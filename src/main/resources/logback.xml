@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds">
+
+	<property resource="/spring/prop/globals.properties" />
+
+	<appender name="console"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern> %d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+			<!--
+			%-5level %d{HH:mm:ss.SSS} [%thread %F:%L] %method - %msg%n
+			 -->
+		</encoder>
+	</appender>
+
+	<if condition='property("Globals.log.mode").equals("SERVICE")'>
+		<then>
+			<logger name="org.springframework" level="info" />
+			<logger name="java.sql" level="info" />
+			<logger name="jdbc.sqlonly" level="info" />
+			<logger name="jdbc.sqltiming" level="info" />
+			<logger name="jdbc.audit" level="error" />
+			<logger name="jdbc.resultset" level="error" />
+			<root level="info">
+				<appender-ref ref="console" />
+			</root>
+		</then>
+		<else>
+			<logger name="org.springframework" level="debug" />
+			<logger name="java.sql" level="debug" />
+			<logger name="jdbc.sqlonly" level="debug" />
+			<logger name="jdbc.sqltiming" level="debug" />
+			<logger name="jdbc.audit" level="debug" />
+			<logger name="jdbc.resultset" level="debug" />
+			<root level="debug">
+				<appender-ref ref="console" />
+			</root>
+		</else>
+	</if>
+
+</configuration>
