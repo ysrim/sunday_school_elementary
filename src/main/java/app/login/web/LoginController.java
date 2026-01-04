@@ -12,7 +12,7 @@ public class LoginController {
 
 	@RequestMapping("/login.do")
 	public String csDeploy() {
-		return "/pages/login";
+		return "/pages/app/login";
 	}
 
 }

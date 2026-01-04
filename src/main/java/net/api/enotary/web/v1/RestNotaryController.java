@@ -17,8 +17,8 @@ import net.api.enotary.vo.ReqDocCrtVO;
 @RequestMapping(value = "/v1", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 public class RestNotaryController {
 
-//	@Resource(name = "resService")
-//	private ResService resService;
+	//	@Resource(name = "resService")
+	//	private ResService resService;
 
 	/**
 	 * @param bodyResVO
@@ -28,8 +28,8 @@ public class RestNotaryController {
 	 */
 	@RequestMapping(value = "/reqDoc/crt")
 	public BodyResVO reqDocCrt(BodyResVO bodyResVO //
-			, @RequestBody @Valid ReqDocCrtVO reqDocCrtVO //
-			, BindingResult bindingResult //
+		, @RequestBody @Valid ReqDocCrtVO reqDocCrtVO //
+		, BindingResult bindingResult //
 	) {
 
 		if (bindingResult.hasErrors()) {
