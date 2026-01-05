@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 public class LoginController {
 
-//	@Resource(name = "resService")
-//	private ResService resService;
+	//	@Resource(name = "resService")
+	//	private ResService resService;
 
-	@RequestMapping("/login.do")
-	public String csDeploy() {
+	@RequestMapping(path = "/login.pg")
+	public String loginPage() {
 		return "/pages/app/login";
 	}
 

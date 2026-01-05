@@ -176,8 +176,8 @@
 					<input type="checkbox" id="auto-login"> 자동 로그인
 				</label>
 			</div>
-			<button class="btn btn-main" onclick="location.href='<c:url value="/login.do"/>'">로그인</button>
-			<button class="btn btn-sub" onclick="location.href='<c:url value="/join.do"/>'">처음 왔어요 (회원가입)</button>
+			<button class="btn btn-main" onclick="location.href='<c:url value="/login.ax"/>'">로그인</button>
+			<button class="btn btn-sub" onclick="location.href='<c:url value="/join.pg"/>'">처음 왔어요 (회원가입)</button>
 		</div>
 	</div>
 </div>

@@ -22,9 +22,12 @@ public class JoinServiceImpl implements JoinService {
 
 	@PostConstruct
 	public void serviceInit() {
-
 		// do something
-
 	}
 
+	@Override
+	public boolean idDupleChk(String memberId) {
+		System.out.println("joinDAO.idDupleChk(memberId)> " + joinDAO.idDupleChk(memberId));
+		return joinDAO.idDupleChk(memberId) > 0 ? false : true;
+	}
 }

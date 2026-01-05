@@ -9,9 +9,8 @@ import net.api.enotary.vo.RestApiLogVO;
 @Repository("joinDAO")
 public class JoinDAO extends SqlAbstractDAO {
 
-	public int insertRestAPiLog(RestApiLogVO vo) {
-		// return insert("RestApiLogDAO.insertRestAPiLog", vo);
-		return 0;
+	public int idDupleChk(String memberId) {
+		return selectOne("JoinDAO.idDupleChk", memberId);
 	}
 
 }

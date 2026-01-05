@@ -253,7 +253,7 @@
 			</p>
 		</div>
 		<div class="intro-footer">
-			<button class="btn-start" onclick="location.href='<c:url value="/login.do"/>'">
+			<button class="btn-start" onclick="location.href='<c:url value="/login.pg"/>'">
 				모험 시작하기! ⚔
 			</button>
 			<div class="warrior-count">

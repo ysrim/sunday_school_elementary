@@ -18,7 +18,7 @@ public class WebAppInit implements WebApplicationInitializer {
 		log.debug("=============== WebApplicationInitializer START ===============");
 
 		XmlWebApplicationContext rootContext = new XmlWebApplicationContext();
-		rootContext.setConfigLocations(new String[] { "classpath*:spring/context/context-*.xml" });
+		rootContext.setConfigLocations(new String[] {"classpath*:spring/context/context-*.xml"});
 		rootContext.refresh();
 		rootContext.start();
 		sc.addListener(new ContextLoaderListener(rootContext));
@@ -26,7 +26,7 @@ public class WebAppInit implements WebApplicationInitializer {
 		XmlWebApplicationContext dispatcherServlet = new XmlWebApplicationContext();
 		dispatcherServlet.setConfigLocation("/WEB-INF/config/spring-com-servlet.xml");
 		ServletRegistration.Dynamic dispatcher = sc.addServlet("dispatcher", new DispatcherServlet(dispatcherServlet));
-		dispatcher.addMapping("*.do");
+		dispatcher.addMapping("*.do", "*.ax", "*.pg");
 		dispatcher.setLoadOnStartup(1);
 
 		loadEncodingFilter(sc);
@@ -46,7 +46,7 @@ public class WebAppInit implements WebApplicationInitializer {
 		log.debug("    =========== Filter: Encoding START ===========    ");
 
 		FilterRegistration.Dynamic filter = sc.addFilter("encodingFilter",
-				new org.springframework.web.filter.CharacterEncodingFilter());
+			new org.springframework.web.filter.CharacterEncodingFilter());
 		filter.setInitParameter("encoding", "UTF-8");
 		filter.setInitParameter("forceEncoding", "true");
 		filter.addMappingForUrlPatterns(null, false, "/");
