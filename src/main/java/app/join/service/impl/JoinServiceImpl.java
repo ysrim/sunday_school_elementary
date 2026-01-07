@@ -33,6 +33,9 @@ public class JoinServiceImpl implements JoinService {
 	@Transactional(rollbackFor = {RuntimeException.class})
 	public boolean joinMber(JoinMemberVO joinMemberVO) {
 
+		String mberSn = joinDAO.sltMberSn();
+		joinMemberVO.setMberSn(mberSn);
+
 		// 1. MBER_INFO insert -> MBER_SN return;
 		joinDAO.insMberInfo(joinMemberVO);
 

@@ -13,6 +13,10 @@ public class JoinDAO extends SqlAbstractDAO {
 		return selectOne("JoinDAO.idDupleChk", memberId);
 	}
 
+	public String sltMberSn() {
+		return selectOne("JoinDAO.sltMberSn");
+	}
+
 	public int insMberInfo(JoinMemberVO joinMemberVO) {
 		return insert("JoinDAO.insMberInfo", joinMemberVO);
 	}
