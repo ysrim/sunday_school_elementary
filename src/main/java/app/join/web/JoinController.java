@@ -1,8 +1,5 @@
 package app.join.web;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -15,8 +12,12 @@ import com.base.cmm.vo.BodyResVO;
 
 import app.join.service.JoinService;
 import app.join.vo.JoinMemberVO;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
+@Slf4j
 public class JoinController {
 
 	@Resource(name = "joinService")
@@ -33,9 +34,13 @@ public class JoinController {
 		, @Valid JoinMemberVO joinMemberVO //
 		, BindingResult bindingResult) {
 
+		log.info("joinMemberVO: {}", joinMemberVO);
+
 		if (bindingResult.hasErrors()) {
 			return ResUtil.resValid(bodyResVO, bindingResult);
 		}
+
+		joinService.joinMber(joinMemberVO);
 
 		return ResUtil.resSucc(bodyResVO, "성공");
 

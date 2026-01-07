@@ -1,23 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><!--Converted at: Wed May 11 15:49:38 KST 2016 -->
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="RestApiLogDAO">
-
-	<insert id="insertRestAPiLog" parameterType="net.api.enotary.vo.RestApiLogVO">
-		INSERT INTO `REST_API_LOG` (
-									 `URI`
-									,`INPUT`
-									,`OUTPUT`
-									,`RES_CODE`
-									,`PROC_TIME`
-		) VALUE
-			(
-			 #{uri}
-			,#{input}
-			,#{output}
-			,#{resCode}
-			,#{procTime}
-			)
-	</insert>
 
 </mapper>

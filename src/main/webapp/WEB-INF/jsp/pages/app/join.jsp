@@ -280,31 +280,32 @@
 				<sf:input path="mberNm" placeholder="실명을 적어주세요"/>
 				<p class="validation-msg"></p>
 				<label>캐릭터 이름</label>
-				<input type="text" id="ncnm" placeholder="멋진 캐릭터이름을 지어주세요">
+				<sf:input path="ncnm" placeholder="멋진 캐릭터이름을 지어주세요"/>
 				<p class="validation-msg"></p>
 				<label>나의 캐릭터 선택</label>
 				<div class="avatar-grid" id="avatar-selector">
-					<div class="avatar-item" data-id="warrior">
+					<sf:hidden path="occpCode"/>
+					<div class="avatar-item" data-id="010">
 						<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/warrior.png" alt="전사">
 						<span>믿음의 전사</span>
 					</div>
-					<div class="avatar-item" data-id="paladin">
+					<div class="avatar-item" data-id="020">
 						<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/paladin.png" alt="성기사">
 						<span>말씀 용사</span>
 					</div>
-					<div class="avatar-item" data-id="archer">
+					<div class="avatar-item" data-id="030">
 						<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/archer.png" alt="궁수">
 						<span>평화의 궁수</span>
 					</div>
-					<div class="avatar-item" data-id="healer">
+					<div class="avatar-item" data-id="040">
 						<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/healer.png" alt="치유사">
 						<span>사랑의 약사</span>
 					</div>
-					<div class="avatar-item" data-id="wizard">
+					<div class="avatar-item" data-id="050">
 						<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/wizard.png" alt="마법사">
 						<span>지혜의 술사</span>
 					</div>
-					<div class="avatar-item" data-id="guardian">
+					<div class="avatar-item" data-id="060">
 						<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/guardian.png" alt="수호자">
 						<span>희망 수호자</span>
 					</div>
@@ -312,21 +313,22 @@
 				<div style="display: flex; gap: 10px; margin-bottom: 10px;">
 					<div style="flex: 1;">
 						<label>학년</label>
-						<select id="signup-grade">
-							<option value="4">4학년</option>
-							<option value="5">5학년</option>
-							<option value="6">6학년</option>
-						</select>
+						<sf:select path="grade">
+							<sf:option value="4">4학년</sf:option>
+							<sf:option value="5">5학년</sf:option>
+							<sf:option value="6">6학년</sf:option>
+						</sf:select>
 					</div>
 					<div style="flex: 1;">
 						<label>반</label>
-						<select id="signup-class">
-							<option value="1">1반</option>
-							<option value="2">2반</option>
-							<option value="3">3반</option>
-							<option value="4">4반</option>
-							<option value="5">5반</option>
-							<option value="6">6반</option>
+						<sf:select path="cls">
+							<sf:option value="1">1반</sf:option>
+							<sf:option value="2">2반</sf:option>
+							<sf:option value="3">3반</sf:option>
+							<sf:option value="4">4반</sf:option>
+							<sf:option value="5">5반</sf:option>
+							<sf:option value="6">6반</sf:option>
+						</sf:select>
 						</select>
 					</div>
 				</div>
@@ -340,13 +342,12 @@
 	$(function () {
 
 		let isIdChecked = false; // 아이디 중복 확인 여부
-		let selectedAvatar = null; // 선택된 아바타
 
 		// 1. 아바타 선택 로직
 		$('.avatar-item').on('click', function () {
 			$('.avatar-item').removeClass('selected'); // 기존 선택 제거
 			$(this).addClass('selected'); // 현재 선택 활성화
-			selectedAvatar = $(this).data('id');
+			$('#occpCode').val($(this).data('id'));
 		});
 
 		// 2. 아이디 중복 확인 로직
@@ -419,7 +420,7 @@
 			if (pw.length < 4) {
 				alert('비밀번호를 4자리 이상 입력해주세요.');
 				$('#pwd').focus();
-				return;
+				return false;
 			}
 			if (pw !== pwConfirm) {
 				alert('비밀번호가 일치하지 않습니다.');
@@ -436,23 +437,22 @@
 				$('#ncnm').focus();
 				return false;
 			}
-			if (!selectedAvatar) {
+			if ($('#occpCode').val() === '') {
 				alert('캐릭터를 선택해주세요!');
 				return false;
 			}
-			//alert('가입을 축하합니다! ' + name + ' 용사님!');
-			//location.href = 'index.html'; // 메인 페이지로 이동
 
 			$.ajax({
 				type: "GET",
 				url: "<c:url value='/join.ax'/>",
 				data: $("#joinFm").serialize(),
 				success: function (data) {
-
 					if (data.rtnCd == '001') {
 						alert('가입을 축하합니다! ' + name + ' 용사님!');
+						location.href = "<c:url value='/login.pg'/>";
 					} else {
-						alert('실패했습니다.');
+						alert(data.rtnMsg);
+						return false;
 					}
 				},
 				error: function (e) {
@@ -460,15 +460,17 @@
 				}
 			});
 
+			return false;
+
 		});
 	});
 
 	// 학년 선택 변경 시 반 목록 동적 생성
-	$('#signup-grade').on('change', function () {
-		$('#signup-class').empty();
+	$('#grade').on('change', function () {
+		$('#cls').empty();
 		let maxClass = $(this).val() === '5' ? 4 : 6;
 		for (let i = 1; i <= maxClass; i++) {
-			$('#signup-class').append('<option value="' + i + '">' + i + '반</option>');
+			$('#cls').append('<option value="' + i + '">' + i + '반</option>');
 		}
 	});
 

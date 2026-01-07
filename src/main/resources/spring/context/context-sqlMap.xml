@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean id="home.sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="home.dataSource" />
-		<property name="configLocation" value="classpath:spring/sqlmap/config/sql-map-config.xml" />
+		<property name="dataSource" ref="home.dataSource"/>
+		<property name="configLocation" value="classpath:spring/sqlmap/config/sql-map-config.xml"/>
 		<property name="mapperLocations">
 			<list>
 				<value>classpath:spring/sqlmap/mapper/**/*.xml</value>

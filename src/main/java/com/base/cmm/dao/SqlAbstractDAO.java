@@ -1,10 +1,10 @@
 package com.base.cmm.dao;
 
-import javax.annotation.Resource;
-
 import org.apache.ibatis.session.SqlSessionFactory;
 
 import org.egovframe.rte.psl.dataaccess.EgovAbstractMapper;
+
+import jakarta.annotation.Resource;
 
 public abstract class SqlAbstractDAO extends EgovAbstractMapper {
 

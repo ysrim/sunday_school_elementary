@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?><!--Converted at: Wed May 11 15:49:38 KST 2016 -->
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="JoinDAO">
-
-	<insert id="insertRestAPiLog" parameterType="net.api.enotary.vo.RestApiLogVO">
-		INSERT INTO `REST_API_LOG` (
-									 `URI`
-									,`INPUT`
-									,`OUTPUT`
-									,`RES_CODE`
-									,`PROC_TIME`
-		) VALUE
-			(
-			 #{uri}
-			,#{input}
-			,#{output}
-			,#{resCode}
-			,#{procTime}
-			)
-	</insert>
 
 	<select id="idDupleChk" parameterType="string" resultType="int">
 		SELECT COUNT(*) AS cnt
-		FROM   MBER_INFO
-		WHERE  MBER_ID = #{mberId};
+		FROM MBER_INFO
+		WHERE MBER_ID = #{mberId}
 	</select>
+
+	<insert id="insMberInfo" parameterType="app.join.vo.JoinMemberVO" useGeneratedKeys="true" keyProperty="mberSn" keyColumn="MBER_SN">
+		INSERT INTO MBER_INFO (MBER_ID, MBER_NM, PWD) VALUES (#{mberId}, #{mberNm}, #{pwd})
+	</insert>
+
+	<insert id="insAvatarInfo" parameterType="app.join.vo.JoinMemberVO" >
+		INSERT INTO AVATAR_INFO (MBER_SN, NCNM, OCCP_CODE) VALUES (#{mberSn}, #{ncnm}, #{occpCode})
+	</insert>
+
+	<select id="sltGuildInfo" parameterType="app.join.vo.JoinMemberVO" resultType="int">
+		SELECT GUILD_SN
+		FROM GUILD_INFO
+		WHERE 1 = 1
+		  AND GRADE = #{grade}
+		  AND CLA = #{cls}
+	</select>
+
 
 </mapper>

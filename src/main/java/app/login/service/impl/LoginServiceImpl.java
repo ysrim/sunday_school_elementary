@@ -1,12 +1,11 @@
 package app.login.service.impl;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import app.login.service.LoginService;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
