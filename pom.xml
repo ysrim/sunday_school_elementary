@@ -16,7 +16,8 @@
     <properties>
         <java.version>11</java.version>
         <web.jar.path>
-            D:\2.work\sunday_school_elementary\src\main\webapp\WEB-INF\lib\
+            /Users/ysrim/IdeaProjects/sunday_school_elementary/src/main/webapp/WEB-INF/lib/
+            <!-- D:\2.work\sunday_school_elementary\src\main\webapp\WEB-INF\lib\ -->
         </web.jar.path>
         <spring.version>6.1.10</spring.version>
         <egov.version>4.2.0</egov.version>
