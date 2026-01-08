@@ -52,7 +52,7 @@ public class JoinServiceImpl implements JoinService {
 
 		// 4.GUILD_MBER_LIST insert
 
-		throw new NullPointerException("Throw Force Exception");
+		return true;
 
 	}
 }

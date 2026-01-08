@@ -23,12 +23,12 @@ public class JoinController {
 	@Resource(name = "joinService")
 	private JoinService joinService;
 
-	@RequestMapping(path = "/join.pg")
+	@RequestMapping(path = "join.pg")
 	public String joinPage(@ModelAttribute("joinFm") JoinMemberVO joinMemberVO) {
-		return "/pages/app/join";
+		return "pages/app/join";
 	}
 
-	@RequestMapping(path = "/join.ax")
+	@RequestMapping(path = "join.ax")
 	@ResponseBody
 	public BodyResVO joinAx(BodyResVO bodyResVO //
 		, @Valid JoinMemberVO joinMemberVO //
@@ -46,7 +46,7 @@ public class JoinController {
 
 	}
 
-	@RequestMapping(path = "/idDupleChk.ax")
+	@RequestMapping(path = "idDupleChk.ax")
 	@ResponseBody
 	public BodyResVO idDupleChkAx(BodyResVO bodyResVO //
 		, @RequestParam(name = "mberId", defaultValue = "") String mberId //

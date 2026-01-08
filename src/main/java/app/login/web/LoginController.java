@@ -10,9 +10,9 @@ public class LoginController {
 	//	@Resource(name = "resService")
 	//	private ResService resService;
 
-	@RequestMapping(path = "/login.pg")
+	@RequestMapping(path = "login.pg")
 	public String loginPage() {
-		return "/pages/app/login";
+		return "pages/app/login";
 	}
 
 }

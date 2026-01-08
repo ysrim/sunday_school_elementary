@@ -1,9 +1,14 @@
 package com.base.cmm.web;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.ui.Model;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -14,37 +19,52 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.base.cmm.enumm.ResultCode;
 import com.base.cmm.vo.BodyResVO;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @ControllerAdvice
 public class CustomRestExceptionHandler {
 
+	private boolean ajaxType(HttpServletRequest request) {
+		return request.getRequestURI().endsWith(".ax") || "XMLHttpRequest".equals(request.getHeader("X-Requested-With")) ? true : false;
+	}
+
+	// 아예 잘못된 형식으로 request 를 요청할 경우 예외 발생
 	@ExceptionHandler(HttpMessageNotReadableException.class)
-	@ResponseBody
-	public BodyResVO handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+	public Object handleHttpMessageNotReadableException(HttpServletRequest request, Model model, HttpMessageNotReadableException ex) {
 
-		// 아예 잘못된 형식으로 request 를 요청할 경우 예외 발생
-		BodyResVO error = new BodyResVO();
-		error.setRtnCd(ResultCode.fail.getValue());
-		error.setRtnMsg("Required request body is missing");
+		// 1. ajax로 호출했을 경우 -> JSON 리턴
+		if (ajaxType(request)) {
+			BodyResVO error = new BodyResVO();
+			error.setRtnCd(ResultCode.fail.getValue());
+			error.setRtnMsg("Required request body is missing");
+			return new ResponseEntity<>(error, HttpStatus.OK);
+		}
+		// 2. .do (일반 페이지 요청)로 호출했을 경우 -> JSP 리턴
+		model.addAttribute("exception", ex.getMessage());
 
-		return error;
+		return "com/error/errorPage"; // jsp 경로
 
 	}
 
 	@ExceptionHandler(MissingServletRequestParameterException.class)
-	@ResponseBody
-	public BodyResVO handleMissingServletRequestParameterException(MissingServletRequestParameterException ex) {
+	public Object handleMissingServletRequestParameterException(HttpServletRequest request, Model model, MissingServletRequestParameterException ex) {
 
-		BodyResVO error = new BodyResVO();
-		error.setRtnCd(ResultCode.fail.getValue());
-		error.setRtnMsg(ex.getParameterName() + " is missing");
+		// 1. ajax로 호출했을 경우 -> JSON 리턴
+		if (ajaxType(request)) {
+			BodyResVO error = new BodyResVO();
+			error.setRtnCd(ResultCode.fail.getValue());
+			error.setRtnMsg(ex.getParameterName() + " is missing");
+			return new ResponseEntity<>(error, HttpStatus.OK);
+		}
+		// 2. .do (일반 페이지 요청)로 호출했을 경우 -> JSP 리턴
+		model.addAttribute("exception", ex.getMessage());
 
-		return error;
+		return "com/error/errorPage"; // jsp 경로
 
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	@ResponseBody
-	public BodyResVO handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+	public Object handleMethodArgumentNotValidException(HttpServletRequest request, Model model, MethodArgumentNotValidException ex) {
 
 		List<String> params = new ArrayList<>();
 		for (FieldError error : ex.getBindingResult().getFieldErrors()) {
@@ -52,23 +72,34 @@ public class CustomRestExceptionHandler {
 		}
 		String errorStr = String.join(",", params);
 
-		BodyResVO error = new BodyResVO();
-		error.setRtnCd(ResultCode.fail.getValue());
-		error.setRtnMsg(errorStr + " is invalid");
+		// 1. ajax로 호출했을 경우 -> JSON 리턴
+		if (ajaxType(request)) {
+			BodyResVO error = new BodyResVO();
+			error.setRtnCd(ResultCode.fail.getValue());
+			error.setRtnMsg(errorStr + " is invalid");
+			return new ResponseEntity<>(error, HttpStatus.OK);
+		}
+		// 2. .do (일반 페이지 요청)로 호출했을 경우 -> JSP 리턴
+		model.addAttribute("exception", errorStr);
 
-		return error;
+		return "com/error/errorPage"; // jsp 경로
 
 	}
 
-	@ExceptionHandler(Exception.class)
-	@ResponseBody
-	public final BodyResVO handleAllExceptions(Exception ex) {
+	@ExceptionHandler({Exception.class, RuntimeException.class})
+	public Object handleAllExceptions(HttpServletRequest request, Model model, Exception ex) {
 
-		BodyResVO error = new BodyResVO();
-		error.setRtnCd(ResultCode.fail.getValue());
-		error.setRtnMsg(ex.getMessage());
+		// 1. ajax로 호출했을 경우 -> JSON 리턴
+		if (ajaxType(request)) {
+			BodyResVO error = new BodyResVO();
+			error.setRtnCd(ResultCode.fail.getValue());
+			error.setRtnMsg(ex.getMessage());
+			return new ResponseEntity<>(error, HttpStatus.OK);
+		}
+		// 2. .do (일반 페이지 요청)로 호출했을 경우 -> JSP 리턴
+		model.addAttribute("exception", ex.getMessage());
 
-		return error;
+		return "com/error/errorPage"; // jsp 경로
 
 	}
 
