@@ -2,7 +2,7 @@ package com.init;
 
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
-import org.springframework.web.context.support.XmlWebApplicationContext;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import jakarta.servlet.FilterRegistration;
@@ -17,17 +17,31 @@ public class WebAppInit implements WebApplicationInitializer {
 
 		log.debug("=============== WebApplicationInitializer START ===============");
 
-		XmlWebApplicationContext rootContext = new XmlWebApplicationContext();
-		rootContext.setConfigLocations(new String[] {"classpath*:spring/context/context-*.xml"});
-		rootContext.refresh();
-		rootContext.start();
+		// 1. AnnotationConfigWebApplicationContext 객체 생성
+		AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
+
+		// 2. 방금 만든 AppConfig 클래스(또는 설정 클래스들)를 등록
+		rootContext.register(AppConfig.class);
+
+		// 만약 설정 클래스가 여러 개라면 콤마로 구분하여 등록 가능합니다.
+		// rootContext.register(AppConfig.class, DataSourceConfig.class);
+
+		// 3. (옵션) refresh와 start는 ContextLoaderListener가 내부적으로 처리하므로
+		// 일반적으로 WebApplicationInitializer 환경에서는 아래 Listener 등록만으로 충분합니다.
+
+		// 4. ContextLoaderListener에 생성한 rootContext 전달
 		sc.addListener(new ContextLoaderListener(rootContext));
 
-		XmlWebApplicationContext dispatcherServlet = new XmlWebApplicationContext();
-		dispatcherServlet.setConfigLocation("/WEB-INF/config/spring-com-servlet.xml");
-		ServletRegistration.Dynamic dispatcher = sc.addServlet("dispatcher", new DispatcherServlet(dispatcherServlet));
-		dispatcher.addMapping("*.do", "*.ax", "*.pg");
+		// 1. XML 대신 Annotation 기반 ApplicationContext 생성
+		AnnotationConfigWebApplicationContext dispatcherContext = new AnnotationConfigWebApplicationContext();
+		dispatcherContext.register(WebConfig.class); // 자바 설정 파일 등록
+
+		// 2. DispatcherServlet 등록
+		ServletRegistration.Dynamic dispatcher = sc.addServlet("dispatcher", new DispatcherServlet(dispatcherContext));
+
+		// 3. 기존 설정 적용
 		dispatcher.setLoadOnStartup(1);
+		dispatcher.addMapping("*.do", "*.ax", "*.pg");
 
 		loadEncodingFilter(sc);
 

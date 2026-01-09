@@ -1,9 +1,7 @@
 package com.base.cmm.web;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.base.cmm.enumm.ResultCode;
 import com.base.cmm.vo.BodyResVO;
@@ -42,7 +39,7 @@ public class CustomRestExceptionHandler {
 		// 2. .do (일반 페이지 요청)로 호출했을 경우 -> JSP 리턴
 		model.addAttribute("exception", ex.getMessage());
 
-		return "com/error/errorPage"; // jsp 경로
+		return "error/errorPage"; // jsp 경로
 
 	}
 
@@ -59,7 +56,7 @@ public class CustomRestExceptionHandler {
 		// 2. .do (일반 페이지 요청)로 호출했을 경우 -> JSP 리턴
 		model.addAttribute("exception", ex.getMessage());
 
-		return "com/error/errorPage"; // jsp 경로
+		return "error/errorPage"; // jsp 경로
 
 	}
 
@@ -82,7 +79,7 @@ public class CustomRestExceptionHandler {
 		// 2. .do (일반 페이지 요청)로 호출했을 경우 -> JSP 리턴
 		model.addAttribute("exception", errorStr);
 
-		return "com/error/errorPage"; // jsp 경로
+		return "error/errorPage"; // jsp 경로
 
 	}
 
@@ -99,7 +96,7 @@ public class CustomRestExceptionHandler {
 		// 2. .do (일반 페이지 요청)로 호출했을 경우 -> JSP 리턴
 		model.addAttribute("exception", ex.getMessage());
 
-		return "com/error/errorPage"; // jsp 경로
+		return "error/errorPage"; // jsp 경로
 
 	}
 

@@ -25,7 +25,7 @@ public class JoinController {
 
 	@RequestMapping(path = "join.pg")
 	public String joinPage(@ModelAttribute("joinFm") JoinMemberVO joinMemberVO) {
-		return "pages/app/join";
+		return "jsp/app/join";
 	}
 
 	@RequestMapping(path = "join.ax")
