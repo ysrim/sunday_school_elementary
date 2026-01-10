@@ -1,49 +1,29 @@
-package com.init;
+package com.config;
 
 import javax.sql.DataSource;
-import org.apache.commons.dbcp2.BasicDataSource; // 패키지 경로가 dbcp2로 변경됨
+
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@ComponentScan(
-	basePackages = {"com", "net", "app"},
-	useDefaultFilters = false,
-	includeFilters = {
-		@ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Service.class),
-		@ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Repository.class)
-	}
-)
-@PropertySource({
-	"classpath:spring/prop/globals.properties",
-	"classpath:spring/prop/db.properties"
-}) //Properties 사용을 위한 소스 등록
+@PropertySource("classpath:spring/prop/db.properties") // DB 프로퍼티 로드
 @EnableTransactionManagement // @Transactional 활성화
-public class AppConfig {
+public class DataSourceConfig {
 
-	@Bean(name = "globalsProps")
-	public PropertiesFactoryBean globalsProps() {
-		PropertiesFactoryBean bean = new PropertiesFactoryBean();
-		bean.setLocation(new ClassPathResource("spring/prop/globals.properties"));
-		return bean;
-	}
-
+	// DB 관련 프로퍼티 빈
 	@Bean(name = "dbProps")
 	public PropertiesFactoryBean dbProps() {
 		PropertiesFactoryBean bean = new PropertiesFactoryBean();
@@ -51,7 +31,13 @@ public class AppConfig {
 		return bean;
 	}
 
-	//datasource
+	// @Value를 사용하기 위한 설정 (static 필수)
+	@Bean
+	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+		return new PropertySourcesPlaceholderConfigurer();
+	}
+
+	// Datasource 관련 변수 (@Value)
 	@Value("${DataBase.Maria.DriverClassName}")
 	private String dbDrvClzNm;
 
@@ -97,13 +83,5 @@ public class AppConfig {
 		);
 
 		return sessionFactoryBean.getObject();
-	}
-
-	/**
-	 * ${...} 프로퍼티 치환을 위한 정적 빈
-	 */
-	@Bean
-	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-		return new PropertySourcesPlaceholderConfigurer();
 	}
 }

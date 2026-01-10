@@ -5,6 +5,10 @@ import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
+import com.config.AppConfig;
+import com.config.DataSourceConfig;
+import com.config.WebConfig;
+
 import jakarta.servlet.FilterRegistration;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletRegistration;
@@ -21,7 +25,7 @@ public class WebAppInit implements WebApplicationInitializer {
 		AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
 
 		// 2. 방금 만든 AppConfig 클래스(또는 설정 클래스들)를 등록
-		rootContext.register(AppConfig.class);
+		rootContext.register(AppConfig.class, DataSourceConfig.class);
 
 		// 만약 설정 클래스가 여러 개라면 콤마로 구분하여 등록 가능합니다.
 		// rootContext.register(AppConfig.class, DataSourceConfig.class);
