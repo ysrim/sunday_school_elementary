@@ -7,252 +7,7 @@
 	<title>봉동중앙교회 초등부 RPG - 회원가입</title>
 	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<style>
-        :root {
-            --primary: #FFD700;
-            --secondary: #4A90E2;
-            --bg: #E3F2FD;
-            --text: #333;
-            --white: #ffffff;
-            --gray: #999;
-            --light-gray: #f0f0f0;
-            --success: #4CAF50;
-            --error: #FF5252;
-        }
-
-        /* 기본 초기화 및 컨테이너 */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background-color: var(--bg);
-            background-image: url('https://www.transparenttextures.com/patterns/clouds.png');
-            color: var(--text);
-            line-height: 1.6;
-        }
-
-        .app-container {
-            max-width: 480px;
-            margin: 0 auto;
-            min-height: 100vh;
-            background: #ffffff;
-            position: relative;
-            padding-bottom: 60px;
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* 페이지 설정 */
-        .page {
-            display: none;
-            padding: 0 0 20px 0;
-            animation: fadeIn 0.3s ease;
-            width: 100%;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* 서브페이지 헤더 */
-        .sub-header {
-            padding: 15px 20px;
-            background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            color: white;
-        }
-
-        .sub-header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .sub-header h2 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin: 0;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-        }
-
-        h3 {
-            color: #1976D2;
-            margin: 20px 0 15px;
-            font-size: 1.3rem;
-            text-align: center;
-        }
-
-        /* 카드 스타일 */
-        .card {
-            margin: 15px 20px;
-            width: calc(100% - 40px);
-            background: var(--white);
-            border-radius: 25px;
-            padding: 25px 20px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
-            border: 2px solid #e1f5fe;
-        }
-
-        /* 폼 요소 스타일 */
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            color: #555;
-            margin-top: 10px;
-        }
-
-        label:first-child {
-            margin-top: 0;
-        }
-
-        input[type="text"], input[type="password"], select {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 5px; /* 메시지 공간 확보를 위해 줄임 */
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: border-color 0.2s;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--secondary);
-        }
-
-        /* 아이디 중복확인 레이아웃 */
-        .input-group {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 5px;
-        }
-
-        .input-group input {
-            margin-bottom: 0;
-            flex: 1;
-        }
-
-        .btn-check {
-            white-space: nowrap;
-            background: #81D4FA;
-            color: #01579B;
-            border: none;
-            border-radius: 10px;
-            padding: 0 15px;
-            font-weight: bold;
-            font-size: 0.85rem;
-            cursor: pointer;
-            height: 46px; /* 인풋 높이와 맞춤 (padding+border 고려) */
-            transition: background 0.2s;
-        }
-
-        .btn-check:hover {
-            background: #4FC3F7;
-        }
-
-        /* 유효성 메시지 */
-        .validation-msg {
-            font-size: 0.8rem;
-            min-height: 18px;
-            margin-bottom: 10px;
-            padding-left: 5px;
-        }
-
-        .msg-success {
-            color: var(--success);
-        }
-
-        .msg-error {
-            color: var(--error);
-        }
-
-        /* 아바타 선택창 */
-        .avatar-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin: 15px 0 20px;
-        }
-
-        .avatar-item {
-            border: 3px solid transparent;
-            border-radius: 15px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: 0.2s;
-            background: #f8f9fa;
-        }
-
-        .avatar-item img {
-            width: 100%;
-            display: block;
-            aspect-ratio: 1/1;
-            object-fit: cover;
-        }
-
-        .avatar-item span {
-            display: block;
-            font-size: 0.7rem;
-            text-align: center;
-            padding: 5px 0;
-            background: rgba(255, 255, 255, 0.8);
-            font-weight: bold;
-        }
-
-        .avatar-item.selected {
-            border-color: var(--secondary);
-            background: #e3f2fd;
-            transform: scale(1.05);
-            box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
-        }
-
-        /* 메인 버튼 */
-        .btn {
-            width: 100%;
-            padding: 15px;
-            border-radius: 50px;
-            border: none;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.2s;
-            margin-top: 20px;
-        }
-
-        .btn-main {
-            background: var(--primary);
-            color: #444;
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
-        }
-
-        .btn-main:active {
-            transform: scale(0.98);
-        }
-	</style>
+	<link rel="stylesheet" href="<c:url value='/files/css/intro_style.css' />">
 </head>
 <body>
 <div class="app-container">
@@ -336,10 +91,31 @@
 			</div>
 		</sf:form>
 	</div>
+	<div id="custom-alert"
+		 style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center;">
+		<div class="card"
+			 style="max-width:320px; text-align:center; padding:30px; transform: scale(0.9); transition: transform 0.2s;">
+			<div id="alert-icon" style="font-size: 3rem; margin-bottom: 15px;">✨</div>
+			<h4 id="alert-title" style="margin-bottom: 10px; color: var(--secondary);">알림</h4>
+			<p id="alert-message"
+			   style="font-size: 0.95rem; color: #666; margin-bottom: 25px; line-height: 1.5; word-break: keep-all;"></p>
+			<button class="btn btn-main" onclick="closeAlert();return false;" style="margin-top:0;">확인</button>
+		</div>
+	</div>
 </div>
 
 <script>
 	$(function () {
+		function closeAlert() {
+			$('#custom-alert').removeClass('active');
+		}
+
+		function showAlert(msg, icon = '✨', title = '알림') {
+			$('#alert-message').html(msg);
+			$('#alert-icon').html(icon);
+			$('#alert-title').text(title);
+			$('#custom-alert').addClass('active');
+		}
 
 		let isIdChecked = false; // 아이디 중복 확인 여부
 
@@ -368,10 +144,10 @@
 				success: function (data) {
 
 					if (data.rtnCd == '001') {
-						$msg.text('사용 가능한 아이디입니다!').removeClass('msg-error').addClass('msg-success');
+						$msg.text(data.rtnMsg).removeClass('msg-error').addClass('msg-success');
 						isIdChecked = true;
 					} else {
-						$msg.text('이미 사용 중인 아이디입니다.').removeClass('msg-success').addClass('msg-error');
+						$msg.text(data.rtnMsg).removeClass('msg-success').addClass('msg-error');
 						isIdChecked = false;
 					}
 				},

@@ -1,4 +1,4 @@
-package com.base.cmm.vo;
+package com.base.vo;
 
 import lombok.Getter;
 import lombok.Setter;

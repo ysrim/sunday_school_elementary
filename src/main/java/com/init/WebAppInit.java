@@ -19,23 +19,20 @@ public class WebAppInit implements WebApplicationInitializer {
 
 	public void onStartup(ServletContext sc) {
 
-		log.debug("=============== WebApplicationInitializer START ===============");
+		log.info("[WebApplicationInitializer] => START");
 
-		// 1. AnnotationConfigWebApplicationContext 객체 생성
+		log.info("    [application context] => START");
+		// 1. rootContext 객체 생성
 		AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
 
-		// 2. 방금 만든 AppConfig 클래스(또는 설정 클래스들)를 등록
+		// 2. allication context clz 등록
 		rootContext.register(AppConfig.class, DataSourceConfig.class);
 
-		// 만약 설정 클래스가 여러 개라면 콤마로 구분하여 등록 가능합니다.
-		// rootContext.register(AppConfig.class, DataSourceConfig.class);
-
-		// 3. (옵션) refresh와 start는 ContextLoaderListener가 내부적으로 처리하므로
-		// 일반적으로 WebApplicationInitializer 환경에서는 아래 Listener 등록만으로 충분합니다.
-
-		// 4. ContextLoaderListener에 생성한 rootContext 전달
+		// 3. ContextLoaderListener에 생성한 rootContext 전달
 		sc.addListener(new ContextLoaderListener(rootContext));
+		log.info("    [application context] => END");
 
+		log.info("    [web_application context] => START");
 		// 1. XML 대신 Annotation 기반 ApplicationContext 생성
 		AnnotationConfigWebApplicationContext dispatcherContext = new AnnotationConfigWebApplicationContext();
 		dispatcherContext.register(WebConfig.class); // 자바 설정 파일 등록
@@ -46,31 +43,22 @@ public class WebAppInit implements WebApplicationInitializer {
 		// 3. 기존 설정 적용
 		dispatcher.setLoadOnStartup(1);
 		dispatcher.addMapping("*.do", "*.ax", "*.pg");
+		log.info("    [web_application context] => END");
 
+		log.info("    [Filter encoding] => START");
+		// 1. encoding filter
 		loadEncodingFilter(sc);
+		log.info("    [Filter encoding] => END");
 
-		log.debug("=============== WebApplicationInitializer END ===============");
+		log.info("[WebApplicationInitializer] => END");
 
 	}
 
-	/**
-	 * Desc : 인코딩 필터
-	 *
-	 * @Method Name : setEncodingFilter
-	 * @param sc
-	 */
 	private void loadEncodingFilter(ServletContext sc) {
-
-		log.debug("    =========== Filter: Encoding START ===========    ");
-
-		FilterRegistration.Dynamic filter = sc.addFilter("encodingFilter",
-			new org.springframework.web.filter.CharacterEncodingFilter());
+		FilterRegistration.Dynamic filter = sc.addFilter("encodingFilter", new org.springframework.web.filter.CharacterEncodingFilter());
 		filter.setInitParameter("encoding", "UTF-8");
 		filter.setInitParameter("forceEncoding", "true");
 		filter.addMappingForUrlPatterns(null, false, "/");
-
-		log.debug("    =========== Filter: Encoding END ===========    ");
-
 	}
 
 }

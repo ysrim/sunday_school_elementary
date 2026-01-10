@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?><!--Converted at: Wed May 11 15:49:38 KST 2016 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LoginDAO">
+
+	<select id="sltMber" parameterType="app.login.vo.LoginVO" resultType="app.login.vo.SessionVO">
+		SELECT A.MBER_SN
+			 , A.MBER_ID
+			 , A.MBER_NM
+			 , A.PWD
+			 , A.GRADE_CODE
+			 , B.NCNM
+			 , B.OCCP_CODE
+			 , B.EXP
+			 , B.LEVEL
+		FROM MBER_INFO A
+				 INNER JOIN AVATAR_INFO B
+							ON A.MBER_SN = B.MBER_SN
+		WHERE A.MBER_ID = #{mberId}
+		  AND A.USE_AT = 'Y';
+	</select>
+
+</mapper>

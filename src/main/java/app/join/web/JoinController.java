@@ -1,14 +1,14 @@
 package app.join.web;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.base.cmm.utl.ResUtil;
-import com.base.cmm.vo.BodyResVO;
+import com.base.utl.ResUtil;
+import com.base.vo.BodyResVO;
 
 import app.join.service.JoinService;
 import app.join.vo.JoinMemberVO;
@@ -16,8 +16,8 @@ import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
-@Controller
 @Slf4j
+@Controller
 public class JoinController {
 
 	@Resource(name = "joinService")
@@ -30,15 +30,9 @@ public class JoinController {
 
 	@RequestMapping(path = "join.ax")
 	@ResponseBody
-	public BodyResVO joinAx(BodyResVO bodyResVO //
-		, @Valid JoinMemberVO joinMemberVO //
-		, BindingResult bindingResult) {
+	public ResponseEntity joinAx(BodyResVO bodyResVO, @Valid JoinMemberVO joinMemberVO) {
 
-		log.info("joinMemberVO: {}", joinMemberVO);
-
-		if (bindingResult.hasErrors()) {
-			return ResUtil.resValid(bodyResVO, bindingResult);
-		}
+		log.debug("joinMemberVO: {}", joinMemberVO);
 
 		joinService.joinMber(joinMemberVO);
 
@@ -48,15 +42,16 @@ public class JoinController {
 
 	@RequestMapping(path = "idDupleChk.ax")
 	@ResponseBody
-	public BodyResVO idDupleChkAx(BodyResVO bodyResVO //
+	public ResponseEntity idDupleChkAx(BodyResVO bodyResVO //
 		, @RequestParam(name = "mberId", defaultValue = "") String mberId //
 	) {
 
+		log.debug("idDupleChkAx mberId: {}", mberId);
 		if ("".equals(mberId)) {
-			return ResUtil.resValid(bodyResVO, "아이디를 입력해주세요");
+			return ResUtil.resValid(bodyResVO, "잘못된 형식의 아이디입니다.");
 		}
 
-		return joinService.idDupleChk(mberId) ? ResUtil.resSucc(bodyResVO, "성공") : ResUtil.resFail(bodyResVO, "실패");
+		return joinService.idDupleChk(mberId) ? ResUtil.resSucc(bodyResVO, "사용 가능한 아이디입니다.") : ResUtil.resFail(bodyResVO, "이미 사용 중인 아이디입니다.");
 
 	}
 

@@ -1,4 +1,6 @@
-package com.base.cmm.vo;
+package com.base.vo;
+
+import com.base.enumm.RstCdEnum;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class BodyResVO {
 
-	private String rtnCd = "001";
+	private String rtnCd = RstCdEnum.succ.getValue();
 
 	private Object rtnMsg;
 

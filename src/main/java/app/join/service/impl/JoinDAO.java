@@ -2,7 +2,7 @@ package app.join.service.impl;
 
 import org.springframework.stereotype.Repository;
 
-import com.base.cmm.dao.SqlAbstractDAO;
+import com.base.dao.SqlAbstractDAO;
 
 import app.join.vo.JoinMemberVO;
 

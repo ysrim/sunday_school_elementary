@@ -7,158 +7,70 @@
 	<title>봉동중앙교회 초등부 RPG - 로그인</title>
 	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<style>
-        :root {
-            --primary: #FFD700;
-            --secondary: #4A90E2;
-            --bg: #E3F2FD;
-            --text: #333;
-            --white: #ffffff;
-            --gray: #999;
-        }
-
-        /* 기본 초기화 */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background-color: var(--bg);
-            background-image: url('https://www.transparenttextures.com/patterns/clouds.png');
-            color: var(--text);
-            line-height: 1.6;
-        }
-
-        /* 앱 레이아웃 */
-        .app-container {
-            max-width: 480px;
-            margin: 0 auto;
-            min-height: 100vh;
-            background: #ffffff;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-        }
-
-        /* 페이지 애니메이션 */
-        .page {
-            width: 100%;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* 헤더 스타일 */
-        .sub-header {
-            padding: 20px;
-            background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center; /* 로그인 타이틀 중앙 정렬 */
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            color: white;
-            border-radius: 0 0 20px 20px;
-            margin-bottom: 20px;
-        }
-
-        .sub-header h2 {
-            font-size: 1.2rem;
-            font-weight: 700;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-        }
-
-        /* 카드 스타일 */
-        .card {
-            margin: 0 20px;
-            background: var(--white);
-            border-radius: 25px;
-            padding: 30px 20px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
-            border: 2px solid #e1f5fe;
-        }
-
-        /* 입력 폼 스타일 */
-        input[type="text"], input[type="password"] {
-            width: 100%;
-            padding: 14px;
-            margin-bottom: 12px;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            font-size: 1rem;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        input[type="text"]:focus, input[type="password"]:focus {
-            border-color: var(--secondary);
-        }
-
-        /* 체크박스 옵션 영역 */
-        .login-options {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 5px 5px 20px 5px;
-            font-size: 0.85rem;
-            color: #666;
-        }
-
-        .checkbox-label {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .checkbox-label input {
-            width: 18px;
-            height: 18px;
-            margin-right: 6px;
-            accent-color: var(--secondary);
-        }
-
-        /* 버튼 스타일 */
-        .btn {
-            width: 100%;
-            padding: 16px;
-            border-radius: 50px;
-            border: none;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: transform 0.1s;
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-
-        .btn-main {
-            background: var(--primary);
-            color: #444;
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
-            margin-bottom: 10px;
-        }
-
-        .btn-sub {
-            background: #f0f2f5;
-            color: #666;
-        }
-	</style>
+	<link rel="stylesheet" href="<c:url value='/files/css/intro_style.css' />">
 </head>
+<script>
+	$(function () {
+
+		function showPopup(msg, icon = '✨', title = '알림', callback) {
+			$('#alert-message').html(msg);
+			$('#alert-icon').html(icon);
+			$('#alert-title').text(title);
+			$('#custom-alert').addClass('active');
+			$('.custom-alert-confirm').on('click', function () {
+				$('#custom-alert').removeClass('active');
+				if (callback && typeof callback === 'function') {
+					callback();
+				}
+			});
+		}
+
+		$('.btn-main-login').on('click', function () {
+			var mberId = $('#mberId').val().trim();
+			var pwd = $('#pwd').val();
+			console.log('mberId: ' + mberId);
+			console.log('pwd: ' + pwd);
+			if (mberId == '') {
+				showPopup('아이디를 입력해주세요!', '⚠️', '아이디 입력', function () {
+					console.log("트리거 작동: 저장 후 페이지 이동 로직 실행");
+					$('#mberId').focus();
+				});
+				return false;
+			}
+			if (pwd == '') {
+				showPopup('비밀번호를 입력해주세요!', '🔑', '비밀번호 입력', function () {
+					$('#pwd').focus();
+				});
+				return false;
+			}
+			$.ajax({
+				type: "POST",
+				url: "<c:url value="/login.ax"/>",
+				contentType: "application/json; charset=utf-8",
+				data: JSON.stringify({
+					mberId: mberId,
+					pwd: pwd
+				}),
+				success: function (data) {
+					if (data.rtnCd == '001') {
+						showPopup(data.rtnMsg, '✨', '인증 완료', function () {
+							location.href = "<c:url value='/dashboard.pg'/>";
+						});
+					} else {
+						showPopup(data.rtnMsg, '❌', '인증 실패', function () {
+						});
+						return false;
+					}
+				},
+				error: function (e) {
+					console.log(JSON.stringify(e));
+				}
+			});
+			return false;
+		});
+	});
+
+</script>
 <body>
 <div class="app-container">
 	<div id="page-login" class="page">
@@ -166,8 +78,8 @@
 			<h2>로그인</h2>
 		</div>
 		<div class="card">
-			<input type="text" id="login-id" placeholder="이름을 입력하세요">
-			<input type="password" id="login-pw" placeholder="비밀번호">
+			<input type="text" id="mberId" placeholder="이름을 입력하세요">
+			<input type="password" id="pwd" placeholder="비밀번호">
 			<div class="login-options">
 				<label class="checkbox-label">
 					<input type="checkbox" id="save-id"> 아이디 저장
@@ -176,8 +88,19 @@
 					<input type="checkbox" id="auto-login"> 자동 로그인
 				</label>
 			</div>
-			<button class="btn btn-main" onclick="location.href='<c:url value="/login.ax"/>'">로그인</button>
+			<button class="btn btn-main btn-main-login">로그인</button>
 			<button class="btn btn-sub" onclick="location.href='<c:url value="/join.pg"/>'">처음 왔어요 (회원가입)</button>
+		</div>
+	</div>
+	<div id="custom-alert"
+		 style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center;">
+		<div class="card"
+			 style="max-width:320px; text-align:center; padding:30px; transform: scale(0.9); transition: transform 0.2s;">
+			<div id="alert-icon" style="font-size: 3rem; margin-bottom: 15px;">✨</div>
+			<h4 id="alert-title" style="margin-bottom: 10px; color: var(--secondary);">알림</h4>
+			<p id="alert-message"
+			   style="font-size: 0.95rem; color: #666; margin-bottom: 25px; line-height: 1.5; word-break: keep-all;"></p>
+			<button class="btn btn-main custom-alert-confirm" style="margin-top:0;">확인</button>
 		</div>
 	</div>
 </div>

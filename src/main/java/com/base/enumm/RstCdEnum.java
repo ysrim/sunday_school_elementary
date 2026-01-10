@@ -1,6 +1,6 @@
-package com.base.cmm.enumm;
+package com.base.enumm;
 
-public enum ResultCode {
+public enum RstCdEnum {
 
 	succ("001") // 성공
 	, valid("002") // 변수 부족
@@ -9,7 +9,7 @@ public enum ResultCode {
 
 	private final String value;
 
-	ResultCode(String value) {
+	RstCdEnum(String value) {
 		this.value = value;
 	}
 

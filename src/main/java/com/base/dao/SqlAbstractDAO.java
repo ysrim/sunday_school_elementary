@@ -1,4 +1,4 @@
-package com.base.cmm.dao;
+package com.base.dao;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 

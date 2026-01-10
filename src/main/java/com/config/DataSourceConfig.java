@@ -45,7 +45,7 @@ public class DataSourceConfig {
 	private String dbUrl;
 
 	@Value("${DataBase.home.UserName}")
-	private String dbUsernm;
+	private String dbUserNm;
 
 	@Value("${DataBase.home.Password}")
 	private String dbPwd;
@@ -56,7 +56,7 @@ public class DataSourceConfig {
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setDriverClassName(dbDrvClzNm);
 		dataSource.setUrl(dbUrl);
-		dataSource.setUsername(dbUsernm);
+		dataSource.setUsername(dbUserNm);
 		dataSource.setPassword(dbPwd);
 		dataSource.setTestOnBorrow(true);
 		dataSource.setValidationQuery("SELECT 1");

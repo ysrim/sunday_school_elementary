@@ -63,7 +63,7 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
 		viewResolver.setTemplateEngine(templateEngine());
 		viewResolver.setCharacterEncoding("UTF-8");
 		viewResolver.setOrder(1);
-		viewResolver.setViewNames(new String[] {"page/*"}); //"th/"로 시작하는 것만 처리하도록 제한
+		viewResolver.setViewNames(new String[] {"page/*"}); // "page/"로 시작하는 것만 처리하도록 제한
 
 		return viewResolver;
 	}

@@ -1,4 +1,4 @@
-package com.base.cmm.dao;
+package com.base.dao;
 
 import java.util.List;
 import java.util.Map;
