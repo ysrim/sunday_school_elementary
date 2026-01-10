@@ -1,7 +1,12 @@
 <html lagn="ko" xmlns:th="http://www.thymeleaf.org">
-<div th:fragment="headerFragment">
-	<div id="header" class="header navbar-default">
-		헤더입니다.
+<header th:fragment="headerFragment">
+	<div class="header-top">
+		<h1>봉동중앙교회 초등부 RPG</h1>
+		<div class="header-actions">
+			<button class="icon-btn btn-logout-new" onclick="handleLogout()" title="로그아웃">
+				<img src="https://cdn-icons-png.flaticon.com/512/1828/1828445.png" alt="로그아웃">
+			</button>
+		</div>
 	</div>
-</div>
+</header>
 </html>
