@@ -47,7 +47,7 @@ public class JoinServiceImpl implements JoinService {
 		log.info("guildSn: {}", guildSn);
 
 		if (guildSn == null) {
-			throw new RuntimeException("이름이 null일 수 없습니다.");  // 롤백 처리됨
+			throw new RuntimeException("선택한 길드 정보를 가져올 수 없습니다");  // 롤백 처리됨
 		}
 
 		// 4.GUILD_MBER_LIST insert

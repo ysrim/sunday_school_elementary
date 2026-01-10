@@ -9,7 +9,7 @@ public class IntroController {
 	@RequestMapping("intro.pg")
 	public String introPage() {
 		// 방문자 카운트 증가
-		return "pages/app/intro";
+		return "jsp/app/intro";
 	}
 
 }
