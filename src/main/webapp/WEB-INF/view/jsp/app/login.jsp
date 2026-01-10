@@ -7,7 +7,8 @@
 	<title>봉동중앙교회 초등부 RPG - 로그인</title>
 	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<link rel="stylesheet" href="<c:url value='/files/css/intro_style.css' />">
+	<link rel="stylesheet" href="<c:url value='/files/css/login_style.css'/>">
+
 </head>
 <script>
 	$(function () {
@@ -73,10 +74,13 @@
 </script>
 <body>
 <div class="app-container">
-	<div id="page-login" class="page">
+	<div class="page active">
 		<div class="sub-header">
-			<h2>로그인</h2>
+			<div class="sub-header-left">
+				<h2>봉동중앙교회 초등부 RPG - 로그인</h2>
+			</div>
 		</div>
+		<h3>반가워요! 믿음의 용사님</h3>
 		<div class="card">
 			<input type="text" id="mberId" placeholder="이름을 입력하세요">
 			<input type="password" id="pwd" placeholder="비밀번호">
@@ -93,9 +97,9 @@
 		</div>
 	</div>
 	<div id="custom-alert"
-		 style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center;">
+	     style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center;">
 		<div class="card"
-			 style="max-width:320px; text-align:center; padding:30px; transform: scale(0.9); transition: transform 0.2s;">
+		     style="max-width:320px; text-align:center; padding:30px; transform: scale(0.9); transition: transform 0.2s;">
 			<div id="alert-icon" style="font-size: 3rem; margin-bottom: 15px;">✨</div>
 			<h4 id="alert-title" style="margin-bottom: 10px; color: var(--secondary);">알림</h4>
 			<p id="alert-message"

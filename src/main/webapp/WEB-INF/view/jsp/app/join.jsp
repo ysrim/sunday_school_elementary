@@ -7,17 +7,18 @@
 	<title>봉동중앙교회 초등부 RPG - 회원가입</title>
 	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<link rel="stylesheet" href="<c:url value='/files/css/intro_style.css' />">
+	<link rel="stylesheet" href="<c:url value='/files/css/join_style.css'/>">
+
 </head>
 <body>
 <div class="app-container">
-	<div id="page-signup" class="page active">
+	<div class="page active">
 		<div class="sub-header">
 			<div class="sub-header-left">
 				<h2>봉동중앙교회 초등부 RPG - 회원가입</h2>
 			</div>
 		</div>
-		<h3>반가워요! 믿음의 용사가 되어볼까요?</h3>
+		<h3>믿음의 용사가 되어볼까요?</h3>
 		<sf:form id="joinFm" name="joinFm" modelAttribute="joinFm">
 			<div class="card">
 				<label>아이디</label>
@@ -91,31 +92,10 @@
 			</div>
 		</sf:form>
 	</div>
-	<div id="custom-alert"
-		 style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center;">
-		<div class="card"
-			 style="max-width:320px; text-align:center; padding:30px; transform: scale(0.9); transition: transform 0.2s;">
-			<div id="alert-icon" style="font-size: 3rem; margin-bottom: 15px;">✨</div>
-			<h4 id="alert-title" style="margin-bottom: 10px; color: var(--secondary);">알림</h4>
-			<p id="alert-message"
-			   style="font-size: 0.95rem; color: #666; margin-bottom: 25px; line-height: 1.5; word-break: keep-all;"></p>
-			<button class="btn btn-main" onclick="closeAlert();return false;" style="margin-top:0;">확인</button>
-		</div>
-	</div>
 </div>
 
 <script>
 	$(function () {
-		function closeAlert() {
-			$('#custom-alert').removeClass('active');
-		}
-
-		function showAlert(msg, icon = '✨', title = '알림') {
-			$('#alert-message').html(msg);
-			$('#alert-icon').html(icon);
-			$('#alert-title').text(title);
-			$('#custom-alert').addClass('active');
-		}
 
 		let isIdChecked = false; // 아이디 중복 확인 여부
 
@@ -144,10 +124,10 @@
 				success: function (data) {
 
 					if (data.rtnCd == '001') {
-						$msg.text(data.rtnMsg).removeClass('msg-error').addClass('msg-success');
+						$msg.text('사용 가능한 아이디입니다!').removeClass('msg-error').addClass('msg-success');
 						isIdChecked = true;
 					} else {
-						$msg.text(data.rtnMsg).removeClass('msg-success').addClass('msg-error');
+						$msg.text('이미 사용 중인 아이디입니다.').removeClass('msg-success').addClass('msg-error');
 						isIdChecked = false;
 					}
 				},

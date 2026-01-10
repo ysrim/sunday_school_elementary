@@ -1,12 +1,13 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 	<title>봉동중앙교회 초등부 RPG</title>
 	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;800&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="<c:url value='/files/css/intro_style.css' />">
+	<link rel="stylesheet" href="<c:url value='/files/css/intro_style.css'/>">
 </head>
 <body>
 <div class="app-container">
@@ -17,14 +18,8 @@
 		</div>
 		<div class="intro-content">
 			<span class="intro-badge">SEASON 1 · 믿음의 갑주</span>
-			<h1 class="intro-title">
-				봉동중앙교회<br>
-				<span>초등부 RPG</span>
-			</h1>
-			<p class="intro-subtitle">
-				말씀으로 성장하고 ⚔️<br>
-				달란트를 모아 레벨업하자!
-			</p>
+			<h1 class="intro-title">봉동중앙교회<br><span>초등부 RPG</span></h1>
+			<p class="intro-subtitle">말씀으로 성장하고 ⚔️<br>달란트를 모아 레벨업하자!</p>
 		</div>
 		<div class="intro-footer">
 			<button class="btn-start" onclick="location.href='<c:url value="/login.pg"/>'">
