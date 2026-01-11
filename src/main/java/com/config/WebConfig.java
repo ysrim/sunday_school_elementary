@@ -20,7 +20,7 @@ import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 
 @Configuration
 @EnableWebMvc
-@Import({ThymeleafConfig.class, LoginInterceptor.class}) // Thymeleaf,LoginInterceptor 설정 로드
+@Import({ThymeleafConfig.class, LoginInterceptor.class})
 @ComponentScan(
 		basePackages = {"com", "net", "app"},
 		useDefaultFilters = false,
@@ -28,13 +28,13 @@ import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 				@ComponentScan.Filter(type = FilterType.ANNOTATION, classes = {Controller.class, ControllerAdvice.class})
 		}
 )
-@RequiredArgsConstructor // 생성자 주입을 위해 사용 (Lombok이 없다면 @Autowired 필드 주입 유지)
+@RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
 	private final LoginInterceptor loginInterceptor;
 	private final ThymeleafViewResolver thymeleafViewResolver;
 
-	// 0순위: BeanNameViewResolver (파일 다운로드, 엑셀 뷰 등 특수 목적)
+	// 0순위: 파일 다운로드 등
 	@Bean
 	public BeanNameViewResolver beanNameViewResolver() {
 		BeanNameViewResolver resolver = new BeanNameViewResolver();
@@ -44,22 +44,27 @@ public class WebConfig implements WebMvcConfigurer {
 
 	@Override
 	public void configureViewResolvers(ViewResolverRegistry registry) {
-		// 1순위: JSP 설정
+		// 1. Thymeleaf 등록 (설정파일에서 Order 2, exclude jsp/* 설정됨)
+		registry.viewResolver(thymeleafViewResolver);
+
+		// 2. JSP 등록
 		InternalResourceViewResolver jspResolver = new InternalResourceViewResolver();
 		jspResolver.setViewClass(JstlView.class);
 		jspResolver.setPrefix("/WEB-INF/view/");
 		jspResolver.setSuffix(".jsp");
-		jspResolver.setOrder(1); // ★ Thymeleaf보다 먼저 실행
-		registry.viewResolver(jspResolver);
+		jspResolver.setOrder(1);
 
-		// 2순위: Thymeleaf 설정 (ThymeleafConfig에서 Order 2로 설정됨)
-		registry.viewResolver(thymeleafViewResolver);
+		// ★ 핵심: 컨트롤러가 "jsp/..."로 리턴할 때만 JSP 리졸버가 작동하도록 제한
+		// 이렇게 해야 JSP가 없을 때 에러가 나지 않고 안전하게 처리됨
+		jspResolver.setViewNames("jsp/*");
+
+		registry.viewResolver(jspResolver);
 	}
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(loginInterceptor)
 				.addPathPatterns("/**")
-				.excludePathPatterns("/intro/**", "/files/**");
+				.excludePathPatterns("/intro/**", "/files/**", "/css/**", "/js/**"); // 정적 리소스 제외 추가 권장
 	}
 }

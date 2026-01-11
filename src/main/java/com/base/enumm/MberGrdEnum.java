@@ -2,9 +2,9 @@ package com.base.enumm;
 
 public enum MberGrdEnum {
 
-	STUDENT("100") // 학생
-	, TEACHER("200") // 선생
-	, MASTER("300") // 마스터
+	STD("100") // 학생
+	, TCH("200") // 선생
+	, ADN("300") // 관리자
 	;
 
 	private final String value;

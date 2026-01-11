@@ -1,64 +1,38 @@
 package com.init;
 
-import org.springframework.web.WebApplicationInitializer;
-import org.springframework.web.context.ContextLoaderListener;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springframework.web.servlet.DispatcherServlet;
-
 import com.config.AppConfig;
 import com.config.DataSourceConfig;
 import com.config.WebConfig;
+import jakarta.servlet.Filter;
+import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-import jakarta.servlet.FilterRegistration;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletRegistration;
-import lombok.extern.slf4j.Slf4j;
+public class WebAppInit extends AbstractAnnotationConfigDispatcherServletInitializer {
 
-@Slf4j
-public class WebAppInit implements WebApplicationInitializer {
-
-	public void onStartup(ServletContext sc) {
-
-		log.info("[WebApplicationInitializer] => START");
-
-		log.info("    [application context] => START");
-		// 1. rootContext 객체 생성
-		AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
-
-		// 2. allication context clz 등록
-		rootContext.register(AppConfig.class, DataSourceConfig.class);
-
-		// 3. ContextLoaderListener에 생성한 rootContext 전달
-		sc.addListener(new ContextLoaderListener(rootContext));
-		log.info("    [application context] => END");
-
-		log.info("    [web_application context] => START");
-		// 1. XML 대신 Annotation 기반 ApplicationContext 생성
-		AnnotationConfigWebApplicationContext dispatcherContext = new AnnotationConfigWebApplicationContext();
-		dispatcherContext.register(WebConfig.class); // 자바 설정 파일 등록
-
-		// 2. DispatcherServlet 등록
-		ServletRegistration.Dynamic dispatcher = sc.addServlet("dispatcher", new DispatcherServlet(dispatcherContext));
-
-		// 3. 기존 설정 적용
-		dispatcher.setLoadOnStartup(1);
-		dispatcher.addMapping("*.do", "*.ax", "*.pg");
-		log.info("    [web_application context] => END");
-
-		log.info("    [Filter encoding] => START");
-		// 1. encoding filter
-		loadEncodingFilter(sc);
-		log.info("    [Filter encoding] => END");
-
-		log.info("[WebApplicationInitializer] => END");
-
+	// Root Context (Service, Repository, DB 등)
+	@Override
+	protected Class<?>[] getRootConfigClasses() {
+		return new Class<?>[]{AppConfig.class, DataSourceConfig.class};
 	}
 
-	private void loadEncodingFilter(ServletContext sc) {
-		FilterRegistration.Dynamic filter = sc.addFilter("encodingFilter", new org.springframework.web.filter.CharacterEncodingFilter());
-		filter.setInitParameter("encoding", "UTF-8");
-		filter.setInitParameter("forceEncoding", "true");
-		filter.addMappingForUrlPatterns(null, false, "/");
+	// Servlet Context (Controller, ViewResolver, Interceptor 등)
+	@Override
+	protected Class<?>[] getServletConfigClasses() {
+		return new Class<?>[]{WebConfig.class};
 	}
 
+	// DispatcherServlet 매핑 패턴
+	@Override
+	protected String[] getServletMappings() {
+		return new String[]{"*.do", "*.ax", "*.pg"};
+	}
+
+	// 인코딩 필터 등록 (web.xml의 filter 설정 대체)
+	@Override
+	protected Filter[] getServletFilters() {
+		CharacterEncodingFilter encodingFilter = new CharacterEncodingFilter();
+		encodingFilter.setEncoding("UTF-8");
+		encodingFilter.setForceEncoding(true);
+		return new Filter[]{encodingFilter};
+	}
 }

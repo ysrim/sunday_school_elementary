@@ -13,17 +13,17 @@
 		SELECT NEXTVAL('mber_sn') as mberSn FROM DUAL
 	</select>
 
-	<insert id="insMberInfo" parameterType="app.join.vo.JoinMemberVO">
+	<insert id="insMberInfo" parameterType="app.idx.reg.vo.JoinMemberVO">
 		INSERT INTO MBER_INFO (MBER_SN, MBER_ID, MBER_NM, PWD)
 		VALUES (#{mberSn}, #{mberId}, #{mberNm}, #{pwd})
 	</insert>
 
-	<insert id="insAvatarInfo" parameterType="app.join.vo.JoinMemberVO">
+	<insert id="insAvatarInfo" parameterType="app.idx.reg.vo.JoinMemberVO">
 		INSERT INTO AVATAR_INFO (MBER_SN, NCNM, OCCP_CODE)
 		VALUES (#{mberSn}, #{ncnm}, #{occpCode})
 	</insert>
 
-	<select id="sltGuildInfo" parameterType="app.join.vo.JoinMemberVO" resultType="string">
+	<select id="sltGuildInfo" parameterType="app.idx.reg.vo.JoinMemberVO" resultType="string">
 		SELECT GUILD_SN
 		FROM GUILD_INFO
 		WHERE 1 = 1

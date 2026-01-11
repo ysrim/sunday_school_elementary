@@ -3,7 +3,7 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="LoginDAO">
 
-	<select id="sltMber" parameterType="app.login.vo.LoginVO" resultType="app.login.vo.SessionVO">
+	<select id="sltMber" parameterType="app.idx.lgn.vo.LoginVO" resultType="app.idx.lgn.vo.SessionVO">
 		SELECT A.MBER_SN
 			 , A.MBER_ID
 			 , A.MBER_NM

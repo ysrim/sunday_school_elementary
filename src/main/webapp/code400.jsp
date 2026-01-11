@@ -182,7 +182,7 @@
 			다시 안전한 마을로 돌아갈까요?<br>
 			error: ${exception}
 		</p>
-		<button class="btn btn-main btn-shine" onclick="location.href='<c:url value="/intro.pg"/>'">
+		<button class="btn btn-main btn-shine" onclick="location.href='<c:url value="/idx/intro.pg"/>'">
 			<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/navi/home.png"
 				 style="width: 20px; height: 20px; opacity: 0.6;">
 			메인으로 돌아가기

@@ -12,6 +12,6 @@ import com.base.enumm.MberGrdEnum;
 @Documented
 public @interface MberGrd {
 
-	public abstract MberGrdEnum value() default MberGrdEnum.STUDENT;
+	public abstract MberGrdEnum value() default MberGrdEnum.STD;
 
 }

@@ -46,7 +46,7 @@
 			}
 			$.ajax({
 				type: "POST",
-				url: "<c:url value="/login.ax"/>",
+				url: "<c:url value="/idx/login.ax"/>",
 				contentType: "application/json; charset=utf-8",
 				data: JSON.stringify({
 					mberId: mberId,
@@ -55,7 +55,7 @@
 				success: function (data) {
 					if (data.rtnCd == '001') {
 						showPopup(data.rtnMsg, '✨', '인증 완료', function () {
-							location.href = "<c:url value='/dashboard.pg'/>";
+							location.href = "<c:url value='/std/home.pg'/>";
 						});
 					} else {
 						showPopup(data.rtnMsg, '❌', '인증 실패', function () {

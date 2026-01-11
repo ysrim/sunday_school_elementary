@@ -7,7 +7,7 @@
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <script>
-	location.href = "<c:url value ='/intro.pg' />";
+	location.href = "<c:url value ='/idx/intro.pg' />";
 </script>
 <body>
 <!-- do something -->

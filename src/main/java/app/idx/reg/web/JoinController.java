@@ -1,0 +1,59 @@
+package app.idx.reg.web;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.base.utl.ResUtil;
+import com.base.vo.BodyResVO;
+
+import app.idx.reg.service.JoinService;
+import app.idx.reg.vo.JoinMemberVO;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Controller
+@RequestMapping("/idx")
+public class JoinController {
+
+	@Resource(name = "joinService")
+	private JoinService joinService;
+
+	@RequestMapping(path = "/join.pg")
+	public String joinPage(@ModelAttribute("joinFm") JoinMemberVO joinMemberVO) {
+		return "jsp/app/join";
+	}
+
+	@RequestMapping(path = "/join.ax")
+	@ResponseBody
+	public ResponseEntity joinAx(BodyResVO bodyResVO, @Valid JoinMemberVO joinMemberVO) {
+
+		log.debug("joinMemberVO: {}", joinMemberVO);
+
+		joinService.joinMber(joinMemberVO);
+
+		return ResUtil.resSucc(bodyResVO, "성공");
+
+	}
+
+	@RequestMapping(path = "/idDupleChk.ax")
+	@ResponseBody
+	public ResponseEntity idDupleChkAx(BodyResVO bodyResVO //
+		, @RequestParam(name = "mberId", defaultValue = "") String mberId //
+	) {
+
+		log.debug("idDupleChkAx mberId: {}", mberId);
+		if ("".equals(mberId)) {
+			return ResUtil.resValid(bodyResVO, "잘못된 형식의 아이디입니다.");
+		}
+
+		return joinService.idDupleChk(mberId) ? ResUtil.resSucc(bodyResVO, "사용 가능한 아이디입니다.") : ResUtil.resFail(bodyResVO, "이미 사용 중인 아이디입니다.");
+
+	}
+
+}

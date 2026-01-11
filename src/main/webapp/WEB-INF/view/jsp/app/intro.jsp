@@ -22,7 +22,7 @@
 			<p class="intro-subtitle">말씀으로 성장하고 ⚔️<br>달란트를 모아 레벨업하자!</p>
 		</div>
 		<div class="intro-footer">
-			<button class="btn-start" onclick="location.href='<c:url value="/login.pg"/>'">
+			<button class="btn-start" onclick="location.href='<c:url value="/idx/login.pg"/>'">
 				모험 시작하기! ⚔
 			</button>
 			<div class="warrior-count">

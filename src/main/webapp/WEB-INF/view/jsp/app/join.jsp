@@ -119,7 +119,7 @@
 
 			$.ajax({
 				type: "GET",
-				url: "<c:url value='/idDupleChk.ax'/>",
+				url: "<c:url value='/idx/idDupleChk.ax'/>",
 				data: $("#joinFm").serialize(),
 				success: function (data) {
 
@@ -200,12 +200,12 @@
 
 			$.ajax({
 				type: "GET",
-				url: "<c:url value='/join.ax'/>",
+				url: "<c:url value='/idx/join.ax'/>",
 				data: $("#joinFm").serialize(),
 				success: function (data) {
 					if (data.rtnCd == '001') {
 						alert('가입을 축하합니다! ' + name + ' 용사님!');
-						location.href = "<c:url value='/login.pg'/>";
+						location.href = "<c:url value='/idx/login.pg'/>";
 					} else {
 						alert(data.rtnMsg);
 						return false;

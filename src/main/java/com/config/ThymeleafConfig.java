@@ -11,30 +11,28 @@ import org.thymeleaf.templatemode.TemplateMode;
 @Configuration
 public class ThymeleafConfig {
 
-	private final String resolverPath = "/WEB-INF/view/templates/";
+	private static final String RESOLVER_PATH = "/WEB-INF/view/templates";
 
-	// --- 템플릿 리졸버 설정 (경로별) ---
 	@Bean
 	public SpringResourceTemplateResolver studentTemplateResolver() {
-		return createTemplateResolver(resolverPath + "student/", 1);
+		return createTemplateResolver(RESOLVER_PATH + "/std", 1);
 	}
 
 	@Bean
 	public SpringResourceTemplateResolver teacherTemplateResolver() {
-		return createTemplateResolver(resolverPath + "teacher/", 2);
+		return createTemplateResolver(RESOLVER_PATH + "/tch", 2);
 	}
 
 	@Bean
 	public SpringResourceTemplateResolver adminTemplateResolver() {
-		return createTemplateResolver(resolverPath + "admin/", 3);
+		return createTemplateResolver(RESOLVER_PATH + "/adm", 3);
 	}
 
 	@Bean
 	public SpringResourceTemplateResolver layoutTemplateResolver() {
-		return createTemplateResolver(resolverPath, 4);
+		return createTemplateResolver(RESOLVER_PATH, 4);
 	}
 
-	// 반복되는 리졸버 설정을 위한 헬퍼 메서드
 	private SpringResourceTemplateResolver createTemplateResolver(String prefix, int order) {
 		SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
 		resolver.setPrefix(prefix);
@@ -42,14 +40,14 @@ public class ThymeleafConfig {
 		resolver.setTemplateMode(TemplateMode.HTML);
 		resolver.setOrder(order);
 		resolver.setCheckExistence(true);
-		resolver.setCacheable(false);
+		resolver.setCacheable(false); // 운영 시 true로 변경
 		return resolver;
 	}
 
-	// --- 엔진 및 뷰 리졸버 설정 ---
 	@Bean
 	public SpringTemplateEngine templateEngine() {
 		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+		// 필요한 리졸버 모두 추가
 		templateEngine.addTemplateResolver(studentTemplateResolver());
 		templateEngine.addTemplateResolver(teacherTemplateResolver());
 		templateEngine.addTemplateResolver(adminTemplateResolver());
@@ -63,9 +61,9 @@ public class ThymeleafConfig {
 		ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
 		viewResolver.setTemplateEngine(templateEngine());
 		viewResolver.setCharacterEncoding("UTF-8");
-		viewResolver.setOrder(2); // JSP보다 후순위로 밀기 위해 순서를 2로 설정
+		viewResolver.setOrder(2);
+		// ★ 핵심: JSP 경로는 Thymeleaf가 처리하지 않도록 명시적 제외
 		viewResolver.setExcludedViewNames(new String[]{"jsp/*"});
 		return viewResolver;
 	}
-
 }
