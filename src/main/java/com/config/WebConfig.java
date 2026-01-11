@@ -1,6 +1,8 @@
 package com.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +12,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.BeanNameViewResolver;
@@ -20,15 +23,19 @@ import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 
+import com.base.interceptor.LoginInterceptor;
 import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
 
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = {"com", "net", "app"}, useDefaultFilters = false, includeFilters = {
-	@ComponentScan.Filter(type = FilterType.ANNOTATION, classes = {Controller.class, ControllerAdvice.class})})
+		@ComponentScan.Filter(type = FilterType.ANNOTATION, classes = {Controller.class, ControllerAdvice.class})})
 public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
 
 	private ApplicationContext applicationContext;
+
+	@Autowired
+	private LoginInterceptor loginInterceptor;
 
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -63,7 +70,7 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
 		viewResolver.setTemplateEngine(templateEngine());
 		viewResolver.setCharacterEncoding("UTF-8");
 		viewResolver.setOrder(1);
-		viewResolver.setViewNames(new String[] {"page/*"}); // "page/"로 시작하는 것만 처리하도록 제한
+		viewResolver.setViewNames(new String[]{"page/*"}); // "page/"로 시작하는 것만 처리하도록 제한
 
 		return viewResolver;
 	}
@@ -98,6 +105,13 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
 		jspResolver.setSuffix(".jsp");
 		jspResolver.setOrder(2); // Thymeleaf가 처리 안 한 것은 모두 JSP가 처리
 		registry.viewResolver(jspResolver);
+	}
+
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		registry.addInterceptor(loginInterceptor)
+				.addPathPatterns("/**")            // 모든 경로에 적용
+				.excludePathPatterns("/intro/**", "/fiels/**"); // 특정 경로는 제외
 	}
 
 }
