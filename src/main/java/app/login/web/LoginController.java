@@ -51,7 +51,7 @@ public class LoginController {
 		// 실제 파일: /WEB-INF/templates/th/dashboard.html
 		// 이 파일을 열면 layout:decorate 설정 때문에 defaultLayout과 합쳐져서 렌더링됨
 
-		return "page/dashboard";
+		return "student/dashboard";
 	}
 
 }
