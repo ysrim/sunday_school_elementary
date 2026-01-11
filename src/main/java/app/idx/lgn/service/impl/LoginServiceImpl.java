@@ -4,13 +4,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.base.enumm.SessionKeyEnum;
+import com.base.utl.SessionUtil;
 
 import app.idx.lgn.service.LoginService;
 import app.idx.lgn.vo.LoginVO;
 import app.idx.lgn.vo.SessionVO;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -32,7 +32,7 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	@Override
-	public SessionVO loginAx(HttpServletRequest req, LoginVO loginVO) {
+	public SessionVO loginAx(LoginVO loginVO) {
 
 		// 1. id로 회원정보 찾기
 		SessionVO sessionVO = this.sltMber(loginVO);
@@ -46,7 +46,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		// 3. session set
-		req.getSession().setAttribute(SessionKeyEnum.MBERINFO.name(), sessionVO);
+		SessionUtil.setAttribute(SessionKeyEnum.MBERINFO.name(), sessionVO);
 
 		return sessionVO;
 

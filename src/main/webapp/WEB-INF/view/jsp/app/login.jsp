@@ -93,7 +93,7 @@
 				</label>
 			</div>
 			<button class="btn btn-main btn-main-login">로그인</button>
-			<button class="btn btn-sub" onclick="location.href='<c:url value="/join.pg"/>'">처음 왔어요 (회원가입)</button>
+			<button class="btn btn-sub" onclick="location.href='<c:url value="/idx/join.pg"/>'">처음 왔어요 (회원가입)</button>
 		</div>
 	</div>
 	<div id="custom-alert"

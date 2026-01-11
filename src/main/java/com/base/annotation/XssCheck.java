@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 
 import com.base.xss.XssCheckValidator;
 
-@Target({ElementType.FIELD, ElementType.PARAMETER})
+@Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = XssCheckValidator.class) // 검증 로직 연결
 public @interface XssCheck {

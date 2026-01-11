@@ -1,7 +1,9 @@
 package com.config;
 
-import com.base.interceptor.LoginInterceptor;
+import com.base.interceptor.AuthInterceptor;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -20,18 +22,18 @@ import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 
 @Configuration
 @EnableWebMvc
-@Import({ThymeleafConfig.class, LoginInterceptor.class})
+@Import({ThymeleafConfig.class, AuthInterceptor.class})
 @ComponentScan(
-		basePackages = {"com", "net", "app"},
-		useDefaultFilters = false,
-		includeFilters = {
-				@ComponentScan.Filter(type = FilterType.ANNOTATION, classes = {Controller.class, ControllerAdvice.class})
-		}
+	basePackages = {"com", "net", "app"},
+	useDefaultFilters = false,
+	includeFilters = {
+		@ComponentScan.Filter(type = FilterType.ANNOTATION, classes = {Controller.class, ControllerAdvice.class})
+	}
 )
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
-	private final LoginInterceptor loginInterceptor;
+	private final AuthInterceptor loginInterceptor;
 	private final ThymeleafViewResolver thymeleafViewResolver;
 
 	// 0순위: 파일 다운로드 등
@@ -64,7 +66,7 @@ public class WebConfig implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(loginInterceptor)
-				.addPathPatterns("/**")
-				.excludePathPatterns("/intro/**", "/files/**", "/css/**", "/js/**"); // 정적 리소스 제외 추가 권장
+			.addPathPatterns("/**")
+			.excludePathPatterns("/idx/**", "/files/**"); // 정적 리소스와 인덱스 페이지 제외 추가 권장
 	}
 }

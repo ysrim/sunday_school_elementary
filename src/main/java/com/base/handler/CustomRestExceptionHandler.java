@@ -43,7 +43,7 @@ public class CustomRestExceptionHandler {
 
 		// 2. .do (일반 페이지 요청)로 호출했을 경우 -> JSP 리턴
 		model.addAttribute("exception", ex.getMessage());
-		return "error/errorPage"; // jsp 경로
+		return "/error/errorPage"; // jsp 경로
 
 	}
 
@@ -60,7 +60,7 @@ public class CustomRestExceptionHandler {
 		// 2. .do (일반 페이지 요청)로 호출했을 경우 -> JSP 리턴
 		model.addAttribute("exception", ex.getMessage());
 
-		return "error/errorPage"; // jsp 경로
+		return "/error/errorPage"; // jsp 경로
 
 	}
 
@@ -88,7 +88,7 @@ public class CustomRestExceptionHandler {
 		}
 		String errorStr = String.join(",", params);
 		model.addAttribute("exception", errorStr);
-		return "error/errorPage"; // jsp 경로
+		return "/error/errorPage"; // jsp 경로
 
 	}
 
@@ -105,7 +105,7 @@ public class CustomRestExceptionHandler {
 		// 2. .do (일반 페이지 요청)로 호출했을 경우 -> JSP 리턴
 		model.addAttribute("exception", ex.getMessage());
 
-		return "error/errorPage"; // jsp 경로
+		return "/error/errorPage"; // jsp 경로
 
 	}
 
