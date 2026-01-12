@@ -31,7 +31,7 @@ public class JoinController {
 
 	@RequestMapping(path = "/join.ax")
 	@ResponseBody
-	public ResponseEntity joinAx(BodyResVO bodyResVO, @Valid JoinMemberVO joinMemberVO) {
+	public ResponseEntity joinAx(@Valid JoinMemberVO joinMemberVO) {
 
 		log.debug("joinMemberVO: {}", joinMemberVO);
 
@@ -43,8 +43,7 @@ public class JoinController {
 
 	@RequestMapping(path = "/idDupleChk.ax")
 	@ResponseBody
-	public ResponseEntity idDupleChkAx(BodyResVO bodyResVO //
-		, @RequestParam(name = "mberId", defaultValue = "") String mberId //
+	public ResponseEntity idDupleChkAx(@RequestParam(name = "mberId", defaultValue = "") String mberId //
 	) {
 
 		log.debug("idDupleChkAx mberId: {}", mberId);

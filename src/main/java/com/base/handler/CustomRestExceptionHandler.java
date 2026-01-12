@@ -2,7 +2,6 @@ package com.base.handler;
 
 import java.util.stream.Collectors;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;

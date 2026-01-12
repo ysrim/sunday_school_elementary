@@ -30,7 +30,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
 	// 1. 컨트롤러 실행 전 (Pre-Handle)
 	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
 
 		// 1. 정적 리소스 요청은 통과
 		if (!(handler instanceof HandlerMethod)) {

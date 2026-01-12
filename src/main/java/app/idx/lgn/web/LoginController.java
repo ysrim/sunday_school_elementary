@@ -1,23 +1,17 @@
 package app.idx.lgn.web;
 
-import java.util.Arrays;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.base.utl.ResUtil;
 import com.base.utl.SessionUtil;
-import com.base.vo.BodyResVO;
 
 import app.idx.lgn.service.LoginService;
 import app.idx.lgn.vo.LoginVO;
 import app.idx.lgn.vo.SessionVO;
 import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,7 +29,7 @@ public class LoginController {
 	}
 
 	@RequestMapping(path = "/login.ax")
-	public ResponseEntity loginAx(BodyResVO bodyResVO, @RequestBody @Valid LoginVO loginVO) {
+	public ResponseEntity loginAx(@RequestBody @Valid LoginVO loginVO) {
 
 		log.debug("loginVO: {}", loginVO);
 
@@ -46,12 +40,9 @@ public class LoginController {
 	}
 
 	@RequestMapping(path = "/logOut.pg")
-	public String logOutAx(BodyResVO bodyResVO, @RequestBody @Valid LoginVO loginVO) {
-
+	public String logOutAx() {
 		SessionUtil.getSession().invalidate();
-
 		return "redirect:/idx/intro.html";
-
 	}
 
 }
