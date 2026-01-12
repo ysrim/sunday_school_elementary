@@ -1,6 +1,5 @@
 package app.idx.lgn.service.impl;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.base.enumm.SessionKeyEnum;
@@ -17,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service("loginService")
 public class LoginServiceImpl implements LoginService {
 
-	private @Value("#{globalsProps['bc.contractAddr.mov']}") String contractAddr;
+	//private @Value("#{globalsProps['bc.contractAddr.mov']}") String contractAddr;
 
 	@Resource(name = "loginDAO")
 	private LoginDAO loginDAO;

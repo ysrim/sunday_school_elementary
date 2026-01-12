@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.base.utl.ResUtil;
-import com.base.vo.BodyResVO;
 
 import app.idx.reg.service.JoinService;
 import app.idx.reg.vo.JoinMemberVO;

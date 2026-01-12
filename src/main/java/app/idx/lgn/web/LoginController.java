@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.base.utl.ResUtil;
-import com.base.utl.SessionUtil;
 
 import app.idx.lgn.service.LoginService;
 import app.idx.lgn.vo.LoginVO;
 import app.idx.lgn.vo.SessionVO;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,8 +40,8 @@ public class LoginController {
 	}
 
 	@RequestMapping(path = "/logOut.pg")
-	public String logOutAx() {
-		SessionUtil.getSession().invalidate();
+	public String logOutAx(HttpSession session) {
+		session.invalidate();
 		return "redirect:/idx/intro.html";
 	}
 

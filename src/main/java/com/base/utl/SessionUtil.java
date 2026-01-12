@@ -28,7 +28,9 @@ public class SessionUtil {
 	 * 세션에 객체를 저장합니다.
 	 */
 	public static void setAttribute(String name, Object value) {
-		getRequest().getSession().setAttribute(name, value);
+		if (getRequest() != null) {
+			getRequest().getSession().setAttribute(name, value);
+		}
 	}
 
 	/**
