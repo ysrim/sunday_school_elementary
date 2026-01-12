@@ -1,7 +1,6 @@
 package com.base.handler;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,8 +8,6 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,88 +22,82 @@ import lombok.extern.slf4j.Slf4j;
 @ControllerAdvice
 public class CustomRestExceptionHandler {
 
-	private boolean ajaxType(HttpServletRequest request) {
-		return request.getRequestURI().endsWith(".ax") || "XMLHttpRequest".equals(request.getHeader("X-Requested-With")) ? true : false;
-	}
+    private static final String ERROR_VIEW_PATH = "/error/errorPage";
 
-	// 아예 잘못된 형식으로 request 를 요청할 경우 예외 발생
-	@ExceptionHandler(HttpMessageNotReadableException.class)
-	public Object handleHttpMessageNotReadableException(HttpServletRequest request, Model model, HttpMessageNotReadableException ex) {
+    /**
+     * Ajax 요청 여부 확인
+     * 로직 단순화: 삼항 연산자 제거
+     */
+    private boolean isAjaxRequest(HttpServletRequest request) {
+        return request.getRequestURI().endsWith(".ax") 
+            || "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+    }
 
-		// 1. ajax로 호출했을 경우 -> JSON 리턴
-		if (ajaxType(request)) {
-			BodyResVO error = new BodyResVO();
-			error.setRtnCd(RstCdEnum.fail.getValue());
-			error.setRtnMsg("Required request body is missing");
-			return new ResponseEntity<>(error, HttpStatus.OK);
-		}
+    /**
+     * 공통 응답 처리 메소드
+     * JSON(Ajax) 또는 View(JSP) 분기 처리
+     */
+    private Object resolveResponse(HttpServletRequest request, Model model, RstCdEnum rstCd, String message) {
+        if (isAjaxRequest(request)) {
+            BodyResVO error = new BodyResVO();
+            error.setRtnCd(rstCd.getValue());
+            error.setRtnMsg(message);
+            return new ResponseEntity<>(error, HttpStatus.OK);
+        }
 
-		// 2. .do (일반 페이지 요청)로 호출했을 경우 -> JSP 리턴
-		model.addAttribute("exception", ex.getMessage());
-		return "/error/errorPage"; // jsp 경로
+        // 일반 페이지 요청
+        model.addAttribute("exception", message);
+        return ERROR_VIEW_PATH;
+    }
 
-	}
+    // 1. 잘못된 형식의 Request Body 요청 (JSON 파싱 실패 등)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public Object handleHttpMessageNotReadableException(HttpServletRequest request, Model model) {
+        return resolveResponse(request, model, RstCdEnum.fail, "Required request body is missing or invalid");
+    }
 
-	@ExceptionHandler(MissingServletRequestParameterException.class)
-	public Object handleMissingServletRequestParameterException(HttpServletRequest request, Model model, MissingServletRequestParameterException ex) {
+    // 2. 필수 파라미터 누락
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public Object handleMissingServletRequestParameterException(HttpServletRequest request, Model model, MissingServletRequestParameterException ex) {
+        String msg = ex.getParameterName() + " is missing";
+        return resolveResponse(request, model, RstCdEnum.fail, msg);
+    }
 
-		// 1. ajax로 호출했을 경우 -> JSON 리턴
-		if (ajaxType(request)) {
-			BodyResVO error = new BodyResVO();
-			error.setRtnCd(RstCdEnum.fail.getValue());
-			error.setRtnMsg(ex.getParameterName() + " is missing");
-			return new ResponseEntity<>(error, HttpStatus.OK);
-		}
-		// 2. .do (일반 페이지 요청)로 호출했을 경우 -> JSP 리턴
-		model.addAttribute("exception", ex.getMessage());
+    // 3. 유효성 검증 실패 (@Valid)
+    // 중요: MethodArgumentNotValidException은 BindException을 상속받으므로 BindException으로 통합 처리 가능
+    @ExceptionHandler({BindException.class}) 
+    public Object handleBindException(HttpServletRequest request, Model model, BindException ex) {
+        
+        // Ajax 요청: 첫 번째 에러 메시지만 반환 (또는 필요에 따라 전체 반환)
+        if (isAjaxRequest(request)) {
+            String firstErrorMsg = ex.getBindingResult().getAllErrors().stream()
+                    .findFirst()
+                    .map(e -> e.getDefaultMessage())
+                    .orElse("Validation failed");
+            
+            log.debug("Ajax validation error: {}", firstErrorMsg);
+            return resolveResponse(request, model, RstCdEnum.valid, firstErrorMsg);
+        }
 
-		return "/error/errorPage"; // jsp 경로
+        // 일반 요청: 에러 필드명들을 쉼표로 연결
+        String fieldErrors = ex.getBindingResult().getFieldErrors().stream()
+                .map(FieldError::getField)
+                .collect(Collectors.joining(","));
+        
+        log.debug("Page validation error fields: {}", fieldErrors);
+        return resolveResponse(request, model, RstCdEnum.valid, fieldErrors);
+    }
 
-	}
+    // 4. 그 외 모든 예외
+    @ExceptionHandler({Exception.class, RuntimeException.class})
+    public Object handleAllExceptions(HttpServletRequest request, Model model, Exception ex) {
+        log.error("Unhandled Exception occurred: ", ex); // 전체 스택트레이스 로깅 (중요)
 
-	// MethodArgumentNotValidException -> @RequestBody (@Valid JSON) 검증 실패 시
-	// BindException -> @ModelAttribute (@Valid Form/QueryString) 검증 실패 시
-	@ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
-	public Object handleMethodArgumentNotValidException(HttpServletRequest request, Model model, MethodArgumentNotValidException ex) {
-
-		// 1. ajax로 호출했을 경우 -> JSON 리턴
-		if (ajaxType(request)) {
-			log.debug("ajax validation ex: {}", ex.getMessage());
-			BodyResVO body = new BodyResVO();
-			body.setRtnCd(RstCdEnum.valid.getValue());
-			for (ObjectError error : ex.getBindingResult().getAllErrors()) {
-				body.setRtnMsg(error.getDefaultMessage());
-				return new ResponseEntity<>(body, HttpStatus.OK);
-			}
-		}
-
-		// 2. .do (일반 페이지 요청)로 호출했을 경우 -> JSP 리턴
-		log.debug("page validation ex: {}", ex.getMessage());
-		List<String> params = new ArrayList<>();
-		for (FieldError error : ex.getBindingResult().getFieldErrors()) {
-			params.add(error.getField());
-		}
-		String errorStr = String.join(",", params);
-		model.addAttribute("exception", errorStr);
-		return "/error/errorPage"; // jsp 경로
-
-	}
-
-	@ExceptionHandler({Exception.class, RuntimeException.class})
-	public Object handleAllExceptions(HttpServletRequest request, Model model, Exception ex) {
-
-		// 1. ajax로 호출했을 경우 -> JSON 리턴
-		if (ajaxType(request)) {
-			BodyResVO error = new BodyResVO();
-			error.setRtnCd(RstCdEnum.fail.getValue());
-			error.setRtnMsg(ex.getMessage());
-			return new ResponseEntity<>(error, HttpStatus.OK);
-		}
-		// 2. .do (일반 페이지 요청)로 호출했을 경우 -> JSP 리턴
-		model.addAttribute("exception", ex.getMessage());
-
-		return "/error/errorPage"; // jsp 경로
-
-	}
-
+        // 보안상 내부 에러 메시지를 그대로 노출하기보다 일반적인 메시지를 권장하지만,
+        // 개발 편의를 위해 유지한다면 아래와 같이 사용. 
+        // 운영 배포시에는 "Internal Server Error" 등으로 변경하는 것이 좋습니다.
+        String msg = ex.getMessage() != null ? ex.getMessage() : "An unexpected error occurred";
+        
+        return resolveResponse(request, model, RstCdEnum.fail, msg);
+    }
 }
