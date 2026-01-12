@@ -1,20 +1,18 @@
 package com.base.enumm;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
 public enum RstCdEnum {
 
-	succ("001") // 성공
-	, valid("002") // 변수 부족
-	, fail("999") // 실패
-	;
+	// 상수명은 대문자가 관례입니다.
+	SUCC("001", "Success"),
+	VALID("002", "Validation Failed"),
+	FAIL("999", "An error occurred");
 
-	private final String value;
-
-	RstCdEnum(String value) {
-		this.value = value;
-	}
-
-	public String getValue() {
-		return value;
-	}
+	private final String code;
+	private final String defaultMessage;
 
 }

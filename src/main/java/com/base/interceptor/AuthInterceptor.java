@@ -1,11 +1,8 @@
 package com.base.interceptor;
 
 import java.io.IOException;
-
-import app.idx.lgn.vo.SessionVO;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
@@ -18,79 +15,124 @@ import com.base.annotation.PassAuth;
 import com.base.enumm.SessionKeyEnum;
 import com.base.utl.SessionUtil;
 
+import app.idx.lgn.vo.SessionVO;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class AuthInterceptor implements HandlerInterceptor {
+
+	private static final String LOGIN_PAGE_URL = "/idx/login.pg";
 
 	// 1. 컨트롤러 실행 전 (Pre-Handle)
 	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-		log.debug(">>> [PreHandle] Request URI: {}", request.getRequestURI());
-
-		// 1. 핸들러 종류 확인 (정적 리소스 요청이 아닌 컨트롤러 메서드인지 확인)
+		// 1. 정적 리소스 요청은 통과
 		if (!(handler instanceof HandlerMethod)) {
-			return true; // 정적 리소스(css, js 등)라면 바로 통과
-		}
-
-		// 2. HandlerMethod로 캐스팅하여 메타정보 접근 권한 획득
-		HandlerMethod handlerMethod = (HandlerMethod)handler;
-
-		// 3. clz, method의 annotation 정보가져오기
-		MenuInfo menuInfo = handlerMethod.getMethodAnnotation(MenuInfo.class);
-		PassAuth pathAuth = handlerMethod.getMethodAnnotation(PassAuth.class);
-		if (menuInfo == null || pathAuth != null) { // menuInfo annotation이 없거나, pathAuth annotation이 있으면 true
-			log.debug(">>> [Annotation Check] @PathAuth 발견!");
 			return true;
 		}
 
-		// 4. 로그인한 사용자 session정보를 가져온다.
-		SessionVO sessionVO = (SessionVO)SessionUtil.getAttribute(SessionKeyEnum.MBERINFO.name());
+		HandlerMethod handlerMethod = (HandlerMethod)handler;
 
-		// 5. 로그인한 사용자가 해당 매뉴 접근 가능한지
-		if (!menuInfo.role().getValue().equals((sessionVO == null ? "" : sessionVO.getGradeCode()))) {
-			log.debug(">>> 권한 불충분으로 페이지 접근 실패! 로그인 페이지로 리다이렉션");
-			return loginPage(request, response);
+		// 2. @PassAuth 체크
+		PassAuth passAuth = AnnotationUtils.findAnnotation(handlerMethod.getBeanType(), PassAuth.class);
+		// 인증 패스 어노테이션이 있으면 통과
+		if (passAuth != null) {
+			return true;
 		}
 
+		// 3. @MenuInfo 체크 (권한 정보가 없는 경우 정책에 따라 통과 or 차단)
+		MenuInfo menuInfo = AnnotationUtils.findAnnotation(handlerMethod.getBeanType(), MenuInfo.class);
+		if (menuInfo == null) {
+			return true;
+		}
+
+		// 4. 로그인 세션 체크
+		SessionVO sessionVO = (SessionVO)SessionUtil.getAttribute(SessionKeyEnum.MBER_INFO.name());
+
+		// 4-1. 비로그인 상태 처리
+		if (sessionVO == null) {
+			log.warn(">>> [Auth Failed] Session is null. Redirect to Login.");
+			handleAuthFail(request, response, "Login Required");
+			return false;
+		}
+
+		// 5. 권한(Role) 체크
+		// SessionVO의 등급과 MenuInfo의 요구 등급 비교
+		String userGrade = sessionVO.getGradeCode();
+		String requiredRole = menuInfo.role().getCode();
+
+		if (!requiredRole.equals(userGrade)) {
+			log.warn(">>> [Access Denied] User Grade: {}, Required: {}", userGrade, requiredRole);
+			// 403 Forbidden 처리가 맞으나, 편의상 로그인 페이지 혹은 에러 페이지로 보냄
+			handleAuthFail(request, response, "Access Denied");
+			return false;
+		}
+
+		// 6. 메뉴 정보 세션 저장 (화면 표시용)
 		SessionUtil.setAttribute("menuInfo", menuInfo.name());
 
 		return true;
 	}
 
-	// 2. 컨트롤러 실행 후, 뷰 렌더링 전 (Post-Handle)
+	// 2. 컨트롤러 실행 후 (Post-Handle)
 	@Override
-	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-		// 코드정보 셋팅 해야함.
-		log.info(">>> [PostHandle] 컨트롤러 실행 완료");
+	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
+		log.debug(">>> [PostHandle] View Rendering Start");
 	}
 
-	// 3. 뷰 렌더링까지 완료된 후 (After-Completion)
+	// 3. 요청 완료 후 (After-Completion)
 	@Override
-	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-
-		// 페이지 뷰 산정을 위한 데이터 저장 로직 추가
-
-		log.info(">>> [AfterCompletion] 요청 처리 최종 완료");
-
+	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
 		if (ex != null) {
-			log.error(">>> [Error Occurred] 예외 발생: ", ex);
+			log.error(">>> [Exception] Logic Error: ", ex);
 		}
 	}
 
-	private boolean loginPage(HttpServletRequest req, HttpServletResponse res, String rtnParm) {
-		try {
-			res.sendRedirect(req.getContextPath() + "/idx/login.pg" + rtnParm);
-		} catch (IOException e) {
-			log.error("loginPage error: {}", e);
+	/**
+	 * 인증 실패 처리 (Ajax vs 일반 요청 분기)
+	 */
+	private void handleAuthFail(HttpServletRequest request, HttpServletResponse response, String msg) throws IOException {
+
+		if (SessionUtil.isAjaxRequest(request)) {
+			// Ajax 요청인 경우 401 에러 코드와 JSON 응답 반환
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401
+			response.setContentType("application/json;charset=UTF-8");
+			// 예: {"rtnCd":"401", "rtnMsg":"Login Required"}
+			String jsonResponse = String.format("{\"rtnCd\":\"%s\", \"rtnMsg\":\"%s\"}", "401", msg);
+			response.getWriter().write(jsonResponse);
+		} else {
+			// 일반 요청인 경우 로그인 페이지로 리다이렉트
+			response.sendRedirect(request.getContextPath() + LOGIN_PAGE_URL + getRedirectUrl(request));
 		}
-		return false;
 	}
 
-	private boolean loginPage(HttpServletRequest req, HttpServletResponse res) {
-		String rtnPage = req.getRequestURL() + (req.getQueryString() != null ? ("?" + req.getQueryString()) : "");
-		String rtnParm = !"".equals(rtnPage) && "GET".equals(req.getMethod()) ? "" : "";
-		return this.loginPage(req, res, rtnParm);
+	/**
+	 * 리다이렉트 URL 생성 (현재 페이지 정보를 파라미터로 포함)
+	 */
+	private String getRedirectUrl(HttpServletRequest request) {
+		if ("GET".equalsIgnoreCase(request.getMethod())) {
+			String currentUrl = request.getRequestURI();
+			String queryString = request.getQueryString();
+
+			if (queryString != null) {
+				currentUrl += "?" + queryString;
+			}
+
+			// URL 인코딩 처리 (특수문자 등 안전하게 전달)
+			try {
+				String encodedUrl = URLEncoder.encode(currentUrl, StandardCharsets.UTF_8);
+				return "?rtnUrl=" + encodedUrl;
+			} catch (Exception e) {
+				log.error("URL Encoding Error", e);
+			}
+		}
+		return "";
 	}
 
 }

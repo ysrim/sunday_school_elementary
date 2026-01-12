@@ -41,7 +41,7 @@ public class LoginController {
 
 		SessionVO sessionVO = loginService.loginAx(loginVO);
 
-		return ResUtil.resSucc(bodyResVO, sessionVO.getNcnm() + "용사님 어서오세요.");
+		return ResUtil.resSucc(sessionVO.getNcnm() + "용사님 어서오세요.");
 
 	}
 

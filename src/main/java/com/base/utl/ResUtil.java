@@ -8,22 +8,57 @@ import com.base.vo.BodyResVO;
 
 public class ResUtil {
 
-	public static ResponseEntity resSucc(BodyResVO bodyResVO, Object rtnMsg) {
-		bodyResVO.setRtnCd(RstCdEnum.succ.getValue());
-		bodyResVO.setRtnMsg(rtnMsg);
-		return new ResponseEntity<>(bodyResVO, HttpStatus.OK);
+	// 인스턴스화 방지
+	private ResUtil() {
 	}
 
-	public static ResponseEntity resFail(BodyResVO bodyResVO, Object rtnMsg) {
-		bodyResVO.setRtnCd(RstCdEnum.fail.getValue());
-		bodyResVO.setRtnMsg(rtnMsg);
-		return new ResponseEntity<>(bodyResVO, HttpStatus.OK);
+	/**
+	 * 성공 응답 (데이터 포함)
+	 */
+	public static <T> ResponseEntity<BodyResVO<T>> resSucc(String msg, T data) {
+		return createResponse(RstCdEnum.SUCC, msg, data);
 	}
 
-	public static ResponseEntity resValid(BodyResVO bodyResVO, String validStr) {
-		bodyResVO.setRtnCd(RstCdEnum.valid.getValue());
-		bodyResVO.setRtnMsg(validStr);
-		return new ResponseEntity<>(bodyResVO, HttpStatus.OK);
+	/**
+	 * 성공 응답 (데이터 포함)
+	 */
+	public static <T> ResponseEntity<BodyResVO<T>> resSucc(String msg) {
+		return createResponse(RstCdEnum.SUCC, msg, null);
 	}
 
+	/**
+	 * 성공 응답 (데이터 없음 - 필요 시 사용)
+	 */
+	public static <T> ResponseEntity<BodyResVO<T>> resSucc() {
+		return createResponse(RstCdEnum.SUCC, null, null);
+	}
+
+	/**
+	 * 실패 응답
+	 * <T>를 붙여주어 호출하는 쪽에서 타입을 명시해도 경고가 뜨지 않게 함
+	 */
+	public static <T> ResponseEntity<BodyResVO<T>> resFail(String msg) {
+		return createResponse(RstCdEnum.FAIL, msg, null);
+	}
+
+	/**
+	 * 유효성 검증 실패 응답
+	 */
+	public static <T> ResponseEntity<BodyResVO<T>> resValid(String msg) {
+		return createResponse(RstCdEnum.VALID, msg, null);
+	}
+
+	/**
+	 * 내부 공통 응답 생성 메서드 (Builder 패턴 통일)
+	 */
+	private static <T> ResponseEntity<BodyResVO<T>> createResponse(RstCdEnum rstEnum, String msg, T data) {
+		BodyResVO<T> body = BodyResVO.<T>builder()
+			.rtnCd(rstEnum.getCode())
+			// msg가 null이면 Enum에 정의된 기본 메시지 사용
+			.rtnMsg(msg != null ? msg : rstEnum.getDefaultMessage())
+			.rtnData(data)
+			.build();
+
+		return new ResponseEntity<>(body, HttpStatus.OK);
+	}
 }

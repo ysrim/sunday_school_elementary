@@ -46,7 +46,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		// 3. session set
-		SessionUtil.setAttribute(SessionKeyEnum.MBERINFO.name(), sessionVO);
+		SessionUtil.setAttribute(SessionKeyEnum.MBER_INFO.getKey(), sessionVO);
 
 		return sessionVO;
 

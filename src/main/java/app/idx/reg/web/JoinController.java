@@ -37,7 +37,7 @@ public class JoinController {
 
 		joinService.joinMber(joinMemberVO);
 
-		return ResUtil.resSucc(bodyResVO, "성공");
+		return ResUtil.resSucc("가입을 축하합니다! " + joinMemberVO.getNcnm() + " 용사님!");
 
 	}
 
@@ -49,10 +49,10 @@ public class JoinController {
 
 		log.debug("idDupleChkAx mberId: {}", mberId);
 		if ("".equals(mberId)) {
-			return ResUtil.resValid(bodyResVO, "잘못된 형식의 아이디입니다.");
+			return ResUtil.resValid("잘못된 형식의 아이디입니다.");
 		}
 
-		return joinService.idDupleChk(mberId) ? ResUtil.resSucc(bodyResVO, "사용 가능한 아이디입니다.") : ResUtil.resFail(bodyResVO, "이미 사용 중인 아이디입니다.");
+		return joinService.idDupleChk(mberId) ? ResUtil.resSucc("사용 가능한 아이디입니다.") : ResUtil.resFail("이미 사용 중인 아이디입니다.");
 
 	}
 

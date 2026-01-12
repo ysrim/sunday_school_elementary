@@ -46,7 +46,7 @@ public class JoinMemberVO {
 	@Range(min = 1, max = 10, message = "반은 1에서 99까지 선택 가능합니다.")
 	private String cls = ""; // 반
 
-	private String gradeCode = MberGrdEnum.STD.getValue();
+	private String gradeCode = MberGrdEnum.STD.getCode();
 
 	private String guildSn = ""; // 길드_시퀀스
 

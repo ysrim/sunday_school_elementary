@@ -50,4 +50,9 @@ public class SessionUtil {
 		}
 	}
 
+	public static boolean isAjaxRequest(HttpServletRequest request) {
+		String acceptHeader = request.getHeader("Accept");
+		return "XMLHttpRequest".equals(request.getHeader("X-Requested-With")) || (acceptHeader != null && acceptHeader.contains("application/json")) || request.getRequestURI().endsWith(".ax");
+	}
+
 }
