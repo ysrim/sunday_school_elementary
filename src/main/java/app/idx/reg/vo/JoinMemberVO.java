@@ -1,11 +1,11 @@
 package app.idx.reg.vo;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
 
 import com.base.annotation.XssCheck;
 import com.base.enumm.MberGrdEnum;
 
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
