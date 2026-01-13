@@ -4,55 +4,63 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import app.idx.reg.mapper.JoinMapper;
 import app.idx.reg.service.JoinService;
 import app.idx.reg.vo.JoinMemberVO;
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service("joinService")
+@RequiredArgsConstructor // 1. final 필드에 대한 생성자를 자동 생성 (생성자 주입)
+@Transactional(readOnly = true) // 2. 기본적으로 읽기 전용으로 설정 (성능 최적화)
 public class JoinServiceImpl implements JoinService {
 
-	private @Value("#{globalsProps['Service.year']}") String srvYear;
+	// Properties는 생성자 주입이 번거로울 수 있어 필드 주입을 유지하거나,
+	// @ConfigurationProperties 사용을 권장하지만 여기선 간단히 유지합니다.
+	@Value("#{globalsProps['Service.year']}")
+	private String srvYear;
 
-	@Resource(name = "joinDAO")
-	private JoinDAO joinDAO;
-
-	@PostConstruct
-	public void serviceInit() {
-		// do something
-	}
+	private final JoinMapper joinMapper;
 
 	@Override
 	public boolean idDupleChk(String memberId) {
-		return joinDAO.idDupleChk(memberId) > 0 ? false : true;
+		// 3. 삼항 연산자 제거: 카운트가 0이면 사용 가능(true)
+		return joinMapper.idDupleChk(memberId) == 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor = {RuntimeException.class})
+	// 4. 쓰기가 일어나는 곳만 @Transactional 별도 지정 (rollbackFor 생략 시 기본 RuntimeException 포함)
+	@Transactional
 	public boolean joinMber(JoinMemberVO joinMemberVO) {
 
-		String mberSn = joinDAO.sltMberSn();
+		// 1. 회원 번호(SN) 채번
+		String mberSn = joinMapper.sltMberSn();
+		if (mberSn == null) {
+			// 예외 발생 시 자동 롤백됩니다.
+			throw new RuntimeException("시스템 오류: 회원 번호를 생성할 수 없습니다.");
+		}
 		joinMemberVO.setMberSn(mberSn);
 
-		// 1. MBER_INFO insert -> MBER_SN return;
-		joinDAO.insMberInfo(joinMemberVO);
+		// 2. 기본 정보 및 아바타 정보 등록
+		joinMapper.insMberInfo(joinMemberVO);
+		joinMapper.insAvatarInfo(joinMemberVO);
 
-		// 2.AVATAR_INFO insert
-		joinDAO.insAvatarInfo(joinMemberVO);
-
-		// 3. 입력한 학년/반 정보로 GUILD_INFO 정보를 찾는다. -> GUILD_SN return;
-		String guildSn = joinDAO.sltGuildInfo(joinMemberVO);
-		log.info("guildSn: {}", guildSn);
+		// 3. 길드 정보 조회
+		String guildSn = joinMapper.sltGuildInfo(joinMemberVO);
+		log.info("Check Guild SN: {}", guildSn); // 로그 메시지 명확화
 
 		if (guildSn == null) {
-			throw new RuntimeException("선택한 길드 정보를 가져올 수 없습니다");  // 롤백 처리됨
+			// 비즈니스 로직상 필수라면 예외 처리
+			throw new RuntimeException("선택하신 학년/반에 해당하는 길드 정보가 없습니다.");
 		}
 
-		// 4.GUILD_MBER_LIST insert
+		// VO에 길드 번호 세팅 (추후 insert시 필요할 것으로 추정)
+		joinMemberVO.setGuildSn(guildSn);
+
+		// 4. GUILD_MBER_LIST insert (누락된 로직 추가 필요)
+		// joinDAO.insGuildMberList(joinMemberVO);
 
 		return true;
-
 	}
 }

@@ -202,4 +202,5 @@ input:focus, select:focus {
     min-height: 20px;
     padding: 4px 0 0 6px;
     font-weight: 500;
+    color: #ff5252;
 }

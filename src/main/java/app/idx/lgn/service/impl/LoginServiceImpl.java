@@ -1,33 +1,28 @@
 package app.idx.lgn.service.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.base.enumm.SessionKeyEnum;
 import com.base.utl.SessionUtil;
 
+import app.idx.lgn.mapper.LoginMapper;
 import app.idx.lgn.service.LoginService;
 import app.idx.lgn.vo.LoginVO;
 import app.idx.lgn.vo.SessionVO;
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service("loginService")
+@RequiredArgsConstructor // 1. final 필드에 대한 생성자를 자동 생성 (생성자 주입)
+@Transactional(readOnly = true) // 2. 기본적으로 읽기 전용으로 설정 (성능 최적화)
 public class LoginServiceImpl implements LoginService {
 
-	//private @Value("#{globalsProps['bc.contractAddr.mov']}") String contractAddr;
-
-	@Resource(name = "loginDAO")
-	private LoginDAO loginDAO;
-
-	@PostConstruct
-	public void serviceInit() {
-		// do something
-	}
+	private final LoginMapper loginMapper;
 
 	private SessionVO sltMber(LoginVO loginVO) {
-		return loginDAO.sltMber(loginVO);
+		return loginMapper.sltMber(loginVO);
 	}
 
 	@Override

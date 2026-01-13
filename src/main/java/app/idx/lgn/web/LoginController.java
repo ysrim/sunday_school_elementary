@@ -42,7 +42,7 @@ public class LoginController {
 	@RequestMapping(path = "/logOut.pg")
 	public String logOutAx(HttpSession session) {
 		session.invalidate();
-		return "redirect:/idx/intro.html";
+		return "redirect:/idx/intro.pg";
 	}
 
 }

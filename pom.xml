@@ -83,6 +83,11 @@
 			<version>8.0.1.Final</version>
 		</dependency>
 		<dependency>
+			<groupId>jakarta.el</groupId>
+			<artifactId>jakarta.el-api</artifactId>
+			<version>5.0.0</version>
+		</dependency>
+		<dependency>
 			<groupId>org.glassfish</groupId>
 			<artifactId>jakarta.el</artifactId>
 			<version>4.0.2</version>
@@ -192,6 +197,12 @@
 			<artifactId>mybatis-spring</artifactId>
 			<version>4.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+			<version>5.1.0</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.sun.xml.security</groupId>
 			<artifactId>xml-security-impl</artifactId>

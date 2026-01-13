@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?><!--Converted at: Wed May 11 15:49:38 KST 2016 -->
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="JoinDAO">
+<mapper namespace="app.idx.reg.mapper.JoinMapper">
 
 	<select id="idDupleChk" parameterType="string" resultType="int">
 		SELECT COUNT(*) AS cnt
@@ -10,7 +10,8 @@
 	</select>
 
 	<select id="sltMberSn" parameterType="string" resultType="string">
-		SELECT NEXTVAL('mber_sn') as mberSn FROM DUAL
+		SELECT NEXTVAL('mber_sn') as mberSn
+		FROM DUAL
 	</select>
 
 	<insert id="insMberInfo" parameterType="app.idx.reg.vo.JoinMemberVO">
