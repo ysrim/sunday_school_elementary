@@ -75,7 +75,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 		}
 
 		// 6. 메뉴 정보 세션 저장 (화면 표시용)
-		SessionUtil.setAttribute("menuInfo", menuInfo.name());
+		SessionUtil.setAttribute("menuInfo", menuInfo.navi().toString());
 
 		return true;
 	}

@@ -7,16 +7,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import com.base.enumm.MberGrdEnum;
+import com.base.enumm.NaviEnum;
 
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface MenuInfo {
 
-	public abstract MberGrdEnum role() default MberGrdEnum.STD;
+	public abstract MberGrdEnum role();
 
-	public abstract int seq() default 0;
-
-	public abstract String name() default "";
+	public abstract NaviEnum navi() default NaviEnum.EMPT;
 
 }
