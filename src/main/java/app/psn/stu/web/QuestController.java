@@ -16,9 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 public class QuestController {
 
 	@MenuInfo(navi = NaviEnum.STD_QEST, role = MberGrdEnum.STD)
-	@RequestMapping("/quest.pg")
+	@RequestMapping("/qest.pg")
 	public String questPg(Model model) {
-		return "/std/page/quest";
+		return "/std/page/qest";
 	}
 
 }

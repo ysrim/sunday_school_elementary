@@ -26,13 +26,13 @@ public class AttendanceController {
 	private JoinService joinService;
 
 	@MenuInfo(navi = NaviEnum.STD_ATND, role = MberGrdEnum.STD)
-	@RequestMapping("/attendance.pg")
+	@RequestMapping("/atnd.pg")
 	public String attendancePg(Model model) {
-		return "/std/page/home";
+		return "/std/page/atnd";
 	}
 
 	@MenuInfo(role = MberGrdEnum.STD)
-	@RequestMapping("/attendance.ax")
+	@RequestMapping("/atnd.ax")
 	public ResponseEntity attendanceAx(@RequestBody @Valid LoginVO loginVO) {
 
 		log.debug("loginVO: {}", loginVO);

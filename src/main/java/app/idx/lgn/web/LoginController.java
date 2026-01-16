@@ -1,6 +1,8 @@
 package app.idx.lgn.web;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,11 +19,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
+
+@RequiredArgsConstructor
 @RequestMapping("/idx")
 public class LoginController {
 
-	@Resource(name = "loginService")
-	private LoginService loginService;
+	private final LoginService loginService;
 
 	@RequestMapping(path = "/login.pg")
 	public String loginPg() {

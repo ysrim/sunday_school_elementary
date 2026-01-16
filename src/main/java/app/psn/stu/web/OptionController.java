@@ -16,9 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 public class OptionController {
 
 	@MenuInfo(navi = NaviEnum.STD_OPTS, role = MberGrdEnum.STD)
-	@RequestMapping("/option.pg")
+	@RequestMapping("/opts.pg")
 	public String guildPg(Model model) {
-		return "/std/page/option";
+		return "/std/page/opts";
 	}
 
 }

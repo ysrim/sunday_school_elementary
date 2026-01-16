@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -27,112 +27,117 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthInterceptor implements HandlerInterceptor {
 
 	private static final String LOGIN_PAGE_URL = "/idx/login.pg";
+	private static final String RTN_URL_PARAM = "rtnUrl";
 
-	// 1. 컨트롤러 실행 전 (Pre-Handle)
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
 
-		// 1. 정적 리소스 요청은 통과
+		// 1. 정적 리소스 등 HandlerMethod가 아닌 경우 통과
 		if (!(handler instanceof HandlerMethod)) {
 			return true;
 		}
+		HandlerMethod handlerMethod = (HandlerMethod) handler;
 
-		HandlerMethod handlerMethod = (HandlerMethod)handler;
-
-		// 2. @PassAuth 체크
-		PassAuth passAuth = AnnotationUtils.findAnnotation(handlerMethod.getBeanType(), PassAuth.class);
-		// 인증 패스 어노테이션이 있으면 통과
-		if (passAuth != null) {
+		// 2. @PassAuth 체크 (메서드 우선 -> 클래스 확인)
+		if (hasPassAuth(handlerMethod)) {
 			return true;
 		}
 
-		// 3. @MenuInfo 체크 (권한 정보가 없는 경우 정책에 따라 통과 or 차단)
-		MenuInfo menuInfo = AnnotationUtils.findAnnotation(handlerMethod.getBeanType(), MenuInfo.class);
-		if (menuInfo == null) {
-			return true;
-		}
-
-		// 4. 로그인 세션 체크
-		SessionVO sessionVO = (SessionVO)SessionUtil.getAttribute(SessionKeyEnum.MBER_INFO.name());
-
-		// 4-1. 비로그인 상태 처리
+		// 3. 로그인 세션 체크
+		SessionVO sessionVO = (SessionVO) SessionUtil.getAttribute(SessionKeyEnum.MBER_INFO.getKey());
 		if (sessionVO == null) {
-			log.warn(">>> [Auth Failed] Session is null. Redirect to Login.");
-			handleAuthFail(request, response, "Login Required");
+			log.warn(">>> [Auth Failed] Session is null. IP: {}", request.getRemoteAddr());
+			handleAuthFail(request, response, "Login Required", "401");
 			return false;
 		}
 
-		// 5. 권한(Role) 체크
-		// SessionVO의 등급과 MenuInfo의 요구 등급 비교
-		String userGrade = sessionVO.getGradeCode();
-		String requiredRole = menuInfo.role().getCode();
+		// 4. @MenuInfo 체크 및 권한 검증
+		// 메서드 레벨의 @MenuInfo를 먼저 찾고, 없으면 클래스 레벨을 찾음 (필요 시 정책 조정)
+		MenuInfo menuInfo = AnnotatedElementUtils.findMergedAnnotation(handlerMethod.getMethod(), MenuInfo.class);
 
-		if (!requiredRole.equals(userGrade)) {
-			log.warn(">>> [Access Denied] User Grade: {}, Required: {}", userGrade, requiredRole);
-			// 403 Forbidden 처리가 맞으나, 편의상 로그인 페이지 혹은 에러 페이지로 보냄
-			handleAuthFail(request, response, "Access Denied");
-			return false;
+		if (menuInfo != null) {
+			// 4-1. 권한 체크
+			if (!isAuthorized(sessionVO, menuInfo)) {
+				handleAuthFail(request, response, "Access Denied", "403");
+				return false;
+			}
+
+			// 4-2. 메뉴 정보 저장 (Request Scope 권장)
+			// 세션에 저장하면 브라우저 다중 탭 사용 시 정보가 꼬일 수 있음
+			request.setAttribute("menuInfo", menuInfo.navi().toString());
 		}
-
-		// 6. 메뉴 정보 세션 저장 (화면 표시용)
-		SessionUtil.setAttribute("menuInfo", menuInfo.navi().toString());
 
 		return true;
 	}
 
-	// 2. 컨트롤러 실행 후 (Post-Handle)
-	@Override
-	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
-		log.debug(">>> [PostHandle] View Rendering Start");
+	/**
+	 * PassAuth 어노테이션 존재 여부 확인
+	 * (메서드에 붙어있거나, 클래스에 붙어있으면 통과)
+	 */
+	private boolean hasPassAuth(HandlerMethod handler) {
+		return AnnotatedElementUtils.hasAnnotation(handler.getMethod(), PassAuth.class)
+				|| AnnotatedElementUtils.hasAnnotation(handler.getBeanType(), PassAuth.class);
 	}
 
-	// 3. 요청 완료 후 (After-Completion)
+	/**
+	 * 권한 비교 로직 분리
+	 * (단순 문자열 비교 외에 계층형 권한 로직 등을 여기에 구현)
+	 */
+	private boolean isAuthorized(SessionVO session, MenuInfo menuInfo) {
+		String userGrade = session.getGradeCode();
+		String requiredRole = menuInfo.role().getCode();
+		return requiredRole.equals(userGrade);
+	}
+
+	@Override
+	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
+		// request에 담았던 menuInfo를 View로 전달 (필요 시)
+		// 만약 jsp/thymeleaf에서 request scope에 직접 접근한다면 생략 가능
+	}
+
 	@Override
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
 		if (ex != null) {
-			log.error(">>> [Exception] Logic Error: ", ex);
+			log.error(">>> [Exception] Request URI: {}", request.getRequestURI(), ex);
 		}
 	}
 
 	/**
-	 * 인증 실패 처리 (Ajax vs 일반 요청 분기)
+	 * 인증/인가 실패 처리
 	 */
-	private void handleAuthFail(HttpServletRequest request, HttpServletResponse response, String msg) throws IOException {
-
+	private void handleAuthFail(HttpServletRequest request, HttpServletResponse response, String msg, String code) throws IOException {
 		if (SessionUtil.isAjaxRequest(request)) {
-			// Ajax 요청인 경우 401 에러 코드와 JSON 응답 반환
-			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			response.setContentType("application/json;charset=UTF-8");
-			// 예: {"rtnCd":"401", "rtnMsg":"Login Required"}
-			String jsonResponse = String.format("{\"rtnCd\":\"%s\", \"rtnMsg\":\"%s\"}", "401", msg);
+
+			// 실제 프로젝트의 응답 DTO를 사용하는 것이 가장 좋음 (예: CommonResponse)
+			String jsonResponse = String.format("{\"rtnCd\":\"%s\", \"rtnMsg\":\"%s\"}", code, msg);
 			response.getWriter().write(jsonResponse);
 		} else {
-			// 일반 요청인 경우 로그인 페이지로 리다이렉트
 			response.sendRedirect(request.getContextPath() + LOGIN_PAGE_URL + getRedirectUrl(request));
 		}
 	}
 
 	/**
-	 * 리다이렉트 URL 생성 (현재 페이지 정보를 파라미터로 포함)
+	 * 리다이렉트 URL 생성
 	 */
 	private String getRedirectUrl(HttpServletRequest request) {
-		if ("GET".equalsIgnoreCase(request.getMethod())) {
-			String currentUrl = request.getRequestURI();
-			String queryString = request.getQueryString();
-
-			if (queryString != null) {
-				currentUrl += "?" + queryString;
-			}
-
-			// URL 인코딩 처리 (특수문자 등 안전하게 전달)
-			try {
-				String encodedUrl = URLEncoder.encode(currentUrl, StandardCharsets.UTF_8);
-				return "?rtnUrl=" + encodedUrl;
-			} catch (Exception e) {
-				log.error("URL Encoding Error", e);
-			}
+		if (!"GET".equalsIgnoreCase(request.getMethod())) {
+			return "";
 		}
-		return "";
-	}
 
+		String currentUrl = request.getRequestURI();
+		String queryString = request.getQueryString();
+
+		if (queryString != null) {
+			currentUrl += "?" + queryString;
+		}
+
+		try {
+			return "?" + RTN_URL_PARAM + "=" + URLEncoder.encode(currentUrl, StandardCharsets.UTF_8);
+		} catch (Exception e) {
+			log.error("URL Encoding Error", e);
+			return "";
+		}
+	}
 }

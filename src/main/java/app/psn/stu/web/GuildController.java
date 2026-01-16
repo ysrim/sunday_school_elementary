@@ -23,9 +23,9 @@ import lombok.extern.slf4j.Slf4j;
 public class GuildController {
 
 	@MenuInfo(navi = NaviEnum.STD_GILD, role = MberGrdEnum.STD)
-	@RequestMapping("/guild.pg")
+	@RequestMapping("/gild.pg")
 	public String guildPg(Model model) {
-		return "/std/page/gulid";
+		return "/std/page/gild";
 	}
 
 }

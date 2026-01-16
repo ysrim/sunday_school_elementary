@@ -1,26 +1,42 @@
 <html lagn="ko" xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="footerFragment">
 	<nav class="nav-bar" id="bottom-nav">
-		<button class="nav-item active" onclick="showPage('page-main')">
+
+		<button class="nav-item"
+		        th:classappend="${menuInfo == 'STD_HOME'} ? 'active'"
+		        onclick="_naviPage('STD_HOME')">
 			<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/navi/home.png">
 			<span>홈</span>
 		</button>
-		<button class="nav-item" onclick="showPage('page-attendance')">
+
+		<button class="nav-item"
+		        th:classappend="${menuInfo == 'STD_ATND'} ? 'active'"
+		        onclick="_naviPage('STD_ATND')">
 			<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/navi/stamp.png">
 			<span>출석</span>
 		</button>
-		<button class="nav-item" onclick="showPage('page-guild')">
+
+		<button class="nav-item"
+		        th:classappend="${menuInfo == 'STD_GILD'} ? 'active'"
+		        onclick="_naviPage('STD_GILD')">
 			<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/navi/guild.png">
 			<span>길드</span>
 		</button>
-		<button class="nav-item" onclick="showPage('page-quest')">
+
+		<button class="nav-item"
+		        th:classappend="${menuInfo == 'STD_QEST'} ? 'active'"
+		        onclick="_naviPage('STD_QEST')">
 			<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/navi/quest.png">
 			<span>퀘스트</span>
 		</button>
-		<button class="nav-item" onclick="showPage('page-mypage')">
+
+		<button class="nav-item"
+		        th:classappend="${menuInfo == 'STD_OPTS'} ? 'active'"
+		        onclick="_naviPage('STD_OPTS')">
 			<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/navi/settings.png">
 			<span>설정</span>
 		</button>
 	</nav>
+
 </div>
 </html>

@@ -1,12 +1,135 @@
 <!DOCTYPE html>
 <html xmlns:th="http//www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layouts/std_layout}">
+<script>
+
+	/**
+	 * UI/UX 관련 로직을 관리하는 모듈 객체
+	 */
+	const StdHomeUI = {
+		// 상태 관리 (현재 달란트 등)
+		data: {
+			currentTalent: 2500
+		},
+
+		/**
+		 * 초기화 함수
+		 */
+		init: function () {
+			this.cacheDOM();
+			this.bindEvents();
+			this.render();
+		},
+
+		cacheDOM: function () {
+			this.$talentDisplay = $('.sub-money, #user-level');
+			this.$expBar = $('#exp-bar');
+			this.$expText = $('#current-exp');
+			this.$typingTarget = $('#typing-bible');
+		},
+
+		bindEvents: function () {
+			// 필요 시 클릭 이벤트 등을 여기에 바인딩
+		},
+
+		render: function () {
+			// 1. 초기 경험치 바 애니메이션
+			this.animateExpBar();
+
+			// 2. 말씀 타이핑 효과 시작
+			const text = this.$typingTarget.data('text'); // HTML data-text 속성에서 가져옴
+			this.typeWriter(this.$typingTarget, text);
+
+			// 3. 테스트용: 0.5초 뒤 달란트 50 증가
+			setTimeout(() => this.updateTalent(50), 500);
+		},
+
+		/**
+		 * 달란트(재화) 카운팅 애니메이션
+		 * 연속 호출 시에도 자연스럽게 이어지도록 개선
+		 */
+		updateTalent: function (amount) {
+			// 논리적 합계 즉시 반영
+			this.data.currentTalent += amount;
+			const targetValue = this.data.currentTalent;
+
+			// 현재 화면에 표시되고 있는 숫자 파싱 (애니메이션 중간값)
+			// 쉼표(,) 제거 후 숫자로 변환, 없으면 0
+			let currentValue = parseInt(this.$talentDisplay.first().text().replace(/,/g, '')) || 0;
+
+			// 이전 애니메이션 멈추고 새로운 목표값으로 애니메이션 시작
+			$({val: currentValue}).stop(true).animate({val: targetValue}, {
+				duration: 800,
+				easing: 'swing',
+				step: function (now) {
+					// 소수점 버림 및 콤마 포맷팅
+					StdHomeUI.$talentDisplay.text(Math.floor(now).toLocaleString());
+				},
+				complete: function () {
+					// 최종 값 보정
+					StdHomeUI.$talentDisplay.text(targetValue.toLocaleString());
+				}
+			});
+		},
+
+		/**
+		 * 경험치 바 애니메이션
+		 * data-current, data-max 속성을 활용하여 유연하게 처리
+		 */
+		animateExpBar: function () {
+			// HTML 태그에서 값 가져오기 (예: <span id="current-exp" data-current="60" data-max="100">)
+			const current = this.$expText.data('current') || 60;
+			const max = this.$expText.data('max') || 100;
+
+			const percentage = Math.min((current / max) * 100, 100); // 100% 넘지 않도록 방지
+
+			// CSS 초기화 후 애니메이션
+			this.$expBar.css('width', '0%');
+			setTimeout(() => {
+				this.$expBar.css({
+					'width': percentage + '%',
+					'transition': 'width 1s ease-out' // CSS transition 활용 (더 부드러움)
+				});
+			}, 100);
+		},
+
+		/**
+		 * 타이핑 효과 (재사용 가능한 함수)
+		 * @param {jQuery} $element - 대상 요소
+		 * @param {String} text - 타이핑할 텍스트
+		 * @param {Number} speed - 속도 (ms)
+		 */
+		typeWriter: function ($element, text, speed = 100) {
+			if (!text) return;
+
+			$element.text(''); // 초기화
+			let i = 0;
+
+			function typing() {
+				if (i < text.length) {
+					// append 대신 text를 누적하여 설정 (HTML 태그가 포함된 경우 html() 사용 고려)
+					$element.text(text.substring(0, i + 1));
+					i++;
+					setTimeout(typing, speed);
+				}
+			}
+
+			typing();
+		}
+	};
+
+	// 실행
+	$(function () {
+		StdHomeUI.init();
+	});
+</script>
 <div class="page active" layout:fragment="content">
 	<div class="profile-card">
 		<div style="display: flex; align-items: center; margin-bottom: 20px;">
 			<div class="profile-avatar-wrap">
-				<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/warrior.png" id="user-profile-img" alt="내 캐릭터"
-					 style="width:100%; height:100%; object-fit:cover; border-radius:18px;">
+				<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/warrior.png"
+				     id="user-profile-img" alt="내 캐릭터"
+				     style="width:100%; height:100%; object-fit:cover; border-radius:18px;">
 			</div>
 			<div style="margin-left: 15px;">
 				<div style="display: flex; gap: 5px;">
@@ -49,7 +172,8 @@
 		</div>
 		<div class="guild-member-list">
 			<div class="member-item">
-				<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/warrior.png" class="member-avatar">
+				<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/warrior.png"
+				     class="member-avatar">
 				<div class="member-info">
 					<div class="member-name">김용사 (나) <span class="master-badge">MASTER</span></div>
 					<div class="member-status">오늘도 퀘스트 완료! 🔥</div>
@@ -60,7 +184,8 @@
 			</div>
 
 			<div class="member-item" style="opacity: 0.8;">
-				<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/wizard.png" class="member-avatar">
+				<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/wizard.png"
+				     class="member-avatar">
 				<div class="member-info">
 					<div class="member-name">이마법</div>
 					<div class="member-status">접속 중</div>
@@ -77,202 +202,37 @@
 	<div class="card" style="margin-top:15px;">
 		<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
 			<h4 style="margin: 0;">공지사항 📢</h4>
-			<span style="font-size: 0.7rem; color: var(--gray); cursor: pointer;" onclick="showPage('page-notice-detail')">전체보기 ></span>
+			<span style="font-size: 0.7rem; color: var(--gray); cursor: pointer;"
+			      onclick="showPage('page-notice-detail')">전체보기 ></span>
 		</div>
 		<div class="notice-list">
-			<div class="notice-item" onclick="showPage('page-notice-detail')" style="padding: 12px 0; border-bottom: 1px solid #f0f0f0; cursor: pointer;">
+			<div class="notice-item" onclick="showPage('page-notice-detail')"
+			     style="padding: 12px 0; border-bottom: 1px solid #f0f0f0; cursor: pointer;">
 				<div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
 					<span style="background: #FFEBEB; color: #FF4D4D; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: bold;">중요</span>
 					<span style="font-size: 0.9rem; font-weight: 700; color: #333;">이번 주 주일 야외 활동 안내</span>
 				</div>
-				<p style="font-size: 0.8rem; color: #777; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">교회 근처 공원에서 보물찾기가 진행됩니다!</p>
+				<p style="font-size: 0.8rem; color: #777; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+					교회 근처 공원에서 보물찾기가 진행됩니다!</p>
 			</div>
-			<div class="notice-item" onclick="showPage('page-notice-detail')" style="padding: 12px 0; border-bottom: 1px solid #f0f0f0; cursor: pointer;">
+			<div class="notice-item" onclick="showPage('page-notice-detail')"
+			     style="padding: 12px 0; border-bottom: 1px solid #f0f0f0; cursor: pointer;">
 				<div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
 					<span style="background: #E3F2FD; color: #2196F3; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: bold;">안내</span>
 					<span style="font-size: 0.9rem; font-weight: 700; color: #333;">새 친구 환영 파티 (다음 주)</span>
 				</div>
-				<p style="font-size: 0.8rem; color: #777; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">새로 온 친구들을 위해 맛있는 간식이 준비되어 있어요.</p>
+				<p style="font-size: 0.8rem; color: #777; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+					새로 온 친구들을 위해 맛있는 간식이 준비되어 있어요.</p>
 			</div>
 			<div class="notice-item" onclick="showPage('page-notice-detail')" style="padding: 12px 0; cursor: pointer;">
 				<div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
 					<span style="background: #F5F5F5; color: #666; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: bold;">필독</span>
 					<span style="font-size: 0.9rem; font-weight: 700; color: #333;">달란트 시장 개최 공지</span>
 				</div>
-				<p style="font-size: 0.8rem; color: #777; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">열심히 모은 달란트를 사용할 시간이 왔습니다!</p>
+				<p style="font-size: 0.8rem; color: #777; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+					열심히 모은 달란트를 사용할 시간이 왔습니다!</p>
 			</div>
 		</div>
 	</div>
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<script>
-		let currentTalent = 2500;
-
-		// 페이지 전환 함수
-		function showPage(pageId) {
-			$('.page').hide();
-			$('#' + pageId).show();
-			$('#bottom-nav').css('display', 'flex');
-
-
-			// --- 경험치 바 애니메이션 로직 추가 ---
-			if (pageId === 'page-main') {
-
-			}
-			// ------------------------------------
-
-			$('.nav-item').removeClass('active');
-			if (pageId === 'page-main') $('.nav-item').eq(0).addClass('active');
-			if (pageId === 'page-attendance') $('.nav-item').eq(1).addClass('active');
-			if (pageId === 'page-guild') $('.nav-item').eq(2).addClass('active');
-			if (pageId === 'page-quest') $('.nav-item').eq(3).addClass('active');
-			// 추가: 마이페이지(설정)가 켜졌을 때 4번 인덱스(5번째) 버튼 활성화
-			if (pageId === 'page-mypage') $('.nav-item').eq(4).addClass('active');
-		}
-
-		// 달란트 카운팅 애니메이션 함수
-		function updateTalent(amount) {
-			let $subDisplay = $('.sub-money, #user-level'); // 서브페이지용
-
-			let startValue = currentTalent;
-			let endValue = currentTalent + amount;
-
-			$({val: startValue}).animate({val: endValue}, {
-				duration: 800, // 0.8초 동안 애니메이션
-				easing: 'swing',
-				step: function () {
-					// 숫자에 콤마(,) 추가하며 업데이트
-					let formatted = Math.floor(this.val).toLocaleString();
-					$subDisplay.text(formatted);
-				},
-				complete: function () {
-					currentTalent = endValue;
-					$subDisplay.text(currentTalent.toLocaleString());
-				}
-			});
-		}
-
-		// 알림창 띄우기 함수 (메시지, 아이콘, 제목)
-		function showAlert(msg, icon = '✨', title = '알림') {
-			$('#alert-message').html(msg);
-			$('#alert-icon').html(icon);
-			$('#alert-title').text(title);
-			$('#custom-alert').addClass('active');
-		}
-
-		// 알림창 닫기 함수
-		function closeAlert() {
-			$('#custom-alert').removeClass('active');
-		}
-
-		// --- 기존 코드 수정 예시 ---
-
-		$(document).ready(function () {
-			const targetExp = $('#current-exp').text(); // 현재 60 등으로 설정된 텍스트값 읽기
-			const totalExp = 100; // 최대 경험치
-			const percentage = (targetExp / totalExp) * 100;
-
-			// 0으로 초기화했다가 0.1초 뒤에 목표치로 설정 (애니메이션 효과 극대화)
-			$('#exp-bar').css('width', '0%');
-			setTimeout(() => {
-				$('#exp-bar').css('width', percentage + '%');
-			}, 100);
-
-			// 말씀 타이핑 효과도 여기서 함께 실행하면 좋습니다.
-			typeBible();
-
-
-			// 날짜 표시
-			$('#current-date').text(
-				new Date().toLocaleDateString('ko-KR', {year: 'numeric', month: 'long', day: 'numeric'}));
-
-			$('#stamp-zone').click(function () {
-				if ($(this).hasClass('checked')) {
-					showAlert('이미 오늘의 출석을 완료했습니다!', '📅', '알림');
-					return;
-				}
-
-				// 상태 변경
-				$(this).addClass('checked').css({
-					'background': '#FFF0F0',
-					'border-color': '#FF6B6B'
-				}).html('<img src="https://cdn-icons-png.flaticon.com/512/3585/3585145.png" style="width:100px;">');
-
-				// 오늘 날짜 슬롯도 체크 표시 (수요일 예시)
-				$('.slot-circle.today').addClass('checked');
-
-				showAlert('참 잘했어요!<br>출석 달란트 <b>+100P</b>를 획득했습니다!',
-					'<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/attendance.png" style="width:80px;">', '출석 성공!');
-
-				//updateTalent(100);
-			});
-
-			// 퀘스트 이벤트 (이벤트 위임 사용)
-			$('.q-check').change(function () {
-				const isChecked = $(this).is(':checked');
-				$(this).parent().toggleClass('quest-done', isChecked);
-				updateTalent(isChecked ? 50 : -50);
-			});
-			updateTalent(50);
-		});
-
-		// 타이핑 효과용 변수
-		const bibleText = "내게 능력 주시는 자 안에서 내가 모든 것을 할 수 있느니라";
-		let typingIdx = 0;
-		let isTyping = false; // 중복 실행 방지
-
-		function typeBible() {
-			if (isTyping) return; // 이미 타이핑 중이면 무시
-			const $target = $('#typing-bible');
-			$target.text(""); // 초기화
-			typingIdx = 0;
-			isTyping = true;
-
-			function typing() {
-				if (typingIdx < bibleText.length) {
-					$target.append(bibleText[typingIdx]);
-					typingIdx++;
-					setTimeout(typing, 100); // 타이핑 속도 (100ms)
-				} else {
-					isTyping = false; // 타이핑 완료
-				}
-			}
-
-			typing();
-		}
-
-		function handleLogout() {
-			location.href = 'intro.html';
-		}
-
-		// 비밀번호 변경 처리 함수
-		function handlePasswordChange() {
-			const currentPw = $('#current-pw').val();
-			const newPw = $('#new-pw').val();
-			const newPwConfirm = $('#new-pw-confirm').val();
-
-			// 간단한 유효성 검사
-			if (!currentPw || !newPw || !newPwConfirm) {
-				showAlert('모든 항목을 입력해주세요!', '⚠️', '입력 오류');
-				return;
-			}
-
-			if (newPw !== newPwConfirm) {
-				showAlert('새 비밀번호가 서로 일치하지 않아요.', '❌', '확인 실패');
-				return;
-			}
-
-			if (newPw.length < 4) {
-				showAlert('비밀번호는 4자리 이상으로 해주세요!', '🔑', '보안 약함');
-				return;
-			}
-
-			// 변경 성공 시뮬레이션
-			showAlert('비밀번호가 안전하게 변경되었습니다!<br>새로운 마음으로 모험을 떠나볼까요?', '✨', '변경 완료');
-
-			// 입력창 초기화 및 마이페이지로 이동
-			$('#current-pw, #new-pw, #new-pw-confirm').val('');
-			showPage('page-mypage');
-		}
-	</script>
 </div>
 </html>

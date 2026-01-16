@@ -2,6 +2,7 @@ package com.init;
 
 import com.config.AppConfig;
 import com.config.DataSourceConfig;
+import com.config.SecurityConfig;
 import com.config.WebConfig;
 import jakarta.servlet.Filter;
 import org.springframework.web.filter.CharacterEncodingFilter;
@@ -12,7 +13,7 @@ public class WebAppInit extends AbstractAnnotationConfigDispatcherServletInitial
 	// Root Context (Service, Repository, DB 등)
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
-		return new Class<?>[]{AppConfig.class, DataSourceConfig.class};
+		return new Class<?>[]{AppConfig.class, DataSourceConfig.class, SecurityConfig.class};
 	}
 
 	// Servlet Context (Controller, ViewResolver, Interceptor 등)
