@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.base.annotation.MenuInfo;
 import com.base.annotation.PassAuth;
+import com.base.enumm.NaviEnum;
 import com.base.enumm.SessionKeyEnum;
 import com.base.utl.SessionUtil;
 
@@ -36,7 +37,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 		if (!(handler instanceof HandlerMethod)) {
 			return true;
 		}
-		HandlerMethod handlerMethod = (HandlerMethod) handler;
+		HandlerMethod handlerMethod = (HandlerMethod)handler;
 
 		// 2. @PassAuth 체크 (메서드 우선 -> 클래스 확인)
 		if (hasPassAuth(handlerMethod)) {
@@ -44,9 +45,8 @@ public class AuthInterceptor implements HandlerInterceptor {
 		}
 
 		// 3. 로그인 세션 체크
-		SessionVO sessionVO = (SessionVO) SessionUtil.getAttribute(SessionKeyEnum.MBER_INFO.getKey());
+		SessionVO sessionVO = (SessionVO)SessionUtil.getAttribute(SessionKeyEnum.MBER_INFO.getKey());
 		if (sessionVO == null) {
-			log.warn(">>> [Auth Failed] Session is null. IP: {}", request.getRemoteAddr());
 			handleAuthFail(request, response, "Login Required", "401");
 			return false;
 		}
@@ -65,6 +65,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 			// 4-2. 메뉴 정보 저장 (Request Scope 권장)
 			// 세션에 저장하면 브라우저 다중 탭 사용 시 정보가 꼬일 수 있음
 			request.setAttribute("menuInfo", menuInfo.navi().toString());
+			request.setAttribute("menuNm", NaviEnum.valueOf(menuInfo.navi().toString()).getNaviNm());
 		}
 
 		return true;
@@ -76,7 +77,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 	 */
 	private boolean hasPassAuth(HandlerMethod handler) {
 		return AnnotatedElementUtils.hasAnnotation(handler.getMethod(), PassAuth.class)
-				|| AnnotatedElementUtils.hasAnnotation(handler.getBeanType(), PassAuth.class);
+			|| AnnotatedElementUtils.hasAnnotation(handler.getBeanType(), PassAuth.class);
 	}
 
 	/**
@@ -89,19 +90,6 @@ public class AuthInterceptor implements HandlerInterceptor {
 		return requiredRole.equals(userGrade);
 	}
 
-	@Override
-	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
-		// request에 담았던 menuInfo를 View로 전달 (필요 시)
-		// 만약 jsp/thymeleaf에서 request scope에 직접 접근한다면 생략 가능
-	}
-
-	@Override
-	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-		if (ex != null) {
-			log.error(">>> [Exception] Request URI: {}", request.getRequestURI(), ex);
-		}
-	}
-
 	/**
 	 * 인증/인가 실패 처리
 	 */
@@ -109,8 +97,6 @@ public class AuthInterceptor implements HandlerInterceptor {
 		if (SessionUtil.isAjaxRequest(request)) {
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			response.setContentType("application/json;charset=UTF-8");
-
-			// 실제 프로젝트의 응답 DTO를 사용하는 것이 가장 좋음 (예: CommonResponse)
 			String jsonResponse = String.format("{\"rtnCd\":\"%s\", \"rtnMsg\":\"%s\"}", code, msg);
 			response.getWriter().write(jsonResponse);
 		} else {
@@ -125,14 +111,8 @@ public class AuthInterceptor implements HandlerInterceptor {
 		if (!"GET".equalsIgnoreCase(request.getMethod())) {
 			return "";
 		}
-
 		String currentUrl = request.getRequestURI();
-		String queryString = request.getQueryString();
-
-		if (queryString != null) {
-			currentUrl += "?" + queryString;
-		}
-
+		currentUrl += request.getQueryString() != null ? "?" + request.getQueryString() : "";
 		try {
 			return "?" + RTN_URL_PARAM + "=" + URLEncoder.encode(currentUrl, StandardCharsets.UTF_8);
 		} catch (Exception e) {

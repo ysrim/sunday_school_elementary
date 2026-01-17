@@ -1,278 +1,55 @@
 <!DOCTYPE html>
 <html xmlns:th="http//www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layouts/std_layout}">
-<div class="page active" layout:fragment="content">
-	<div class="profile-card">
-		<div style="display: flex; align-items: center; margin-bottom: 20px;">
-			<div class="profile-avatar-wrap">
-				<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/warrior.png" id="user-profile-img" alt="내 캐릭터"
-					 style="width:100%; height:100%; object-fit:cover; border-radius:18px;">
-			</div>
-			<div style="margin-left: 15px;">
-				<div style="display: flex; gap: 5px;">
-					<span class="user-rank-badge" style="background: #E3F2FD; color: #4A90E2;" id="user-grade-display">XXX 길드</span>
-					<span class="user-rank-badge" style="background: #FFF3E0; color: #EF6C00;"><span id="user-level">2,500</span> 달란트</span>
-				</div>
-				<h2 id="user-display-name" style="font-size: 1.3rem; color: #333;">신입 용사님</h2>
+	  layout:decorate="~{/layouts/std_layout}">
+<th:block layout:fragment="content">
+	<div style="margin: 25px 25px 5px 25px; display: flex; align-items: center;">
+		<span style="color: #4A90E2; font-size: 0.8rem; margin-right: 8px;">●</span>
+		<h3 style="margin: 0; font-size: 1.1rem; color: #333; text-align: left;">길드 정보</h3>
+	</div>
+	<div class="content">
+		<div class="card" style="text-align: center; padding: 30px 20px;">
+			<div style="font-size: 3rem; margin-bottom: 10px;">🛡️</div>
+			<h2 id="my-guild-name">다윗의 용사들</h2>
+			<p style="color: #666; font-size: 0.9rem;">"용기와 믿음으로 승리하는 길드"</p>
+			<div class="user-rank"
+				 style="display: inline-block; margin-top: 10px; background: #E3F2FD; color: #4A90E2;">
+				길드 레벨. 3
 			</div>
 		</div>
-		<div style="background: #FAFBFC; padding: 12px; border-radius: 15px;">
-			<div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: bold; color: #777;">
-				<span>성장 경험치 (EXP)</span>
-				<span><span id="current-exp">60</span> / 100</span>
+
+		<h3>🔥 길드 협동 미션</h3>
+		<div class="card">
+			<div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+				<span>함께 성경 100독 하기</span>
+				<span style="color: #4A90E2; font-weight: bold;">75%</span>
 			</div>
-			<div class="exp-container">
-				<div id="exp-bar" class="exp-bar-fill" style="width: 60%;"></div>
+			<div
+					style="width: 100%; height: 12px; background: #eee; border-radius: 6px; overflow: hidden;">
+				<div
+						style="width: 75%; height: 100%; background: linear-gradient(90deg, #4A90E2, #64B5F6);"></div>
 			</div>
+			<p style="font-size: 0.8rem; color: #999; margin-top: 8px;">완료 시 모든 길드원에게 500P 지급!</p>
+		</div>
+
+		<h3>👥 길드 멤버 (8명)</h3>
+		<div class="card" style="padding: 10px;">
+			<ul style="list-style: none;">
+				<li style="display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #eee;">
+					<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/warrior.png"
+						 style="width: 40px; height: 40px; border-radius: 50%;">
+					<div style="flex: 1;"><strong>김하늘 (길드장)</strong><br><small style="color: #999;">Lv.15
+						용사</small></div>
+					<span style="color: #4CAF50; font-size: 0.8rem;">● 접속중</span>
+				</li>
+				<li style="display: flex; align-items: center; gap: 10px; padding: 10px 0;">
+					<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/healer.png"
+						 style="width: 40px; height: 40px; border-radius: 50%;">
+					<div style="flex: 1;"><strong>이믿음</strong><br><small style="color: #999;">Lv.10
+						치유사</small></div>
+					<span style="color: #ccc; font-size: 0.8rem;">1시간 전</span>
+				</li>
+			</ul>
 		</div>
 	</div>
-	<div class="card">
-		<h4>오늘의 말씀 📖</h4>
-		<p style="font-style:italic; min-height: 1.6em;">
-			<span id="typing-bible">내게 능력 주시는 자 안에서 내가 모든 것을 할 수 있느니라</span>
-		</p>
-	</div>
-	<div class="guild-section">
-		<div class="guild-header">
-			<div class="guild-name">
-				<h4 style="color: #4A90E2;">🛡️ 다윗의 용사들</h4>
-				<span class="guild-tag">LV.5</span>
-			</div>
-			<span style="font-size: 0.75rem; color: #666; font-weight: bold;">길드원 12/20</span>
-		</div>
-		<div style="margin-top: 10px;">
-			<p style="font-size: 0.8rem; color: #666;">공동 퀘스트: 이번 주 말씀 50번 읽기</p>
-			<div style="width: 100%; height: 6px; background: #eee; border-radius: 10px; margin-top: 5px;">
-				<div style="width: 75%; height: 100%; background: #4A90E2; border-radius: 10px;"></div>
-			</div>
-			<p style="text-align: right; font-size: 0.7rem; color: #999; margin-top: 3px;">75% 달성 중</p>
-		</div>
-		<div class="guild-member-list">
-			<div class="member-item">
-				<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/warrior.png" class="member-avatar">
-				<div class="member-info">
-					<div class="member-name">김용사 (나) <span class="master-badge">MASTER</span></div>
-					<div class="member-status">오늘도 퀘스트 완료! 🔥</div>
-				</div>
-				<div style="text-align: right;">
-					<div style="font-size: 0.8rem; font-weight: bold; color: #4A90E2;">Lv.15</div>
-				</div>
-			</div>
-
-			<div class="member-item" style="opacity: 0.8;">
-				<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/wizard.png" class="member-avatar">
-				<div class="member-info">
-					<div class="member-name">이마법</div>
-					<div class="member-status">접속 중</div>
-				</div>
-				<div style="text-align: right;">
-					<div style="font-size: 0.8rem; font-weight: bold; color: #4A90E2;">Lv.12</div>
-				</div>
-			</div>
-			<button style="width: 100%; padding: 10px; border: 1px dashed #DDD; background: none; border-radius: 15px; color: #999; font-size: 0.8rem; cursor: pointer;">
-				+ 길드원 더보기
-			</button>
-		</div>
-	</div>
-	<div class="card" style="margin-top:15px;">
-		<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-			<h4 style="margin: 0;">공지사항 📢</h4>
-			<span style="font-size: 0.7rem; color: var(--gray); cursor: pointer;" onclick="showPage('page-notice-detail')">전체보기 ></span>
-		</div>
-		<div class="notice-list">
-			<div class="notice-item" onclick="showPage('page-notice-detail')" style="padding: 12px 0; border-bottom: 1px solid #f0f0f0; cursor: pointer;">
-				<div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
-					<span style="background: #FFEBEB; color: #FF4D4D; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: bold;">중요</span>
-					<span style="font-size: 0.9rem; font-weight: 700; color: #333;">이번 주 주일 야외 활동 안내</span>
-				</div>
-				<p style="font-size: 0.8rem; color: #777; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">교회 근처 공원에서 보물찾기가 진행됩니다!</p>
-			</div>
-			<div class="notice-item" onclick="showPage('page-notice-detail')" style="padding: 12px 0; border-bottom: 1px solid #f0f0f0; cursor: pointer;">
-				<div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
-					<span style="background: #E3F2FD; color: #2196F3; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: bold;">안내</span>
-					<span style="font-size: 0.9rem; font-weight: 700; color: #333;">새 친구 환영 파티 (다음 주)</span>
-				</div>
-				<p style="font-size: 0.8rem; color: #777; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">새로 온 친구들을 위해 맛있는 간식이 준비되어 있어요.</p>
-			</div>
-			<div class="notice-item" onclick="showPage('page-notice-detail')" style="padding: 12px 0; cursor: pointer;">
-				<div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
-					<span style="background: #F5F5F5; color: #666; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: bold;">필독</span>
-					<span style="font-size: 0.9rem; font-weight: 700; color: #333;">달란트 시장 개최 공지</span>
-				</div>
-				<p style="font-size: 0.8rem; color: #777; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">열심히 모은 달란트를 사용할 시간이 왔습니다!</p>
-			</div>
-		</div>
-	</div>
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<script>
-		let currentTalent = 2500;
-
-		// 페이지 전환 함수
-		function showPage(pageId) {
-			$('.page').hide();
-			$('#' + pageId).show();
-			$('#bottom-nav').css('display', 'flex');
-
-
-			// --- 경험치 바 애니메이션 로직 추가 ---
-			if (pageId === 'page-main') {
-
-			}
-			// ------------------------------------
-
-			$('.nav-item').removeClass('active');
-			if (pageId === 'page-main') $('.nav-item').eq(0).addClass('active');
-			if (pageId === 'page-attendance') $('.nav-item').eq(1).addClass('active');
-			if (pageId === 'page-guild') $('.nav-item').eq(2).addClass('active');
-			if (pageId === 'page-quest') $('.nav-item').eq(3).addClass('active');
-			// 추가: 마이페이지(설정)가 켜졌을 때 4번 인덱스(5번째) 버튼 활성화
-			if (pageId === 'page-mypage') $('.nav-item').eq(4).addClass('active');
-		}
-
-		// 달란트 카운팅 애니메이션 함수
-		function updateTalent(amount) {
-			let $subDisplay = $('.sub-money, #user-level'); // 서브페이지용
-
-			let startValue = currentTalent;
-			let endValue = currentTalent + amount;
-
-			$({val: startValue}).animate({val: endValue}, {
-				duration: 800, // 0.8초 동안 애니메이션
-				easing: 'swing',
-				step: function () {
-					// 숫자에 콤마(,) 추가하며 업데이트
-					let formatted = Math.floor(this.val).toLocaleString();
-					$subDisplay.text(formatted);
-				},
-				complete: function () {
-					currentTalent = endValue;
-					$subDisplay.text(currentTalent.toLocaleString());
-				}
-			});
-		}
-
-		// 알림창 띄우기 함수 (메시지, 아이콘, 제목)
-		function showAlert(msg, icon = '✨', title = '알림') {
-			$('#alert-message').html(msg);
-			$('#alert-icon').html(icon);
-			$('#alert-title').text(title);
-			$('#custom-alert').addClass('active');
-		}
-
-		// 알림창 닫기 함수
-		function closeAlert() {
-			$('#custom-alert').removeClass('active');
-		}
-
-		// --- 기존 코드 수정 예시 ---
-
-		$(document).ready(function () {
-			const targetExp = $('#current-exp').text(); // 현재 60 등으로 설정된 텍스트값 읽기
-			const totalExp = 100; // 최대 경험치
-			const percentage = (targetExp / totalExp) * 100;
-
-			// 0으로 초기화했다가 0.1초 뒤에 목표치로 설정 (애니메이션 효과 극대화)
-			$('#exp-bar').css('width', '0%');
-			setTimeout(() => {
-				$('#exp-bar').css('width', percentage + '%');
-			}, 100);
-
-			// 말씀 타이핑 효과도 여기서 함께 실행하면 좋습니다.
-			typeBible();
-
-
-			// 날짜 표시
-			$('#current-date').text(
-				new Date().toLocaleDateString('ko-KR', {year: 'numeric', month: 'long', day: 'numeric'}));
-
-			$('#stamp-zone').click(function () {
-				if ($(this).hasClass('checked')) {
-					showAlert('이미 오늘의 출석을 완료했습니다!', '📅', '알림');
-					return;
-				}
-
-				// 상태 변경
-				$(this).addClass('checked').css({
-					'background': '#FFF0F0',
-					'border-color': '#FF6B6B'
-				}).html('<img src="https://cdn-icons-png.flaticon.com/512/3585/3585145.png" style="width:100px;">');
-
-				// 오늘 날짜 슬롯도 체크 표시 (수요일 예시)
-				$('.slot-circle.today').addClass('checked');
-
-				showAlert('참 잘했어요!<br>출석 달란트 <b>+100P</b>를 획득했습니다!',
-					'<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/attendance.png" style="width:80px;">', '출석 성공!');
-
-				//updateTalent(100);
-			});
-
-			// 퀘스트 이벤트 (이벤트 위임 사용)
-			$('.q-check').change(function () {
-				const isChecked = $(this).is(':checked');
-				$(this).parent().toggleClass('quest-done', isChecked);
-				updateTalent(isChecked ? 50 : -50);
-			});
-			updateTalent(50);
-		});
-
-		// 타이핑 효과용 변수
-		const bibleText = "내게 능력 주시는 자 안에서 내가 모든 것을 할 수 있느니라";
-		let typingIdx = 0;
-		let isTyping = false; // 중복 실행 방지
-
-		function typeBible() {
-			if (isTyping) return; // 이미 타이핑 중이면 무시
-			const $target = $('#typing-bible');
-			$target.text(""); // 초기화
-			typingIdx = 0;
-			isTyping = true;
-
-			function typing() {
-				if (typingIdx < bibleText.length) {
-					$target.append(bibleText[typingIdx]);
-					typingIdx++;
-					setTimeout(typing, 100); // 타이핑 속도 (100ms)
-				} else {
-					isTyping = false; // 타이핑 완료
-				}
-			}
-
-			typing();
-		}
-
-		function handleLogout() {
-			location.href = 'intro.html';
-		}
-
-		// 비밀번호 변경 처리 함수
-		function handlePasswordChange() {
-			const currentPw = $('#current-pw').val();
-			const newPw = $('#new-pw').val();
-			const newPwConfirm = $('#new-pw-confirm').val();
-
-			// 간단한 유효성 검사
-			if (!currentPw || !newPw || !newPwConfirm) {
-				showAlert('모든 항목을 입력해주세요!', '⚠️', '입력 오류');
-				return;
-			}
-
-			if (newPw !== newPwConfirm) {
-				showAlert('새 비밀번호가 서로 일치하지 않아요.', '❌', '확인 실패');
-				return;
-			}
-
-			if (newPw.length < 4) {
-				showAlert('비밀번호는 4자리 이상으로 해주세요!', '🔑', '보안 약함');
-				return;
-			}
-
-			// 변경 성공 시뮬레이션
-			showAlert('비밀번호가 안전하게 변경되었습니다!<br>새로운 마음으로 모험을 떠나볼까요?', '✨', '변경 완료');
-
-			// 입력창 초기화 및 마이페이지로 이동
-			$('#current-pw, #new-pw, #new-pw-confirm').val('');
-			showPage('page-mypage');
-		}
-	</script>
-</div>
+</th:block>
 </html>
