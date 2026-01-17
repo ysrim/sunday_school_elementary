@@ -23,7 +23,7 @@
 ## 🛠️ 기술 스택 (Tech Stack)
 
 ### Backend
-![Java](https://img.shields.io/badge/Java-11%2B-ED8B00?style=for-the-badge&logo=java&logoColor=white)
+![Java](https://img.shields.io/badge/Java-17%2B-ED8B00?style=for-the-badge&logo=java&logoColor=white)
 ![Spring Framework](https://img.shields.io/badge/Spring_Legacy-6.2.15-6DB33F?style=for-the-badge&logo=spring&logoColor=white)
 ![MyBatis](https://img.shields.io/badge/MyBatis-3.5.19-black?style=for-the-badge)
 ![MariaDB](https://img.shields.io/badge/MariaDB-10.x-003545?style=for-the-badge&logo=mariadb&logoColor=white)
