@@ -7,15 +7,15 @@ import app.idx.reg.vo.JoinMemberVO;
 @Mapper
 public interface JoinMapper {
 
-	public int idDupleChk(String memberId);
+	int idDupleChk(String memberId);
 
-	public String sltMberSn();
+	String sltMberSn();
 
-	public int insMberInfo(JoinMemberVO joinMemberVO);
+	int insMberInfo(JoinMemberVO joinMemberVO);
 
-	public int insAvatarInfo(JoinMemberVO joinMemberVO);
+	int insAvatarInfo(JoinMemberVO joinMemberVO);
 
-	public String sltGuildInfo(JoinMemberVO joinMemberVO);
+	String sltGuildInfo(JoinMemberVO joinMemberVO);
 
 	// 1. MBER_INFO insert -> MBER_SN return;
 

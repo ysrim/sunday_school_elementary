@@ -1,9 +1,6 @@
 package app.idx.lgn.web;
 
-import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,9 +10,9 @@ import com.base.utl.ResUtil;
 import app.idx.lgn.service.LoginService;
 import app.idx.lgn.vo.LoginVO;
 import app.idx.lgn.vo.SessionVO;
-import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
