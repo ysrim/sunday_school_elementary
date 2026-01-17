@@ -20,7 +20,17 @@ public class HomeController {
 	@MenuInfo(navi = NaviEnum.STD_HOME, role = MberGrdEnum.STD)
 	@RequestMapping("/home.pg")
 	public String homePg(Model model) {
-		return "/std/page/home";
+
+		//길드, 달란트
+		// 아바타명
+
+		// 오늘의 말씀
+
+		// 소속한 길드명, 길드레벨, 길드원
+
+		// 공지사항
+
+		return "/app/psn/stu/page/home";
 	}
 
 }

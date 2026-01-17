@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @ControllerAdvice
 public class CustomRestExceptionHandler {
 
-	private static final String ERROR_VIEW_PATH = "/error/errorPage";
+	private static final String ERROR_VIEW_PATH = "/app/err/errorPage";
 
 	/**
 	 * 공통 응답 처리 메소드

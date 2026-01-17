@@ -31,6 +31,9 @@ public class JoinMemberVO {
 	@Size(min = 4, message = "패스워드는 4자 이상이어야 합니다.")
 	private String pwd = ""; // 패스워드
 
+	@NotEmpty(message = "성별을 선택해주세요!")
+	private String sexdstnCode = "";
+
 	@NotEmpty(message = "닉네임을 입력해주세요!")
 	@Size(min = 3, message = "닉네임은 3자 이상이어야 합니다.")
 	private String ncnm = ""; // 닉네임

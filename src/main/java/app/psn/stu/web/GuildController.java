@@ -18,7 +18,7 @@ public class GuildController {
 	@MenuInfo(navi = NaviEnum.STD_GILD, role = MberGrdEnum.STD)
 	@RequestMapping("/gild.pg")
 	public String guildPg(Model model) {
-		return "/std/page/gild";
+		return "/app/psn/stu/page/gild";
 	}
 
 }

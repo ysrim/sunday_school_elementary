@@ -28,7 +28,7 @@ public class AttendanceController {
 	@MenuInfo(navi = NaviEnum.STD_ATND, role = MberGrdEnum.STD)
 	@RequestMapping("/atnd.pg")
 	public String attendancePg(Model model) {
-		return "/std/page/atnd";
+		return "/app/psn/stu/page/atnd";
 	}
 
 	@MenuInfo(role = MberGrdEnum.STD)

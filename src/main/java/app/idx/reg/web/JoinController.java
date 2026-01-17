@@ -1,6 +1,7 @@
 package app.idx.reg.web;
 
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.base.utl.ResUtil;
 
 import app.idx.reg.service.JoinService;
@@ -27,7 +29,7 @@ public class JoinController {
 
 	@RequestMapping(path = "/join.pg")
 	public String joinPage(@ModelAttribute("joinFm") JoinMemberVO joinMemberVO) {
-		return "jsp/app/join";
+		return "/app/idx/join";
 	}
 
 	@RequestMapping(path = "/join.ax")
@@ -36,7 +38,6 @@ public class JoinController {
 
 		log.debug("joinMemberVO: {}", joinMemberVO);
 
-		// 저장 시 암호화
 		joinMemberVO.setPwd(passwordEncoder.encode(joinMemberVO.getPwd()));
 
 		joinService.joinMber(joinMemberVO);

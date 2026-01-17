@@ -1,13 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 	<title>봉동중앙교회 초등부 RPG</title>
 	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;800&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="<c:url value='/files/css/intro_style.css'/>">
+	<link rel="stylesheet" th:href="@{/files/css/intro_style.css}">
 </head>
 <body>
 <div class="app-container">
@@ -22,12 +20,12 @@
 			<p class="intro-subtitle">말씀으로 성장하고 ⚔️<br>달란트를 모아 레벨업하자!</p>
 		</div>
 		<div class="intro-footer">
-			<button class="btn-start" onclick="location.href='<c:url value="/idx/login.pg"/>'">
+			<button class="btn-start" th:onclick="|location.href='@{/idx/login.pg}'|">
 				모험 시작하기! ⚔
 			</button>
 			<div class="warrior-count">
 				<span class="status-dot"></span>
-				이번 주 <b>120명</b>의 용사가 함께 모험 중!
+				<b th:text="|${stuMberCnt}명|">0명</b> 용사가 함께 모험 중!
 			</div>
 		</div>
 	</div>

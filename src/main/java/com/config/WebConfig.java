@@ -67,6 +67,6 @@ public class WebConfig implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(loginInterceptor)
 			.addPathPatterns("/**")
-			.excludePathPatterns("/idx/**", "/files/**"); // 정적 리소스와 인덱스 페이지 제외 추가 권장
+			.excludePathPatterns("/idx/**", "/error/**", "/files/**"); // 정적 리소스와 인덱스 페이지 제외 추가 권장
 	}
 }

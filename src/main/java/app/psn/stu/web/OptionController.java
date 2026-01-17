@@ -18,7 +18,7 @@ public class OptionController {
 	@MenuInfo(navi = NaviEnum.STD_OPTS, role = MberGrdEnum.STD)
 	@RequestMapping("/opts.pg")
 	public String guildPg(Model model) {
-		return "/std/page/opts";
+		return "/app/psn/stu/page/opts";
 	}
 
 }

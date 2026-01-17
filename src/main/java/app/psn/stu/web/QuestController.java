@@ -18,7 +18,7 @@ public class QuestController {
 	@MenuInfo(navi = NaviEnum.STD_QEST, role = MberGrdEnum.STD)
 	@RequestMapping("/qest.pg")
 	public String questPg(Model model) {
-		return "/std/page/qest";
+		return "/app/psn/stu/page/qest";
 	}
 
 }

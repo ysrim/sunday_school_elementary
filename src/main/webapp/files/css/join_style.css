@@ -34,7 +34,7 @@ body {
     margin: 0 auto;
     min-height: 100vh;
     background: var(--white);
-    box-shadow: 0 0 30px rgba(0,0,0,0.05);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: column;
 }
@@ -123,7 +123,9 @@ input:focus, select:focus {
     transition: all 0.2s;
 }
 
-.btn-check:hover { background: #B3E5FC; }
+.btn-check:hover {
+    background: #B3E5FC;
+}
 
 /* 아바타 선택 그리드 강화 */
 .avatar-grid {
@@ -203,4 +205,61 @@ input:focus, select:focus {
     padding: 4px 0 0 6px;
     font-weight: 500;
     color: #ff5252;
+}
+
+/* ✅ 성별 선택 영역 스타일 시작 */
+.radio-group {
+    display: flex;
+    gap: 12px; /* 버튼 사이 간격 */
+    margin-bottom: 25px; /* 아래 요소와의 간격 */
+    width: 100%;
+}
+
+.radio-label {
+    flex: 1; /* 두 버튼이 동일한 너비를 가짐 */
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    background: #fff; /* 기본 배경 흰색 */
+    border: 2px solid #e0e0e0; /* 기본 테두리 회색 */
+    border-radius: 15px; /* 둥근 모서리 (카드 디자인과 통일) */
+    cursor: pointer;
+    font-weight: 700;
+    color: #777;
+    font-size: 1.1rem;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* 부드러운 애니메이션 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* 기본 라디오 버튼 숨기기 */
+.radio-label input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* 마우스 올렸을 때 효과 */
+.radio-label:hover {
+    border-color: #4A90E2; /* 테마색 (파랑) */
+    background: #f5faff;
+    transform: translateY(-2px); /* 살짝 위로 */
+}
+
+/* :has() 선택자는 최신 브라우저에서 작동하며, input이 체크된 label을 디자인합니다. */
+.radio-label:has(input:checked) {
+    border-color: #4A90E2; /* 테두리 파랑 */
+    background: #eef7ff; /* 배경 연한 파랑 */
+    color: #4A90E2; /* 글자색 파랑 */
+    box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3); /* 파란색 그림자 효과 */
+    transform: translateY(-3px); /* 위로 톡 튀어나옴 */
+}
+
+/* 성별 아이콘 스타일 */
+.gender-icon {
+    font-size: 1.4rem;
+    margin-right: 8px;
 }
