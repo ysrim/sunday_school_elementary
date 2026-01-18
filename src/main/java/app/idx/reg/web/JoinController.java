@@ -36,8 +36,6 @@ public class JoinController {
 	@ResponseBody
 	public ResponseEntity joinAx(@Valid JoinMemberVO joinMemberVO) {
 
-		log.debug("joinMemberVO: {}", joinMemberVO);
-
 		joinMemberVO.setPwd(passwordEncoder.encode(joinMemberVO.getPwd()));
 
 		joinService.joinMber(joinMemberVO);

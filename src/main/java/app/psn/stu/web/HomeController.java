@@ -21,14 +21,16 @@ public class HomeController {
 	@RequestMapping("/home.pg")
 	public String homePg(Model model) {
 
-		//길드, 달란트
-		// 아바타명
+		// 캐쉬데이터
+		// 1. 달란트
+		// 2. 레벨
+		// 3. 경험치
 
-		// 오늘의 말씀
-
-		// 소속한 길드명, 길드레벨, 길드원
-
-		// 공지사항
+		// sql가져오기
+		// 1. 길드원 숫자
+		// 2. 길드목원 목록 레벨 높은 사람 > 이름 순 으로 3명 까지
+		// 3. 공지사항
+		// 4. 오늘의 말씀
 
 		return "/app/psn/stu/page/home";
 	}

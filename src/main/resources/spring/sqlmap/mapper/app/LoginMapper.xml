@@ -3,20 +3,23 @@
 <mapper namespace="app.idx.lgn.mapper.LoginMapper">
 
 	<select id="sltMber" parameterType="app.idx.lgn.vo.LoginVO" resultType="app.idx.lgn.vo.SessionVO">
-		SELECT A.MBER_SN
-			 , A.MBER_ID
-			 , A.MBER_NM
-			 , A.PWD
-			 , A.GRADE_CODE
-			 , B.NCNM
-			 , B.OCCP_CODE
-			 , B.EXP
-			 , B.LEVEL
-		FROM MBER_INFO A
-				 INNER JOIN AVATAR_INFO B
-							ON A.MBER_SN = B.MBER_SN
-		WHERE A.MBER_ID = #{mberId}
-		  AND A.USE_AT = 'Y';
-	</select>
+        SELECT A.MBER_SN
+             , A.MBER_ID
+             , A.MBER_NM
+             , A.PWD
+             , A.GRADE_CODE
+             , A.SEXDSTN
+             , B.NCNM
+             , B.OCCP_CODE
+             , B.EXP
+             , B.LEVEL
+             , D.GUILD_NM
+        FROM MBER_INFO A
+                 INNER JOIN AVATAR_INFO B ON A.MBER_SN = B.MBER_SN
+                 INNER JOIN GUILD_MBER_LIST C ON A.MBER_SN = C.MBER_SN
+                 INNER JOIN GUILD_INFO D ON C.GUILD_SN = D.GUILD_SN
+        WHERE A.MBER_ID = #{mberId}
+          AND A.USE_AT = 'Y'
+    </select>
 
 </mapper>

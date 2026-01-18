@@ -2,10 +2,7 @@ package com.init;
 
 import java.util.EnumSet;
 
-import com.config.AppConfig;
-import com.config.DataSourceConfig;
-import com.config.SecurityConfig;
-import com.config.WebConfig;
+import com.config.*;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.ServletContext;
@@ -20,19 +17,24 @@ public class WebAppInit extends AbstractAnnotationConfigDispatcherServletInitial
 	// Root Context (Service, Repository, DB 등)
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
-		return new Class<?>[] {AppConfig.class, DataSourceConfig.class, SecurityConfig.class};
+		return new Class<?>[]{
+				AppConfig.class // properties 설정
+				, DataSourceConfig.class // db conn
+				, SecurityConfig.class // password encode
+				, CacheConfig.class // chache
+		};
 	}
 
 	// Servlet Context (Controller, ViewResolver, Interceptor 등)
 	@Override
 	protected Class<?>[] getServletConfigClasses() {
-		return new Class<?>[] {WebConfig.class};
+		return new Class<?>[]{WebConfig.class};
 	}
 
 	// DispatcherServlet 매핑 패턴
 	@Override
 	protected String[] getServletMappings() {
-		return new String[] {"*.do", "*.ax", "*.pg"};
+		return new String[]{"*.do", "*.ax", "*.pg"};
 	}
 
 	// 인코딩 필터 등록 (web.xml의 filter 설정 대체)
@@ -41,7 +43,7 @@ public class WebAppInit extends AbstractAnnotationConfigDispatcherServletInitial
 		CharacterEncodingFilter encodingFilter = new CharacterEncodingFilter();
 		encodingFilter.setEncoding("UTF-8");
 		encodingFilter.setForceEncoding(true);
-		return new Filter[] {encodingFilter};
+		return new Filter[]{encodingFilter};
 	}
 
 	@Override

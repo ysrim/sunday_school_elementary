@@ -61,9 +61,9 @@ public class ThymeleafConfig {
 		ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
 		viewResolver.setTemplateEngine(templateEngine());
 		viewResolver.setCharacterEncoding("UTF-8");
-		viewResolver.setOrder(2);
+		viewResolver.setOrder(1);
 		// ★ 핵심: JSP 경로는 Thymeleaf가 처리하지 않도록 명시적 제외
-		viewResolver.setExcludedViewNames(new String[]{"jsp/*"});
+		//viewResolver.setExcludedViewNames(new String[]{"jsp/*"});
 		return viewResolver;
 	}
 }

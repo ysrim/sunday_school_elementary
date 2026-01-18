@@ -55,12 +55,11 @@ public class JoinServiceImpl implements JoinService {
 			throw new RuntimeException("선택하신 학년/반에 해당하는 길드 정보가 없습니다.");
 		}
 
-		// VO에 길드 번호 세팅 (추후 insert시 필요할 것으로 추정)
-		joinMemberVO.setGuildSn(guildSn);
-
 		// 4. GUILD_MBER_LIST insert (누락된 로직 추가 필요)
-		// joinDAO.insGuildMberList(joinMemberVO);
+		joinMemberVO.setGuildSn(guildSn);
+		joinMapper.insGuildMberList(joinMemberVO);
 
 		return true;
+
 	}
 }

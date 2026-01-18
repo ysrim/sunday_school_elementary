@@ -44,7 +44,7 @@
 					this.$msgPw = $('#msg-pw');
 
 					// ✅ 성별 라디오 버튼 그룹 추가 (name 속성으로 선택)
-					this.$genderInputs = $('input[name="sexdstnCode"]');
+					this.$genderInputs = $('input[name="sexdstn"]');
 
 					this.$alert = $('#custom-alert');
 					this.$alertMsg = $('#alert-message');
@@ -237,11 +237,11 @@
 				<label>성별을 선택해주세요</label>
 				<div class="radio-group">
 					<label class="radio-label">
-						<input type="radio" th:field="*{sexdstnCode}" value="M">
+						<input type="radio" th:field="*{sexdstn}" value="M">
 						남자 용사
 					</label>
 					<label class="radio-label">
-						<input type="radio" th:field="*{sexdstnCode}" value="F">
+						<input type="radio" th:field="*{sexdstn}" value="F">
 						여자 용사
 					</label>
 				</div>
@@ -251,35 +251,35 @@
 				<input type="hidden" th:field="*{occpCode}">
 				<div class="avatar-grid" id="avatar-selector">
 					<div class="avatar-item" data-id="001">
-						<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/warrior_m.png" alt="전사">
+						<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/001_m.png" alt="전사">
 						<span>믿음의 전사</span>
 					</div>
 					<div class="avatar-item" data-id="002">
-						<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/guardian_m.png" alt="수호자">
+						<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/002_m.png" alt="수호자">
 						<span>절제의 수호자</span>
 					</div>
 					<div class="avatar-item" data-id="003">
-						<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/paladin_m.png" alt="성기사">
+						<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/003_m.png" alt="성기사">
 						<span>소망의 성기사</span>
 					</div>
 					<div class="avatar-item" data-id="004">
-						<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/archer_m.png" alt="궁수">
+						<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/004_m.png" alt="궁수">
 						<span>평안의 궁수</span>
 					</div>
 					<div class="avatar-item" data-id="005">
-						<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/wizard_m.png" alt="마법사">
+						<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/005_m.png" alt="마법사">
 						<span>지혜의 마법사</span>
 					</div>
 					<div class="avatar-item" data-id="006">
-						<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/healer_m.png" alt="힐러">
+						<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/006_m.png" alt="힐러">
 						<span>사랑의 힐러</span>
 					</div>
 					<div class="avatar-item" data-id="007">
-						<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/druid_m.png" alt="힐러">
+						<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/007_m.png" alt="드루이드">
 						<span>성장의 드루이드</span>
 					</div>
 					<div class="avatar-item" data-id="008">
-						<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/poet_m.png" alt="음유시인">
+						<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/008_m.png" alt="음유시인">
 						<span>기쁨의 음유시인</span>
 					</div>
 				</div>

@@ -27,4 +27,8 @@ public class SessionVO {
 
 	private String level = ""; // 캐릭터_래벨
 
+	private String guildNm = ""; // 길드_이름
+
+	private String sexdstn = ""; // 성별
+
 }

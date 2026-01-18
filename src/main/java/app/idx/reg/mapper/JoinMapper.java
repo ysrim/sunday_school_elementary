@@ -15,14 +15,8 @@ public interface JoinMapper {
 
 	int insAvatarInfo(JoinMemberVO joinMemberVO);
 
+	int insGuildMberList(JoinMemberVO joinMemberVO);
+
 	String sltGuildInfo(JoinMemberVO joinMemberVO);
-
-	// 1. MBER_INFO insert -> MBER_SN return;
-
-	// 2.AVATAR_INFO insert
-
-	// 3. 입력한 학년/반 정보로 GUILD_INFO 정보를 찾는다. -> GUILD_SN return;
-
-	// 4.GUILD_MBER_LIST insert
 
 }

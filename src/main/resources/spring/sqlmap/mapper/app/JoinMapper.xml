@@ -14,13 +14,18 @@
 	</select>
 
 	<insert id="insMberInfo" parameterType="app.idx.reg.vo.JoinMemberVO">
-		INSERT INTO MBER_INFO (MBER_SN, MBER_ID, MBER_NM, PWD, SEXDSTN_Code)
-		VALUES (#{mberSn}, #{mberId}, #{mberNm}, #{pwd}, #{sexdstnCode})
+		INSERT INTO MBER_INFO (MBER_SN, MBER_ID, MBER_NM, PWD, SEXDSTN)
+		VALUES (#{mberSn}, #{mberId}, #{mberNm}, #{pwd}, #{sexdstn})
 	</insert>
 
 	<insert id="insAvatarInfo" parameterType="app.idx.reg.vo.JoinMemberVO">
 		INSERT INTO AVATAR_INFO (MBER_SN, NCNM, OCCP_CODE)
 		VALUES (#{mberSn}, #{ncnm}, #{occpCode})
+	</insert>
+
+	<insert id="insGuildMberList" parameterType="app.idx.reg.vo.JoinMemberVO">
+		INSERT INTO GUILD_MBER_LIST (MBER_SN, GUILD_SN)
+		VALUES (#{mberSn}, #{guildSn})
 	</insert>
 
 	<select id="sltGuildInfo" parameterType="app.idx.reg.vo.JoinMemberVO" resultType="string">

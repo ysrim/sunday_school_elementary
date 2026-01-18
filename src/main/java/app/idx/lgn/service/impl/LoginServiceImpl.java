@@ -46,6 +46,10 @@ public class LoginServiceImpl implements LoginService {
 		// 3. session set
 		SessionUtil.setAttribute(SessionKeyEnum.MBER_INFO.getKey(), sessionVO);
 
+		// 1. 아바타 이름, 길드 이름, 회원시퀀스
+		// 2. 개인화 캐쉬> 달란트, exp, 레벨
+		// 3. 공통화 캐쉬> 오늘의 말씀, 길드레벨,
+
 		return sessionVO;
 
 	}
