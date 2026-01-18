@@ -20,7 +20,12 @@ import com.zaxxer.hikari.HikariDataSource;
 @Configuration
 @PropertySource("classpath:spring/prop/db.properties")
 @EnableTransactionManagement
-@MapperScan("app.idx.lgn.mapper,app.idx.man.mapper,app.idx.reg.mapper")
+@MapperScan(value = {"app.idx.lgn.mapper" //
+	+ ",app.idx.man.mapper" //
+	+ ",app.idx.reg.mapper" //
+	+ ",app.psn.com.mapper" //
+	+ ",app.psn.stu.mapper" //
+})
 public class DataSourceConfig {
 
 	@Value("${jdbc.driver}")
@@ -71,9 +76,7 @@ public class DataSourceConfig {
 		sessionFactory.setDataSource(dataSource);
 
 		// 1. Mapper XML 위치 지정
-		sessionFactory.setMapperLocations(
-			new PathMatchingResourcePatternResolver().getResources("classpath:spring/sqlmap/mapper/**/*.xml")
-		);
+		sessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:spring/sqlmap/mapper/**/*.xml"));
 
 		// 2. DTO 패키지 별칭 지정
 		sessionFactory.setTypeAliasesPackage("com.example.domain");

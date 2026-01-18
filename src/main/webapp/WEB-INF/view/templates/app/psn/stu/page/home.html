@@ -26,7 +26,7 @@
 			 */
 			animateExpBar: function () {
 				// HTML 태그에서 값 가져오기 (예: <span id="current-exp" data-current="60" data-max="100">)
-				const current = this.$expText.data('current') || 60;
+				const current = this.$expText.data('current') || 0;
 				const max = this.$expText.data('max') || 100;
 				const percentage = Math.min((current / max) * 100, 100); // 100% 넘지 않도록 방지
 				// CSS 초기화 후 애니메이션
@@ -74,19 +74,18 @@
 			<div style="margin-left: 15px;">
 				<div style="display: flex; gap: 5px;">
 					<span class="user-rank-badge" style="background: #E3F2FD; color: #4A90E2;" th:text="|${session.mberInfo.guildNm} 길드|"></span>
-					<span class="user-rank-badge" style="background: #FFF3E0; color: #EF6C00;"><span>LV. 1</span></span>
 					<span class="user-rank-badge" style="background: #FFF3E0; color: #EF6C00;"><span>2,500</span> 달란트</span>
 				</div>
-				<h2 style="font-size: 1.3rem; color: #333;" th:text="${session.mberInfo.ncnm}" ></h2>
+				<h2 style="font-size: 1.3rem; color: #333;" th:text="|Lv.1 ${session.mberInfo.ncnm}|"></h2>
 			</div>
 		</div>
 		<div style="background: #FAFBFC; padding: 12px; border-radius: 15px;">
 			<div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: bold; color: #777;">
 				<span>성장 경험치 (EXP)</span>
-				<span><span id="current-exp">60</span> / 100</span>
+				<span><span id="current-exp" th:text="${mberPoint}" th:data-current="${mberPoint}"></span> / 100</span>
 			</div>
 			<div class="exp-container">
-				<div id="exp-bar" class="exp-bar-fill" style="width: 60%;"></div>
+				<div id="exp-bar" class="exp-bar-fill" th:style="|width: ${mberPoint}%;|"></div>
 			</div>
 		</div>
 	</div>

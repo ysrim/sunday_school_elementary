@@ -9,26 +9,26 @@ import lombok.ToString;
 @ToString
 public class SessionVO {
 
-	private String mberSn = ""; // 회원_일련번호
+	private int mberSn; // 회원_일련번호
 
-	private String mberId = ""; // 회원_아이디
+	private String mberId; // 회원_아이디
 
-	private String mberNm = ""; // 회원_이름
+	private String mberNm; // 회원_이름
 
-	private String pwd = ""; // 패스워드
+	private String pwd; // 패스워드
 
-	private String gradeCode = ""; // 등급_코드
+	private String gradeCode; // 등급_코드
 
-	private String ncnm = ""; // 닉네임
+	private String ncnm; // 닉네임
 
-	private String occpCode = ""; // 직업_코드
+	private String occpCode; // 직업_코드
 
-	private String exp = ""; // 경험치
+	private int exp; // 경험치
 
-	private String level = ""; // 캐릭터_래벨
+	private int level; // 캐릭터_래벨
 
-	private String guildNm = ""; // 길드_이름
+	private String guildNm; // 길드_이름
 
-	private String sexdstn = ""; // 성별
+	private String sexdstn; // 성별
 
 }

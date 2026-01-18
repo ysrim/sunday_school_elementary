@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="app.psn.com.mapper.CacheMapper">
+
+	<select id="sltPont" parameterType="int" resultType="int">
+		SELECT POINT
+		FROM AVATAR_INFO
+		WHERE MBER_SN = #{mberSn}
+	</select>
+
+	<select id="sltLv" parameterType="int" resultType="int">
+		SELECT LEVEL
+		FROM AVATAR_INFO
+		WHERE MBER_SN = #{mberSn}
+	</select>
+
+	<select id="sltExp" parameterType="int" resultType="int">
+		SELECT EXP
+		FROM AVATAR_INFO
+		WHERE MBER_SN = #{mberSn}
+	</select>
+
+</mapper>

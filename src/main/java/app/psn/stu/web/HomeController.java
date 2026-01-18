@@ -7,7 +7,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.base.annotation.MenuInfo;
 import com.base.enumm.MberGrdEnum;
 import com.base.enumm.NaviEnum;
+import com.base.utl.SessionUtil;
 
+import app.idx.lgn.vo.SessionVO;
+import app.psn.com.mapper.CacheMapper;
+import app.psn.com.service.CacheService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,14 +22,16 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/std")
 public class HomeController {
 
+	private final CacheService cacheService;
+
 	@MenuInfo(navi = NaviEnum.STD_HOME, role = MberGrdEnum.STD)
 	@RequestMapping("/home.pg")
-	public String homePg(Model model) {
+	public String homePg(HttpSession session, Model model) {
 
-		// 캐쉬데이터
-		// 1. 달란트
-		// 2. 레벨
-		// 3. 경험치
+		int mberSn = SessionUtil.getMberInfo().getMberSn();
+		model.addAttribute("mberPoint", cacheService.sltPont(mberSn)); // 달란트
+		model.addAttribute("mberLv", cacheService.sltLv(mberSn)); // 레벨
+		model.addAttribute("mberExp", cacheService.sltExp(mberSn)); // 경험치
 
 		// sql가져오기
 		// 1. 길드원 숫자

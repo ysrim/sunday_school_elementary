@@ -3,6 +3,9 @@ package com.base.utl;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.base.enumm.SessionKeyEnum;
+
+import app.idx.lgn.vo.SessionVO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -39,6 +42,14 @@ public class SessionUtil {
 	public static Object getAttribute(String name) {
 		HttpSession session = getSession();
 		return (session != null) ? session.getAttribute(name) : null;
+	}
+
+	public static SessionVO getMberInfo() {
+		HttpSession session = getSession();
+		if (session != null && session.getAttribute(SessionKeyEnum.MBER_INFO.getKey()) != null) {
+			return (SessionVO)session.getAttribute(SessionKeyEnum.MBER_INFO.getKey());
+		}
+		return null;
 	}
 
 	/**
