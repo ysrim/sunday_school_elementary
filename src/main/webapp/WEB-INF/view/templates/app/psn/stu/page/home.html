@@ -92,7 +92,9 @@
 	<div class="card">
 		<h4>오늘의 말씀 📖</h4>
 		<p style="font-style:italic; min-height: 1.6em;">
-			<span id="typing-bible">내게 능력 주시는 자 안에서 내가 모든 것을 할 수 있느니라</span>
+			<span id="typing-bible"
+				  th:text="|${todayBibleVerse.content} [${todayBibleVerse.bookName} ${todayBibleVerse.chapter}장 ${todayBibleVerse.verseStart}절]|">내게 능력 주시는 자 안에서 내가 모든 것을 할 수 있느니라
+			</span>
 		</p>
 	</div>
 	<div class="guild-section">

@@ -21,13 +21,8 @@ import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 @Configuration
 @EnableWebMvc
 @Import({ThymeleafConfig.class, AuthInterceptor.class})
-@ComponentScan(
-		basePackages = {"com", "net", "app"},
-		useDefaultFilters = false,
-		includeFilters = {
-				@ComponentScan.Filter(type = FilterType.ANNOTATION, classes = {Controller.class, ControllerAdvice.class})
-		}
-)
+@ComponentScan(basePackages = {"com", "net", "app"}, useDefaultFilters = false, includeFilters = {
+	@ComponentScan.Filter(type = FilterType.ANNOTATION, classes = {Controller.class, ControllerAdvice.class})})
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
@@ -44,14 +39,11 @@ public class WebConfig implements WebMvcConfigurer {
 
 	@Override
 	public void configureViewResolvers(ViewResolverRegistry registry) {
-		// 1. Thymeleaf 등록 (설정파일에서 Order 2, exclude jsp/* 설정됨)
 		registry.viewResolver(thymeleafViewResolver);
 	}
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(loginInterceptor)
-				.addPathPatterns("/**")
-				.excludePathPatterns("/idx/**", "/error/**", "/files/**"); // 정적 리소스와 인덱스 페이지 제외 추가 권장
+		registry.addInterceptor(loginInterceptor).addPathPatterns("/**").excludePathPatterns("/idx/**", "/error/**", "/files/**"); // 정적 리소스와 인덱스 페이지 제외 추가 권장
 	}
 }

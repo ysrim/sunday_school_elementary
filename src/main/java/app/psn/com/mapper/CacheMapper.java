@@ -1,6 +1,10 @@
 package app.psn.com.mapper;
 
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
+
+import app.psn.com.vo.TodayBibleVerseVO;
 
 @Mapper
 public interface CacheMapper {
@@ -10,5 +14,7 @@ public interface CacheMapper {
 	int sltLv(int mberSn); // 캐쉬데이터 레벨
 
 	int sltExp(int mberSn); // 캐쉬데이터 경험치
+
+	TodayBibleVerseVO sltTodayBibleVerse(); // 오늘의 성경말씀
 
 }

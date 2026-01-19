@@ -32,14 +32,17 @@ public class HomeController {
 		model.addAttribute("mberPoint", cacheService.sltPont(mberSn)); // 달란트
 		model.addAttribute("mberLv", cacheService.sltLv(mberSn)); // 레벨
 		model.addAttribute("mberExp", cacheService.sltExp(mberSn)); // 경험치
+		model.addAttribute("todayBibleVerse", cacheService.sltTodayBibleVerse()); // 오늘의 말씀
 
 		// sql가져오기
-		// 1. 길드원 숫자
-		// 2. 길드목원 목록 레벨 높은 사람 > 이름 순 으로 3명 까지
-		// 3. 공지사항
-		// 4. 오늘의 말씀
+		// 1. 길드원 숫자 (접속자 // 전체숫자)
+		// 2. 길드명, 길드마크
+		// 3. 일일퀘스트 완료하면 오늘도 퀘스트 뜸
+		// 4. 길드원 목록 나타나기(접속자 표시)
+		// 5. 공지사항
 
 		return "/app/psn/stu/page/home";
+
 	}
 
 }

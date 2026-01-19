@@ -31,4 +31,6 @@ public class SessionVO {
 
 	private String sexdstn; // 성별
 
+	private int guildSn; // 길드_일련번호
+
 }

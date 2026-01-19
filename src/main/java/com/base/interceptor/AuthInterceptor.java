@@ -3,8 +3,10 @@ package com.base.interceptor;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 
 import org.springframework.core.annotation.AnnotatedElementUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -17,6 +19,7 @@ import com.base.enumm.SessionKeyEnum;
 import com.base.utl.SessionUtil;
 
 import app.idx.lgn.vo.SessionVO;
+import app.psn.com.service.CacheService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +29,8 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 public class AuthInterceptor implements HandlerInterceptor {
+
+	private final CacheService cacheService;
 
 	private static final String LOGIN_PAGE_URL = "/idx/login.pg";
 	private static final String RTN_URL_PARAM = "rtnUrl";
@@ -68,6 +73,16 @@ public class AuthInterceptor implements HandlerInterceptor {
 			request.setAttribute("menuNm", NaviEnum.valueOf(menuInfo.navi().toString()).getNaviNm());
 		}
 
+		// 1. 로그인된 유저 ID 가져오기 (세션 등에서)
+		String mberId = SessionUtil.getMberInfo().getMberId();
+
+		if (mberId != null) {
+			// onlineMbers cache 키 저장 (유효시간 5분 설정)
+			cacheService.addOnlineMber(mberId);
+			// 로그인 체크여부는 이렇게
+			log.info("ysrim login? {}", cacheService.checkKeyExists("onlineMbers", "ysrim"));
+		}
+
 		return true;
 	}
 
@@ -76,8 +91,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 	 * (메서드에 붙어있거나, 클래스에 붙어있으면 통과)
 	 */
 	private boolean hasPassAuth(HandlerMethod handler) {
-		return AnnotatedElementUtils.hasAnnotation(handler.getMethod(), PassAuth.class)
-			|| AnnotatedElementUtils.hasAnnotation(handler.getBeanType(), PassAuth.class);
+		return AnnotatedElementUtils.hasAnnotation(handler.getMethod(), PassAuth.class) || AnnotatedElementUtils.hasAnnotation(handler.getBeanType(), PassAuth.class);
 	}
 
 	/**

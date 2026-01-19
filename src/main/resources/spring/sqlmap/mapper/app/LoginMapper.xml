@@ -14,6 +14,7 @@
              , B.EXP
              , B.LEVEL
              , D.GUILD_NM
+             , D.GUILD_SN
         FROM MBER_INFO A
                  INNER JOIN AVATAR_INFO B ON A.MBER_SN = B.MBER_SN
                  INNER JOIN GUILD_MBER_LIST C ON A.MBER_SN = C.MBER_SN
