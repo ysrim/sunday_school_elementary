@@ -3,14 +3,11 @@ package com.base.interceptor;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
 
 import org.springframework.core.annotation.AnnotatedElementUtils;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.base.annotation.MenuInfo;
 import com.base.annotation.PassAuth;

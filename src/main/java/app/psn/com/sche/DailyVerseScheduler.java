@@ -1,16 +1,15 @@
 package app.psn.com.sche;
 
+import java.time.LocalDate;
+
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import app.psn.com.mapper.BibleVerseMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.cache.annotation.CacheEvict;
-
-import java.time.LocalDate;
 
 @Slf4j
 @Service("dailyVerseScheduler")
@@ -55,5 +54,6 @@ public class DailyVerseScheduler {
 			log.error("스케줄러 실행 중 오류 발생: ", e);
 			// 필요 시 관리자에게 알림(Slack, Email) 전송 로직 추가
 		}
+
 	}
 }

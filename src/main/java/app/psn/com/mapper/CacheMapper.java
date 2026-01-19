@@ -1,7 +1,5 @@
 package app.psn.com.mapper;
 
-import java.util.Map;
-
 import org.apache.ibatis.annotations.Mapper;
 
 import app.psn.com.vo.TodayBibleVerseVO;

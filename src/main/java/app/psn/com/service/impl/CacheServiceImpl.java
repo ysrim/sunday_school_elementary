@@ -1,7 +1,5 @@
 package app.psn.com.service.impl;
 
-import java.util.Map;
-
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;

@@ -1,7 +1,5 @@
 package app.psn.com.service;
 
-import java.util.Map;
-
 import app.psn.com.vo.TodayBibleVerseVO;
 
 public interface CacheService {

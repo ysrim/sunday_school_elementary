@@ -9,8 +9,6 @@ import com.base.enumm.MberGrdEnum;
 import com.base.enumm.NaviEnum;
 import com.base.utl.SessionUtil;
 
-import app.idx.lgn.vo.SessionVO;
-import app.psn.com.mapper.CacheMapper;
 import app.psn.com.service.CacheService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;

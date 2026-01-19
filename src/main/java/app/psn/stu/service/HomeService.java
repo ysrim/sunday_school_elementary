@@ -1,7 +1,5 @@
 package app.psn.stu.service;
 
-import java.util.Map;
-
 public interface HomeService {
 
 	int sltGuildMberCnt(int guildSn); // 길드원 숫자
