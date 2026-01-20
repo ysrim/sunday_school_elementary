@@ -18,4 +18,6 @@ public interface CacheService {
 
 	boolean checkKeyExists(String cacheName, String key);
 
+	int checkKeySize(String cacheName);
+
 }

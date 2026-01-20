@@ -7,6 +7,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.base.enumm.CacheKeys;
+
 import app.psn.com.mapper.CacheMapper;
 import app.psn.com.service.CacheService;
 import app.psn.com.vo.TodayBibleVerseVO;
@@ -23,37 +25,37 @@ public class CacheServiceImpl implements CacheService {
 
 	private final CacheManager cacheManager;
 
-	@Cacheable(value = "mberPoint", key = "#p0")
+	@Cacheable(value = CacheKeys.MberPointEnum, key = "#p0")
 	@Override
 	public int sltPont(int mberSn) {
 		return cacheMapper.sltPont(mberSn);
 	}
 
-	@Cacheable(value = "mberLv", key = "#p0")
+	@Cacheable(value = CacheKeys.MberLvEnum, key = "#p0")
 	@Override
 	public int sltLv(int mberSn) {
 		return cacheMapper.sltLv(mberSn);
 	}
 
-	@Cacheable(value = "mberExp", key = "#p0")
+	@Cacheable(value = CacheKeys.MberExpEnum, key = "#p0")
 	@Override
 	public int sltExp(int mberSn) {
 		return cacheMapper.sltExp(mberSn);
 	}
 
-	@Cacheable(value = "todayBibleVerse")
+	@Cacheable(value = CacheKeys.TodayBibleVerseEnum)
 	@Override
 	public TodayBibleVerseVO sltTodayBibleVerse() {
 		return cacheMapper.sltTodayBibleVerse();
 	}
 
-	@Cacheable(value = "onlineMbers", key = "#p0")
+	@Cacheable(value = CacheKeys.OnlineMbersEnum, key = "#p0")
 	@Override
 	public boolean addOnlineMber(String mberId) {
 		return true;
 	}
 
-	@CacheEvict(value = "onlineMbers", key = "#p0")
+	@CacheEvict(value = CacheKeys.OnlineMbersEnum, key = "#p0")
 	@Override
 	public void delOnlineMber(String mberId) {
 		// do something;
@@ -72,6 +74,22 @@ public class CacheServiceImpl implements CacheService {
 
 		return wrapper != null;
 
+	}
+
+	@Override
+	public int checkKeySize(String cacheName) {
+		Cache springCache = cacheManager.getCache(cacheName);
+		if (springCache != null) {
+			com.github.benmanes.caffeine.cache.Cache nativeCache = (com.github.benmanes.caffeine.cache.Cache)springCache.getNativeCache();
+			try {
+				long bigValue = nativeCache.estimatedSize();
+				int intValue = Math.toIntExact(bigValue); // 여기서 예외 발생
+				return intValue;
+			} catch (ArithmeticException e) {
+				throw new RuntimeException("시스템 오류" + e.getMessage());
+			}
+		}
+		return 0;
 	}
 
 	//삭제

@@ -12,6 +12,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import com.base.annotation.MenuInfo;
 import com.base.annotation.PassAuth;
 import com.base.enumm.NaviEnum;
+import com.base.enumm.CacheKeys;
 import com.base.enumm.SessionKeyEnum;
 import com.base.utl.SessionUtil;
 
@@ -77,7 +78,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 			// onlineMbers cache 키 저장 (유효시간 5분 설정)
 			cacheService.addOnlineMber(mberId);
 			// 로그인 체크여부는 이렇게
-			log.info("ysrim login? {}", cacheService.checkKeyExists("onlineMbers", "ysrim"));
+			log.info("ysrim login? {}", cacheService.checkKeyExists(CacheKeys.OnlineMbers.name(), "ysrim"));
 		}
 
 		return true;

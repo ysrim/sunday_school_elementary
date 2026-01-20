@@ -7,6 +7,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.base.enumm.CacheKeys;
+
 import app.psn.com.mapper.BibleVerseMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +25,7 @@ public class DailyVerseScheduler {
 	 * 표현식: 초 분 시 일 월 요일
 	 */
 	//@Scheduled(cron = "0 0 0 * * *")
-	@CacheEvict(value = "todayBibleVerse", allEntries = true)
+	@CacheEvict(value = CacheKeys.TodayBibleVerseEnum, allEntries = true)
 	@Scheduled(fixedDelay = 1000000000)
 	@Transactional
 	public void rotateDailyVerse() {

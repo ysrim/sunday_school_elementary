@@ -21,4 +21,6 @@ public class TodayBibleVerseVO {
 
 	private String content;
 
+	private int seq;
+
 }

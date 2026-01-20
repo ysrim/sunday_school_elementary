@@ -1,5 +1,7 @@
 package app.psn.stu.web;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +12,8 @@ import com.base.enumm.NaviEnum;
 import com.base.utl.SessionUtil;
 
 import app.psn.com.service.CacheService;
+import app.psn.stu.service.HomeService;
+import app.psn.stu.vo.HomeGuildListVO;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,21 +26,30 @@ public class HomeController {
 
 	private final CacheService cacheService;
 
+	private final HomeService homeService;
+
 	@MenuInfo(navi = NaviEnum.STD_HOME, role = MberGrdEnum.STD)
 	@RequestMapping("/home.pg")
 	public String homePg(HttpSession session, Model model) {
 
+		// cache
 		int mberSn = SessionUtil.getMberInfo().getMberSn();
 		model.addAttribute("mberPoint", cacheService.sltPont(mberSn)); // 달란트
 		model.addAttribute("mberLv", cacheService.sltLv(mberSn)); // 레벨
 		model.addAttribute("mberExp", cacheService.sltExp(mberSn)); // 경험치
 		model.addAttribute("todayBibleVerse", cacheService.sltTodayBibleVerse()); // 오늘의 말씀
 
-		// sql가져오기
-		// 1. 길드원 숫자 (접속자 // 전체숫자)
+		// sql
+		int guildSn = SessionUtil.getMberInfo().getGuildSn();
+		model.addAttribute("guildMberCnt", homeService.sltGuildMberList(guildSn).size()); // 길드 숫자
+		List<HomeGuildListVO> guildMberAccessList = homeService.sltGuildMberAccessList(guildSn);
+		model.addAttribute("guildMberAccessList", guildMberAccessList); // 길드접속자 목록
+		model.addAttribute("guildMberAccessListCnt", guildMberAccessList.size()); // 길드접속자 숫자
+		model.addAttribute("guildInfo", homeService.sltGuildInfo(guildSn)); // 길드정보
+		// 1. 길드원 목록 나타나기(접속자 표시) > (접속자 // 전체숫자)
 		// 2. 길드명, 길드마크
 		// 3. 일일퀘스트 완료하면 오늘도 퀘스트 뜸
-		// 4. 길드원 목록 나타나기(접속자 표시)
+		// 4.
 		// 5. 공지사항
 
 		return "/app/psn/stu/page/home";

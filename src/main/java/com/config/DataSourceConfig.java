@@ -20,7 +20,7 @@ import com.zaxxer.hikari.HikariDataSource;
 @Configuration
 @PropertySource("classpath:spring/prop/db.properties")
 @EnableTransactionManagement
-@MapperScan(value = {"app.idx.lgn.mapper" //
+@MapperScan(value = {"app.idx.lgn.mapper" // 와일드카드 못쓴다해서 이렇게 일일히 선언
 	+ ",app.idx.man.mapper" //
 	+ ",app.idx.reg.mapper" //
 	+ ",app.psn.com.mapper" //

@@ -11,6 +11,7 @@ import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.base.enumm.CacheKeys;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
 @EnableCaching // 캐시 기능 활성화
@@ -26,59 +27,52 @@ public class CacheConfig {
 		List<CaffeineCache> caches = Arrays.asList(
 
 			// 1. 게시판 리스트 (5분 유지, 최대 1000개)
-			new CaffeineCache(
-				"onlineMbers",
-				Caffeine.newBuilder()
-					.expireAfterWrite(5, TimeUnit.MINUTES)
-					.maximumSize(1000)
-					.build()
-			),
+			new CaffeineCache( //0
+				CacheKeys.OnlineMbers.name(), //
+				Caffeine.newBuilder() //
+					.expireAfterWrite(5, TimeUnit.MINUTES) //
+					.maximumSize(1000) //
+					.build()),
 
 			// 2. 오늘의 말씀 (24시간 유지, 최대 10개)
-			new CaffeineCache(
-				"todayBibleVerse",
-				Caffeine.newBuilder()
-					.expireAfterWrite(24, TimeUnit.HOURS)
-					.maximumSize(10)
-					.build()
-			),
+			new CaffeineCache( //
+				CacheKeys.TodayBibleVerse.name(), //
+				Caffeine.newBuilder() //
+					.expireAfterWrite(24, TimeUnit.HOURS) //
+					.maximumSize(10) //
+					.build()),
 
 			// 3. 맴버 달란트 (24시간 유지, 최대 10개)
-			new CaffeineCache(
-				"mberPoint",
-				Caffeine.newBuilder()
-					.expireAfterWrite(10, TimeUnit.MINUTES)
-					.maximumSize(1000)
-					.build()
-			),
+			new CaffeineCache( //
+				CacheKeys.MberPoint.name(), //
+				Caffeine.newBuilder() //
+					.expireAfterWrite(10, TimeUnit.MINUTES) //
+					.maximumSize(1000) //
+					.build()),
 
 			// 4. 맴버 레벨 (10분 유지, 최대 1000개)
-			new CaffeineCache(
-				"mberLv",
-				Caffeine.newBuilder()
-					.expireAfterWrite(10, TimeUnit.MINUTES)
-					.maximumSize(1000)
-					.build()
-			),
+			new CaffeineCache( //
+				CacheKeys.MberLv.name(), //
+				Caffeine.newBuilder() //
+					.expireAfterWrite(10, TimeUnit.MINUTES) //
+					.maximumSize(1000) //
+					.build()),
 
 			// 5. 맴버 경험치 (10분 유지, 최대 1000개)
-			new CaffeineCache(
-				"mberExp",
-				Caffeine.newBuilder()
-					.expireAfterWrite(10, TimeUnit.MINUTES)
-					.maximumSize(1000)
-					.build()
-			),
+			new CaffeineCache( //
+				CacheKeys.MberExp.name(), //
+				Caffeine.newBuilder() //
+					.expireAfterWrite(10, TimeUnit.MINUTES) //
+					.maximumSize(1000) //
+					.build()),
 
 			// 6. 기본/기타 캐시 (60분 유지, 최대 100개)
-			new CaffeineCache(
-				"defaultCache",
-				Caffeine.newBuilder()
-					.expireAfterWrite(60, TimeUnit.MINUTES)
-					.maximumSize(1000)
-					.build()
-			)
-		);
+			new CaffeineCache( //
+				"defaultCache", //
+				Caffeine.newBuilder() //
+					.expireAfterWrite(60, TimeUnit.MINUTES) //
+					.maximumSize(1000) //
+					.build()));
 
 		cacheManager.setCaches(caches);
 

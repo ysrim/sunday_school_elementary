@@ -100,10 +100,10 @@
 	<div class="guild-section">
 		<div class="guild-header">
 			<div class="guild-name">
-				<h4 style="color: #4A90E2;">🛡️ 다윗의 용사들</h4>
-				<span class="guild-tag">LV.5</span>
+				<h4 style="color: #4A90E2;" th:text="|🛡️ ${guildInfo.guildNm}길드|">다윗의 용사들</h4>
+				<span class="guild-tag" th:text="|LV.${guildInfo.guildLevel}|">LV.5</span>
 			</div>
-			<span style="font-size: 0.75rem; color: #666; font-weight: bold;">길드원 12/20</span>
+			<span style="font-size: 0.75rem; color: #666; font-weight: bold;" th:text="|길드원 ${guildMberAccessListCnt}/${guildMberCnt}|">길드원 12/20</span>
 		</div>
 		<div style="margin-top: 10px;">
 			<p style="font-size: 0.8rem; color: #666;">공동 퀘스트: 이번 주 말씀 50번 읽기</p>
@@ -113,6 +113,17 @@
 			<p style="text-align: right; font-size: 0.7rem; color: #999; margin-top: 3px;">75% 달성 중</p>
 		</div>
 		<div class="guild-member-list">
+			<div class="member-item" th:each="vo : ${guildMberAccessList}">
+				<img th:src="|https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/${vo.occpCode}_${#strings.toLowerCase(vo.sexdstn)}.png|" class="member-avatar">
+				<div class="member-info">
+					<div class="member-name">[[${vo.ncnm}]] [[${vo.mberId == session.mberInfo.mberId ? '(나)' : '('+session.mberInfo.mberNm+')'}]]</div>
+					<div class="member-status">현재 접속중</div>
+				</div>
+				<div style="text-align: right;">
+					<div style="font-size: 0.8rem; font-weight: bold; color: #4A90E2;" th:text="|LV.${vo.level}|">Lv.15</div>
+				</div>
+			</div>
+			<!--
 			<div class="member-item">
 				<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/warrior.png" class="member-avatar">
 				<div class="member-info">
@@ -123,7 +134,7 @@
 					<div style="font-size: 0.8rem; font-weight: bold; color: #4A90E2;">Lv.15</div>
 				</div>
 			</div>
-			<div class="member-item" style="opacity: 0.8;">
+			<div class="member-item" >
 				<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/wizard.png"
 					 class="member-avatar">
 				<div class="member-info">
@@ -134,7 +145,8 @@
 					<div style="font-size: 0.8rem; font-weight: bold; color: #4A90E2;">Lv.12</div>
 				</div>
 			</div>
-			<button style="width: 100%; padding: 10px; border: 1px dashed #DDD; background: none; border-radius: 15px; color: #999; font-size: 0.8rem; cursor: pointer;">
+			-->
+			<button style="width: 100%; padding: 10px; border: 1px dashed #DDD; background: none; border-radius: 15px; color: #999; font-size: 0.8rem; cursor: pointer;" th:onclick="|location.href='@{/std/gild.pg}'|">
 				+ 길드원 더보기
 			</button>
 		</div>
