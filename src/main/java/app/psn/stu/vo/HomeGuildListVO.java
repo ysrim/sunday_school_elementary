@@ -21,6 +21,8 @@ public class HomeGuildListVO {
 
 	private String occpCode; // 직업_코드
 
+	private String occpNm; // 직업_명
+
 	private int level; // 캐릭터_래벨
 
 	private boolean isAccess; // 접속중 여부

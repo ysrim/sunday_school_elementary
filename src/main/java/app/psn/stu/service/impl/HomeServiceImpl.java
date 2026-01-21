@@ -46,8 +46,8 @@ public class HomeServiceImpl implements HomeService {
 		return Optional.ofNullable(list)
 			.orElseGet(Collections::emptyList)
 			.stream()
-			.filter(vo -> cacheService.checkKeyExists(CacheKeys.OnlineMbers.name(), vo.getMberId()))
-			.collect(Collectors.toList()); // Java 16 이상이라면 .toList() 로 대체 가능
+			.filter(vo -> cacheService.checkKeyExists(CacheKeys.OnlineMbers.name(), vo.getMberId())) // 길드원이 온라인만 리스트업
+			.collect(Collectors.toList());
 	}
 
 	@Override

@@ -15,6 +15,7 @@ import com.base.enumm.NaviEnum;
 import com.base.enumm.CacheKeys;
 import com.base.enumm.SessionKeyEnum;
 import com.base.utl.SessionUtil;
+import com.base.utl.StringUtil;
 
 import app.idx.lgn.vo.SessionVO;
 import app.psn.com.service.CacheService;
@@ -67,19 +68,24 @@ public class AuthInterceptor implements HandlerInterceptor {
 
 			// 4-2. 메뉴 정보 저장 (Request Scope 권장)
 			// 세션에 저장하면 브라우저 다중 탭 사용 시 정보가 꼬일 수 있음
-			request.setAttribute("menuInfo", menuInfo.navi().toString());
-			request.setAttribute("menuNm", NaviEnum.valueOf(menuInfo.navi().toString()).getNaviNm());
+			request.setAttribute("_menuInfo", menuInfo.navi().toString());
+			request.setAttribute("_menuNm", NaviEnum.valueOf(menuInfo.navi().toString()).getNaviNm());
 		}
 
-		// 1. 로그인된 유저 ID 가져오기 (세션 등에서)
+		// 로그인된 유저 ID 가져오기 (세션 등에서)
 		String mberId = SessionUtil.getMberInfo().getMberId();
-
 		if (mberId != null) {
 			// onlineMbers cache 키 저장 (유효시간 5분 설정)
 			cacheService.addOnlineMber(mberId);
 			// 로그인 체크여부는 이렇게
 			log.info("ysrim login? {}", cacheService.checkKeyExists(CacheKeys.OnlineMbers.name(), "ysrim"));
 		}
+
+		// 기타 정보
+		int mberSn = SessionUtil.getMberInfo().getMberSn();
+		request.setAttribute("_mberPoint", StringUtil.comma(cacheService.sltPont(mberSn))); // 달란트
+		request.setAttribute("_mberLevel", cacheService.sltLv(mberSn)); // 레벨
+		request.setAttribute("_mberExp", cacheService.sltExp(mberSn)); // 경험치
 
 		return true;
 	}

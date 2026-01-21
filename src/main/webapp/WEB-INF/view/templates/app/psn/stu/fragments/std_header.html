@@ -1,6 +1,6 @@
 <html lagn="ko" xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="headerFragment">
-	<th:block th:if="${menuInfo == 'STD_HOME'}">
+	<th:block th:if="${_menuInfo == 'STD_HOME'}">
 		<header>
 			<div class="header-top">
 				<h1>봉동중앙교회 초등부 RPG</h1>
@@ -12,14 +12,14 @@
 			</div>
 		</header>
 	</th:block>
-	<th:block th:if="${menuInfo != 'STD_HOME'}">
+	<th:block th:if="${_menuInfo != 'STD_HOME'}">
 		<div class="sub-header">
 			<div class="sub-header-left">
 				<h2>봉동중앙교회초등부 RPG</h2>
 			</div>
 			<div class="sub-header-info">
-				<div class="sub-info-badge">Lv.<span class="sub-lvl">1</span></div>
-				<div class="sub-info-badge money"><span class="sub-money">2500</span> P</div>
+				<div class="sub-info-badge">Lv.<span class="sub-lvl" th:text="|${_mberLevel}|">1</span></div>
+				<div class="sub-info-badge money"><span class="sub-money" th:text="|${_mberPoint}|">2500</span> P</div>
 				<button class="icon-btn btn-logout-new" onclick="handleLogout()" title="로그아웃" style="width: 28px; height: 28px; margin-right: 10px; background: rgba(255,255,255,0.15);">
 					<img src="https://cdn-icons-png.flaticon.com/512/1828/1828445.png" alt="로그아웃" style="width: 14px; height: 14px;">
 				</button>

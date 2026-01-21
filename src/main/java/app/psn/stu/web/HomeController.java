@@ -1,7 +1,5 @@
 package app.psn.stu.web;
 
-import java.util.List;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +11,6 @@ import com.base.utl.SessionUtil;
 
 import app.psn.com.service.CacheService;
 import app.psn.stu.service.HomeService;
-import app.psn.stu.vo.HomeGuildListVO;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,9 +39,7 @@ public class HomeController {
 		// sql
 		int guildSn = SessionUtil.getMberInfo().getGuildSn();
 		model.addAttribute("guildMberCnt", homeService.sltGuildMberList(guildSn).size()); // 길드 숫자
-		List<HomeGuildListVO> guildMberAccessList = homeService.sltGuildMberAccessList(guildSn);
-		model.addAttribute("guildMberAccessList", guildMberAccessList); // 길드접속자 목록
-		model.addAttribute("guildMberAccessListCnt", guildMberAccessList.size()); // 길드접속자 숫자
+		model.addAttribute("guildMberAccessList", homeService.sltGuildMberAccessList(guildSn)); // 길드접속자 목록
 		model.addAttribute("guildInfo", homeService.sltGuildInfo(guildSn)); // 길드정보
 		// 1. 길드원 목록 나타나기(접속자 표시) > (접속자 // 전체숫자)
 		// 2. 길드명, 길드마크
@@ -52,7 +47,15 @@ public class HomeController {
 		// 4.
 		// 5. 공지사항
 
-		return "/app/psn/stu/page/home";
+		return "/app/psn/stu/page/home/home";
+
+	}
+
+	@MenuInfo(navi = NaviEnum.STD_HOME_SUB, role = MberGrdEnum.STD)
+	@RequestMapping("/home/noticeCont.pg")
+	public String noticeContPg(Model model) {
+		// 공지사항 컨텐츠 to-be
+		return "/app/psn/stu/page/home/noticeCont";
 
 	}
 

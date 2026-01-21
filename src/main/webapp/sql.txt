@@ -1,0 +1,51 @@
+SELECT * FROM (
+    -- [1레벨] 최상위 코드 조회
+    SELECT
+        T1.CODE_ID,
+        T1.PARENT_CODE_ID,
+        T1.CODE_NAME,
+        1 AS LVL,
+        T1.SORT_ORDER,
+        CAST(T1.CODE_NAME AS CHAR(255)) AS FULL_PATH,
+        -- 정렬을 위한 키 생성 (00001)
+        CAST(LPAD(T1.SORT_ORDER, 5, '0') AS CHAR(255)) AS SORT_KEY
+    FROM TB_COM_CODE T1
+    WHERE T1.PARENT_CODE_ID IS NULL
+    AND T1.USE_YN = 'Y'
+
+    UNION ALL
+
+    -- [2레벨] 1레벨 + 2레벨 조인
+    SELECT
+        T2.CODE_ID,
+        T2.PARENT_CODE_ID,
+        T2.CODE_NAME,
+        2 AS LVL,
+        T2.SORT_ORDER,
+        CONCAT(T1.CODE_NAME, ' > ', T2.CODE_NAME) AS FULL_PATH,
+        -- 정렬 키: 부모순서-자식순서 (00001-00001)
+        CONCAT(LPAD(T1.SORT_ORDER, 5, '0'), '-', LPAD(T2.SORT_ORDER, 5, '0')) AS SORT_KEY
+    FROM TB_COM_CODE T1
+    JOIN TB_COM_CODE T2 ON T1.CODE_ID = T2.PARENT_CODE_ID
+    WHERE T1.PARENT_CODE_ID IS NULL
+    AND T2.USE_YN = 'Y'
+
+    UNION ALL
+
+    -- [3레벨] 1레벨 + 2레벨 + 3레벨 조인
+    SELECT
+        T3.CODE_ID,
+        T3.PARENT_CODE_ID,
+        T3.CODE_NAME,
+        3 AS LVL,
+        T3.SORT_ORDER,
+        CONCAT(T1.CODE_NAME, ' > ', T2.CODE_NAME, ' > ', T3.CODE_NAME) AS FULL_PATH,
+        -- 정렬 키: 부모-자식-손자 (00001-00001-00001)
+        CONCAT(LPAD(T1.SORT_ORDER, 5, '0'), '-', LPAD(T2.SORT_ORDER, 5, '0'), '-', LPAD(T3.SORT_ORDER, 5, '0')) AS SORT_KEY
+    FROM TB_COM_CODE T1
+    JOIN TB_COM_CODE T2 ON T1.CODE_ID = T2.PARENT_CODE_ID
+    JOIN TB_COM_CODE T3 ON T2.CODE_ID = T3.PARENT_CODE_ID
+    WHERE T1.PARENT_CODE_ID IS NULL
+    AND T3.USE_YN = 'Y'
+) A
+ORDER BY A.SORT_KEY;

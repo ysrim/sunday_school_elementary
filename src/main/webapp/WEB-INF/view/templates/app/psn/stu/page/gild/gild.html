@@ -8,44 +8,36 @@
 	<div class="content">
 		<div class="card" style="text-align: center; padding: 30px 20px;">
 			<div style="font-size: 3rem; margin-bottom: 10px;">🛡️</div>
-			<h2 id="my-guild-name">다윗의 용사들</h2>
+			<h2 id="my-guild-name" th:text="|${guildInfo.guildNm} 길드|">다윗의 용사들</h2>
 			<p style="color: #666; font-size: 0.9rem;">"용기와 믿음으로 승리하는 길드"</p>
-			<div class="user-rank"
-				 style="display: inline-block; margin-top: 10px; background: #E3F2FD; color: #4A90E2;">
+			<div class="user-rank" style="display: inline-block; margin-top: 10px; background: #E3F2FD; color: #4A90E2;" th:text="|길드 레벨. ${guildInfo.guildLevel}|">
 				길드 레벨. 3
 			</div>
 		</div>
-
+		<!--
 		<h3>🔥 길드 협동 미션</h3>
 		<div class="card">
 			<div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
 				<span>함께 성경 100독 하기</span>
 				<span style="color: #4A90E2; font-weight: bold;">75%</span>
 			</div>
-			<div
-					style="width: 100%; height: 12px; background: #eee; border-radius: 6px; overflow: hidden;">
-				<div
-						style="width: 75%; height: 100%; background: linear-gradient(90deg, #4A90E2, #64B5F6);"></div>
+			<div style="width: 100%; height: 12px; background: #eee; border-radius: 6px; overflow: hidden;">
+				<div style="width: 75%; height: 100%; background: linear-gradient(90deg, #4A90E2, #64B5F6);"></div>
 			</div>
 			<p style="font-size: 0.8rem; color: #999; margin-top: 8px;">완료 시 모든 길드원에게 500P 지급!</p>
 		</div>
-
-		<h3>👥 길드 멤버 (8명)</h3>
+		-->
+		<h3>👥 길드 멤버 ([[${guildMberCnt}]]명)</h3>
 		<div class="card" style="padding: 10px;">
 			<ul style="list-style: none;">
-				<li style="display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #eee;">
-					<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/warrior.png"
+				<li style="display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #eee;" th:each="vo : ${guildMberAccessList}">
+					<img th:src="|https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/${vo.occpCode}_${#strings.toLowerCase(vo.sexdstn)}.png|"
 						 style="width: 40px; height: 40px; border-radius: 50%;">
-					<div style="flex: 1;"><strong>김하늘 (길드장)</strong><br><small style="color: #999;">Lv.15
-						용사</small></div>
-					<span style="color: #4CAF50; font-size: 0.8rem;">● 접속중</span>
-				</li>
-				<li style="display: flex; align-items: center; gap: 10px; padding: 10px 0;">
-					<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/healer.png"
-						 style="width: 40px; height: 40px; border-radius: 50%;">
-					<div style="flex: 1;"><strong>이믿음</strong><br><small style="color: #999;">Lv.10
-						치유사</small></div>
-					<span style="color: #ccc; font-size: 0.8rem;">1시간 전</span>
+					<div style="flex: 1;">
+						<strong>[[${vo.ncnm}]] [[${vo.mberId == session.mberInfo.mberId ? '(나)' : '('+session.mberInfo.mberNm+')'}]]</strong><br>
+						<small style="color: #999;" th:text="|LV.${vo.level} ${vo.occpNm}|">Lv.15 용사</small>
+					</div>
+					<span style="color: #4CAF50; font-size: 0.8rem;">[[${vo.isAccess ? '● 접속중' : ''}]]</span>
 				</li>
 			</ul>
 		</div>
