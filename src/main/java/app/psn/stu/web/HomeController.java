@@ -11,7 +11,6 @@ import com.base.utl.SessionUtil;
 
 import app.psn.com.service.CacheService;
 import app.psn.stu.service.HomeService;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,7 +26,7 @@ public class HomeController {
 
 	@MenuInfo(navi = NaviEnum.STD_HOME, role = MberGrdEnum.STD)
 	@RequestMapping("/home.pg")
-	public String homePg(HttpSession session, Model model) {
+	public String homePg(Model model) {
 
 		// cache
 		int mberSn = SessionUtil.getMberInfo().getMberSn();

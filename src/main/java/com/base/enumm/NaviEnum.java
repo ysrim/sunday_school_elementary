@@ -1,7 +1,5 @@
 package com.base.enumm;
 
-import java.util.Arrays;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
