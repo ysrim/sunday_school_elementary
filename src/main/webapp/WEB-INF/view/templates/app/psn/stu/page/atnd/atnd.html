@@ -1,47 +1,63 @@
 <!DOCTYPE html>
 <html xmlns:th="http//www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/app/psn/stu/layouts/std_layout}">
 <th:block layout:fragment="content">
+	<script th:inline="javascript">
+		$(function () {
+			$('#stamp-zone').click(function () {
+				if ($(this).hasClass('checked')) {
+					_showAlert('이미 오늘의 출석을 완료했습니다!', '📅', '알림');
+					return;
+				}
+				$.ajax({
+					type: "POST",
+					url: "/std/atnd.ax",
+					success: (data) => {
+						if (data.rtnCd === '001') {
+							$(this).addClass('checked').css({
+								'background': '#FFF0F0',
+								'border-color': '#FF6B6B'
+							}).html('<img src="https://cdn-icons-png.flaticon.com/512/3585/3585145.png" style="width:100px;">');
+							// 오늘 날짜 슬롯도 체크 표시 (수요일 예시)
+							$('.slot-circle.today').addClass('checked');
+							_showAlert('참 잘했어요!<br>출석 달란트 <b>+100P</b>를 획득했습니다!',
+								'<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/attendance.png" style="width:80px;">', '출석 성공!');
+							return;
+						} else {
+							_showAlert('오류가 발생했습니다!', '🔥', '오류');
+							return;
+						}
+					},
+					error: (e) => {
+						console.error(e);
+						this.showPopup('오류가 발생했습니다.', '🔥', '오류');
+					}
+				});
+			});
+
+		});
+	</script>
 	<div style="margin: 25px 25px 5px 25px; display: flex; align-items: center;">
 		<span style="color: #4A90E2; font-size: 0.8rem; margin-right: 8px;">●</span>
 		<h3 style="margin: 0; font-size: 1.1rem; color: #333; text-align: left;">출석 현황</h3>
 	</div>
 	<div class="card" style="text-align:center;">
 		<div style="margin-bottom: 20px; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px;">
-			<h3 style="color: #333; font-size: 1.3rem; margin: 0;">📅 1월 출석부</h3>
+			<h3 style="color: #333; font-size: 1.3rem; margin: 0;">📅 [[${currMonth}]]월 출석부</h3>
 			<p style="font-size: 0.8rem; color: #888; margin-top: 5px;">꾸준히 출석하고 선물을 받아보세요!</p>
 		</div>
 		<h4 style="color: #4A90E2; margin-bottom: 5px;">오늘의 출석 도장</h4>
 		<p style="margin-bottom:20px; color: #888; font-size: 0.9rem;" id="current-date"></p>
-
 		<div id="stamp-zone"
 			 style="width:160px; height:160px; background:#fdfdfd; border-radius:50%; margin:20px auto; display:flex; align-items:center; justify-content:center; border:4px dashed #ddd; cursor:pointer; flex-direction: column; gap: 10px;">
 			<img src="https://cdn-icons-png.flaticon.com/512/10439/10439744.png" style="width:50px; opacity: 0.3;">
 			<span style="font-size:0.85rem; color:#aaa; font-weight: bold;">여기를 눌러서<br>출석체크!</span>
 		</div>
-
 		<div class="attendance-status-board">
-			<div class="day-slot">
-				<div class="slot-circle checked"></div>
-				1주
-			</div>
-			<div class="day-slot">
-				<div class="slot-circle checked"></div>
-				2주
-			</div>
-			<div class="day-slot">
-				<div class="slot-circle today"></div>
-				3주
-			</div>
-			<div class="day-slot">
-				<div class="slot-circle"></div>
-				4주
-			</div>
-			<div class="day-slot">
-				<div class="slot-circle" style="border-color: #FF6B6B;"></div>
-				5주
+			<div class="day-slot" th:each="vo : ${attendanceList}">
+				<div th:class="|slot-circle ${vo.attendance} ${vo.today}|"></div>
+				[[${vo.week}]]주
 			</div>
 		</div>
-
 		<p style="font-size: 0.8rem; color: #999; margin-top: 10px;">
 			매일매일 출석하고 <b>100 달란트</b>를 받으세요!
 		</p>
