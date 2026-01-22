@@ -20,7 +20,6 @@ public class LoginVO {
 
 	@NotEmpty(message = "패스워드를 입력해주세요!")
 	@Size(min = 4, message = "패스워드는 4자 이상이어야 합니다.")
-	@XssCheck
 	private String pwd = ""; // 패스워드
 
 }
