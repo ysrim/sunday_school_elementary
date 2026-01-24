@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>용사 정보 확인</title>
+	<style>
+        body {
+            background-color: #f8fafe;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .hero-card {
+            margin: 20px 15px;
+            background: #fff;
+            border-radius: 30px;
+            box-shadow: 0 12px 30px rgba(74, 144, 226, 0.08);
+            overflow: hidden;
+            border: none;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-around;
+            background: #fdfdfd;
+            padding: 20px 10px;
+            border-top: 1px solid #f1f4f8;
+        }
+
+        .info-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .info-item label {
+            display: block;
+            font-size: 0.75rem;
+            color: #aaa;
+            margin-bottom: 5px;
+        }
+
+        .info-item span {
+            font-size: 1rem;
+            color: #333;
+            font-weight: 700;
+        }
+
+        .info-item.highlight span {
+            color: #4A90E2;
+        }
+	</style>
+</head>
+<body>
+<div class="app-container" style="padding: 10px 0;">
+
+	<div style="margin: 15px 25px; display: flex; align-items: center; justify-content: space-between;">
+		<h3 style="margin: 0; font-size: 1.2rem; color: #333; font-weight: 900;">🛡️ 용사 상세 정보</h3>
+		<span style="font-size: 0.8rem; color: #4A90E2; background: #eef5ff; padding: 4px 10px; border-radius: 10px; font-weight: 700;">확인 완료</span>
+	</div>
+
+	<div class="hero-card">
+		<div style="background: linear-gradient(to right, #f8fbff, #ffffff); padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f4f8;">
+			<div style="display: flex; align-items: center; gap: 8px;">
+				<span style="font-size: 1.1rem;">🏰</span>
+				<span style="font-size: 0.9rem; color: #4A90E2; font-weight: 800;" th:text="|${qrInfo.guildNm} 길드|">길드명</span>
+			</div>
+			<span style="font-size: 0.75rem; color: #bbb; font-weight: 600;">길드 LV.1</span>
+		</div>
+
+		<div style="padding: 35px 20px 25px 20px; text-align: center;">
+			<div style="width: 150px; height: 150px; margin: 0 auto 20px auto; position: relative;">
+				<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 170px; height: 170px; background: radial-gradient(circle, rgba(74,144,226,0.1) 0%, rgba(255,255,255,0) 70%);"></div>
+				<div style="position: relative; width: 100%; height: 100%; border: 6px solid #fff; border-radius: 50%; box-shadow: 0 6px 20px rgba(0,0,0,0.1); overflow: hidden; background: #f0f7ff;">
+					<img th:src="|https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/${qrInfo.occpCode}_${#strings.toLowerCase(qrInfo.sexdstn)}.png|"
+						 alt="용사 캐릭터" style="width: 100%; height: 100%; object-fit: cover;">
+				</div>
+			</div>
+
+			<div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 15px;">
+                <span style="background: #4A90E2; color: #fff; padding: 4px 12px; border-radius: 10px; font-size: 0.85rem; font-weight: 700; box-shadow: 0 4px 10px rgba(74,144,226,0.2);">
+                    Lv.<span th:text="${qrInfo.level}">1</span>
+                </span>
+				<span style="background: #f0f7ff; color: #4A90E2; padding: 4px 12px; border-radius: 10px; font-size: 0.8rem; font-weight: 700; border: 1px solid #e0eeff;">
+                    EXP <span th:text="${#numbers.formatInteger(qrInfo.exp, 0, 'COMMA')}">0</span>
+                </span>
+			</div>
+
+			<h2 style="margin: 0; font-size: 1.6rem; color: #222; font-weight: 900; letter-spacing: -1px;"
+				th:with="nameLen=${#strings.length(qrInfo.mberNm)}">
+				<span th:text="${qrInfo.ncnm}" style="color: #4A90E2;">닉네임</span>
+				<small style="color: #333; font-size: 1.3rem;"
+					   th:text="'(' + (${nameLen} == 2 ? ${#strings.substring(qrInfo.mberNm,0,1)} + '*' : ${#strings.substring(qrInfo.mberNm,0,1)} + '*' + ${#strings.substring(qrInfo.mberNm, nameLen-1, nameLen)}) + ')'">
+				</small>
+			</h2>
+
+			<p style="margin: 10px 0 0 0; color: #888; font-size: 0.95rem; font-weight: 500;"
+			   th:text="|봉동중앙교회 초등부 ${qrInfo.grade}학년 ${qrInfo.cla}반|">소속 정보</p>
+		</div>
+
+		<div class="info-row">
+			<div class="info-item">
+				<label>직업</label>
+				<span th:text="${qrInfo.occpNm}">전사</span>
+			</div>
+			<div style="width: 1px; background: #eee; height: 30px; align-self: center;"></div>
+			<div class="info-item highlight">
+				<label>현재 달란트</label>
+				<span th:text="|${#numbers.formatInteger(qrInfo.point, 0, 'COMMA')} P|">2,500 P</span>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

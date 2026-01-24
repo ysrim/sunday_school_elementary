@@ -22,6 +22,7 @@ import com.zaxxer.hikari.HikariDataSource;
 @EnableTransactionManagement
 @MapperScan(value = {"app.idx.lgn.mapper" // 와일드카드 못쓴다해서 이렇게 일일히 선언
 	+ ",app.idx.man.mapper" //
+	+ ",app.idx.qrc.mapper" //
 	+ ",app.idx.reg.mapper" //
 	+ ",app.psn.com.mapper" //
 	+ ",app.psn.stu.mapper" //

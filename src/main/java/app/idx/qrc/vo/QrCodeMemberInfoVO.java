@@ -1,4 +1,4 @@
-package app.idx.lgn.vo;
+package app.idx.qrc.vo;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,23 +7,15 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class SessionVO {
-
-	private int mberSn; // 회원_일련번호
-
-	private String mberId; // 회원_아이디
+public class QrCodeMemberInfoVO {
 
 	private String mberNm; // 회원_이름
-
-	private String pwd; // 패스워드
 
 	private String gradeCode; // 등급_코드
 
 	private String ncnm; // 닉네임
 
 	private String occpCode; // 직업_코드
-
-	private String occpNm; // 직업_코드
 
 	private int exp; // 경험치
 
@@ -33,10 +25,12 @@ public class SessionVO {
 
 	private String sexdstn; // 성별
 
-	private int guildSn; // 길드_일련번호
+	private String grade; // 성별
 
-	private String grade; // 학년
+	private String cla; // 성별
 
-	private String cla; // 반
+	private String occpNm; // 직업
+
+	private String point; // 달란트
 
 }

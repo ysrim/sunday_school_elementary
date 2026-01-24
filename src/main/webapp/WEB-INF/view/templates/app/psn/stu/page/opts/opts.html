@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{/app/psn/stu/layouts/std_layout}">
+
+<th:block layout:fragment="content">
+	<div style="background-color: #f8fafe; min-height: 100vh; padding-top: 10px;">
+
+		<div style="margin: 5px 25px 15px 25px; display: flex; align-items: center;">
+			<h3 style="margin: 0; font-size: 1.1rem; color: #333; font-weight: 700;">마이 페이지</h3>
+		</div>
+		<div style="margin: 0 15px 20px 15px; background: #fff; border-radius: 28px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border: none; overflow: hidden;">
+
+			<div style="background: #f8fbff; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f4f8;">
+				<div style="display: flex; align-items: center; gap: 6px;">
+					<span style="font-size: 1rem;">🛡️</span>
+					<span style="font-size: 0.85rem; color: #4A90E2; font-weight: 700;" th:text="|${session.mberInfo.guildNm} 길드|">길드명</span>
+				</div>
+				<span style="font-size: 0.75rem; color: #999; font-weight: 600;">길드 Lv.1</span>
+			</div>
+			<div style="padding: 30px 20px; text-align: center;">
+
+				<div style="width: 140px; height: 140px; margin: 0 auto 18px auto; position: relative;">
+					<div style="width: 100%; height: 100%; border: 5px solid #fff; border-radius: 50%; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden; background: #f0f7ff;">
+						<img th:src="|https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/${session.mberInfo.occpCode}_${#strings.toLowerCase(session.mberInfo.sexdstn)}.png|"
+							 alt="내 캐릭터" style="width: 100%; height: 100%; object-fit: cover;">
+					</div>
+				</div>
+
+				<div style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 12px;">
+                <span style="background: #4A90E2; color: #fff; padding: 3px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 700;">
+                   Lv.<span th:text="${_mberLevel}">1</span>
+                </span>
+					<span style="background: #f0f7ff; color: #4A90E2; padding: 3px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; border: 1px solid #e0eeff;">
+                   EXP <span th:text="${#numbers.formatInteger(_mberExp, 0, 'COMMA')}">0</span>
+                </span>
+				</div>
+				<h2 style="margin: 0; font-size: 1.6rem; color: #222; font-weight: 900; letter-spacing: -1px;">
+					<span th:text="${session.mberInfo.ncnm}" style="color: #4A90E2;">닉네임</span>
+					<small style="color: #333; font-size: 1.3rem;"
+						   th:text="|(${session.mberInfo.mberNm})|">
+					</small>
+				</h2>
+
+				<p style="margin: 6px 0 0 0; color: #999; font-size: 0.85rem;"
+				   th:text="|봉동중앙교회 초등부 ${session.mberInfo.grade}학년 ${session.mberInfo.cla}반|">소속 정보</p>
+			</div>
+			<div class="info-row">
+				<div class="info-item">
+					<label>직업</label>
+					<span th:text="|(${session.mberInfo.occpNm})|">전사</span>
+				</div>
+				<div style="width: 1px; background: #eee; height: 30px; align-self: center;"></div>
+				<div class="info-item highlight">
+					<label>현재 달란트</label>
+					<span th:text="|${_mberPoint} P|">100 P</span>
+				</div>
+			</div>
+		</div>
+
+		<div style="margin: 0 15px; display: flex; flex-direction: column; gap: 10px; padding-bottom: 30px;">
+			<div th:onclick="|location.href='@{/std/opts/qrCode.pg}'|" class="menu-item-style">
+				<div style="display: flex; align-items: center; gap: 12px;">
+					<span>🔍</span>
+					<span style="font-size: 0.95rem; color: #444; font-weight: 600;">나의 QR코드 확인</span>
+				</div>
+				<span style="color: #ddd;">&rsaquo;</span>
+			</div>
+			<div th:onclick="|location.href='@{/std/gild.pg}'|" class="menu-item-style">
+				<div style="display: flex; align-items: center; gap: 12px;">
+					<span>🛡️</span>
+					<span style="font-size: 0.95rem; color: #444; font-weight: 600;">캐릭터명 변경</span>
+				</div>
+				<span style="color: #ddd;">&rsaquo;</span>
+			</div>
+			<div th:onclick="|location.href='@{/std/gild.pg}'|" class="menu-item-style">
+				<div style="display: flex; align-items: center; gap: 12px;">
+					<span>🔑</span>
+					<span style="font-size: 0.95rem; color: #444; font-weight: 600;">비밀번호 변경</span>
+				</div>
+				<span style="color: #ddd;">&rsaquo;</span>
+			</div>
+			<div th:onclick="|location.href='@{/std/gild.pg}'|" class="menu-item-style">
+				<div style="display: flex; align-items: center; gap: 12px;">
+					<span>✨</span>
+					<span style="font-size: 0.95rem; color: #444; font-weight: 600;">포인트 내역</span>
+				</div>
+				<span style="color: #ddd;">&rsaquo;</span>
+			</div>
+		</div>
+	</div>
+</th:block>
+</html>

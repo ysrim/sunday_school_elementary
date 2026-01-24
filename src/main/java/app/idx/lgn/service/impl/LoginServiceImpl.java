@@ -24,7 +24,6 @@ public class LoginServiceImpl implements LoginService {
 
 	private final PasswordEncoder passwordEncoder;
 
-
 	private SessionVO sltMber(LoginVO loginVO) {
 		return loginMapper.sltMber(loginVO);
 	}
@@ -39,7 +38,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		// 2. pwd 검증
-		if (!passwordEncoder.matches(loginVO.getPwd() , sessionVO.getPwd())) {
+		if (!passwordEncoder.matches(loginVO.getPwd(), sessionVO.getPwd())) {
 			throw new RuntimeException("패스워드가 틀렸습니다.");
 		}
 

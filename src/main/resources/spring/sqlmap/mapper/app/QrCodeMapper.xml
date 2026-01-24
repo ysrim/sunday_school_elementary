@@ -1,28 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?><!--Converted at: Wed May 11 15:49:38 KST 2016 -->
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="app.idx.lgn.mapper.LoginMapper">
+<mapper namespace="app.idx.qrc.mapper.QrCodeMapper">
 
-	<select id="sltMber" parameterType="app.idx.lgn.vo.LoginVO" resultType="app.idx.lgn.vo.SessionVO">
-        SELECT A.MBER_SN
-             , A.MBER_ID
-             , A.MBER_NM
-             , A.PWD
+	<select id="sltMberSn" parameterType="string" resultType="app.idx.qrc.vo.QrCodeMemberInfoVO">
+        SELECT A.MBER_NM
              , A.GRADE_CODE
-             , A.SEXDSTN
              , B.NCNM
              , B.OCCP_CODE
-             , FN_GET_CODE_NM('OCCP', B.OCCP_CODE) as OCCP_NM
              , B.EXP
              , B.LEVEL
              , D.GUILD_NM
-             , D.GUILD_SN
+             , A.SEXDSTN
              , D.GRADE
              , D.CLA
+             , FN_GET_CODE_NM('OCCP', B.OCCP_CODE) as OCCP_NM
+             , B.POINT
         FROM MBER_INFO A
                  INNER JOIN AVATAR_INFO B ON A.MBER_SN = B.MBER_SN
                  INNER JOIN GUILD_MBER_LIST C ON A.MBER_SN = C.MBER_SN
                  INNER JOIN GUILD_INFO D ON C.GUILD_SN = D.GUILD_SN
-        WHERE A.MBER_ID = #{mberId}
+        WHERE A.MBER_SN = #{mberId}
           AND A.USE_AT = 'Y'
     </select>
 

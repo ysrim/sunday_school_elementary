@@ -72,8 +72,7 @@ h3 {
     background: var(--white);
     border-radius: 28px;
     padding: 30px 22px;
-    border: 2.5px solid var(--border-light);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 
 /* 입력 요소 */

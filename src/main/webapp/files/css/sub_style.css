@@ -116,8 +116,7 @@ header h1 {
     background: var(--white);
     border-radius: 25px;
     padding: 20px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
-    border: 2px solid #e1f5fe;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
     transition: transform 0.2s;
 }
 
@@ -791,4 +790,45 @@ h3 {
 
 #point-history-list .menu-item:active {
     background: none; /* 클릭 효과 제거 */
+}
+
+.menu-item-style {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 20px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-around;
+    background: #fdfdfd;
+    padding: 20px 10px;
+    border-top: 1px solid #f1f4f8;
+}
+
+.info-item {
+    text-align: center;
+    flex: 1;
+}
+
+.info-item label {
+    display: block;
+    font-size: 0.75rem;
+    color: #aaa;
+    margin-bottom: 5px;
+}
+
+.info-item span {
+    font-size: 1rem;
+    color: #333;
+    font-weight: 700;
+}
+
+.info-item.highlight span {
+    color: #4A90E2;
 }
