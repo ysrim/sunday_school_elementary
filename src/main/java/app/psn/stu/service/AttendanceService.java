@@ -10,7 +10,7 @@ import app.psn.stu.vo.HomeGuildListVO;
 
 public interface AttendanceService {
 
-	List<AttendanceVO> sltAttendanceList(int mberSn); // 출석리스트
+	Map<String, Object> sltAttendanceList(int mberSn); // 출석리스트
 
 	boolean attendanceDo(int mberSn); // 출석하기
 

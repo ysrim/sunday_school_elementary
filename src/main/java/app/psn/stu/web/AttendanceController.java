@@ -3,6 +3,7 @@ package app.psn.stu.web;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -33,9 +34,17 @@ public class AttendanceController {
 	@MenuInfo(navi = NaviEnum.STD_ATND, role = MberGrdEnum.STD)
 	@RequestMapping("/atnd.pg")
 	public String attendancePg(Model model) {
-		model.addAttribute("attendanceList", attendanceService.sltAttendanceList(SessionUtil.getMberInfo().getMberSn()));
-		model.addAttribute("isAttendance", isTodaySunday()); // 투표가능한지 여부 찾기(오늘 투표 했는지 여부가져와야함 to-be > 화면에서도)
+
+		Map<String, Object> resultMap = attendanceService.sltAttendanceList(SessionUtil.getMberInfo().getMberSn());
+		model.addAttribute("attendanceList", resultMap.get("attendanceList"));
+		model.addAttribute("attendanceToday", resultMap.get("attendanceToday")); // 출석여부
+		model.addAttribute("isAttendance", isTodaySunday()); // 주일 여부
 		model.addAttribute("currMonth", LocalDate.now(ZoneId.of("Asia/Seoul")).getMonthValue());
+
+		// 경우의 수
+		// 주일여부: Y/N
+		// 출석여부: Y/N
+
 		return "/app/psn/stu/page/atnd/atnd";
 	}
 
@@ -51,8 +60,7 @@ public class AttendanceController {
 	}
 
 	private boolean isTodaySunday() {
-		//return (LocalDate.now(ZoneId.of("Asia/Seoul")).getDayOfWeek() == DayOfWeek.SUNDAY);
-		return true;
+		return (LocalDate.now(ZoneId.of("Asia/Seoul")).getDayOfWeek() == DayOfWeek.SUNDAY);
 	}
 
 }

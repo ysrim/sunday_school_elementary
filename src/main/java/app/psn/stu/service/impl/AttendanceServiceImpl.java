@@ -1,6 +1,7 @@
 package app.psn.stu.service.impl;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -31,8 +32,17 @@ public class AttendanceServiceImpl implements AttendanceService {
 	private final AttendanceMapper attendanceMapper;
 
 	@Override
-	public List<AttendanceVO> sltAttendanceList(int mberSn) {
-		return attendanceMapper.sltAttendanceList(mberSn);
+	public Map<String, Object> sltAttendanceList(int mberSn) {
+		List<AttendanceVO> attendanceList = attendanceMapper.sltAttendanceList(mberSn);
+		String attendanceToday = attendanceList.stream()
+			.filter(vo -> "today".equals(vo.getToday()))
+			.map(AttendanceVO::getAttendanceToday)
+			.findFirst()
+			.orElse("N"); // 오늘 날짜 데이터가 없을 경우 기본값
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("attendanceList", attendanceList);
+		resultMap.put("attendanceToday", attendanceToday);
+		return resultMap;
 	}
 
 	@Override
