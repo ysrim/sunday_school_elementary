@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>RPG 성소 - 통합 관리자</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+	<link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/airbnb.css">
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+	<script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
+	<style>
+        /* 화면 전환용 유틸리티 클래스 */
+        .hidden-page {
+            display: none;
+        }
+	</style>
+</head>
+<body class="bg-slate-100 font-sans">
+
+<div class="flex h-screen">
+	<aside class="w-64 bg-indigo-900 text-white flex flex-col transition-all duration-300">
+		<div class="p-6 text-2xl font-bold border-b border-indigo-800 flex items-center">
+			<i class="fas fa-chess-rook mr-3 text-yellow-400"></i> RPG Admin
+		</div>
+		<nav class="flex-1 p-4 space-y-2">
+			<button onclick="showPage('dashboard', this)" class="nav-item w-full text-left p-3 bg-indigo-700 rounded-lg transition-colors">
+				<i class="fas fa-home mr-2 w-6 text-center"></i> 대시보드
+			</button>
+			<button onclick="showPage('members', this)" class="nav-item w-full text-left p-3 hover:bg-indigo-800 rounded-lg transition-colors">
+				<i class="fas fa-users mr-2 w-6 text-center"></i> 용사(회원) 관리
+			</button>
+			<button onclick="showPage('notice', this)" class="nav-item w-full text-left p-3 hover:bg-indigo-800 rounded-lg transition-colors">
+				<i class="fas fa-bullhorn mr-2 w-6 text-center"></i> 공지사항 관리
+			</button>
+			<button onclick="showPage('adjustment', this)" class="nav-item w-full text-left p-3 hover:bg-indigo-800 rounded-lg transition-colors">
+				<i class="fas fa-magic mr-2 w-6 text-center"></i> 경험치/포인트 조정
+			</button>
+		</nav>
+		<div class="p-4 border-t border-indigo-800 text-sm opacity-70 cursor-pointer hover:opacity-100">
+			<i class="fas fa-sign-out-alt mr-2"></i> 로그아웃
+		</div>
+	</aside>
+
+	<main class="flex-1 overflow-y-auto p-8 bg-slate-50">
+
+		<div id="page-dashboard" class="page-content">
+			<header class="flex justify-between items-center mb-8">
+				<div>
+					<h1 class="text-3xl font-extrabold text-slate-800">왕국 통계 현황</h1>
+					<p class="text-slate-500 mt-1">기간별 아이들의 활동 추이를 분석합니다.</p>
+				</div>
+
+				<div class="relative group">
+					<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+						<i class="far fa-calendar-alt text-indigo-500"></i>
+					</div>
+
+					<input type="text" id="dateRangePicker"
+						   class="bg-white border border-gray-200 text-gray-700 text-sm font-bold rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-64 pl-10 p-2.5 shadow-sm cursor-pointer hover:bg-gray-50 transition"
+						   placeholder="기간을 선택하세요">
+
+					<div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+						<i class="fas fa-chevron-down text-xs text-gray-400"></i>
+					</div>
+				</div>
+			</header>
+
+			<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+				<div class="bg-white p-6 rounded-2xl shadow-sm border border-indigo-50 relative overflow-hidden group hover:shadow-md transition">
+					<div class="flex justify-between items-start">
+						<div>
+							<p class="text-sm font-bold text-gray-400 uppercase tracking-wider">금주 출석률</p>
+							<h3 class="text-3xl font-extrabold text-slate-800 mt-2">92.4%</h3>
+						</div>
+						<div class="p-3 bg-indigo-50 rounded-lg text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition">
+							<i class="fas fa-chart-line text-xl"></i>
+						</div>
+					</div>
+					<div class="mt-4 flex items-center text-sm">
+						<span class="text-green-500 font-bold flex items-center"><i class="fas fa-arrow-up mr-1"></i> 3.2%</span>
+						<span class="text-gray-400 ml-2">지난주 대비</span>
+					</div>
+				</div>
+
+				<div class="bg-white p-6 rounded-2xl shadow-sm border border-indigo-50 relative overflow-hidden group hover:shadow-md transition">
+					<div class="flex justify-between items-start">
+						<div>
+							<p class="text-sm font-bold text-gray-400 uppercase tracking-wider">퀘스트 완료</p>
+							<h3 class="text-3xl font-extrabold text-slate-800 mt-2">128건</h3>
+						</div>
+						<div class="p-3 bg-green-50 rounded-lg text-green-600 group-hover:bg-green-600 group-hover:text-white transition">
+							<i class="fas fa-check-circle text-xl"></i>
+						</div>
+					</div>
+					<div class="mt-4 flex items-center text-sm">
+						<span class="text-green-500 font-bold flex items-center"><i class="fas fa-arrow-up mr-1"></i> 12%</span>
+						<span class="text-gray-400 ml-2">지난주 대비</span>
+					</div>
+				</div>
+
+				<div class="bg-white p-6 rounded-2xl shadow-sm border border-indigo-50 relative overflow-hidden group hover:shadow-md transition">
+					<div class="flex justify-between items-start">
+						<div>
+							<p class="text-sm font-bold text-gray-400 uppercase tracking-wider">신규 용사</p>
+							<h3 class="text-3xl font-extrabold text-slate-800 mt-2">5명</h3>
+						</div>
+						<div class="p-3 bg-yellow-50 rounded-lg text-yellow-600 group-hover:bg-yellow-500 group-hover:text-white transition">
+							<i class="fas fa-user-plus text-xl"></i>
+						</div>
+					</div>
+					<div class="mt-4 flex items-center text-sm">
+						<span class="text-red-400 font-bold flex items-center"><i class="fas fa-arrow-down mr-1"></i> 1명</span>
+						<span class="text-gray-400 ml-2">지난주 대비</span>
+					</div>
+				</div>
+
+				<div class="bg-white p-6 rounded-2xl shadow-sm border border-indigo-50 relative overflow-hidden group hover:shadow-md transition">
+					<div class="flex justify-between items-start">
+						<div>
+							<p class="text-sm font-bold text-gray-400 uppercase tracking-wider">지급된 골드</p>
+							<h3 class="text-3xl font-extrabold text-slate-800 mt-2">45k</h3>
+						</div>
+						<div class="p-3 bg-purple-50 rounded-lg text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition">
+							<i class="fas fa-coins text-xl"></i>
+						</div>
+					</div>
+					<div class="mt-4 flex items-center text-sm">
+						<span class="text-gray-500 font-medium">이번 달 누적</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+
+				<div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+					<div class="flex justify-between items-center mb-6">
+						<h2 class="text-lg font-bold text-slate-800">📅 주간 출석 추이</h2>
+						<button class="text-sm text-indigo-600 font-bold hover:bg-indigo-50 px-3 py-1 rounded transition">상세보기</button>
+					</div>
+					<div id="attendanceChart" class="w-full h-80"></div>
+				</div>
+
+				<div class="lg:col-span-1 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+					<h2 class="text-lg font-bold text-slate-800 mb-6">🏫 반별 출석 점유율</h2>
+					<div id="classChart" class="w-full flex justify-center"></div>
+
+					<div class="mt-6 space-y-3">
+						<div class="flex justify-between items-center text-sm">
+							<div class="flex items-center"><span class="w-3 h-3 rounded-full bg-indigo-500 mr-2"></span> 믿음반</div>
+							<span class="font-bold">45% (12명)</span>
+						</div>
+						<div class="flex justify-between items-center text-sm">
+							<div class="flex items-center"><span class="w-3 h-3 rounded-full bg-teal-400 mr-2"></span> 소망반</div>
+							<span class="font-bold">35% (9명)</span>
+						</div>
+						<div class="flex justify-between items-center text-sm">
+							<div class="flex items-center"><span class="w-3 h-3 rounded-full bg-yellow-400 mr-2"></span> 사랑반</div>
+							<span class="font-bold">20% (5명)</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+				<div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+					<h2 class="text-lg font-bold text-slate-800 mb-4">📜 요일별 퀘스트 수행</h2>
+					<div id="questChart" class="w-full h-64"></div>
+				</div>
+
+				<div class="bg-indigo-900 p-6 rounded-2xl shadow-lg text-white">
+					<div class="flex justify-between items-center mb-6">
+						<h2 class="text-lg font-bold flex items-center"><i class="fas fa-crown text-yellow-400 mr-2"></i> 금주의 MVP 용사</h2>
+						<span class="text-xs bg-indigo-800 px-2 py-1 rounded text-indigo-200">EXP 랭킹</span>
+					</div>
+
+					<div class="space-y-4">
+						<div class="flex items-center justify-between bg-indigo-800 p-3 rounded-xl border border-indigo-700">
+							<div class="flex items-center gap-3">
+								<div class="w-8 h-8 rounded-full bg-yellow-400 text-indigo-900 font-bold flex items-center justify-center">1</div>
+								<img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" class="w-10 h-10 rounded-full bg-white">
+								<div>
+									<div class="font-bold text-sm">김철수 (전사)</div>
+									<div class="text-xs text-indigo-300">획득 경험치: 1,200 EXP</div>
+								</div>
+							</div>
+							<i class="fas fa-medal text-yellow-400 text-xl"></i>
+						</div>
+
+						<div class="flex items-center justify-between bg-indigo-800/50 p-3 rounded-xl border border-indigo-700/50">
+							<div class="flex items-center gap-3">
+								<div class="w-8 h-8 rounded-full bg-gray-300 text-gray-700 font-bold flex items-center justify-center text-sm">2</div>
+								<img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka" class="w-10 h-10 rounded-full bg-white">
+								<div>
+									<div class="font-bold text-sm">이영희 (마법사)</div>
+									<div class="text-xs text-indigo-300">획득 경험치: 980 EXP</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="flex items-center justify-between bg-indigo-800/50 p-3 rounded-xl border border-indigo-700/50">
+							<div class="flex items-center gap-3">
+								<div class="w-8 h-8 rounded-full bg-orange-300 text-orange-800 font-bold flex items-center justify-center text-sm">3</div>
+								<img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Bob" class="w-10 h-10 rounded-full bg-white">
+								<div>
+									<div class="font-bold text-sm">박민수 (궁수)</div>
+									<div class="text-xs text-indigo-300">획득 경험치: 850 EXP</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="page-notice" class="page-content hidden-page">
+			<header class="flex justify-between items-center mb-8">
+				<h1 class="text-3xl font-extrabold text-slate-800">왕국 게시판 관리</h1>
+				<button class="bg-indigo-600 text-white px-5 py-2 rounded-lg font-bold hover:bg-indigo-700 shadow-lg transition transform hover:-translate-y-1" onclick="showPage('notice-write')">
+					<i class="fas fa-pen mr-2"></i> 공지 작성
+				</button>
+			</header>
+
+			<div class="bg-white rounded-xl shadow-sm overflow-hidden">
+				<div class="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+					<div class="flex space-x-2">
+						<select class="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+							<option>전체</option>
+							<option>공지</option>
+							<option>이벤트</option>
+						</select>
+					</div>
+					<div class="relative">
+						<input type="text" placeholder="제목 검색..." class="pl-8 pr-4 py-1 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+						<i class="fas fa-search absolute left-3 top-2 text-gray-400 text-xs"></i>
+					</div>
+				</div>
+				<table class="w-full text-left">
+					<thead class="bg-gray-50 text-gray-500 text-sm">
+					<tr>
+						<th class="py-3 px-4 w-16 text-center">번호</th>
+						<th class="py-3 px-4 w-24 text-center">분류</th>
+						<th class="py-3 px-4">제목</th>
+						<th class="py-3 px-4 w-32 text-center">작성일</th>
+						<th class="py-3 px-4 w-20 text-center">조회</th>
+						<th class="py-3 px-4 w-24 text-center">관리</th>
+					</tr>
+					</thead>
+					<tbody class="divide-y divide-gray-100 text-sm text-gray-700">
+					<tr class="hover:bg-indigo-50 transition cursor-pointer">
+						<td class="py-3 px-4 text-center text-gray-400">3</td>
+						<td class="py-3 px-4 text-center"><span class="bg-red-100 text-red-600 px-2 py-0.5 rounded text-xs font-bold">긴급</span></td>
+						<td class="py-3 px-4 font-bold text-gray-800">이번 주 주일예배 시간 변경 안내</td>
+						<td class="py-3 px-4 text-center text-gray-500">2026-01-25</td>
+						<td class="py-3 px-4 text-center text-gray-500">124</td>
+						<td class="py-3 px-4 text-center">
+							<button class="text-indigo-600 hover:text-indigo-800"><i class="fas fa-edit"></i></button>
+						</td>
+					</tr>
+					<tr class="hover:bg-indigo-50 transition cursor-pointer">
+						<td class="py-3 px-4 text-center text-gray-400">2</td>
+						<td class="py-3 px-4 text-center"><span class="bg-blue-100 text-blue-600 px-2 py-0.5 rounded text-xs font-bold">이벤트</span></td>
+						<td class="py-3 px-4">달란트 시장 개최 안내 (2/14)</td>
+						<td class="py-3 px-4 text-center text-gray-500">2026-01-20</td>
+						<td class="py-3 px-4 text-center text-gray-500">89</td>
+						<td class="py-3 px-4 text-center">
+							<button class="text-indigo-600 hover:text-indigo-800"><i class="fas fa-edit"></i></button>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+				<div class="p-4 flex justify-center space-x-2 text-sm text-gray-500">
+					<button class="px-2 hover:text-indigo-600">&lt;</button>
+					<button class="px-2 font-bold text-indigo-600">1</button>
+					<button class="px-2 hover:text-indigo-600">2</button>
+					<button class="px-2 hover:text-indigo-600">&gt;</button>
+				</div>
+			</div>
+
+		</div>
+
+		<div id="page-adjustment" class="page-content hidden-page">
+			<header class="mb-8">
+				<h1 class="text-3xl font-extrabold text-slate-800">보상 수동 지급</h1>
+				<p class="text-slate-500 mt-2">특정 학생에게 경험치(EXP)나 포인트(Gold)를 직접 부여하거나 차감합니다.</p>
+			</header>
+
+			<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+				<div class="lg:col-span-1">
+					<div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-indigo-500">
+						<h2 class="text-lg font-bold mb-4 text-gray-800">지급 설정</h2>
+						<form class="space-y-4">
+							<div>
+								<label class="block text-sm font-bold text-gray-700 mb-1">대상 학생 검색</label>
+								<div class="relative">
+									<input type="text" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="이름을 입력하세요">
+									<button type="button" class="absolute right-2 top-2 text-gray-400 hover:text-indigo-600"><i class="fas fa-search"></i></button>
+								</div>
+							</div>
+
+							<div>
+								<label class="block text-sm font-bold text-gray-700 mb-2">지급 유형</label>
+								<div class="grid grid-cols-2 gap-2">
+									<label class="cursor-pointer">
+										<input type="radio" name="type" class="peer sr-only" checked>
+										<div class="text-center py-2 border-2 border-gray-200 rounded-lg peer-checked:border-indigo-500 peer-checked:bg-indigo-50 peer-checked:text-indigo-700 transition">
+											<i class="fas fa-star mr-1"></i> 경험치 (EXP)
+										</div>
+									</label>
+									<label class="cursor-pointer">
+										<input type="radio" name="type" class="peer sr-only">
+										<div class="text-center py-2 border-2 border-gray-200 rounded-lg peer-checked:border-yellow-500 peer-checked:bg-yellow-50 peer-checked:text-yellow-700 transition">
+											<i class="fas fa-coins mr-1"></i> 포인트 (Gold)
+										</div>
+									</label>
+								</div>
+							</div>
+
+							<div>
+								<label class="block text-sm font-bold text-gray-700 mb-2">조정 방식</label>
+								<div class="flex gap-4">
+									<label class="flex items-center">
+										<input type="radio" name="action" class="text-indigo-600 focus:ring-indigo-500" checked>
+										<span class="ml-2 text-sm">지급 (Add)</span>
+									</label>
+									<label class="flex items-center">
+										<input type="radio" name="action" class="text-red-600 focus:ring-red-500">
+										<span class="ml-2 text-sm text-red-600">차감 (Remove)</span>
+									</label>
+								</div>
+							</div>
+
+							<div>
+								<label class="block text-sm font-bold text-gray-700 mb-1">수량</label>
+								<input type="number" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="숫자만 입력 (예: 100)">
+							</div>
+
+							<div>
+								<label class="block text-sm font-bold text-gray-700 mb-1">사유 (로그 기록용)</label>
+								<input type="text" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="예: 친구 전도 보너스">
+							</div>
+
+							<button type="button" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-lg hover:bg-indigo-700 shadow-md transition active:scale-95">
+								적용하기
+							</button>
+						</form>
+					</div>
+				</div>
+
+				<div class="lg:col-span-2">
+					<div class="bg-white p-6 rounded-xl shadow-sm h-full">
+						<h2 class="text-lg font-bold mb-4 text-gray-800 flex justify-between items-center">
+							<span>최근 조정 내역</span>
+							<button class="text-xs text-indigo-600 hover:underline">전체보기</button>
+						</h2>
+						<div class="overflow-x-auto">
+							<table class="w-full text-left">
+								<thead class="text-xs text-gray-500 uppercase bg-gray-50">
+								<tr>
+									<th class="px-4 py-3">시간</th>
+									<th class="px-4 py-3">대상</th>
+									<th class="px-4 py-3">내용</th>
+									<th class="px-4 py-3">변동값</th>
+									<th class="px-4 py-3">관리자</th>
+								</tr>
+								</thead>
+								<tbody class="text-sm divide-y divide-gray-100">
+								<tr>
+									<td class="px-4 py-3 text-gray-500">10:42 AM</td>
+									<td class="px-4 py-3 font-bold">김철수</td>
+									<td class="px-4 py-3 text-gray-600">특별 심부름 보상</td>
+									<td class="px-4 py-3 text-green-600 font-bold">+50 EXP</td>
+									<td class="px-4 py-3 text-gray-400">T.Lee</td>
+								</tr>
+								<tr>
+									<td class="px-4 py-3 text-gray-500">09:15 AM</td>
+									<td class="px-4 py-3 font-bold">이영희</td>
+									<td class="px-4 py-3 text-gray-600">상점 아이템 구매</td>
+									<td class="px-4 py-3 text-red-500 font-bold">-200 Gold</td>
+									<td class="px-4 py-3 text-gray-400">System</td>
+								</tr>
+								<tr>
+									<td class="px-4 py-3 text-gray-500">어제</td>
+									<td class="px-4 py-3 font-bold">박민수</td>
+									<td class="px-4 py-3 text-gray-600">지각 페널티 조정</td>
+									<td class="px-4 py-3 text-red-500 font-bold">-10 EXP</td>
+									<td class="px-4 py-3 text-gray-400">T.Kim</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="page-members" class="page-content hidden-page">
+			<header class="flex justify-between items-center mb-8">
+				<div>
+					<h1 class="text-3xl font-extrabold text-slate-800">용사 관리</h1>
+					<p class="text-slate-500 mt-2">등록된 모든 학생들의 정보를 조회하고 수정합니다.</p>
+				</div>
+				<button onclick="openMemberModal()" class="bg-indigo-600 text-white px-5 py-2 rounded-lg font-bold hover:bg-indigo-700 shadow-lg transition flex items-center">
+					<i class="fas fa-user-plus mr-2"></i> 신규 용사 등록
+				</button>
+			</header>
+
+			<div class="bg-white p-4 rounded-xl shadow-sm mb-6 flex flex-wrap gap-4 justify-between items-center">
+				<div class="flex gap-2">
+					<select class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+						<option value="">학년 전체</option>
+						<option value="1">1학년</option>
+						<option value="2">2학년</option>
+						<option value="3">3학년</option>
+					</select>
+					<select class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+						<option value="">반 전체</option>
+						<option value="믿음">믿음반</option>
+						<option value="소망">소망반</option>
+						<option value="사랑">사랑반</option>
+					</select>
+					<select class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+						<option value="">직업 전체</option>
+						<option value="warrior">전사</option>
+						<option value="mage">마법사</option>
+						<option value="archer">궁수</option>
+						<option value="healer">힐러</option>
+					</select>
+				</div>
+				<div class="relative w-full md:w-64">
+					<input type="text" placeholder="이름 또는 아이디 검색" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
+					<i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+				</div>
+			</div>
+
+			<div class="bg-white rounded-xl shadow-sm overflow-hidden">
+				<table class="w-full text-left border-collapse">
+					<thead class="bg-gray-50 text-gray-500 text-sm uppercase">
+					<tr>
+						<th class="p-4">용사 정보 (이름/직업)</th>
+						<th class="p-4">소속 (학년/반)</th>
+						<th class="p-4">스탯 (LV / EXP)</th>
+						<th class="p-4">보유 자산</th>
+						<th class="p-4">연락처 (부모님)</th>
+						<th class="p-4 text-center">관리</th>
+					</tr>
+					</thead>
+					<tbody class="divide-y divide-gray-100 text-sm text-gray-700">
+					<tr class="hover:bg-indigo-50 transition group">
+						<td class="p-4 flex items-center gap-3">
+							<img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" class="w-10 h-10 rounded-full bg-slate-100 border border-slate-200">
+							<div>
+								<div class="font-bold text-gray-800">김철수 <span class="text-xs text-gray-400 font-normal">(cs_kim)</span></div>
+								<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
+                                <i class="fas fa-sword mr-1"></i> 전사
+                            </span>
+							</div>
+						</td>
+						<td class="p-4">
+							<div class="font-semibold">3학년</div>
+							<div class="text-gray-500 text-xs">믿음반</div>
+						</td>
+						<td class="p-4">
+							<div class="font-bold text-indigo-600">LV. 12</div>
+							<div class="w-24 h-1.5 bg-gray-200 rounded-full mt-1 overflow-hidden">
+								<div class="bg-indigo-500 h-full" style="width: 65%"></div>
+							</div>
+							<div class="text-[10px] text-gray-400 mt-0.5">1,250 / 2,000 EXP</div>
+						</td>
+						<td class="p-4">
+							<div class="text-yellow-600 font-bold"><i class="fas fa-coins mr-1"></i> 5,400 G</div>
+						</td>
+						<td class="p-4 text-gray-500">
+							010-1234-5678
+						</td>
+						<td class="p-4 text-center">
+							<button onclick="openMemberModal('김철수')" class="text-gray-400 hover:text-indigo-600 p-2 rounded-full hover:bg-indigo-100 transition">
+								<i class="fas fa-edit"></i>
+							</button>
+							<button class="text-gray-400 hover:text-red-600 p-2 rounded-full hover:bg-red-100 transition">
+								<i class="fas fa-trash-alt"></i>
+							</button>
+						</td>
+					</tr>
+
+					<tr class="hover:bg-indigo-50 transition group">
+						<td class="p-4 flex items-center gap-3">
+							<img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka" class="w-10 h-10 rounded-full bg-slate-100 border border-slate-200">
+							<div>
+								<div class="font-bold text-gray-800">이영희 <span class="text-xs text-gray-400 font-normal">(yh_lee)</span></div>
+								<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">
+                                <i class="fas fa-hat-wizard mr-1"></i> 마법사
+                            </span>
+							</div>
+						</td>
+						<td class="p-4">
+							<div class="font-semibold">3학년</div>
+							<div class="text-gray-500 text-xs">소망반</div>
+						</td>
+						<td class="p-4">
+							<div class="font-bold text-indigo-600">LV. 15</div>
+							<div class="w-24 h-1.5 bg-gray-200 rounded-full mt-1 overflow-hidden">
+								<div class="bg-indigo-500 h-full" style="width: 20%"></div>
+							</div>
+							<div class="text-[10px] text-gray-400 mt-0.5">300 / 3,500 EXP</div>
+						</td>
+						<td class="p-4">
+							<div class="text-yellow-600 font-bold"><i class="fas fa-coins mr-1"></i> 12,000 G</div>
+						</td>
+						<td class="p-4 text-gray-500">
+							010-9876-5432
+						</td>
+						<td class="p-4 text-center">
+							<button onclick="openMemberModal('이영희')" class="text-gray-400 hover:text-indigo-600 p-2 rounded-full hover:bg-indigo-100 transition">
+								<i class="fas fa-edit"></i>
+							</button>
+							<button class="text-gray-400 hover:text-red-600 p-2 rounded-full hover:bg-red-100 transition">
+								<i class="fas fa-trash-alt"></i>
+							</button>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+
+				<div class="p-4 border-t border-gray-100 flex justify-center">
+					<nav class="flex space-x-2">
+						<button class="px-3 py-1 rounded border hover:bg-gray-50 text-gray-500">&lt;</button>
+						<button class="px-3 py-1 rounded bg-indigo-600 text-white font-bold">1</button>
+						<button class="px-3 py-1 rounded border hover:bg-gray-50 text-gray-500">2</button>
+						<button class="px-3 py-1 rounded border hover:bg-gray-50 text-gray-500">3</button>
+						<button class="px-3 py-1 rounded border hover:bg-gray-50 text-gray-500">&gt;</button>
+					</nav>
+				</div>
+			</div>
+		</div>
+		<div id="page-notice-write" class="page-content hidden-page">
+			<header class="flex justify-between items-center mb-6">
+				<div class="flex items-center">
+					<button onclick="showPage('notice')" class="mr-4 p-2 rounded-full hover:bg-gray-200 text-gray-500 transition">
+						<i class="fas fa-arrow-left"></i>
+					</button>
+					<h1 class="text-3xl font-extrabold text-slate-800">새 공지 작성</h1>
+				</div>
+				<div class="flex gap-2">
+					<button onclick="showPage('notice')" class="px-5 py-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 font-bold transition">
+						취소
+					</button>
+					<button class="px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 shadow-lg font-bold transition flex items-center">
+						<i class="fas fa-paper-plane mr-2"></i> 등록하기
+					</button>
+				</div>
+			</header>
+
+			<div class="bg-white p-6 rounded-xl shadow-sm">
+				<form class="space-y-6">
+
+					<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+						<div class="md:col-span-1">
+							<label class="block text-sm font-bold text-gray-700 mb-2">분류</label>
+							<select class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 outline-none">
+								<option value="notice">📢 일반 공지</option>
+								<option value="event">🎉 이벤트</option>
+								<option value="urgent">🚨 긴급 점검</option>
+							</select>
+						</div>
+						<div class="md:col-span-3">
+							<label class="block text-sm font-bold text-gray-700 mb-2">제목</label>
+							<input type="text" placeholder="제목을 입력하세요 (예: 이번 주 달란트 시장 안내)"
+								   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 outline-none font-bold text-gray-800">
+						</div>
+					</div>
+
+					<div>
+						<label class="block text-sm font-bold text-gray-700 mb-2">내용</label>
+						<div class="border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-indigo-500 focus-within:border-transparent transition">
+							<div class="bg-gray-50 border-b border-gray-300 p-2 flex gap-1 flex-wrap">
+								<button type="button" class="p-2 rounded hover:bg-gray-200 text-gray-600"><i class="fas fa-bold"></i></button>
+								<button type="button" class="p-2 rounded hover:bg-gray-200 text-gray-600"><i class="fas fa-italic"></i></button>
+								<button type="button" class="p-2 rounded hover:bg-gray-200 text-gray-600"><i class="fas fa-underline"></i></button>
+								<div class="w-px h-6 bg-gray-300 mx-1 self-center"></div>
+								<button type="button" class="p-2 rounded hover:bg-gray-200 text-gray-600"><i class="fas fa-list-ul"></i></button>
+								<button type="button" class="p-2 rounded hover:bg-gray-200 text-gray-600"><i class="fas fa-list-ol"></i></button>
+								<div class="w-px h-6 bg-gray-300 mx-1 self-center"></div>
+								<button type="button" class="p-2 rounded hover:bg-gray-200 text-gray-600"><i class="fas fa-image"></i></button>
+								<button type="button" class="p-2 rounded hover:bg-gray-200 text-gray-600"><i class="fas fa-link"></i></button>
+							</div>
+							<textarea class="w-full h-64 p-4 outline-none resize-none text-gray-700 leading-relaxed"
+									  placeholder="여기에 내용을 작성하세요.&#13;&#10;이미지를 복사해서 붙여넣을 수도 있습니다."></textarea>
+						</div>
+					</div>
+
+					<div>
+						<label class="block text-sm font-bold text-gray-700 mb-2">첨부파일</label>
+						<div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:bg-gray-50 transition cursor-pointer group relative">
+							<input type="file" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+							<div class="text-gray-400 group-hover:text-indigo-500 transition">
+								<i class="fas fa-cloud-upload-alt text-3xl mb-2"></i>
+								<p class="text-sm">클릭하거나 파일을 여기로 드래그하세요.</p>
+								<p class="text-xs text-gray-400 mt-1">(JPG, PNG, PDF / 최대 10MB)</p>
+							</div>
+						</div>
+						<div class="mt-3 space-y-2">
+							<div class="flex items-center justify-between bg-indigo-50 px-4 py-2 rounded-lg text-sm text-indigo-700 border border-indigo-100">
+								<span class="flex items-center"><i class="fas fa-file-image mr-2"></i> 예배_순서지.jpg</span>
+								<button type="button" class="text-indigo-400 hover:text-red-500"><i class="fas fa-times"></i></button>
+							</div>
+						</div>
+					</div>
+
+					<div class="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-3">
+						<label class="flex items-center cursor-pointer">
+							<input type="checkbox" class="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300">
+							<span class="ml-2 text-sm text-gray-700 font-bold">상단 고정 (공지사항 상단에 계속 노출)</span>
+						</label>
+						<label class="flex items-center cursor-pointer">
+							<input type="checkbox" class="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300" checked>
+							<span class="ml-2 text-sm text-gray-700">
+                        <span class="font-bold">푸시 알림 전송</span> 
+                        <span class="text-gray-400 font-normal ml-1">- 학생들의 앱으로 '새 글 알림'을 보냅니다.</span>
+                    </span>
+						</label>
+					</div>
+
+				</form>
+			</div>
+		</div>
+
+	</main>
+</div>
+
+<script>
+	function showPage(pageId, btnElement) {
+		// 1. 모든 페이지 숨기기
+		document.querySelectorAll('.page-content').forEach(page => {
+			page.classList.add('hidden-page');
+		});
+
+		// 2. 선택한 페이지 보이기
+		document.getElementById('page-' + pageId).classList.remove('hidden-page');
+
+		// 3. 네비게이션 버튼 스타일 초기화 (기존 활성화 클래스 제거)
+		document.querySelectorAll('.nav-item').forEach(nav => {
+			nav.classList.remove('bg-indigo-700');
+			nav.classList.add('hover:bg-indigo-800');
+		});
+
+		// 4. 클릭한 버튼 활성화 스타일 적용
+		if (btnElement) {
+			btnElement.classList.remove('hover:bg-indigo-800');
+			btnElement.classList.add('bg-indigo-700');
+		}
+	}
+
+	// 1. 주간 출석 추이 (Line Chart)
+	var attendanceOptions = {
+		series: [{
+			name: '출석 인원',
+			data: [18, 20, 19, 22, 24, 24, 23] // 최근 7주 또는 7일 데이터
+		}],
+		chart: {
+			height: 320,
+			type: 'area', // 영역 채우기 그래프
+			toolbar: {show: false},
+			fontFamily: 'inherit'
+		},
+		colors: ['#4F46E5'], // Indigo-600
+		dataLabels: {enabled: false},
+		stroke: {curve: 'smooth', width: 3},
+		fill: {
+			type: 'gradient',
+			gradient: {
+				shadeIntensity: 1,
+				opacityFrom: 0.7,
+				opacityTo: 0.2,
+				stops: [0, 90, 100]
+			}
+		},
+		xaxis: {
+			categories: ['12/15', '12/22', '12/29', '01/05', '01/12', '01/19', '01/26'],
+			axisBorder: {show: false},
+			axisTicks: {show: false}
+		},
+		yaxis: {
+			min: 0,
+			max: 30, // 전체 학생 수에 맞춰 조정
+			tickAmount: 5
+		},
+		tooltip: {
+			theme: 'light',
+			y: {
+				formatter: function (val) {
+					return val + "명"
+				}
+			}
+		}
+	};
+	var chart1 = new ApexCharts(document.querySelector("#attendanceChart"), attendanceOptions);
+	chart1.render();
+
+	// 2. 반별 출석 점유율 (Donut Chart)
+	var classOptions = {
+		series: [12, 9, 5], // 믿음, 소망, 사랑 반 인원
+		labels: ['믿음반', '소망반', '사랑반'],
+		chart: {
+			type: 'donut',
+			height: 280,
+			fontFamily: 'inherit'
+		},
+		colors: ['#6366F1', '#2DD4BF', '#FACC15'], // Indigo, Teal, Yellow
+		plotOptions: {
+			pie: {
+				donut: {
+					size: '70%',
+					labels: {
+						show: true,
+						total: {
+							show: true,
+							label: '총 출석',
+							fontSize: '14px',
+							fontWeight: 600,
+							color: '#64748B',
+							formatter: function (w) {
+								return w.globals.seriesTotals.reduce((a, b) => {
+									return a + b
+								}, 0) + "명"
+							}
+						}
+					}
+				}
+			}
+		},
+		legend: {position: 'bottom', show: false}, // 하단 범례 숨김 (커스텀 HTML 사용)
+		dataLabels: {enabled: false}
+	};
+	var chart2 = new ApexCharts(document.querySelector("#classChart"), classOptions);
+	chart2.render();
+
+	// 3. 요일별 퀘스트 수행 (Bar Chart)
+	var questOptions = {
+		series: [{
+			name: '완료된 퀘스트',
+			data: [5, 12, 18, 10, 8, 24, 30] // 월~일
+		}],
+		chart: {
+			type: 'bar',
+			height: 250,
+			toolbar: {show: false},
+			fontFamily: 'inherit'
+		},
+		colors: ['#10B981'], // Green-500
+		plotOptions: {
+			bar: {
+				borderRadius: 4,
+				columnWidth: '40%',
+			}
+		},
+		dataLabels: {enabled: false},
+		xaxis: {
+			categories: ['월', '화', '수', '목', '금', '토', '주일'],
+			axisBorder: {show: false},
+			axisTicks: {show: false}
+		},
+		grid: {
+			borderColor: '#F1F5F9',
+			strokeDashArray: 4,
+		}
+	};
+	var chart3 = new ApexCharts(document.querySelector("#questChart"), questOptions);
+	chart3.render();
+	flatpickr("#dateRangePicker", {
+		mode: "range",          // 범위 선택 모드
+		dateFormat: "Y.m.d",    // 표시 형식 (예: 2026.01.01)
+		defaultDate: [          // 기본 선택 날짜 (지난 30일 ~ 오늘)
+			new Date().fp_incr(-30),
+			new Date()
+		],
+		locale: "ko",           // 한국어 설정
+		theme: "airbnb",        // 테마
+
+		// 날짜 선택이 완료되면 실행될 함수
+		onClose: function (selectedDates, dateStr, instance) {
+			if (selectedDates.length === 2) {
+				console.log("선택된 기간:", dateStr);
+
+				// [개발 팁] 여기서 백엔드에 AJAX 요청을 보내 데이터를 새로 받아옵니다.
+				// 예: updateDashboardData(selectedDates[0], selectedDates[1]);
+
+				// (예시) 날짜 변경 시 알림 띄우기
+				// alert(dateStr + " 기간으로 데이터를 갱신합니다.");
+			}
+		}
+	});
+</script>
+</script>
+</body>
+</html>
