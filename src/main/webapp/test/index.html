@@ -803,11 +803,69 @@
             background: none; /* 클릭 효과 제거 */
         }
 
+/* 실시간 토스트 알림 컨테이너 */
+#toast-container {
+    position: fixed;
+    bottom: 80px; /* 하단 네비게이션 위쪽 */
+    right: 20px;
+    left: 20px; /* 모바일 대응: 양옆 여백 */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 10001;
+    pointer-events: none;
+}
 
+.toast-item {
+    background: rgba(255, 255, 255, 0.95);
+    border-left: 5px solid var(--secondary);
+    padding: 15px 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: slideInRight 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: auto;
+}
+
+.toast-item.reward {
+    border-left-color: var(--primary);
+    background: linear-gradient(90deg, #FFFDF0 0%, #ffffff 100%);
+}
+
+.toast-icon {
+    font-size: 1.5rem;
+}
+
+.toast-content {
+    flex: 1;
+}
+
+.toast-title {
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: #333;
+    display: block;
+}
+
+.toast-msg {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(100%); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeOut {
+    to { opacity: 0; transform: translateY(-20px); }
+}
 	</style>
 </head>
 <body>
-
+<div id="toast-container"></div>
 <div class="app-container">
 
 
@@ -1517,6 +1575,31 @@ location.href = 'intro.html';
 		$('#current-pw, #new-pw, #new-pw-confirm').val('');
 		showPage('page-mypage');
 	}
+	// 실시간 토스트 알림 함수
+function showToast(title, msg, icon = '🔔', type = 'normal') {
+    const id = Date.now();
+    const toastHtml = `
+        <div class="toast-item ${type === 'reward' ? 'reward' : ''}" id="toast-${id}">
+            <div class="toast-icon">${icon}</div>
+            <div class="toast-content">
+                <span class="toast-title">${title}</span>
+                <span class="toast-msg">${msg}</span>
+            </div>
+        </div>
+    `;
+
+    $('#toast-container').append(toastHtml);
+
+    // 3초 후 자동으로 사라짐
+    setTimeout(() => {
+        $(`#toast-${id}`).css('animation', 'fadeOut 0.5s forwards');
+        setTimeout(() => $(`#toast-${id}`).remove(), 500);
+    }, 3000);
+}
+// 기존 stamp-zone 클릭 이벤트 내부
+showToast('출석 완료!', '100 달란트가 적립되었습니다.', '🎁', 'reward');
+showToast('퀘스트 수행', '용사님이 한 걸음 더 성장했어요!', '⚔️');
+showToast('출석 완료!', '100 달란트가 적립되었습니다.', '🎁', 'reward');
 </script>
 </body>
 </html>
