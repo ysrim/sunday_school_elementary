@@ -888,3 +888,67 @@ h3 {
     border: 2px solid #4A90E2;
     box-shadow: 0 0 8px rgba(74, 144, 226, 0.4);
 }
+
+/* 퀘스트 컨테이너 스타일 보정 */
+.quest-container {
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 10px 20px;
+    margin: 0 20px;
+}
+
+.quest-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.quest-row:last-child {
+    border-bottom: none;
+}
+
+/* 메인 버튼 스타일 */
+.btn-quest-action {
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    background: linear-gradient(135deg, #6aacf8 0%, #4a90e2 100%);
+    color: white;
+    box-shadow: 0 4px 6px rgba(74, 144, 226, 0.2);
+    min-width: 90px;
+}
+
+/* 마우스 호버 시 효과 */
+.btn-quest-action:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(74, 144, 226, 0.3);
+    filter: brightness(1.05);
+}
+
+/* 클릭 시 눌리는 효과 */
+.btn-quest-action:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(74, 144, 226, 0.2);
+}
+
+/* 비활성화(승인대기/처리중) 상태 */
+.btn-quest-action:disabled {
+    background: #e0e0e0;
+    color: #999;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* 완료된 행의 텍스트 색상 변경 (선택 사항) */
+.quest-row.done .quest-title {
+    color: #aaa;
+    text-decoration: line-through;
+}

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.base.enumm.CacheKeys;
+import com.base.utl.SessionUtil;
 
 import app.psn.com.service.CacheService;
 import app.psn.stu.mapper.AttendanceMapper;
@@ -32,8 +33,8 @@ public class AttendanceServiceImpl implements AttendanceService {
 	private final AttendanceMapper attendanceMapper;
 
 	@Override
-	public Map<String, Object> sltAttendanceList(int mberSn) {
-		List<AttendanceVO> attendanceList = attendanceMapper.sltAttendanceList(mberSn);
+	public Map<String, Object> sltAttendanceList() {
+		List<AttendanceVO> attendanceList = attendanceMapper.sltAttendanceList(SessionUtil.getMberInfo().getMberSn());
 		String attendanceToday = attendanceList.stream()
 			.filter(vo -> "today".equals(vo.getToday()))
 			.map(AttendanceVO::getAttendanceToday)
@@ -46,8 +47,8 @@ public class AttendanceServiceImpl implements AttendanceService {
 	}
 
 	@Override
-	public boolean attendanceDo(int mberSn) {
-		int cnt = attendanceMapper.insAttendanceDo(mberSn);
+	public boolean attendanceDo() {
+		int cnt = attendanceMapper.insAttendanceDo(SessionUtil.getMberInfo().getMberSn());
 		log.info("insert count: {}", cnt);
 		if (cnt < 1) {
 			// 비즈니스 로직상 필수라면 예외 처리

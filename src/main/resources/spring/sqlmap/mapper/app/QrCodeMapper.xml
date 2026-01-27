@@ -19,7 +19,7 @@
                  INNER JOIN AVATAR_INFO B ON A.MBER_SN = B.MBER_SN
                  INNER JOIN GUILD_MBER_LIST C ON A.MBER_SN = C.MBER_SN
                  INNER JOIN GUILD_INFO D ON C.GUILD_SN = D.GUILD_SN
-        WHERE A.MBER_SN = #{mberId}
+        WHERE A.MBER_SN = #{mberSn}
           AND A.USE_AT = 'Y'
     </select>
 

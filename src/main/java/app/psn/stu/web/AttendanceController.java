@@ -16,6 +16,7 @@ import com.base.enumm.MberGrdEnum;
 import com.base.enumm.NaviEnum;
 import com.base.utl.ResUtil;
 import com.base.utl.SessionUtil;
+import com.base.utl.StringUtil;
 
 import app.idx.lgn.vo.LoginVO;
 import app.psn.stu.service.AttendanceService;
@@ -35,10 +36,10 @@ public class AttendanceController {
 	@RequestMapping("/atnd.pg")
 	public String attendancePg(Model model) {
 
-		Map<String, Object> resultMap = attendanceService.sltAttendanceList(SessionUtil.getMberInfo().getMberSn());
+		Map<String, Object> resultMap = attendanceService.sltAttendanceList();
 		model.addAttribute("attendanceList", resultMap.get("attendanceList"));
 		model.addAttribute("attendanceToday", resultMap.get("attendanceToday")); // 출석여부
-		model.addAttribute("isAttendance", isTodaySunday()); // 주일 여부
+		model.addAttribute("isAttendance", StringUtil.isTodaySunday()); // 주일 여부
 		model.addAttribute("currMonth", LocalDate.now(ZoneId.of("Asia/Seoul")).getMonthValue());
 
 		// 경우의 수
@@ -51,16 +52,12 @@ public class AttendanceController {
 	@MenuInfo(role = MberGrdEnum.STD)
 	@RequestMapping("/atnd.ax")
 	public ResponseEntity attendanceAx() {
-		if (isTodaySunday()) {
-			attendanceService.attendanceDo(SessionUtil.getMberInfo().getMberSn());
+		if (StringUtil.isTodaySunday()) {
+			attendanceService.attendanceDo();
 			return ResUtil.resSucc();
 		} else {
-			return ResUtil.resFail("주일만 투표 가능합니다.");
+			return ResUtil.resFail("주일만 출석 가능합니다.");
 		}
-	}
-
-	private boolean isTodaySunday() {
-		return (LocalDate.now(ZoneId.of("Asia/Seoul")).getDayOfWeek() == DayOfWeek.SUNDAY);
 	}
 
 }

@@ -5,6 +5,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.text.NumberFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Base64;
 
 import javax.crypto.Cipher;
@@ -14,25 +17,16 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class StringUtil {
 
+	private static final String ALGORITHM = "AES/GCM/NoPadding";
+	private static final int TAG_LENGTH_BIT = 128; // 인증 태그 길이
+	private static final int IV_LENGTH_BYTE = 12;  // GCM 권장 IV 길이
+
 	private StringUtil() {
 	}
 
 	public static String comma(int number) {
 		String formattedNumber = NumberFormat.getInstance().format(number);
 		return formattedNumber;
-	}
-
-	private static final String ALGORITHM = "AES/GCM/NoPadding";
-	private static final int TAG_LENGTH_BIT = 128; // 인증 태그 길이
-	private static final int IV_LENGTH_BYTE = 12;  // GCM 권장 IV 길이
-
-	public static byte[] generate32ByteKey(String input) {
-		try {
-			MessageDigest digest = MessageDigest.getInstance("SHA-256");
-			return digest.digest(input.getBytes(StandardCharsets.UTF_8));
-		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException("SHA-256 algorithm not found", e);
-		}
 	}
 
 	// 1. 암호화
@@ -75,6 +69,10 @@ public class StringUtil {
 		byte[] plainText = cipher.doFinal(cipherText);
 
 		return new String(plainText, StandardCharsets.UTF_8);
+	}
+
+	public static boolean isTodaySunday() {
+		return (LocalDate.now(ZoneId.of("Asia/Seoul")).getDayOfWeek() == DayOfWeek.SUNDAY);
 	}
 
 }
