@@ -1,116 +1,124 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>RPG 성소 - 관리자 로그인</title>
-	<script src="https://cdn.tailwindcss.com"></script>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPG 성소 - 관리자 로그인</title>
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-indigo-50 font-sans h-screen flex items-center justify-center p-4">
+<body class="bg-slate-100 font-sans h-screen flex items-center justify-center p-4">
 
-<div class="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
+<div class="w-full max-w-4xl bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col md:flex-row h-auto md:h-[600px]">
 
-	<div class="w-full md:w-1/2 bg-indigo-900 text-white p-12 flex flex-col justify-between relative overflow-hidden">
-		<div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-			<i class="fas fa-chess-rook text-9xl absolute -top-10 -left-10 transform rotate-12"></i>
-			<i class="fas fa-shield-alt text-9xl absolute bottom-10 right-10 transform -rotate-12"></i>
-		</div>
+    <div class="w-full md:w-1/2 bg-indigo-50 p-12 flex flex-col justify-between relative overflow-hidden hidden md:flex">
+        <div class="absolute top-0 left-0 w-full h-full pointer-events-none">
+            <i class="fas fa-chess-rook text-9xl absolute -top-6 -left-6 text-indigo-100 opacity-50 transform rotate-12"></i>
+        </div>
 
-		<div class="relative z-10">
-			<div class="text-indigo-300 font-bold tracking-widest uppercase text-sm mb-2">Admin Portal</div>
-			<h1 class="text-4xl font-extrabold leading-tight mb-4">
-				다음 세대 용사들을<br>
-				준비시키는<br>
-				<span class="text-yellow-400">거룩한 성소</span>
-			</h1>
-			<p class="text-indigo-200 text-sm leading-relaxed">
-				선생님의 헌신으로 아이들이 믿음의 용사로 성장합니다.<br>
-				오늘도 아이들을 위해 기도하며 접속해주세요.
-			</p>
-		</div>
+        <div class="relative z-10">
+            <div class="flex items-center text-indigo-600 font-bold text-lg mb-6">
+                <i class="fas fa-chess-rook mr-2"></i> RPG Admin
+            </div>
+            
+            <div class="bg-white/70 backdrop-blur-sm p-6 rounded-xl border border-indigo-100/50 mb-6 shadow-sm">
+                <h1 class="text-3xl font-bold leading-tight text-slate-800">
+                    다음 세대 용사들을<br>
+                    준비시키는<br>
+                    <span class="text-indigo-600 text-4xl mt-2 inline-block">거룩한 성소</span>
+                </h1>
+            </div>
 
-		<div class="relative z-10 mt-8 md:mt-0">
-			<div class="flex items-center space-x-2 text-indigo-300 text-sm">
-				<i class="fas fa-info-circle"></i>
-				<span>시스템 문의: 미디어팀 (내선 1004)</span>
-			</div>
-		</div>
-	</div>
+            <p class="text-slate-600 text-sm leading-relaxed">
+                선생님의 헌신으로 아이들이 믿음의 용사로 성장합니다.<br>
+                오늘도 아이들을 위해 기도하며 접속해주세요.
+            </p>
+        </div>
 
-	<div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
-		<div class="text-center md:text-left mb-8">
-			<h2 class="text-3xl font-bold text-gray-800">환영합니다, 선생님! 👋</h2>
-			<p class="text-gray-500 mt-2">관리자 계정으로 접속하여 왕국을 관리하세요.</p>
-		</div>
+        <div class="relative z-10">
+            <div class="flex items-center space-x-2 text-slate-500 text-xs font-medium bg-white/60 p-3 rounded-lg backdrop-blur-sm border border-indigo-100 inline-flex">
+                <i class="fas fa-info-circle text-indigo-500"></i>
+                <span>시스템 문의: 미디어팀 (내선 1004)</span>
+            </div>
+        </div>
+    </div>
 
-		<form action="main.html" method="POST" class="space-y-6">
+    <div class="w-full md:w-1/2 p-10 md:p-14 flex flex-col justify-center bg-white">
+        <div class="mb-10">
+            <h2 class="text-2xl font-bold text-slate-800">환영합니다! 👋</h2>
+            <p class="text-slate-500 text-sm mt-2">관리자 계정으로 접속하여 왕국을 관리하세요.</p>
+        </div>
 
-			<div>
-				<label class="block text-sm font-bold text-gray-700 mb-2" for="username">아이디</label>
-				<div class="relative">
-					<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-						<i class="fas fa-user text-gray-400"></i>
-					</div>
-					<input type="text" id="username" name="username"
-						   class="w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" value="test"
-						   placeholder="ID를 입력하세요" required>
-				</div>
-			</div>
+        <form action="main.html" method="POST" class="space-y-5">
 
-			<div>
-				<div class="flex justify-between items-center mb-2">
-					<label class="block text-sm font-bold text-gray-700" for="password">비밀번호</label>
-					<a href="#" class="text-xs text-indigo-600 hover:text-indigo-800 font-bold">비밀번호를 잊으셨나요?</a>
-				</div>
-				<div class="relative">
-					<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-						<i class="fas fa-lock text-gray-400"></i>
-					</div>
-					<input type="password" id="password" name="password"
-						   class="w-full pl-11 pr-12 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" value="test"
-						   placeholder="비밀번호 입력" required>
-					<button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-indigo-600 cursor-pointer focus:outline-none">
-						<i class="fas fa-eye" id="eyeIcon"></i>
-					</button>
-				</div>
-			</div>
+            <div>
+                <label class="block text-sm font-bold text-slate-700 mb-1.5" for="username">아이디</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                        <i class="fas fa-user text-slate-400 text-sm"></i>
+                    </div>
+                    <input type="text" id="username" name="username"
+                           class="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all placeholder-slate-400 text-slate-800"
+                           value="test" placeholder="아이디 입력" required>
+                </div>
+            </div>
 
-			<div class="flex items-center">
-				<input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-				<label for="remember-me" class="ml-2 block text-sm text-gray-700 cursor-pointer">
-					로그인 상태 유지
-				</label>
-			</div>
+            <div>
+                <div class="flex justify-between items-center mb-1.5">
+                    <label class="block text-sm font-bold text-slate-700" for="password">비밀번호</label>
+                    <a href="#" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">비밀번호 찾기</a>
+                </div>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                        <i class="fas fa-lock text-slate-400 text-sm"></i>
+                    </div>
+                    <input type="password" id="password" name="password"
+                           class="w-full pl-10 pr-10 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all placeholder-slate-400 text-slate-800"
+                           value="test" placeholder="비밀번호 입력" required>
+                    <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-indigo-600 cursor-pointer focus:outline-none">
+                        <i class="fas fa-eye text-sm" id="eyeIcon"></i>
+                    </button>
+                </div>
+            </div>
 
-			<button type="submit"
-					class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg transform transition hover:-translate-y-0.5 active:translate-y-0 active:shadow-none text-lg flex justify-center items-center group">
-				<span>왕국 입장하기</span>
-				<i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
-			</button>
-		</form>
+            <div class="flex items-center pt-1">
+                <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded cursor-pointer">
+                <label for="remember-me" class="ml-2 block text-sm text-slate-600 cursor-pointer select-none">
+                    로그인 상태 유지
+                </label>
+            </div>
 
-		<div class="mt-8 pt-6 border-t border-gray-100 text-center text-sm text-gray-400">
-			&copy; 2026 Sunday School RPG Project
-		</div>
-	</div>
+            <button type="submit"
+                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg shadow-sm hover:shadow-md transition-all active:scale-[0.98] text-sm flex justify-center items-center group mt-2">
+                <span>왕국 입장하기</span>
+                <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform text-xs"></i>
+            </button>
+        </form>
+
+        <div class="mt-10 text-center text-xs text-slate-400 font-medium">
+            &copy; 2026 Sunday School RPG Project
+        </div>
+    </div>
 </div>
 
 <script>
-	function togglePassword() {
-		const passwordInput = document.getElementById('password');
-		const eyeIcon = document.getElementById('eyeIcon');
+    function togglePassword() {
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = document.getElementById('eyeIcon');
 
-		if (passwordInput.type === 'password') {
-			passwordInput.type = 'text';
-			eyeIcon.classList.remove('fa-eye');
-			eyeIcon.classList.add('fa-eye-slash');
-		} else {
-			passwordInput.type = 'password';
-			eyeIcon.classList.remove('fa-eye-slash');
-			eyeIcon.classList.add('fa-eye');
-		}
-	}
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            eyeIcon.classList.remove('fa-eye');
+            eyeIcon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            eyeIcon.classList.remove('fa-eye-slash');
+            eyeIcon.classList.add('fa-eye');
+        }
+    }
 </script>
 </body>
 </html>
