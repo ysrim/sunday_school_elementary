@@ -1,0 +1,134 @@
+CREATE TABLE exp_logs (
+    log_id          INT AUTO_INCREMENT PRIMARY KEY COMMENT '로그 고유 ID',
+    user_id         INT NOT NULL COMMENT '학생 ID',
+    amount          INT NOT NULL COMMENT '획득 경험치 양',
+    total_exp_after INT NOT NULL COMMENT '획득 후 누적 경험치 (스냅샷)',
+    level_after     INT NOT NULL COMMENT '획득 후 당시 레벨 (스냅샷)',
+    change_type     ENUM('QUEST', 'ATTENDANCE', 'ADMIN_MANUAL', 'EVENT') COMMENT '획득 경로',
+    reference_id    INT COMMENT '관련 ID (예: 퀘스트 로그 ID)',
+    description     VARCHAR(100) COMMENT '상세 내용',
+    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '발생 시간'
+);
+
+CREATE TABLE point_logs (
+    log_id          INT AUTO_INCREMENT PRIMARY KEY COMMENT '로그 고유 ID',
+    user_id         INT NOT NULL COMMENT '학생 ID',
+    amount          INT NOT NULL COMMENT '변동량 (양수: 획득, 음수: 사용)',
+    balance_after   INT NOT NULL COMMENT '변동 후 잔액 (스냅샷)',
+    change_type     ENUM('QUEST', 'ATTENDANCE', 'SHOP', 'ADMIN_MANUAL', 'EVENT') COMMENT '변동 사유 유형',
+    reference_id    INT COMMENT '관련 ID (예: 퀘스트 로그 ID, 구매 ID)',
+    description     VARCHAR(100) COMMENT '상세 내용 (예: 성경읽기 보상)',
+    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '발생 시간'
+);
+
+CREATE TABLE quest_logs (
+    log_id          INT AUTO_INCREMENT PRIMARY KEY COMMENT '로그 고유 ID',
+    user_id         INT NOT NULL COMMENT '학생 ID (users 테이블 FK)',
+    quest_id        INT NOT NULL COMMENT '퀘스트 ID (quests 테이블 FK)',
+    status          ENUM('PENDING', 'APPROVED', 'REJECTED') DEFAULT 'PENDING' COMMENT '상태(대기, 승인, 반려)',
+    proof_text      TEXT COMMENT '학생이 남긴 인증 글',
+    proof_image_url VARCHAR(255) COMMENT '인증샷 이미지 경로',
+    admin_comment   VARCHAR(255) COMMENT '선생님 피드백(반려 사유 등)',
+    processed_by    INT COMMENT '처리한 선생님 ID',
+    processed_at    DATETIME COMMENT '승인/반려 처리 시간',
+    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '요청 시간',
+    
+    INDEX idx_user_status (user_id, status) -- 학생별, 상태별 조회 속도 향상
+);
+
+CREATE TABLE quests (
+    quest_id        INT AUTO_INCREMENT PRIMARY KEY COMMENT '퀘스트 고유 ID',
+    title           VARCHAR(100) NOT NULL COMMENT '퀘스트 제목',
+    description     TEXT COMMENT '퀘스트 상세 설명',
+    reward_exp      INT DEFAULT 0 COMMENT '완료 시 지급 경험치',
+    reward_point    INT DEFAULT 0 COMMENT '완료 시 지급 포인트(골드)',
+    quest_type      ENUM('DAILY', 'WEEKLY', 'EVENT', 'ONE_TIME') DEFAULT 'DAILY' COMMENT '유형(일일, 주간, 이벤트, 1회성)',
+    target_grade    VARCHAR(20) DEFAULT 'ALL' COMMENT '대상 학년(전체, 1학년 등)',
+    is_active       BOOLEAN DEFAULT TRUE COMMENT '활성화 여부(TRUE: 노출, FALSE: 숨김)',
+    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
+    updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일'
+);
+
+quests: 퀘스트의 정의 (제목, 설명, 보상 등)
+
+quest_logs: 학생들이 퀘스트를 수행한 기록 (승인 대기/완료 상태 포함)
+
+point_logs: 포인트(Gold/달란트) 획득 및 사용 내역 (장부)
+
+exp_logs: 경험치(XP) 획득 및 차감 내역 (성장 기록)
+
+
+CREATE TABLE level_rules (
+    level           INT PRIMARY KEY COMMENT '레벨 (1, 2, 3...)',
+    required_exp    INT NOT NULL COMMENT '해당 레벨 도달에 필요한 최소 누적 경험치',
+    rank_name       VARCHAR(50) COMMENT '해당 레벨의 호칭 (예: 견습 용사, 말씀의 기사)',
+    reward_item_id  INT DEFAULT NULL COMMENT '레벨업 시 지급할 보상 아이템 ID (옵션)',
+    
+    -- 인덱스: 경험치로 레벨을 빨리 찾기 위함
+    INDEX idx_required_exp (required_exp)
+);
+level	required_exp	rank_name	설명
+1	0	🐣 새싹 용사	가입 즉시 시작
+2	100	🌱 떡잎 용사	퀘스트 2~3개 완료 시
+3	300	⚔️ 견습 용사	초반 성취감 구간
+4	600	🛡️ 정예 용사	난이도 상승
+5	1,000	👑 믿음의 용사	고레벨 구간
+
+2. 사용자 테이블 수정 (users)
+사용자 테이블에는 현재 누적 경험치와 현재 레벨을 저장해두어야 매번 계산하지 않아 부하를 줄일 수 있습니다.
+
+SQL
+
+ALTER TABLE users ADD COLUMN total_exp INT DEFAULT 0 COMMENT '누적 경험치';
+ALTER TABLE users ADD COLUMN level INT DEFAULT 1 COMMENT '현재 레벨';
+3. 핵심 로직: 레벨 산정 및 레벨업 처리
+학생이 퀘스트를 완료하여 경험치를 획득했을 때, 시스템이 어떻게 레벨을 계산해야 하는지 보여주는 SQL 로직입니다.
+
+시나리오: 학생이 50 EXP를 획득했을 때
+1단계: 경험치 지급 (UPDATE)
+
+SQL
+
+UPDATE users 
+SET total_exp = total_exp + 50 
+WHERE user_id = 1;
+2단계: 레벨 재산정 (SELECT) 변경된 total_exp를 기준으로, level_rules 테이블에서 달성 가능한 최대 레벨을 조회합니다.
+
+SQL
+
+-- 내 경험치(total_exp)보다 작거나 같은 required_exp 중 가장 높은 레벨을 찾음
+SELECT MAX(level) as calculated_level
+FROM level_rules
+WHERE required_exp <= (SELECT total_exp FROM users WHERE user_id = 1);
+3단계: 레벨업 여부 확인 및 적용
+
+calculated_level이 현재 users.level보다 높다면? -> 레벨업 발생! 🎉
+
+이때 users.level을 업데이트하고, 레벨업 축하 알림을 띄워줍니다.
+
+4. (보너스) '다음 레벨까지 남은 경험치' 계산법
+프론트엔드(UI)에서 **경험치 바(Progress Bar)**를 그리기 위해 필요한 데이터를 뽑는 쿼리입니다.
+
+SQL
+
+SELECT 
+    u.level AS current_level,
+    u.total_exp,
+    next_lvl.required_exp AS next_level_exp,
+    -- 다음 레벨까지 남은 경험치
+    (next_lvl.required_exp - u.total_exp) AS exp_needed,
+    -- 진행률 (%) 계산: (현재경험치 - 현재레벨시작경험치) / (다음레벨경험치 - 현재레벨시작경험치)
+    ROUND(
+        (u.total_exp - cur_lvl.required_exp) / 
+        (next_lvl.required_exp - cur_lvl.required_exp) * 100
+    , 1) AS progress_percent
+FROM users u
+JOIN level_rules cur_lvl ON cur_lvl.level = u.level          -- 현재 레벨 규칙
+JOIN level_rules next_lvl ON next_lvl.level = u.level + 1    -- 다음 레벨 규칙
+WHERE u.user_id = 1;
+💡 요약
+level_rules 테이블에 레벨별 필요 경험치(Cut-line)를 미리 정의해둡니다.
+
+사용자에게 경험치를 줄 때마다 total_exp를 업데이트합니다.
+
+업데이트된 total_exp가 다음 레벨의 required_exp를 넘겼는지 확인하여 레벨업을 처리합니다.
