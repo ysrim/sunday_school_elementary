@@ -1,22 +1,30 @@
+=> 선생님이 승인 해줬다 가정하고 트리거 매소드 만들기
+    -- serviceImple 수행
+    1. 선생님이 승인 하면(화면) => 퀘스트 로그 테이블 승인으로 바꾸고(serviceImpl)
+    2. (학생순번, 퀘스트순번)을 publisher.publishEvent(new QuestCompleteEvent(mberSn, questSn)); 이벤트 트리거에 넘김
+    == @EventListener bean 영역 ==
+    3. @EventListener를 등록한 bean에서 처리로 넘어감
+    4. 학생순번, 퀘스트순번을 활용하여 포인트, 경험치 수치를 찾아해당 학생에게 포인트와 경험치를 넣어준다.
+        > 경험치 수치를 업데이트하는 것은 레벨업과 관련 되어있음... 레벨업되면 달란트도 지급함..;;
+        > 보너스 경험치도 있음 이것 또한 고려해야함.
+    5. 마지막으로 해당 학생에게 토스트DB에 데이너 넣는다.
+
+
 학생이 퀘스트를 완료하여 경험치를 획득했을 때, 시스템이 어떻게 레벨을 계산해야 하는지 보여주는 SQL 로직입니다.
 시나리오: 학생이 50 EXP를 획득했을 때
-
 1단계: 경험치 지급 (UPDATE)
 UPDATE users
 SET total_exp = total_exp + 50 
 WHERE user_id = 1;
-
 2단계: 레벨 재산정 (SELECT) 변경된 total_exp를 기준으로, level_rules 테이블에서 달성 가능한 최대 레벨을 조회합니다.
 SQL
 -- 내 경험치(total_exp)보다 작거나 같은 required_exp 중 가장 높은 레벨을 찾음
 SELECT MAX(level) as calculated_level
 FROM level_rules
 WHERE required_exp <= (SELECT total_exp FROM users WHERE user_id = 1);
-
 3단계: 레벨업 여부 확인 및 적용
 calculated_level이 현재 users.level보다 높다면? -> 레벨업 발생! 🎉
 이때 users.level을 업데이트하고, 레벨업 축하 알림을 띄워줍니다.
-
 4. (보너스) '다음 레벨까지 남은 경험치' 계산법
 프론트엔드(UI)에서 **경험치 바(Progress Bar)**를 그리기 위해 필요한 데이터를 뽑는 쿼리입니다.
 
@@ -72,7 +80,8 @@ public class NotificationHandler {
 }
 
 
-스프링 프레임워크에서 ServiceImpl의 특정 로직이 성공했을 때 자동으로 후속 작업을 수행하게 하는 가장 세련된 방법은 스프링 이벤트(Spring ApplicationEvent) 시스템을 사용하는 것입니다. 이는 '트리거'처럼 작동하며, 비즈니스 로직과 부가 기능(알림, 로그 등)을 깔끔하게 분리해 줍니다.
+스프링 프레임워크에서 ServiceImpl의 특정 로직이 성공했을 때 자동으로 후속 작업을 수행하게 하는 가장 세련된 방법은 스프링 이벤트(Spring ApplicationEvent)
+시스템을 사용하는 것입니다. 이는 '트리거'처럼 작동하며, 비즈니스 로직과 부가 기능(알림, 로그 등)을 깔끔하게 분리해 줍니다.
 
 1. 스프링 이벤트 구조 및 구현 방법
 이 방식은 발행-구독(Publish-Subscribe) 모델을 따릅니다.
