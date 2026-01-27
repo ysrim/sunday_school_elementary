@@ -132,3 +132,58 @@ level_rules 테이블에 레벨별 필요 경험치(Cut-line)를 미리 정의�
 사용자에게 경험치를 줄 때마다 total_exp를 업데이트합니다.
 
 업데이트된 total_exp가 다음 레벨의 required_exp를 넘겼는지 확인하여 레벨업을 처리합니다.
+
+
+
+// 1. 이벤트 클래스 생성
+public record QuestCompleteEvent(String userId, String questName, int rewardAmount) {}
+
+// 2. ServiceImpl에서 이벤트 발행
+@Service
+public class QuestServiceImpl implements QuestService {
+    private final ApplicationEventPublisher publisher;
+
+    public void completeQuest(String userId, String questId) {
+        // ... 퀘스트 완료 로직 수행 ...
+        
+        // 성공 시 이벤트 트리거!
+        publisher.publishEvent(new QuestCompleteEvent(userId, "성경읽기", 50));
+    }
+}
+
+// 3. 리스너에서 후속 작업 처리 (예: 토스트 알림 데이터 생성)
+@Component
+public class NotificationHandler {
+    @EventListener
+    public void handleQuestEvent(QuestCompleteEvent event) {
+        System.out.println(event.userId() + "님에게 알림 전송: " + event.rewardAmount() + "달란트 획득!");
+    }
+}
+
+
+스프링 프레임워크에서 ServiceImpl의 특정 로직이 성공했을 때 자동으로 후속 작업을 수행하게 하는 가장 세련된 방법은 스프링 이벤트(Spring ApplicationEvent) 시스템을 사용하는 것입니다. 이는 '트리거'처럼 작동하며, 비즈니스 로직과 부가 기능(알림, 로그 등)을 깔끔하게 분리해 줍니다.
+
+1. 스프링 이벤트 구조 및 구현 방법
+이 방식은 발행-구독(Publish-Subscribe) 모델을 따릅니다.
+
+이벤트 클래스 (Event): 전달할 데이터를 담는 객체입니다.
+
+발행 (Publisher): ApplicationEventPublisher를 통해 이벤트를 던집니다.
+
+리스너 (Listener): @EventListener가 붙은 메서드가 이벤트를 낚아채서 실행합니다.
+
+
+2. 트랜잭션 처리 가능 여부 (@TransactionalEventListener)
+네, 트랜잭션과 완벽하게 연동됩니다. 단순히 @EventListener를 쓰면 원본 로직의 성공 여부와 상관없이 이벤트가 발생할 수 있지만, **@TransactionalEventListener**를 사용하면 트랜잭션 상태에 맞춰 정밀하게 제어할 수 있습니다.
+
+phase = TransactionPhase.AFTER_COMMIT (기본값):
+
+메인 비즈니스 로직(DB 저장 등)이 최종적으로 Commit 되었을 때만 후속 작업이 실행됩니다.
+
+예: 퀘스트 저장이 성공했을 때만 "달란트 획득" 알림을 보냅니다.
+
+phase = TransactionPhase.AFTER_ROLLBACK:
+
+로직 수행 중 에러가 발생하여 Rollback 되었을 때만 실행됩니다.
+
+예: 실패 로그를 남기거나 복구 로직을 실행할 때 유용합니다.
