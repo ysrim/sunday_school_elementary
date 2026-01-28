@@ -2,19 +2,14 @@ package app.psn.stu.service.impl;
 
 import java.util.List;
 
-import com.base.vo.QuestCompleteEvent;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.base.utl.SessionUtil;
-import com.base.utl.StringUtil;
+import com.base.vo.QuestCompleteEvent;
 
-import app.idx.lgn.vo.SessionVO;
-import app.psn.stu.mapper.OptionMapper;
 import app.psn.stu.mapper.QuestMapper;
-import app.psn.stu.service.OptionService;
 import app.psn.stu.service.QuestService;
 import app.psn.stu.vo.QuestListVO;
 import app.psn.stu.vo.QuestVO;
@@ -29,8 +24,6 @@ public class QuestServiceImpl implements QuestService {
 
 	private final ApplicationEventPublisher publisher;
 	private final QuestMapper questMapper;
-
-	private @Value("#{globalsProps['secretKey.key.qr']}") String secretKey;
 
 	@Override
 	public List<QuestListVO> sltQuestList() {
