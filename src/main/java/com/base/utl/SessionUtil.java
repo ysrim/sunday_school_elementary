@@ -1,5 +1,7 @@
 package com.base.utl;
 
+import java.util.Optional;
+
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -11,60 +13,63 @@ import jakarta.servlet.http.HttpSession;
 
 public class SessionUtil {
 
-	/**
-	 * 현재 스레드의 HttpServletRequest 객체를 가져옵니다.
-	 */
-	public static HttpServletRequest getRequest() {
-		ServletRequestAttributes attributes = (ServletRequestAttributes)RequestContextHolder.getRequestAttributes();
-		return (attributes != null) ? attributes.getRequest() : null;
-	}
+    private SessionUtil() {
+        throw new UnsupportedOperationException("Utility class");
+    }
 
-	/**
-	 * 현재 세션을 가져옵니다. 존재하지 않으면 null을 반환합니다.
-	 */
-	public static HttpSession getSession() {
-		HttpServletRequest request = getRequest();
-		return (request != null) ? request.getSession(false) : null;
-	}
+    /**
+     * 현재 스레드의 HttpServletRequest 객체를 안전하게 가져옵니다.
+     */
+    public static Optional<HttpServletRequest> getRequest() {
+        return Optional.ofNullable((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).map(ServletRequestAttributes::getRequest);
+    }
 
-	/**
-	 * 세션에 객체를 저장합니다.
-	 */
-	public static void setAttribute(String name, Object value) {
-		if (getRequest() != null) {
-			getRequest().getSession().setAttribute(name, value);
-		}
-	}
+    /**
+     * 현재 세션을 가져옵니다. (존재하지 않으면 새로 생성하지 않음)
+     */
+    public static Optional<HttpSession> getSession() {
+        return getRequest().map(request -> request.getSession(false));
+    }
 
-	/**
-	 * 세션에서 특정 이름의 객체를 가져옵니다.
-	 */
-	public static Object getAttribute(String name) {
-		HttpSession session = getSession();
-		return (session != null) ? session.getAttribute(name) : null;
-	}
+    /**
+     * 세션에 객체를 저장합니다. (세션이 없으면 생성함)
+     */
+    public static void setAttribute(String name, Object value) {
+        getRequest().ifPresent(request -> request.getSession(true).setAttribute(name, value));
+    }
 
-	public static SessionVO getMberInfo() {
-		HttpSession session = getSession();
-		if (session != null && session.getAttribute(SessionKeyEnum.MBER_INFO.getKey()) != null) {
-			return (SessionVO)session.getAttribute(SessionKeyEnum.MBER_INFO.getKey());
-		}
-		return null;
-	}
+    /**
+     * 세션에서 특정 객체를 제네릭하게 가져옵니다. (형변환 불필요)
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> Optional<T> getAttribute(String name) {
+        return getSession().map(session -> (T) session.getAttribute(name));
+    }
 
-	/**
-	 * 세션에서 특정 이름의 객체를 삭제합니다.
-	 */
-	public static void removeAttribute(String name) {
-		HttpSession session = getSession();
-		if (session != null) {
-			session.removeAttribute(name);
-		}
-	}
+    /**
+     * 로그인된 회원 정보를 가져옵니다.
+     */
+    public static SessionVO getMberInfo() {
+        return SessionUtil.<SessionVO>getAttribute(SessionKeyEnum.MBER_INFO.getKey()).orElse(null);
+    }
 
-	public static boolean isAjaxRequest(HttpServletRequest request) {
-		String acceptHeader = request.getHeader("Accept");
-		return "XMLHttpRequest".equals(request.getHeader("X-Requested-With")) || (acceptHeader != null && acceptHeader.contains("application/json")) || request.getRequestURI().endsWith(".ax");
-	}
+    /**
+     * 특정 세션 속성을 삭제합니다.
+     */
+    public static void removeAttribute(String name) {
+        getSession().ifPresent(session -> session.removeAttribute(name));
+    }
 
+    /**
+     * AJAX 요청 여부를 판별합니다.
+     */
+    public static boolean isAjaxRequest(HttpServletRequest request) {
+        if (request == null) return false;
+
+        String requestedWith = request.getHeader("X-Requested-With");
+        String accept = request.getHeader("Accept");
+        String uri = request.getRequestURI();
+
+        return "XMLHttpRequest".equals(requestedWith) || (accept != null && accept.contains("application/json")) || (uri != null && uri.endsWith(".ax"));
+    }
 }

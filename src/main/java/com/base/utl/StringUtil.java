@@ -1,78 +1,120 @@
 package com.base.utl;
 
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.text.NumberFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Base64;
+import java.util.Optional;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class StringUtil {
 
-	private static final String ALGORITHM = "AES/GCM/NoPadding";
-	private static final int TAG_LENGTH_BIT = 128; // 인증 태그 길이
-	private static final int IV_LENGTH_BYTE = 12;  // GCM 권장 IV 길이
+    private static final String ALGORITHM = "AES/GCM/NoPadding";
+    private static final int TAG_LENGTH_BIT = 128;
+    private static final int IV_LENGTH_BYTE = 12;
+    private static final String KOREA_ZONE = "Asia/Seoul";
 
-	private StringUtil() {
-	}
+    // 인스턴스화 방지
+    private StringUtil() {
+        throw new UnsupportedOperationException("Utility class");
+    }
 
-	public static String comma(int number) {
-		String formattedNumber = NumberFormat.getInstance().format(number);
-		return formattedNumber;
-	}
+    /**
+     * 숫자에 콤마 추가 (null 안전)
+     */
+    public static String comma(Integer number) {
+        return NumberFormat.getInstance().format(Optional.ofNullable(number).orElse(0));
+    }
 
-	// 1. 암호화
-	public static String encrypt(String plainText, String secretKey) throws Exception {
-		byte[] iv = new byte[IV_LENGTH_BYTE];
-		new SecureRandom().nextBytes(iv); // 무작위 IV 생성
+    /**
+     * AES-GCM 암호화
+     */
+    public static String encrypt(String plainText, String secretKey) {
+        if (plainText == null || secretKey == null) return null;
 
-		Cipher cipher = Cipher.getInstance(ALGORITHM);
-		SecretKey keySpec = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), "AES");
-		GCMParameterSpec gcmSpec = new GCMParameterSpec(TAG_LENGTH_BIT, iv);
+        try {
+            byte[] iv = new byte[IV_LENGTH_BYTE];
+            new SecureRandom().nextBytes(iv);
 
-		cipher.init(Cipher.ENCRYPT_MODE, keySpec, gcmSpec);
-		byte[] cipherText = cipher.doFinal(plainText.getBytes(StandardCharsets.UTF_8));
+            Cipher cipher = Cipher.getInstance(ALGORITHM);
+            SecretKey keySpec = generateKey(secretKey);
+            GCMParameterSpec gcmSpec = new GCMParameterSpec(TAG_LENGTH_BIT, iv);
 
-		// 복호화 시 IV가 필요하므로 IV + 암호문을 합쳐서 Base64로 저장
-		byte[] combined = new byte[iv.length + cipherText.length];
-		System.arraycopy(iv, 0, combined, 0, iv.length);
-		System.arraycopy(cipherText, 0, combined, iv.length, cipherText.length);
+            cipher.init(Cipher.ENCRYPT_MODE, keySpec, gcmSpec);
+            byte[] cipherText = cipher.doFinal(plainText.getBytes(StandardCharsets.UTF_8));
 
-		return Base64.getUrlEncoder().withoutPadding().encodeToString(combined);
-	}
+            byte[] combined = new byte[iv.length + cipherText.length];
+            System.arraycopy(iv, 0, combined, 0, iv.length);
+            System.arraycopy(cipherText, 0, combined, iv.length, cipherText.length);
 
-	// 2. 복호화
-	public static String decrypt(String encryptedText, String secretKey) throws Exception {
-		byte[] decoded = Base64.getUrlDecoder().decode(encryptedText);
+            return Base64.getUrlEncoder().withoutPadding().encodeToString(combined);
+        } catch (Exception e) {
+            log.error("Encryption error: {}", e.getMessage());
+            throw new RuntimeException("암호화 중 오류가 발생했습니다.", e);
+        }
+    }
 
-		// 앞부분에서 IV 추출
-		byte[] iv = new byte[IV_LENGTH_BYTE];
-		System.arraycopy(decoded, 0, iv, 0, iv.length);
+    /**
+     * AES-GCM 복호화
+     */
+    public static String decrypt(String encryptedText, String secretKey) {
+        if (encryptedText == null || secretKey == null) return null;
 
-		// 뒷부분에서 실제 암호문 추출
-		byte[] cipherText = new byte[decoded.length - IV_LENGTH_BYTE];
-		System.arraycopy(decoded, IV_LENGTH_BYTE, cipherText, 0, cipherText.length);
+        try {
+            byte[] decoded = Base64.getUrlDecoder().decode(encryptedText);
+            if (decoded.length < IV_LENGTH_BYTE) throw new IllegalArgumentException("Invalid cipher text");
 
-		Cipher cipher = Cipher.getInstance(ALGORITHM);
-		SecretKey keySpec = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), "AES");
-		GCMParameterSpec gcmSpec = new GCMParameterSpec(TAG_LENGTH_BIT, iv);
+            byte[] iv = new byte[IV_LENGTH_BYTE];
+            System.arraycopy(decoded, 0, iv, 0, iv.length);
 
-		cipher.init(Cipher.DECRYPT_MODE, keySpec, gcmSpec);
-		byte[] plainText = cipher.doFinal(cipherText);
+            byte[] cipherText = new byte[decoded.length - IV_LENGTH_BYTE];
+            System.arraycopy(decoded, IV_LENGTH_BYTE, cipherText, 0, cipherText.length);
 
-		return new String(plainText, StandardCharsets.UTF_8);
-	}
+            Cipher cipher = Cipher.getInstance(ALGORITHM);
+            SecretKey keySpec = generateKey(secretKey);
+            GCMParameterSpec gcmSpec = new GCMParameterSpec(TAG_LENGTH_BIT, iv);
 
-	public static boolean isTodaySunday() {
-		return (LocalDate.now(ZoneId.of("Asia/Seoul")).getDayOfWeek() == DayOfWeek.SUNDAY);
-	}
+            cipher.init(Cipher.DECRYPT_MODE, keySpec, gcmSpec);
+            byte[] plainText = cipher.doFinal(cipherText);
 
+            return new String(plainText, StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            log.error("Decryption error: {}", e.getMessage());
+            throw new RuntimeException("복호화 중 오류가 발생했습니다.", e);
+        }
+    }
+
+    /**
+     * 키 길이 제한 문제를 해결하기 위한 비밀키 생성 로직
+     */
+    private static SecretKey generateKey(String password) {
+        byte[] keyBytes = new byte[16]; // 128비트 고정
+        byte[] passwordBytes = password.getBytes(StandardCharsets.UTF_8);
+        System.arraycopy(passwordBytes, 0, keyBytes, 0, Math.min(passwordBytes.length, keyBytes.length));
+        return new SecretKeySpec(keyBytes, "AES");
+    }
+
+    /**
+     * 오늘이 일요일인지 확인
+     */
+    public static boolean isTodaySunday() {
+        return isDayOfWeek(LocalDate.now(ZoneId.of(KOREA_ZONE)), DayOfWeek.SUNDAY);
+    }
+
+    /**
+     * 특정 날짜의 요일 확인 (확장성)
+     */
+    public static boolean isDayOfWeek(LocalDate date, DayOfWeek dayOfWeek) {
+        return date != null && date.getDayOfWeek() == dayOfWeek;
+    }
 }

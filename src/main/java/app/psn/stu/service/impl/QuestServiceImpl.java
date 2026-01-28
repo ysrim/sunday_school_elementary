@@ -2,7 +2,9 @@ package app.psn.stu.service.impl;
 
 import java.util.List;
 
+import com.base.vo.QuestCompleteEvent;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true) // 2. 기본적으로 읽기 전용으로 설정 (성능 최적화)
 public class QuestServiceImpl implements QuestService {
 
+	private final ApplicationEventPublisher publisher;
 	private final QuestMapper questMapper;
 
 	private @Value("#{globalsProps['secretKey.key.qr']}") String secretKey;
@@ -40,6 +43,7 @@ public class QuestServiceImpl implements QuestService {
 		if (cnt < 1) { // 비즈니스 로직상 필수라면 예외 처리
 			throw new RuntimeException("퀘스트 수행 내역 저장 중 오류가 발생했습니다.");
 		}
+		publisher.publishEvent(new QuestCompleteEvent("TEST인간", "성경읽기", 50));
 		return true;
 	}
 }

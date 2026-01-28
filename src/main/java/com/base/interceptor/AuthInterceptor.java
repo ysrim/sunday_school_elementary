@@ -1,141 +1,117 @@
 package com.base.interceptor;
 
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
-import org.springframework.core.annotation.AnnotatedElementUtils;
-import org.springframework.stereotype.Component;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.HandlerInterceptor;
-
+import app.idx.lgn.vo.SessionVO;
+import app.psn.com.service.CacheService;
 import com.base.annotation.MenuInfo;
 import com.base.annotation.PassAuth;
 import com.base.enumm.NaviEnum;
-import com.base.enumm.CacheKeys;
 import com.base.enumm.SessionKeyEnum;
 import com.base.utl.SessionUtil;
 import com.base.utl.StringUtil;
-
-import app.idx.lgn.vo.SessionVO;
-import app.psn.com.service.CacheService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.AnnotatedElementUtils;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.HandlerInterceptor;
+
+import java.io.IOException;
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
 public class AuthInterceptor implements HandlerInterceptor {
 
-	private final CacheService cacheService;
+    private final CacheService cacheService;
 
-	private static final String LOGIN_PAGE_URL = "/idx/login.pg";
-	private static final String RTN_URL_PARAM = "rtnUrl";
+    private static final String LOGIN_PAGE_URL = "/idx/login.pg";
+    private static final String RTN_URL_PARAM = "rtnUrl";
 
-	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
 
-		// 1. 정적 리소스 등 HandlerMethod가 아닌 경우 통과
-		if (!(handler instanceof HandlerMethod)) {
-			return true;
-		}
-		HandlerMethod handlerMethod = (HandlerMethod)handler;
+        // 1. HandlerMethod 체크
+        if (!(handler instanceof HandlerMethod handlerMethod)) {
+            return true;
+        }
 
-		// 2. @PassAuth 체크 (메서드 우선 -> 클래스 확인)
-		if (hasPassAuth(handlerMethod)) {
-			return true;
-		}
+        // 2. 인증 제외 대상 체크
+        if (hasPassAuth(handlerMethod)) {
+            return true;
+        }
 
-		// 3. 로그인 세션 체크
-		SessionVO sessionVO = (SessionVO)SessionUtil.getAttribute(SessionKeyEnum.MBER_INFO.getKey());
-		if (sessionVO == null) {
-			handleAuthFail(request, response, "Login Required", "401");
-			return false;
-		}
+        // 3. 세션 인증 체크
+        SessionVO sessionVO = SessionUtil.getMberInfo();
+        if (sessionVO == null) {
+            handleAuthFail(request, response, "Login Required", "401");
+            return false;
+        }
 
-		// 4. @MenuInfo 체크 및 권한 검증
-		// 메서드 레벨의 @MenuInfo를 먼저 찾고, 없으면 클래스 레벨을 찾음 (필요 시 정책 조정)
-		MenuInfo menuInfo = AnnotatedElementUtils.findMergedAnnotation(handlerMethod.getMethod(), MenuInfo.class);
+        // 4. 권한(인가) 체크
+        if (!checkMenuAuthorization(request, handlerMethod, sessionVO)) {
+            handleAuthFail(request, response, "Access Denied", "403");
+            return false;
+        }
 
-		if (menuInfo != null) {
-			// 4-1. 권한 체크
-			if (!isAuthorized(sessionVO, menuInfo)) {
-				handleAuthFail(request, response, "Access Denied", "403");
-				return false;
-			}
+        // 5. 사용자 부가 정보 설정 (Cache & Request Attributes)
+        setupUserContext(request, sessionVO);
 
-			// 4-2. 메뉴 정보 저장 (Request Scope 권장)
-			// 세션에 저장하면 브라우저 다중 탭 사용 시 정보가 꼬일 수 있음
-			request.setAttribute("_menuInfo", menuInfo.navi().toString());
-			request.setAttribute("_menuNm", NaviEnum.valueOf(menuInfo.navi().toString()).getNaviNm());
-		}
+        return true;
+    }
 
-		// 로그인된 유저 ID 가져오기 (세션 등에서)
-		String mberId = SessionUtil.getMberInfo().getMberId();
-		if (mberId != null) {
-			// onlineMbers cache 키 저장 (유효시간 5분 설정)
-			cacheService.addOnlineMber(mberId);
-			// 로그인 체크여부는 이렇게
-			log.info("ysrim login? {}", cacheService.checkKeyExists(CacheKeys.OnlineMbers.name(), "ysrim"));
-		}
+    private boolean checkMenuAuthorization(HttpServletRequest request, HandlerMethod handlerMethod, SessionVO sessionVO) {
+        MenuInfo menuInfo = AnnotatedElementUtils.findMergedAnnotation(handlerMethod.getMethod(), MenuInfo.class);
+        if (menuInfo == null) return true;
 
-		// 기타 정보
-		int mberSn = SessionUtil.getMberInfo().getMberSn();
-		request.setAttribute("_mberPoint", StringUtil.comma(cacheService.sltPont(mberSn))); // 달란트
-		request.setAttribute("_mberLevel", cacheService.sltLv(mberSn)); // 레벨
-		request.setAttribute("_mberExp", cacheService.sltExp(mberSn)); // 경험치
+        // 권한 체크
+        if (!isAuthorized(sessionVO, menuInfo)) {
+            return false;
+        }
 
-		return true;
-	}
+        // 메뉴 정보 설정
+        try {
+            String naviKey = menuInfo.navi().toString();
+            NaviEnum navi = NaviEnum.valueOf(naviKey);
+            request.setAttribute("_menuInfo", naviKey);
+            request.setAttribute("_menuNm", navi.getNaviNm());
+        } catch (IllegalArgumentException e) {
+            log.error("Invalid NaviEnum value in @MenuInfo: {}", menuInfo.navi());
+        }
 
-	/**
-	 * PassAuth 어노테이션 존재 여부 확인
-	 * (메서드에 붙어있거나, 클래스에 붙어있으면 통과)
-	 */
-	private boolean hasPassAuth(HandlerMethod handler) {
-		return AnnotatedElementUtils.hasAnnotation(handler.getMethod(), PassAuth.class) || AnnotatedElementUtils.hasAnnotation(handler.getBeanType(), PassAuth.class);
-	}
+        return true;
+    }
 
-	/**
-	 * 권한 비교 로직 분리
-	 * (단순 문자열 비교 외에 계층형 권한 로직 등을 여기에 구현)
-	 */
-	private boolean isAuthorized(SessionVO session, MenuInfo menuInfo) {
-		String userGrade = session.getGradeCode();
-		String requiredRole = menuInfo.role().getCode();
-		return requiredRole.equals(userGrade);
-	}
+    private void setupUserContext(HttpServletRequest request, SessionVO sessionVO) {
+        String mberId = sessionVO.getMberId();
+        int mberSn = sessionVO.getMberSn();
 
-	/**
-	 * 인증/인가 실패 처리
-	 */
-	private void handleAuthFail(HttpServletRequest request, HttpServletResponse response, String msg, String code) throws IOException {
-		if (SessionUtil.isAjaxRequest(request)) {
-			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-			response.setContentType("application/json;charset=UTF-8");
-			String jsonResponse = String.format("{\"rtnCd\":\"%s\", \"rtnMsg\":\"%s\"}", code, msg);
-			response.getWriter().write(jsonResponse);
-		} else {
-			response.sendRedirect(request.getContextPath() + LOGIN_PAGE_URL + getRedirectUrl(request));
-		}
-	}
+        // 온라인 상태 업데이트
+        cacheService.addOnlineMber(mberId);
 
-	/**
-	 * 리다이렉트 URL 생성
-	 */
-	private String getRedirectUrl(HttpServletRequest request) {
-		if (!"GET".equalsIgnoreCase(request.getMethod())) {
-			return "";
-		}
-		String currentUrl = request.getRequestURI();
-		currentUrl += request.getQueryString() != null ? "?" + request.getQueryString() : "";
-		try {
-			return "?" + RTN_URL_PARAM + "=" + URLEncoder.encode(currentUrl, StandardCharsets.UTF_8);
-		} catch (Exception e) {
-			log.error("URL Encoding Error", e);
-			return "";
-		}
-	}
+        // 사용자 포인트/레벨 정보 (한 번의 세션 객체 접근으로 처리)
+        request.setAttribute("_mberPoint", StringUtil.comma(cacheService.sltPont(mberSn)));
+        request.setAttribute("_mberLevel", cacheService.sltLv(mberSn));
+        request.setAttribute("_mberExp", cacheService.sltExp(mberSn));
+    }
+
+    private boolean hasPassAuth(HandlerMethod handler) {
+        return AnnotatedElementUtils.hasAnnotation(handler.getMethod(), PassAuth.class) ||
+                AnnotatedElementUtils.hasAnnotation(handler.getBeanType(), PassAuth.class);
+    }
+
+    private boolean isAuthorized(SessionVO session, MenuInfo menuInfo) {
+        // 등급코드가 없는 경우 방어 코드 추가
+        if (session.getGradeCode() == null) return false;
+        return session.getGradeCode().equals(menuInfo.role().getCode());
+    }
+
+    private void handleAuthFail(HttpServletRequest request, HttpServletResponse response, String msg, String code) throws IOException {
+        if (SessionUtil.isAjaxRequest(request)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write(String.format("{\"rtnCd\":\"%s\", \"rtnMsg\":\"%s\"}", code, msg));
+        } else {
+            response.sendRedirect(request.getContextPath() + LOGIN_PAGE_URL);
+        }
+    }
 }
