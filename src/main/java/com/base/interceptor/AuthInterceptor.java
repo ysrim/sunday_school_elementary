@@ -25,7 +25,6 @@ public class AuthInterceptor implements HandlerInterceptor {
     private final CacheService cacheService;
 
     private static final String LOGIN_PAGE_URL = "/idx/login.pg";
-    private static final String RTN_URL_PARAM = "rtnUrl";
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {

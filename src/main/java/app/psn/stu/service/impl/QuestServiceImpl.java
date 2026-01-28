@@ -36,7 +36,7 @@ public class QuestServiceImpl implements QuestService {
 		if (cnt < 1) { // 비즈니스 로직상 필수라면 예외 처리
 			throw new RuntimeException("퀘스트 수행 내역 저장 중 오류가 발생했습니다.");
 		}
-		publisher.publishEvent(new QuestCompleteEvent("TEST인간", "성경읽기", 50));
+		publisher.publishEvent(new QuestCompleteEvent(SessionUtil.getMberInfo().getMberId(), questVO.getQuestSn()));
 		return true;
 	}
 }
