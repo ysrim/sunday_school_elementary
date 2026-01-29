@@ -7,8 +7,10 @@ import app.psn.com.vo.QuestVO;
 import app.psn.com.vo.RewardVO;
 
 @Mapper
-public interface RewardMapper {
+public interface DomainMapper {
 
-	int updateReward(RewardVO reward); // 아바타 정보 리워드 정보 갱신
+	QuestVO sltQuest(int questSn);
+
+	AvatarVO sltAvatar(int mberSn);
 
 }

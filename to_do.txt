@@ -1,3 +1,10 @@
+=> domain-> vo, dto, 접미사 정리....
+ValueObject: VO(ex.AddressVO) 도메인의 속성을 표현하고 불변성을 가질 때,mybatis에서 단일테이블 조회할 때 record로 정의함.
+Response: Res(ex.AddressRes) 프론트로 데이터 던질 때
+Request: Req(ex. AddressReq) 프론트에서 요청받을 때
+Data Transfer Object: DTO(ex. AddressDTO) 계층간 데이터 이동 ctl -> srv로 이동할 때 ... 거의 안쓸거같음...
+
+
 => 선생님이 승인 해줬다 가정하고 트리거 매소드 만들기
     -- serviceImple 수행
     1. 선생님이 승인 하면(화면) => 퀘스트 로그 테이블 승인으로 바꾸고(serviceImpl)

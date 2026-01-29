@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="app.psn.com.mapper.DomainMapper">
+
+	<select id="sltQuest" parameterType="string" resultType="app.psn.com.vo.QuestVO">
+		SELECT QUEST_SN
+			 , TITLE
+			 , DESCRIPTION
+			 , REWARD_EXP
+			 , REWARD_POINT
+			 , QUEST_TYPE
+			 , EMOJI
+			 , TARGET_GRADE
+		FROM QUESTS
+		WHERE USE_AT = 'Y'
+		  AND QUEST_SN = #{questSn}
+	</select>
+
+	<select id="sltAvatar" parameterType="string" resultType="app.psn.com.vo.AvatarVO">
+		SELECT MBER_SN
+			 , NCNM
+			 , LEVEL
+			 , EXP
+			 , POINT
+			 , OCCP_CODE
+		FROM AVATAR_INFO
+		WHERE MBER_SN = #{mberSn}
+	</select>
+
+</mapper>

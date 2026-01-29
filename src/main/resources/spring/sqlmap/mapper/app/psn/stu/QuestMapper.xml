@@ -14,8 +14,9 @@
 			 , FN_GET_CODE_NM('REQ_STATUS', B.STATUS) as STATUS_NM
 		from QUESTS A
 				 LEFT OUTER JOIN QUEST_LOGS B ON
-			A.QUEST_SN = B.QUEST_SN
-				AND B.MBER_SN = #{mberSn}
+								A.QUEST_SN = B.QUEST_SN
+								AND B.REQ_DATE = DATE_FORMAT(NOW(), '%Y%m%d')
+								AND B.MBER_SN = #{mberSn}
 		where A.USE_AT = 'Y'
 	</select>
 
