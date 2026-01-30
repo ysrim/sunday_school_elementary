@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import app.psn.com.mapper.RewardMapper;
 import app.psn.com.service.DomainService;
 import app.psn.com.service.RewardService;
-import app.psn.com.vo.AvatarVO;
 import app.psn.com.vo.QuestContinuityRulesVO;
 import app.psn.com.vo.QuestContinuityVO;
 import app.psn.com.vo.RewardVO;
@@ -53,11 +52,12 @@ public class RewardServiceImpl implements RewardService {
 		this.insMberRewardLogs(RewardVO.ofExp(event, quest));
 
 		// 4. 연퀘 체크 및 추가 보상
-		// 4.1. QUEST_CONTINUITY_RULES 수행하는 퀘스트가 연퀘가 가능한지 여부 판단.
-		QuestContinuityRulesVO urles = domainService.sltQuestContinuityRules(event.questSn());
-		if (urles != null) {
-			handleQuestContinuity(event, urles);
+		QuestContinuityRulesVO rules = domainService.sltQuestContinuityRules(event.questSn());
+		if (rules != null) { // QUEST_CONTINUITY_RULES 수행하는 퀘스트가 연퀘가 가능한지 여부 판단. 연퀘보상정보가 없으면 pass
+			handleQuestContinuity(event, rules);
 		}
+
+		// 5. 등록한 경험치 검증 > 렙업하면 포인트 줌
 
 	}
 
