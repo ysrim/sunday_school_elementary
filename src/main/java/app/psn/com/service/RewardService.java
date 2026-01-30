@@ -1,12 +1,16 @@
 package app.psn.com.service;
 
-import app.psn.com.vo.RewardVO;
 import com.base.vo.QuestCompleteEvent;
+
+import app.psn.com.vo.QuestContinuityVO;
+import app.psn.com.vo.RewardVO;
 
 public interface RewardService {
 
-    void giveRewards(RewardVO reward);
+	void insMberRewardLogs(RewardVO vo);
 
-    public void processQuestRewards(QuestCompleteEvent event);
+	void processQuestRewards(QuestCompleteEvent vo);
+
+	void insQuestContinuity(QuestContinuityVO vo);
 
 }

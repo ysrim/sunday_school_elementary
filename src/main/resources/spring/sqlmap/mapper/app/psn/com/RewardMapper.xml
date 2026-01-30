@@ -9,4 +9,37 @@
 		WHERE MBER_SN = #{mberSn}
 	</update>
 
+	<insert id="insMberRewardLogs" parameterType="app.psn.com.vo.RewardVO">
+		insert into MBER_REWARD_LOGS
+		( MBER_SN
+		, REWARD_TYPE
+		, AMOUNT
+		, BALANCE_AFTER
+		, CHANGE_TYPE
+		, REFERENCE_SN
+		, DESCRIPTION)
+		VALUES ( #{mberSn}
+			   , #{rewardType}
+			   , #{amount}
+			   , IFNULL((SELECT BALANCE_AFTER FROM MBER_REWARD_LOGS WHERE MBER_SN ORDER BY LOG_SN DESC LIMIT 1), 0) + #{amount}
+			   , #{changeType}
+			   , #{referenceSn}
+			   , #{description})
+	</insert>
+
+	<insert id="insQuestContinuity" parameterType="app.psn.com.vo.QuestContinuityVO">
+		INSERT INTO QUEST_CONTINUITY
+		( MBER_SN
+		, QUEST_SN
+		, CURRENT_STREAK
+		, LAST_SUCCESS_DE)
+		VALUES (#{mberSn},
+				#{questSn},
+				#{currentStreak},
+				CURRENT_TIMESTAMP)
+		ON DUPLICATE KEY UPDATE
+			CURRENT_STREAK = #{currentStreak},
+			LAST_SUCCESS_DE = CURRENT_TIMESTAMP
+	</insert>
+
 </mapper>

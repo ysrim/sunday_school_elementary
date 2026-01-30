@@ -8,6 +8,8 @@ import app.psn.com.mapper.RewardMapper;
 import app.psn.com.service.DomainService;
 import app.psn.com.service.RewardService;
 import app.psn.com.vo.AvatarVO;
+import app.psn.com.vo.QuestContinuityRulesVO;
+import app.psn.com.vo.QuestContinuityVO;
 import app.psn.com.vo.QuestVO;
 import app.psn.com.vo.RewardVO;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,16 @@ public class DomainServiceImpl implements DomainService {
 	@Override
 	public AvatarVO sltAvatar(int mberSn) {
 		return domainMapper.sltAvatar(mberSn);
+	}
+
+	@Override
+	public QuestContinuityRulesVO sltQuestContinuityRules(int questSn) {
+		return domainMapper.sltQuestContinuityRules(questSn);
+	}
+
+	@Override
+	public QuestContinuityVO sltQuestContinuity(int mberSn, int questSn) {
+		return domainMapper.sltQuestContinuity(mberSn, questSn);
 	}
 
 }
