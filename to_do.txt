@@ -5,16 +5,24 @@ Request: Req(ex. AddressReq) 프론트에서 요청받을 때
 Data Transfer Object: DTO(ex. AddressDTO) 계층간 데이터 이동 ctl -> srv로 이동할 때 ... 거의 안쓸거같음...
 
 
-=> 선생님이 승인 해줬다 가정하고 트리거 매소드 만들기
-    -- serviceImple 수행
-    1. 선생님이 승인 하면(화면) => 퀘스트 로그 테이블 승인으로 바꾸고(serviceImpl)
-    2. (학생순번, 퀘스트순번)을 publisher.publishEvent(new QuestCompleteEvent(mberSn, questSn)); 이벤트 트리거에 넘김
-    == @EventListener bean 영역 ==
-    3. @EventListener를 등록한 bean에서 처리로 넘어감
-    4. 학생순번, 퀘스트순번을 활용하여 포인트, 경험치 수치를 찾아해당 학생에게 포인트와 경험치를 넣어준다.
-        > 경험치 수치를 업데이트하는 것은 레벨업과 관련 되어있음... 레벨업되면 달란트도 지급함..;;
-        > 보너스 경험치도 있음 이것 또한 고려해야함.
-    5. 마지막으로 해당 학생에게 토스트DB에 데이너 넣는다.
+=> 신규 페이지 생성
+1. 선생님 페이지
+2. 관리자 페이지
+3. 학생
+    미완료 항목
+        기능
+        - 토스트 메시지
+        - 출석도 퀘스트로 진행
+        - 주일 퀘스트도 연속으로 진행 할 시 보상 지급 프로세스
+        - 캐쉬 정보 정규화해서 정보 변경시 갱신 되게 구현
+        페이지
+        - 출석페이지: 퀘스트 진행으로 로직 변경
+        - 홈: 공지사항 (당분간 하드코드), 남아있는 경험치 계산 로직
+        - 설정: 캐릭터명변경, 비밀번호변경, 포인트변경
+        - 회원가입: 남/여 변경에 따른 이미지 변경 기능
+
+
+
 
 
 학생이 퀘스트를 완료하여 경험치를 획득했을 때, 시스템이 어떻게 레벨을 계산해야 하는지 보여주는 SQL 로직입니다.
@@ -57,74 +65,4 @@ level_rules 테이블에 레벨별 필요 경험치(Cut-line)를 미리 정의�
 
 사용자에게 경험치를 줄 때마다 total_exp를 업데이트합니다.
 
-업데이트된 total_exp가 다음 레벨의 required_exp를 넘겼는지 확인하여 레벨업을 처리합니다.
-
-
-
-// 1. 이벤트 클래스 생성
-public record QuestCompleteEvent(String userId, String questName, int rewardAmount) {}
-
-// 2. ServiceImpl에서 이벤트 발행
-@Service
-public class QuestServiceImpl implements QuestService {
-    private final ApplicationEventPublisher publisher;
-
-    public void completeQuest(String userId, String questId) {
-        // ... 퀘스트 완료 로직 수행 ...
-        
-        // 성공 시 이벤트 트리거!
-        publisher.publishEvent(new QuestCompleteEvent(userId, "성경읽기", 50));
-    }
-}
-
-// 3. 리스너에서 후속 작업 처리 (예: 토스트 알림 데이터 생성)
-@Component
-public class NotificationHandler {
-    @EventListener
-    public void handleQuestEvent(QuestCompleteEvent event) {
-        System.out.println(event.userId() + "님에게 알림 전송: " + event.rewardAmount() + "달란트 획득!");
-    }
-}
-
-
-스프링 프레임워크에서 ServiceImpl의 특정 로직이 성공했을 때 자동으로 후속 작업을 수행하게 하는 가장 세련된 방법은 스프링 이벤트(Spring ApplicationEvent)
-시스템을 사용하는 것입니다. 이는 '트리거'처럼 작동하며, 비즈니스 로직과 부가 기능(알림, 로그 등)을 깔끔하게 분리해 줍니다.
-
-1. 스프링 이벤트 구조 및 구현 방법
-이 방식은 발행-구독(Publish-Subscribe) 모델을 따릅니다.
-
-이벤트 클래스 (Event): 전달할 데이터를 담는 객체입니다.
-
-발행 (Publisher): ApplicationEventPublisher를 통해 이벤트를 던집니다.
-
-리스너 (Listener): @EventListener가 붙은 메서드가 이벤트를 낚아채서 실행합니다.
-
-
-2. 트랜잭션 처리 가능 여부 (@TransactionalEventListener)
-네, 트랜잭션과 완벽하게 연동됩니다. 단순히 @EventListener를 쓰면 원본 로직의 성공 여부와 상관없이 이벤트가 발생할 수 있지만, **@TransactionalEventListener**를 사용하면 트랜잭션 상태에 맞춰 정밀하게 제어할 수 있습니다.
-
-phase = TransactionPhase.AFTER_COMMIT (기본값):
-
-메인 비즈니스 로직(DB 저장 등)이 최종적으로 Commit 되었을 때만 후속 작업이 실행됩니다.
-
-예: 퀘스트 저장이 성공했을 때만 "달란트 획득" 알림을 보냅니다.
-
-phase = TransactionPhase.AFTER_ROLLBACK:
-
-로직 수행 중 에러가 발생하여 Rollback 되었을 때만 실행됩니다.
-
-예: 실패 로그를 남기거나 복구 로직을 실행할 때 유용합니다.
-
-
-보너스 관리 로직 제안
-연속 판정: 학생이 오늘 퀘스트를 완료하면 USER_QUEST_CONTINUITY 테이블을 확인합니다.
-
-LAST_SUCCESS_DE가 어제라면: CURRENT_STREAK를 +1 시킵니다.
-
-LAST_SUCCESS_DE가 오늘이라면: 이미 완료한 것이므로 변화 없음.
-
-둘 다 아니라면(어제 건너뜀): CURRENT_STREAK를 1로 리셋합니다.
-
-보상 지급: 갱신된 CURRENT_STREAK 값이 QUEST_CONTINUITY_RULES의 CONTINUITY_DAYS와 일치하는 시점에 포인트와 경험치를 지급하고 로그(EXP_LOGS, POINT_LOGS)를 남깁니다.
-
-최대 기록: CURRENT_STREAK가 MAX_STREAK보다 커지면 최대 기록도 함께 업데이트하여 나중에 '최장 연속 달성 상장' 등을 줄 때 활용할 수 있습니다.
+업데이트된 total_exp가 다음 레벨의 required_exp를 넘겼는지 확인하여 레벨업을 처리합니다
