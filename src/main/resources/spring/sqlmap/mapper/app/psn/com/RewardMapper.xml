@@ -2,13 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="app.psn.com.mapper.RewardMapper">
 
-	<update id="updateReward" parameterType="app.psn.com.vo.RewardVO">
-		UPDATE AVATAR_INFO
-		SET EXP   = (EXP + (SELECT REWARD_EXP FROM QUESTS WHERE QUEST_SN = #{questSn})),
-			POINT = (POINT + (SELECT REWARD_POINT FROM QUESTS WHERE QUEST_SN = #{questSn}))
-		WHERE MBER_SN = #{mberSn}
-	</update>
-
 	<insert id="insMberRewardLogs" parameterType="app.psn.com.vo.RewardVO">
 		insert into MBER_REWARD_LOGS
 		( MBER_SN
@@ -41,5 +34,19 @@
 			CURRENT_STREAK = #{currentStreak},
 			LAST_SUCCESS_DE = CURRENT_TIMESTAMP
 	</insert>
+
+	<update id="updateAvatarAmount" parameterType="app.psn.com.vo.RewardVO">
+		UPDATE AVATAR_INFO
+		<set>
+			UDT_DE = CURRENT_TIMESTAMP,
+			<if test="rewardType == 'EXP'">
+				EXP = (EXP + #{amount}),
+			</if>
+			<if test="rewardType == 'POINT'">
+				POINT = (POINT + #{amount}),
+			</if>
+		</set>
+		WHERE MBER_SN = #{mberSn}
+	</update>
 
 </mapper>

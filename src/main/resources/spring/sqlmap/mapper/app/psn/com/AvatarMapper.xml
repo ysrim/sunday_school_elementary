@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="app.psn.com.mapper.AvatarMapper">
+
+	<select id="sltLevelRulesExp" parameterType="int" resultType="int">
+		SELECT LEVEL
+		FROM AVATAR_LEVEL_RULES
+		<![CDATA[
+		where REQUIRED_EXP <= #{exp}
+		]]>
+		order by level desc limit 1
+	</select>
+
+	<update id="udtAvatarLevel">
+		UPDATE AVATAR_INFO
+			LEVEL = #{targetLevel},
+			UDT_DE = CURRENT_TIMESTAMP
+		WHERE MBER_SN = #{mberSn}
+	</update>
+
+</mapper>

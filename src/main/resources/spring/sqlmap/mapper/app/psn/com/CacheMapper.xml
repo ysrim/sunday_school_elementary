@@ -26,7 +26,8 @@
 			  , V.CHAPTER
 			  , V.VERSE_START
 			  , V.VERSE_END
-			  , V.CONTENT
+			  , V.WORDS
+		      , V.OPINION
 			  , 1 AS SEQ
 		 FROM BIBLE_VERSES V
 			 limit 1)
@@ -36,7 +37,8 @@
 			  , V.CHAPTER
 			  , V.VERSE_START
 			  , V.VERSE_END
-			  , V.CONTENT
+			  , V.WORDS
+			  , V.OPINION
 			  , 0 AS SEQ
 		 FROM BIBLE_VERSE_DAILY_SCHEDULES S
 				  JOIN BIBLE_VERSES V ON S.VERSE_SN = V.VERSE_SN

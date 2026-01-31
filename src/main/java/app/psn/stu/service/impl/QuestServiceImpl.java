@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 public class QuestServiceImpl implements QuestService {
 
 	private final ApplicationEventPublisher publisher;
+
 	private final QuestMapper questMapper;
 
 	@Override
@@ -36,7 +37,7 @@ public class QuestServiceImpl implements QuestService {
 		if (cnt < 1) { // 비즈니스 로직상 필수라면 예외 처리
 			throw new RuntimeException("퀘스트 수행 내역 저장 중 오류가 발생했습니다.");
 		}
-		publisher.publishEvent(new QuestCompleteEvent(SessionUtil.getMberInfo().getMberId(), questVO.getQuestSn()));
+		publisher.publishEvent(new QuestCompleteEvent(questVO.getMberSn(), questVO.getQuestSn(), 1));
 		return true;
 	}
 }

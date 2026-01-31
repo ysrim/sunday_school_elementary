@@ -7,6 +7,7 @@ import app.psn.com.mapper.DomainMapper;
 import app.psn.com.mapper.RewardMapper;
 import app.psn.com.service.DomainService;
 import app.psn.com.service.RewardService;
+import app.psn.com.vo.AvatarLevelRulesVO;
 import app.psn.com.vo.AvatarVO;
 import app.psn.com.vo.QuestContinuityRulesVO;
 import app.psn.com.vo.QuestContinuityVO;
@@ -31,6 +32,11 @@ public class DomainServiceImpl implements DomainService {
 	@Override
 	public AvatarVO sltAvatar(int mberSn) {
 		return domainMapper.sltAvatar(mberSn);
+	}
+
+	@Override
+	public AvatarLevelRulesVO sltAvatarLevelRules(int level) {
+		return domainMapper.sltAvatarLevelRules(level);
 	}
 
 	@Override

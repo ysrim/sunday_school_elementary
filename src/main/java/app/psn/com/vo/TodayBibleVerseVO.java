@@ -19,7 +19,9 @@ public class TodayBibleVerseVO {
 
 	private String verseEnd;
 
-	private String content;
+	private String words;
+
+	private String opinion;
 
 	private int seq;
 

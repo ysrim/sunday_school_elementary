@@ -45,6 +45,7 @@
 				if (!text) return;
 				$element.text(''); // 초기화
 				let i = 0;
+
 				function typing() {
 					if (i < text.length) {
 						$element.text(text.substring(0, i + 1));
@@ -52,6 +53,7 @@
 						setTimeout(typing, speed);
 					}
 				}
+
 				typing();
 			}
 		};
@@ -87,9 +89,10 @@
 	<div class="card">
 		<h4>오늘의 말씀 📖</h4>
 		<p style="font-style:italic; min-height: 1.6em;">
-			<span id="typing-bible"
-				  th:text="|${todayBibleVerse.content} [${todayBibleVerse.bookName} ${todayBibleVerse.chapter}장 ${todayBibleVerse.verseStart}절]|">내게 능력 주시는 자 안에서 내가 모든 것을 할 수 있느니라
-			</span>
+			<span id="typing-bible" th:text="|${todayBibleVerse.words} [${todayBibleVerse.bookName} ${todayBibleVerse.chapter}장 ${todayBibleVerse.verseStart}절]|"></span>
+		</p>
+		<p style="font-style:italic; min-height: 1.6em;">
+			<span th:text="|${todayBibleVerse.opinion}|"></span>
 		</p>
 	</div>
 	<div class="guild-section">

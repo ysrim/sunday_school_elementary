@@ -38,19 +38,13 @@ public class DailyVerseScheduler {
 			int count = bibleVerseMapper.sltVerseByDateCnt(today);
 
 			if (count > 0) {
-				log.info("오늘 지정된 성구가 이미 존재합니다. (SKIP)");
+				log.warn("오늘 지정된 성구가 이미 존재합니다. (SKIP)");
 				return;
 			}
 
 			// 2. 없다면 랜덤으로 하나 선택하여 INSERT
-			// (앞서 설계한 '최근 1년 중복 제외' 쿼리를 호출)
 			int result = bibleVerseMapper.insRandomVerseForDate(today);
-
-			if (result > 0) {
-				log.info("새로운 오늘의 말씀이 등록되었습니다.");
-			} else {
-				log.warn("등록 가능한 성구 데이터가 부족합니다 (DB 확인 필요).");
-			}
+			log.warn(result > 0 ? "새로운 오늘의 말씀이 등록되었습니다." : "등록 가능한 성구 데이터가 부족합니다 (DB 확인 필요).");
 
 		} catch (Exception e) {
 			log.error("스케줄러 실행 중 오류 발생: ", e);

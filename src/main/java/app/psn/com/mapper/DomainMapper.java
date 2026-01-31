@@ -3,6 +3,7 @@ package app.psn.com.mapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import app.psn.com.vo.AvatarLevelRulesVO;
 import app.psn.com.vo.AvatarVO;
 import app.psn.com.vo.QuestContinuityRulesVO;
 import app.psn.com.vo.QuestContinuityVO;
@@ -16,7 +17,10 @@ public interface DomainMapper {
 
 	AvatarVO sltAvatar(int mberSn);
 
+	AvatarLevelRulesVO sltAvatarLevelRules(int level);
+
 	QuestContinuityRulesVO sltQuestContinuityRules(int questSn);
 
 	QuestContinuityVO sltQuestContinuity(@Param("mberSn") int mberSn, @Param("questSn") int questSn);
+
 }

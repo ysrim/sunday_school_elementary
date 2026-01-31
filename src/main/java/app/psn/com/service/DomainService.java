@@ -1,5 +1,6 @@
 package app.psn.com.service;
 
+import app.psn.com.vo.AvatarLevelRulesVO;
 import app.psn.com.vo.AvatarVO;
 import app.psn.com.vo.QuestContinuityRulesVO;
 import app.psn.com.vo.QuestContinuityVO;
@@ -11,6 +12,8 @@ public interface DomainService {
 	QuestVO sltQuest(int questSn);
 
 	AvatarVO sltAvatar(int mberSn);
+
+	AvatarLevelRulesVO sltAvatarLevelRules(int level);
 
 	QuestContinuityRulesVO sltQuestContinuityRules(int questSn);
 

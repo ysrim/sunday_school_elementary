@@ -7,7 +7,7 @@ import app.psn.com.vo.RewardVO;
 
 public interface RewardService {
 
-	void insMberRewardLogs(RewardVO vo);
+	void insMberReward(RewardVO vo);
 
 	void processQuestRewards(QuestCompleteEvent vo);
 

@@ -4,7 +4,7 @@ package app.psn.com.vo;
  * Quest 정보를 담는 불변 데이터 객체 (Record)
  */
 public record QuestVO(
-	int questSn,     // 퀘스트_일련번호
+	int questSn,        // 퀘스트_일련번호
 	String title,       // 퀘스트_제목
 	String description, // 퀘스트_설명
 	int rewardExp,      // 경험치

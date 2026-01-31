@@ -11,8 +11,8 @@ import lombok.ToString;
 @ToString
 public class QuestVO {
 
-	private String questSn; // 퀘스트_일련번호
+	private int questSn; // 퀘스트_일련번호
 
-	private String mberSn = SessionUtil.getMberInfo().getMberSn() + ""; // 회원_일련번호
+	private int mberSn = SessionUtil.getMberInfo().getMberSn(); // 회원_일련번호
 
 }
