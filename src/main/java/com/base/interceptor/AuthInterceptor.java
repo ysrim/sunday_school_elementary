@@ -89,7 +89,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
         // 사용자 포인트/레벨 정보 (한 번의 세션 객체 접근으로 처리)
         request.setAttribute("_mberPoint", StringUtil.comma(cacheService.sltPont(mberSn)));
-        request.setAttribute("_mberLevel", cacheService.sltLv(mberSn));
+        request.setAttribute("_mberLevel", cacheService.sltLevel(mberSn));
         request.setAttribute("_mberExp", cacheService.sltExp(mberSn));
     }
 

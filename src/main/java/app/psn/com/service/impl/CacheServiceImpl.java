@@ -33,8 +33,8 @@ public class CacheServiceImpl implements CacheService {
 
 	@Cacheable(value = CacheKeys.MberLvEnum, key = "#p0")
 	@Override
-	public int sltLv(int mberSn) {
-		return cacheMapper.sltLv(mberSn);
+	public int sltLevel(int mberSn) {
+		return cacheMapper.sltLevel(mberSn);
 	}
 
 	@Cacheable(value = CacheKeys.MberExpEnum, key = "#p0")

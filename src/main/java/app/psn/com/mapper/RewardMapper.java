@@ -2,9 +2,7 @@ package app.psn.com.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import app.psn.com.vo.AvatarVO;
 import app.psn.com.vo.QuestContinuityVO;
-import app.psn.com.vo.QuestVO;
 import app.psn.com.vo.RewardVO;
 
 @Mapper

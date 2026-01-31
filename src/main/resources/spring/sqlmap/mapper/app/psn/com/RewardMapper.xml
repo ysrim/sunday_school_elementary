@@ -29,8 +29,8 @@
 		VALUES (#{mberSn},
 				#{questSn},
 				#{currentStreak},
-				CURRENT_TIMESTAMP)
-		ON DUPLICATE KEY UPDATE
+				CURRENT_TIMESTAMP) ON DUPLICATE KEY
+		UPDATE
 			CURRENT_STREAK = #{currentStreak},
 			LAST_SUCCESS_DE = CURRENT_TIMESTAMP
 	</insert>

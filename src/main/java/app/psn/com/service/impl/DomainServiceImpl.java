@@ -4,15 +4,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import app.psn.com.mapper.DomainMapper;
-import app.psn.com.mapper.RewardMapper;
 import app.psn.com.service.DomainService;
-import app.psn.com.service.RewardService;
 import app.psn.com.vo.AvatarLevelRulesVO;
 import app.psn.com.vo.AvatarVO;
 import app.psn.com.vo.QuestContinuityRulesVO;
 import app.psn.com.vo.QuestContinuityVO;
 import app.psn.com.vo.QuestVO;
-import app.psn.com.vo.RewardVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

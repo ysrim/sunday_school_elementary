@@ -31,7 +31,7 @@ public class HomeController {
 		// cache
 		int mberSn = SessionUtil.getMberInfo().getMberSn();
 		model.addAttribute("mberPoint", cacheService.sltPont(mberSn)); // 달란트
-		model.addAttribute("mberLv", cacheService.sltLv(mberSn)); // 레벨
+		model.addAttribute("mberLv", cacheService.sltLevel(mberSn)); // 레벨
 		model.addAttribute("mberExp", cacheService.sltExp(mberSn)); // 경험치
 		model.addAttribute("todayBibleVerse", cacheService.sltTodayBibleVerse()); // 오늘의 말씀
 

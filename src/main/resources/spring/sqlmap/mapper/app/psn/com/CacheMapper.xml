@@ -8,7 +8,7 @@
 		WHERE MBER_SN = #{mberSn}
 	</select>
 
-	<select id="sltLv" parameterType="int" resultType="int">
+	<select id="sltLevel" parameterType="int" resultType="int">
 		SELECT LEVEL
 		FROM AVATAR_INFO
 		WHERE MBER_SN = #{mberSn}
@@ -27,10 +27,9 @@
 			  , V.VERSE_START
 			  , V.VERSE_END
 			  , V.WORDS
-		      , V.OPINION
+			  , V.OPINION
 			  , 1 AS SEQ
-		 FROM BIBLE_VERSES V
-			 limit 1)
+		 FROM BIBLE_VERSES V limit 1)
 		union all
 		(SELECT V.VERSE_SN
 			  , V.BOOK_NAME
@@ -43,8 +42,7 @@
 		 FROM BIBLE_VERSE_DAILY_SCHEDULES S
 				  JOIN BIBLE_VERSES V ON S.VERSE_SN = V.VERSE_SN
 		 WHERE S.SCHEDULE_DATE = CURDATE())
-		ORDER BY SEQ
-		limit 1;
+		ORDER BY SEQ limit 1;
 	</select>
 
 </mapper>

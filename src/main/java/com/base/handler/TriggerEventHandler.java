@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import com.base.vo.AvatarLvlUdtEvent;
 import com.base.vo.QuestCompleteEvent;
 
-import app.psn.com.service.DomainService;
+import app.psn.com.service.AvatarService;
 import app.psn.com.service.RewardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,12 +16,11 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class TriggerEventHandler {
 
-	private final DomainService domainService;
 	private final RewardService rewardService;
+	private final AvatarService avatarService;
 
 	/**
 	 * 퀘스트를 완료 시 보상을 부여한다.
-	 * @param event
 	 */
 	@EventListener
 	public void handleQuestCompleteEvent(QuestCompleteEvent event) {
@@ -44,7 +43,6 @@ public class TriggerEventHandler {
 
 	/**
 	 * 회원의 아바타 레벨을 갱신한다.
-	 * @param event
 	 */
 	@EventListener
 	public void handleAvatarLvlUdtEvent(AvatarLvlUdtEvent event) {
@@ -56,6 +54,7 @@ public class TriggerEventHandler {
 		 * 2. 회원의 누적 경험치를
 		 * </pre>
 		 */
+		avatarService.udtAvatarLevel(event.mberSn());
 
 	}
 

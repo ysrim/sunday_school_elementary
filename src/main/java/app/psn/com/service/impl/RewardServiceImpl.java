@@ -1,21 +1,20 @@
 package app.psn.com.service.impl;
 
-import com.base.enumm.RewardTypeEnum;
-import com.base.utl.StringUtil;
-import com.base.vo.AvatarLvlUdtEvent;
-import com.base.vo.QuestCompleteEvent;
-
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.base.utl.StringUtil;
+import com.base.vo.AvatarLvlUdtEvent;
+import com.base.vo.QuestCompleteEvent;
 
 import app.psn.com.mapper.RewardMapper;
 import app.psn.com.service.DomainService;
 import app.psn.com.service.RewardService;
 import app.psn.com.vo.QuestContinuityRulesVO;
 import app.psn.com.vo.QuestContinuityVO;
-import app.psn.com.vo.RewardVO;
 import app.psn.com.vo.QuestVO;
+import app.psn.com.vo.RewardVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,7 +32,6 @@ public class RewardServiceImpl implements RewardService {
 
 	/**
 	 * 회원에게 리워드(경험치, 달란트)를 지급한다.
-	 * @param reward
 	 */
 	@Override
 	@Transactional
@@ -45,7 +43,6 @@ public class RewardServiceImpl implements RewardService {
 
 	/**
 	 * 연퀘 수행이력정보를 담는다.
-	 * @param questContinuityVO
 	 */
 	@Override
 	public void insQuestContinuity(QuestContinuityVO questContinuityVO) {
@@ -54,7 +51,6 @@ public class RewardServiceImpl implements RewardService {
 
 	/**
 	 * 퀘스트를 수행했을 경우 보상하는 프로세스
-	 * @param event
 	 */
 	@Override
 	@Transactional
@@ -82,8 +78,6 @@ public class RewardServiceImpl implements RewardService {
 
 	/**
 	 * 연속퀘스트 추가 보상 로직
-	 * @param event
-	 * @param rules
 	 */
 	private void handleQuestContinuity(QuestCompleteEvent event, QuestContinuityRulesVO rules) {
 
