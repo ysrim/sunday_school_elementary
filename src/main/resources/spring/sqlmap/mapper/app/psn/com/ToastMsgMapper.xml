@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="app.psn.com.mapper.ToastMsgMapper">
+
+	<insert id="insToastMsg" parameterType="com.base.vo.ToastMsgEvent">
+		INSERT INTO TOAST_MSG
+		( MBER_SN
+		, TITLE
+		, MESSAGE
+		, EMOJI)
+		VALUES ( #{mberSn}
+			   , #{title}
+			   , #{message}
+			   , #{emoji})
+	</insert>
+
+</mapper>

@@ -4,9 +4,11 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.base.enumm.RewardTypeEnum;
 import com.base.utl.StringUtil;
 import com.base.vo.AvatarLvlUdtEvent;
 import com.base.vo.QuestCompleteEvent;
+import com.base.vo.ToastMsgEvent;
 
 import app.psn.com.mapper.RewardMapper;
 import app.psn.com.service.DomainService;
@@ -36,9 +38,15 @@ public class RewardServiceImpl implements RewardService {
 	@Override
 	@Transactional
 	public void insMberReward(RewardVO reward) {
+
 		rewardMapper.insMberRewardLogs(reward);  // 회원에게 리워드 테이블에 (경험치, 달란트)를 지급한다.
 		rewardMapper.updateAvatarAmount(reward); // 회원 아바타 정보(포인트, 경험치) 실제 업데이트 로직
-		// TODO 토스트매시지 발송
+
+		// 토스트 메시지 발송
+		String rewardType = RewardTypeEnum.valueOf(reward.rewardType()).getRewardName();
+		String toastMsg = rewardType + "보상으로 " + reward.amount() + " " + reward.rewardType() + " 들어왔어요.";
+		publisher.publishEvent(new ToastMsgEvent(reward.mberSn(), reward.description(), toastMsg, "\uD83C\uDF81"));
+
 	}
 
 	/**

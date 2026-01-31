@@ -4,6 +4,7 @@ Response: Res(ex.AddressRes) 프론트로 데이터 던질 때
 Request: Req(ex. AddressReq) 프론트에서 요청받을 때
 Data Transfer Object: DTO(ex. AddressDTO) 계층간 데이터 이동 ctl -> srv로 이동할 때 ... 거의 안쓸거같음...
 
+=> DB표준화
 
 => 신규 페이지 생성
 1. 선생님 페이지
@@ -25,25 +26,6 @@ Data Transfer Object: DTO(ex. AddressDTO) 계층간 데이터 이동 ctl -> srv�
 
 
 
-학생이 퀘스트를 완료하여 경험치를 획득했을 때, 시스템이 어떻게 레벨을 계산해야 하는지 보여주는 SQL 로직입니다.
-시나리오: 학생이 50 EXP를 획득했을 때
-1단계: 경험치 지급 (UPDATE)
-UPDATE users
-SET total_exp = total_exp + 50 
-WHERE user_id = 1;
-2단계: 레벨 재산정 (SELECT) 변경된 total_exp를 기준으로, level_rules 테이블에서 달성 가능한 최대 레벨을 조회합니다.
-SQL
--- 내 경험치(total_exp)보다 작거나 같은 required_exp 중 가장 높은 레벨을 찾음
-SELECT MAX(level) as calculated_level
-FROM level_rules
-WHERE required_exp <= (SELECT total_exp FROM users WHERE user_id = 1);
-3단계: 레벨업 여부 확인 및 적용
-calculated_level이 현재 users.level보다 높다면? -> 레벨업 발생! 🎉
-이때 users.level을 업데이트하고, 레벨업 축하 알림을 띄워줍니다.
-4. (보너스) '다음 레벨까지 남은 경험치' 계산법
-프론트엔드(UI)에서 **경험치 바(Progress Bar)**를 그리기 위해 필요한 데이터를 뽑는 쿼리입니다.
-
-SQL
 
 SELECT 
     u.level AS current_level,
@@ -60,9 +42,5 @@ FROM users u
 JOIN level_rules cur_lvl ON cur_lvl.level = u.level          -- 현재 레벨 규칙
 JOIN level_rules next_lvl ON next_lvl.level = u.level + 1    -- 다음 레벨 규칙
 WHERE u.user_id = 1;
-💡 요약
-level_rules 테이블에 레벨별 필요 경험치(Cut-line)를 미리 정의해둡니다.
-
-사용자에게 경험치를 줄 때마다 total_exp를 업데이트합니다.
-
-업데이트된 total_exp가 다음 레벨의 required_exp를 넘겼는지 확인하여 레벨업을 처리합니다
+level_rules 테이블에 레벨별 필요 경험치(Cut-line)를 미리 정의
+사용자에게 경험치를 줄 때마다 total_exp를 업데이트
