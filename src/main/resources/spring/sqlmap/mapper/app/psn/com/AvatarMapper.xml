@@ -13,7 +13,7 @@
 
 	<update id="udtAvatarLevel">
 		UPDATE AVATAR_INFO
-			LEVEL = #{targetLevel},
+		SET LEVEL  = #{targetLevel},
 			UDT_DE = CURRENT_TIMESTAMP
 		WHERE MBER_SN = #{mberSn}
 	</update>

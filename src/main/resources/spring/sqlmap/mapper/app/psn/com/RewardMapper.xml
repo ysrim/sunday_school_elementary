@@ -14,7 +14,7 @@
 		VALUES ( #{mberSn}
 			   , #{rewardType}
 			   , #{amount}
-			   , IFNULL((SELECT BALANCE_AFTER FROM MBER_REWARD_LOGS WHERE MBER_SN ORDER BY LOG_SN DESC LIMIT 1), 0) + #{amount}
+			   , IFNULL((SELECT A.BALANCE_AFTER FROM MBER_REWARD_LOGS A WHERE A.MBER_SN = #{mberSn} ORDER BY A.LOG_SN DESC LIMIT 1), 0) + #{amount}
 			   , #{changeType}
 			   , #{referenceSn}
 			   , #{description})

@@ -50,4 +50,13 @@
 		  AND QUEST_SN = #{questSn}
 	</select>
 
+	<select id="sltAvatarLevelRules" parameterType="int" resultType="app.psn.com.vo.AvatarLevelRulesVO">
+		SELECT LEVEL
+			 , REQUIRED_EXP
+			 , RANK_NAME
+			 , REWARD_POINT
+		FROM AVATAR_LEVEL_RULES
+		WHERE LEVEL = #{level}
+	</select>
+
 </mapper>
