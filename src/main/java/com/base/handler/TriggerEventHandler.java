@@ -30,21 +30,8 @@ public class TriggerEventHandler {
 	 */
 	@EventListener
 	public void handleQuestCompleteEvent(QuestCompleteEvent event) {
-
 		log.warn("Quest Complete Process Started: mberSn={}, questSn={}, logSn={}", event.mberSn(), event.questSn(), event.logSn());
-
-		//AvatarVO mberVO = domainService.sltAvatar(event.mberSn());
-
-		/**
-		 * <pre>
-		 * 퀘스트를 완료 시 보상을 부여한다.
-		 * 1. QUESTS테이블의 명시된 경험치와 달란트를 회원에게 지급
-		 * 2. 퀘스트를 연속으로 수행할 경우 QUEST_CONTINUITY_RULES테이블 정의된 일자만큼 수행할 경우 경험치와 달란트 보상
-		 * 3. 최종누적된 경험치를 바탕으로 아바타 레벨업유무 결정
-		 * </pre>
-		 */
 		rewardService.processQuestRewards(event); // 아바타정보에 포인트 경험치 업데이트 트리거 매소드 토스트 메시지 저장
-
 	}
 
 	/**
@@ -53,16 +40,7 @@ public class TriggerEventHandler {
 	 */
 	@EventListener
 	public void handleAvatarLvlUdtEvent(AvatarLvlUdtEvent event) {
-
-		/**
-		 * <pre>
-		 * 회원의 아바타 레벨을 갱신한다.
-		 * 1. 회원의 아바타 레벨 정보를 가져온다.
-		 * 2. 회원의 누적 경험치를
-		 * </pre>
-		 */
 		avatarService.udtAvatarLevel(event.mberSn());
-
 	}
 
 	/**
@@ -70,9 +48,7 @@ public class TriggerEventHandler {
 	 */
 	@EventListener
 	public void handleToastMsgEvent(ToastMsgEvent event) {
-
 		toastMsgService.insToastMsg(event);
-
 	}
 
 }
