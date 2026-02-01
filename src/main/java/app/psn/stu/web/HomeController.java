@@ -1,15 +1,21 @@
 package app.psn.stu.web;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.base.annotation.MenuInfo;
 import com.base.enumm.MberGrdEnum;
 import com.base.enumm.NaviEnum;
+import com.base.utl.ResUtil;
 import com.base.utl.SessionUtil;
+import com.base.utl.StringUtil;
 
 import app.psn.com.service.CacheService;
+import app.psn.com.service.DomainService;
+import app.psn.com.service.ToastMsgService;
 import app.psn.stu.service.HomeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,27 +30,28 @@ public class HomeController {
 
 	private final HomeService homeService;
 
+	private final ToastMsgService toastMsgService;
+
 	@MenuInfo(navi = NaviEnum.STD_HOME, role = MberGrdEnum.STD)
 	@RequestMapping("/home.pg")
 	public String homePg(Model model) {
 
-		// cache
 		int mberSn = SessionUtil.getMberInfo().getMberSn();
+		int guildSn = SessionUtil.getMberInfo().getGuildSn();
+
+		// cache
 		model.addAttribute("mberPoint", cacheService.sltPont(mberSn)); // 달란트
 		model.addAttribute("mberLv", cacheService.sltLevel(mberSn)); // 레벨
 		model.addAttribute("mberExp", cacheService.sltExp(mberSn)); // 경험치
 		model.addAttribute("todayBibleVerse", cacheService.sltTodayBibleVerse()); // 오늘의 말씀
 
 		// sql
-		int guildSn = SessionUtil.getMberInfo().getGuildSn();
 		model.addAttribute("guildMberCnt", homeService.sltGuildMberList(guildSn).size()); // 길드 숫자
 		model.addAttribute("guildMberAccessList", homeService.sltGuildMberAccessList(guildSn)); // 길드접속자 목록
 		model.addAttribute("guildInfo", homeService.sltGuildInfo(guildSn)); // 길드정보
-		// 1. 길드원 목록 나타나기(접속자 표시) > (접속자 // 전체숫자)
-		// 2. 길드명, 길드마크
-		// 3. 일일퀘스트 완료하면 오늘도 퀘스트 뜸
-		// 4.
-		// 5. 공지사항
+		model.addAttribute("toastMsgList", toastMsgService.sltToastMsgList(mberSn)); // 토스트 메시지
+
+		// 미구현 기능: 공지사항, 길드마크
 
 		return "/app/psn/stu/page/home/home";
 
@@ -56,6 +63,16 @@ public class HomeController {
 		// 공지사항 컨텐츠 to-be
 		return "/app/psn/stu/page/home/noticeCont";
 
+	}
+
+	@MenuInfo(role = MberGrdEnum.STD)
+	@RequestMapping("/home/removeToast.ax")
+	public ResponseEntity removeToastAx(@RequestParam(name = "toastSn", defaultValue = "0") String toastSn) {
+		if ("0".equals(toastSn)) {
+			return ResUtil.resFail("변수 부족");
+		}
+		toastMsgService.removeToast(Integer.parseInt(toastSn));
+		return ResUtil.resSucc();
 	}
 
 }

@@ -39,13 +39,11 @@
 	</select>
 
 	<select id="sltQuestContinuity" parameterType="int" resultType="app.psn.com.vo.QuestContinuityRulesVO">
-		SELECT
-			MBER_SN,
-			QUEST_SN,
-			CURRENT_STREAK,
-			DATE_FORMAT(LAST_SUCCESS_DE, '%Y%m%d') AS LAST_SUCCESS_DE
-		FROM
-			QUEST_CONTINUITY
+		SELECT MBER_SN,
+			   QUEST_SN,
+			   CURRENT_STREAK,
+			   DATE_FORMAT(LAST_SUCCESS_DE, '%Y%m%d') AS LAST_SUCCESS_DE
+		FROM QUEST_CONTINUITY
 		WHERE MBER_SN = #{mberSn}
 		  AND QUEST_SN = #{questSn}
 	</select>

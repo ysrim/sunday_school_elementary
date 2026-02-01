@@ -32,7 +32,7 @@
                    Lv.<span th:text="${_mberLevel}">1</span>
                 </span>
 					<span style="background: #f0f7ff; color: #4A90E2; padding: 3px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; border: 1px solid #e0eeff;">
-                   EXP <span th:text="${#numbers.formatInteger(_mberExp, 0, 'COMMA')}">0</span>
+                   EXP <span th:text="${#numbers.formatInteger(_mberExp.currentExp, 0, 'COMMA')}">0</span>
                 </span>
 				</div>
 				<h2 style="margin: 0; font-size: 1.6rem; color: #222; font-weight: 900; letter-spacing: -1px;">

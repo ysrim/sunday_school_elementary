@@ -50,36 +50,17 @@
 			<h3 style="margin: 0; font-size: 1.1rem; color: #333;">주일 퀘스트</h3>
 		</div>
 		<div class="card quest-container">
-			<div class="quest-row">
+			<div th:class="|quest-row${vo.status != null ? ' done': ''}|" th:each="vo : ${questList}" th:if="${vo.questType == 'WEEKLY'}">
 				<div class="quest-info" style="display: flex; align-items: center;">
-					<span class="quest-icon" style="font-size: 1.5rem; margin-right: 12px;">🙏</span>
+					<span class="quest-icon" style="font-size: 1.5rem; margin-right: 12px;" th:text="|${vo.emoji}|">🙏</span>
 					<div class="quest-text" style="display: flex; flex-direction: column;">
-						<span class="quest-title" style="font-weight: bold; color: #333;">아침 기도하기</span>
-						<span class="quest-reward" style="font-size: 0.75rem; color: #888;">+10 EXP / 50 P</span>
+						<span class="quest-title" style="font-weight: bold; color: #333;" th:text="|${vo.title} (${vo.description})|">아침 기도하기</span>
+						<span class="quest-reward" style="font-size: 0.75rem; color: #888;" th:text="|${vo.rewardExp} EXP / ${vo.rewardPoint} P|">10 EXP / 50 P</span>
 					</div>
 				</div>
-				<button class="btn-quest-action" onclick="handleQuest(this, 1)">완료하기</button>
-			</div>
-			<div class="quest-row">
-				<div class="quest-info" style="display: flex; align-items: center;">
-					<span class="quest-icon" style="font-size: 1.5rem; margin-right: 12px;">📖</span>
-					<div class="quest-text" style="display: flex; flex-direction: column;">
-						<span class="quest-title" style="font-weight: bold; color: #333;">말씀 1구절 암송</span>
-						<span class="quest-reward" style="font-size: 0.75rem; color: #888;">+20 EXP / 100 P</span>
-					</div>
-				</div>
-				<button class="btn-quest-action" onclick="handleQuest(this, 2)">완료하기</button>
-			</div>
-
-			<div class="quest-row done">
-				<div class="quest-info" style="display: flex; align-items: center;">
-					<span class="quest-icon" style="font-size: 1.5rem; margin-right: 12px;">💖</span>
-					<div class="quest-text" style="display: flex; flex-direction: column;">
-						<span class="quest-title" style="font-weight: bold;">부모님 도와드리기</span>
-						<span class="quest-reward" style="font-size: 0.75rem; color: #bbb;">보상 획득 완료</span>
-					</div>
-				</div>
-				<button class="btn-quest-action" disabled>완료</button>
+				<button class="btn-quest-action" th:data-sn="${vo.questSn}" th:disabled="${vo.status == 'PENDING' or vo.status == 'APPROVED' or vo.status == 'REJECTED'}" onclick="handleQuest(this)"
+						th:text="${vo.statusNm == null ? '완료하기' : vo.statusNm}">
+				</button>
 			</div>
 		</div>
 	</div>

@@ -11,6 +11,7 @@ import com.base.enumm.CacheKeys;
 
 import app.psn.com.mapper.CacheMapper;
 import app.psn.com.service.CacheService;
+import app.psn.com.vo.AvatarLevelVO;
 import app.psn.com.vo.TodayBibleVerseVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,16 +32,31 @@ public class CacheServiceImpl implements CacheService {
 		return cacheMapper.sltPont(mberSn);
 	}
 
+	@CacheEvict(value = CacheKeys.MberPointEnum, key = "#p0")
+	@Override
+	public void evictPont(int mberSn) {
+	}
+
 	@Cacheable(value = CacheKeys.MberLvEnum, key = "#p0")
 	@Override
 	public int sltLevel(int mberSn) {
 		return cacheMapper.sltLevel(mberSn);
 	}
 
+	@CacheEvict(value = CacheKeys.MberLvEnum, key = "#p0")
+	@Override
+	public void evictLevel(int mberSn) {
+	}
+
 	@Cacheable(value = CacheKeys.MberExpEnum, key = "#p0")
 	@Override
-	public int sltExp(int mberSn) {
+	public AvatarLevelVO sltExp(int mberSn) {
 		return cacheMapper.sltExp(mberSn);
+	}
+
+	@CacheEvict(value = CacheKeys.MberExpEnum, key = "#p0")
+	@Override
+	public void evictExp(int mberSn) {
 	}
 
 	@Cacheable(value = CacheKeys.TodayBibleVerseEnum)
@@ -69,7 +85,6 @@ public class CacheServiceImpl implements CacheService {
 			return false; // 캐시 저장소 자체가 없음
 		}
 		// 2. 값 꺼내보기 (값이 null이 아니면 키가 존재하는 것)
-		// 주의: Spring의 ValueWrapper를 통해 확인하는 것이 가장 안전함
 		Cache.ValueWrapper wrapper = cache.get(key);
 
 		return wrapper != null;

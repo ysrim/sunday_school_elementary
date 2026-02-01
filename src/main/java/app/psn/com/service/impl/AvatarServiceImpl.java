@@ -4,6 +4,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.base.enumm.ToastTypeEnum;
+import com.base.vo.ToastMsgEvent;
+
 import app.psn.com.mapper.AvatarMapper;
 import app.psn.com.service.AvatarService;
 import app.psn.com.service.DomainService;
@@ -57,6 +60,7 @@ public class AvatarServiceImpl implements AvatarService {
 		// 5. 아바타 정보에 변경된 레벨 업데이트
 		avatarMapper.udtAvatarLevel(mberSn, targetLevel);
 		// (선택) 레벨업 축하 이벤트/알림 발행
+		publisher.publishEvent(new ToastMsgEvent(mberSn, ToastTypeEnum.SUCCESS.toString(), "Level UP!", "축하합니다 용사님! " + currentLevel + "Lv에서 " + targetLevel + "Lv로 업했습니다."));
 
 	}
 

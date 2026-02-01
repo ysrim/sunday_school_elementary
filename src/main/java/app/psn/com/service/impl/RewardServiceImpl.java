@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.base.enumm.RewardTypeEnum;
+import com.base.enumm.ToastTypeEnum;
 import com.base.utl.StringUtil;
 import com.base.vo.AvatarLvlUdtEvent;
 import com.base.vo.QuestCompleteEvent;
@@ -45,7 +46,7 @@ public class RewardServiceImpl implements RewardService {
 		// 토스트 메시지 발송
 		String rewardType = RewardTypeEnum.valueOf(reward.rewardType()).getRewardName();
 		String toastMsg = rewardType + "보상으로 " + reward.amount() + " " + reward.rewardType() + " 들어왔어요.";
-		publisher.publishEvent(new ToastMsgEvent(reward.mberSn(), reward.description(), toastMsg, "\uD83C\uDF81"));
+		publisher.publishEvent(new ToastMsgEvent(reward.mberSn(), ToastTypeEnum.REWARD.toString(), reward.description(), toastMsg));
 
 	}
 

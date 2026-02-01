@@ -57,9 +57,11 @@
 				typing();
 			}
 		};
-		// 실행
 		$(function () {
 			StdHomeUI.init();
+			/*[# th:each="msg, stat : ${toastMsgList}"]*/
+			_showToast('[(${msg.toastSn})]', '[(${msg.title})]', '[(${msg.message})]', '[(${msg.toastType})]');
+			/*[/]*/ // 반복문 종료
 		});
 	</script>
 	<div class="profile-card">
@@ -79,20 +81,20 @@
 		<div style="background: #FAFBFC; padding: 12px; border-radius: 15px;">
 			<div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: bold; color: #777;">
 				<span>성장 경험치 (EXP)</span>
-				<span><span id="current-exp" th:text="${_mberExp}" th:data-current="${_mberExp}"></span> / 100</span>
+				<span id="current-exp" th:text="|${_mberExp.currentExp} / ${_mberExp.levelUpRequiredExp}|" th:data-current="${_mberExp.currentExp}" th:data-max="${_mberExp.levelUpRequiredExp}"></span>
 			</div>
 			<div class="exp-container">
-				<div id="exp-bar" class="exp-bar-fill" th:style="|width: ${_mberExp}%;|"></div>
+				<div id="exp-bar" class="exp-bar-fill" th:style="|width: ${_mberExp.progressPercent}%;|"></div>
 			</div>
 		</div>
 	</div>
 	<div class="card">
 		<h4>오늘의 말씀 📖</h4>
 		<p style="font-style:italic; min-height: 1.6em;">
-			<span id="typing-bible" th:text="|${todayBibleVerse.words} [${todayBibleVerse.bookName} ${todayBibleVerse.chapter}장 ${todayBibleVerse.verseStart}절]|"></span>
+			<span th:text="|${todayBibleVerse.opinion}|"></span>
 		</p>
 		<p style="font-style:italic; min-height: 1.6em;">
-			<span th:text="|${todayBibleVerse.opinion}|"></span>
+			<span id="typing-bible" th:text="|${todayBibleVerse.words} [${todayBibleVerse.bookName} ${todayBibleVerse.chapter}장 ${todayBibleVerse.verseStart}절]|"></span>
 		</p>
 	</div>
 	<div class="guild-section">
@@ -103,6 +105,7 @@
 			</div>
 			<span style="font-size: 0.75rem; color: #666; font-weight: bold;" th:text="|길드원 ${guildMberAccessList.size()}/${guildMberCnt}|">길드원 12/20</span>
 		</div>
+		<!-- 기획을 더 해서 다듬기
 		<div style="margin-top: 10px;">
 			<p style="font-size: 0.8rem; color: #666;">공동 퀘스트: 이번 주 말씀 50번 읽기</p>
 			<div style="width: 100%; height: 6px; background: #eee; border-radius: 10px; margin-top: 5px;">
@@ -110,6 +113,7 @@
 			</div>
 			<p style="text-align: right; font-size: 0.7rem; color: #999; margin-top: 3px;">75% 달성 중</p>
 		</div>
+		-->
 		<div class="guild-member-list">
 			<div class="member-item" th:each="vo : ${guildMberAccessList}">
 				<img th:src="|https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/${vo.occpCode}_${#strings.toLowerCase(vo.sexdstn)}.png|" class="member-avatar">

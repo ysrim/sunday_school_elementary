@@ -83,6 +83,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 	}
 
 	private void setupUserContext(HttpServletRequest request, SessionVO sessionVO) {
+
 		String mberId = sessionVO.getMberId();
 		int mberSn = sessionVO.getMberSn();
 
@@ -93,6 +94,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 		request.setAttribute("_mberPoint", StringUtil.comma(cacheService.sltPont(mberSn)));
 		request.setAttribute("_mberLevel", cacheService.sltLevel(mberSn));
 		request.setAttribute("_mberExp", cacheService.sltExp(mberSn));
+
 	}
 
 	private boolean hasPassAuth(HandlerMethod handler) {

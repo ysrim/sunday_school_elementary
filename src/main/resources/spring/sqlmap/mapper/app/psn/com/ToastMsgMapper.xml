@@ -5,13 +5,31 @@
 	<insert id="insToastMsg" parameterType="com.base.vo.ToastMsgEvent">
 		INSERT INTO TOAST_MSG
 		( MBER_SN
+		, TOAST_TYPE
 		, TITLE
-		, MESSAGE
-		, EMOJI)
+		, MESSAGE)
 		VALUES ( #{mberSn}
 			   , #{title}
 			   , #{message}
 			   , #{emoji})
 	</insert>
+
+	<select id="sltToastMsgList" parameterType="int" resultType="app.psn.com.vo.ToastMsgVO">
+		SELECT TOAST_SN
+			 , MBER_SN
+			 , TOAST_TYPE
+			 , TITLE
+			 , MESSAGE
+			 , IS_READ
+			 , CREAT_DE
+			 , READ_DE
+		FROM TOAST_MSG
+		WHERE MBER_SN = #{mberSn}
+		  AND IS_READ = 'N'
+	</select>
+
+	<update id="removeToast" parameterType="int">
+		UPDATE TOAST_MSG SET READ_DE = CURRENT_TIMESTAMP, IS_READ = 'Y' WHERE TOAST_SN = #{toastSn}
+	</update>
 
 </mapper>

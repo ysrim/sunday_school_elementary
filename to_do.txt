@@ -4,7 +4,7 @@ Response: Res(ex.AddressRes) 프론트로 데이터 던질 때
 Request: Req(ex. AddressReq) 프론트에서 요청받을 때
 Data Transfer Object: DTO(ex. AddressDTO) 계층간 데이터 이동 ctl -> srv로 이동할 때 ... 거의 안쓸거같음...
 
-=> DB표준화
+=> DB표준화(필드 사이즈 위주로)
 
 => 신규 페이지 생성
 1. 선생님 페이지
@@ -12,35 +12,14 @@ Data Transfer Object: DTO(ex. AddressDTO) 계층간 데이터 이동 ctl -> srv�
 3. 학생
     미완료 항목
         기능
-        - 토스트 메시지
-        - 출석도 퀘스트로 진행
         - 주일 퀘스트도 연속으로 진행 할 시 보상 지급 프로세스
-        - 캐쉬 정보 정규화해서 정보 변경시 갱신 되게 구현
         페이지
         - 출석페이지: 퀘스트 진행으로 로직 변경
-        - 홈: 공지사항 (당분간 하드코드), 남아있는 경험치 계산 로직
+        - 홈: 공지사항 (당분간 하드코드)
         - 설정: 캐릭터명변경, 비밀번호변경, 포인트변경
-        - 회원가입: 남/여 변경에 따른 이미지 변경 기능
+        - 길드마크
 
 
 
 
 
-
-SELECT 
-    u.level AS current_level,
-    u.total_exp,
-    next_lvl.required_exp AS next_level_exp,
-    -- 다음 레벨까지 남은 경험치
-    (next_lvl.required_exp - u.total_exp) AS exp_needed,
-    -- 진행률 (%) 계산: (현재경험치 - 현재레벨시작경험치) / (다음레벨경험치 - 현재레벨시작경험치)
-    ROUND(
-        (u.total_exp - cur_lvl.required_exp) / 
-        (next_lvl.required_exp - cur_lvl.required_exp) * 100
-    , 1) AS progress_percent
-FROM users u
-JOIN level_rules cur_lvl ON cur_lvl.level = u.level          -- 현재 레벨 규칙
-JOIN level_rules next_lvl ON next_lvl.level = u.level + 1    -- 다음 레벨 규칙
-WHERE u.user_id = 1;
-level_rules 테이블에 레벨별 필요 경험치(Cut-line)를 미리 정의
-사용자에게 경험치를 줄 때마다 total_exp를 업데이트
