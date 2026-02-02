@@ -24,8 +24,4 @@
 		) A LEFT OUTER JOIN QUEST_LOGS B ON B.MBER_SN = #{mberSn} AND B.QUEST_SN = 2 AND DATE_FORMAT(A.DATE, '%Y%m%d') = B.REQ_DATE
 	</select>
 
-	<insert id="insAttendanceDo" parameterType="Integer">
-		INSERT INTO ATTENDANCE_LOG (ATTENDANCE_DATE, MBER_SN) VALUES(DATE_FORMAT(NOW(), '%Y%m%d'), #{mberSn})
-	</insert>
-
 </mapper>

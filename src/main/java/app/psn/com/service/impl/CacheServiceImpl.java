@@ -71,12 +71,6 @@ public class CacheServiceImpl implements CacheService {
 		return true;
 	}
 
-	@CacheEvict(value = CacheKeys.OnlineMbersEnum, key = "#p0")
-	@Override
-	public void delOnlineMber(String mberId) {
-		// do something;
-	}
-
 	public boolean checkKeyExists(String cacheName, String key) {
 
 		// 1. 캐시 저장소 가져오기 (예: "onlineMbers")
@@ -90,27 +84,5 @@ public class CacheServiceImpl implements CacheService {
 		return wrapper != null;
 
 	}
-
-	@Override
-	public Integer checkKeySize(String cacheName) {
-		Cache springCache = cacheManager.getCache(cacheName);
-		if (springCache != null) {
-			com.github.benmanes.caffeine.cache.Cache nativeCache = (com.github.benmanes.caffeine.cache.Cache)springCache.getNativeCache();
-			try {
-				long bigValue = nativeCache.estimatedSize();
-				Integer intValue = Math.toIntExact(bigValue); // 여기서 예외 발생
-				return intValue;
-			} catch (ArithmeticException e) {
-				throw new RuntimeException("시스템 오류" + e.getMessage());
-			}
-		}
-		return 0;
-	}
-
-	//삭제
-	// @CacheEvict(value = "boardList", allEntries = true)
-	// @CacheEvict(value = "boardList", key = "#searchType + '_' + #keyword")
-	//추가
-	// ex. @Cacheable(value = "boardList", key = "#searchType + '_' + #keyword")
 
 }

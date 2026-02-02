@@ -24,13 +24,7 @@ public class QrCodeServiceImpl implements QrCodeService {
 
 	@Override
 	public QrCodeMemberInfoVO sltMberSn(String encryptValue) {
-		String mberSn = "";
-		try {
-			mberSn = StringUtil.decrypt(encryptValue, secretKey);
-		} catch (Exception e) {
-			throw new RuntimeException("잘못된 정보입니다.");
-		}
-		return qrCodeMapper.sltMberSn(mberSn);
+		return qrCodeMapper.sltMberSn(StringUtil.decrypt(encryptValue, secretKey));
 	}
 
 }

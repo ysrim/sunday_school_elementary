@@ -31,13 +31,12 @@ public class QuestServiceImpl implements QuestService {
 		return questMapper.sltQuestList(SessionUtil.getMberInfo().getMberSn() + "");
 	}
 
-	public boolean questDo(QuestPendingVO questVO) {
+	public void questDo(QuestPendingVO questVO) {
 		Integer cnt = questMapper.questDo(questVO);
 		log.info("insert count: {}", cnt);
 		if (cnt < 1) { // 비즈니스 로직상 필수라면 예외 처리
 			throw new RuntimeException("퀘스트 수행 내역 저장 중 오류가 발생했습니다.");
 		}
 		publisher.publishEvent(new QuestCompleteEvent(questVO.getMberSn(), questVO.getQuestSn(), 1));
-		return true;
 	}
 }

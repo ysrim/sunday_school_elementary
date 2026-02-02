@@ -36,12 +36,8 @@ public class QuestController {
 	@MenuInfo(role = MberGrdEnum.STD)
 	@RequestMapping("/qest/qest.ax")
 	public ResponseEntity qestAx(@Valid QuestPendingVO questVO) {
-		if ("".equals(questVO.getQuestSn())) {
-			return ResUtil.resValid("퀘스트 정보가 없습니다.");
-		} else {
-			questService.questDo(questVO);
-			return ResUtil.resSucc();
-		}
+		questService.questDo(questVO);
+		return ResUtil.resSucc();
 	}
 
 }

@@ -9,6 +9,6 @@ public interface QuestService {
 
 	List<QuestListVO> sltQuestList(); // 길드원 목록
 
-	boolean questDo(QuestPendingVO questVO);
+	void questDo(QuestPendingVO questVO);
 
 }

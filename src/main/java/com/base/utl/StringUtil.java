@@ -31,16 +31,12 @@ public class StringUtil {
 		throw new UnsupportedOperationException("Utility class");
 	}
 
-	/**
-	 * 숫자에 콤마 추가 (null 안전)
-	 */
+	// 숫자에 콤마 추가 (null 안전)
 	public static String comma(Integer number) {
 		return NumberFormat.getInstance().format(Optional.ofNullable(number).orElse(0));
 	}
 
-	/**
-	 * AES-GCM 암호화
-	 */
+	// AES-GCM 암호화
 	public static String encrypt(String plainText, String secretKey) {
 		if (plainText == null || secretKey == null)
 			return null;
@@ -67,9 +63,7 @@ public class StringUtil {
 		}
 	}
 
-	/**
-	 * AES-GCM 복호화
-	 */
+	// AES-GCM 복호화
 	public static String decrypt(String encryptedText, String secretKey) {
 		if (encryptedText == null || secretKey == null)
 			return null;
@@ -99,9 +93,7 @@ public class StringUtil {
 		}
 	}
 
-	/**
-	 * 키 길이 제한 문제를 해결하기 위한 비밀키 생성 로직
-	 */
+	// 키 길이 제한 문제를 해결하기 위한 비밀키 생성 로직
 	private static SecretKey generateKey(String password) {
 		byte[] keyBytes = new byte[16]; // 128비트 고정
 		byte[] passwordBytes = password.getBytes(StandardCharsets.UTF_8);
@@ -109,36 +101,23 @@ public class StringUtil {
 		return new SecretKeySpec(keyBytes, "AES");
 	}
 
-	/**
-	 * 오늘이 일요일인지 확인
-	 */
+	// 오늘이 일요일인지 확인
 	public static boolean isTodaySunday() {
 		return isDayOfWeek(LocalDate.now(ZoneId.of(KOREA_ZONE)), DayOfWeek.SUNDAY);
 	}
 
-	/**
-	 * 특정 날짜의 요일 확인 (확장성)
-	 */
+	// 특정 날짜의 요일 확인 (확장성)
 	public static boolean isDayOfWeek(LocalDate date, DayOfWeek dayOfWeek) {
 		return date != null && date.getDayOfWeek() == dayOfWeek;
 	}
 
-	/**
-	 * 두 날짜 차이(date2-date1)
-	 * @param date1
-	 * @param date2
-	 * @return
-	 */
+	// 두 날짜 차이(date2-date1)
 	public static long getDateDiff(String date1, String date2) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 		return ChronoUnit.DAYS.between(LocalDate.parse(date2, formatter), LocalDate.parse(date1, formatter));
 	}
 
-	/**
-	 * 두 날짜 차이(오늘날짜-date1)
-	 * @param date1
-	 * @return
-	 */
+	// 두 날짜 차이(오늘날짜-date1)
 	public static boolean getDateDiffToday(String date1) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 		long betweenDay = ChronoUnit.DAYS.between(LocalDate.now(), LocalDate.parse(date1, formatter));

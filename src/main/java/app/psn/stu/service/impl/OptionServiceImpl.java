@@ -8,7 +8,6 @@ import com.base.utl.SessionUtil;
 import com.base.utl.StringUtil;
 
 import app.idx.lgn.vo.SessionVO;
-import app.psn.stu.mapper.OptionMapper;
 import app.psn.stu.service.OptionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class OptionServiceImpl implements OptionService {
-
-	private final OptionMapper optionMapper;
 
 	private @Value("#{globalsProps['secretKey.key.qr']}") String secretKey;
 
@@ -32,4 +29,5 @@ public class OptionServiceImpl implements OptionService {
 			throw new RuntimeException("QR코드 생성중 에러가 발생했습니다.");
 		}
 	}
+
 }

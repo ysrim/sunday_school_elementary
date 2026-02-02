@@ -31,8 +31,7 @@
 	<select id="sltGuildInfo" parameterType="app.idx.reg.vo.JoinMemberVO" resultType="string">
 		SELECT GUILD_SN
 		FROM GUILD_INFO
-		WHERE 1 = 1
-		  AND GRADE = #{grade}
+		WHERE GRADE = #{grade}
 		  AND CLA = #{cls}
 	</select>
 

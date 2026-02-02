@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{/app/psn/stu/layouts/std_layout}">
+	  layout:decorate="~{/app/psn/stu/layouts/std_layout}" lang="ko">
 
 <th:block layout:fragment="content">
 	<script th:inline="javascript">
 		$(function () {
-			const options = {month: 'long', day: 'numeric', weekday: 'long'};
 			$('#stamp-zone').click(function () {
 				if (!(new Date().getDay() === 0)) {
 					_showAlert('출석은 주일만 가능!', '📅', '알림');
@@ -20,15 +19,15 @@
 							$(this).addClass('checked').css({
 								'background': '#FFF0F0',
 								'border-color': '#FF6B6B'
-							}).html('<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/attendance.png" style="width:110px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">');
+							}).html('<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/attendance.png" alt="출석" style="width:110px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">');
 							$('.slot-circle.today').addClass('checked');
-							_showAlert('선생님께 출석 체크 요청!', '<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/attendance.png" style="width:80px;">', '출석 요청!');
+							_showAlert('선생님께 출석 체크 요청!', '<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/attendance.png" alt="출석" style="width:80px;">', '출석 요청!');
 						} else {
 							_showAlert('오류가 발생했습니다!', '🔥', '오류');
 						}
 					},
 					error: (e) => {
-						_showAlert('통신 오류가 발생했습니다.', '🔥', '오류');
+						_showAlert('통신 오류가 발생했습니다.', '🔥', e);
 					}
 				});
 			});
@@ -48,7 +47,7 @@
 		<div style="background: #fdfdfd; border-radius: 20px; padding: 20px 10px; border: 1px solid #f0f0f0;">
 			<h4 style="color: #666; margin-bottom: 5px; font-weight: 700; font-size: 0.95rem;">오늘의 출석 도장</h4>
 			<div id="stamp-zone" th:class="|${isAttendance ? 'sunday' : ''}|">
-				<img src="https://cdn-icons-png.flaticon.com/512/839/839374.png" style="width:50px; opacity: 0.3; margin-bottom: 5px;">
+				<img src="https://cdn-icons-png.flaticon.com/512/839/839374.png" alt="출석" style="width:50px; opacity: 0.3; margin-bottom: 5px;">
 				<span style="font-size:0.9rem; color:#999; font-weight: 700; line-height:1.4;">터치해서<br>도장 찍기!</span>
 			</div>
 		</div>

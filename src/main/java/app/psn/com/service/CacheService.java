@@ -21,10 +21,6 @@ public interface CacheService {
 
 	boolean addOnlineMber(String mberId);
 
-	void delOnlineMber(String mberId);
-
 	boolean checkKeyExists(String cacheName, String key);
-
-	Integer checkKeySize(String cacheName);
 
 }
