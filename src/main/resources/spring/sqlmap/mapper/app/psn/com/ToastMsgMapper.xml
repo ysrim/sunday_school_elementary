@@ -24,8 +24,8 @@
 			 , CREAT_DE
 			 , READ_DE
 		FROM TOAST_MSG
-		WHERE MBER_SN = #{mberSn}
-		  AND IS_READ = 'N'
+		WHERE IS_READ = 'N'
+		  AND MBER_SN = #{mberSn}
 	</select>
 
 	<update id="removeToast" parameterType="Integer">

@@ -8,6 +8,6 @@ public interface AttendanceService {
 
 	List<AttendanceVO> sltAttendanceList(); // 출석리스트
 
-	boolean attendanceDo(); // 출석하기
+	void attendanceDo(); // 출석하기
 
 }

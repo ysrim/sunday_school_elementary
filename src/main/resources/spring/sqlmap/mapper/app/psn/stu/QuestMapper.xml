@@ -13,12 +13,11 @@
 			 , B.STATUS
 			 , FN_GET_CODE_NM('REQ_STATUS', B.STATUS) as STATUS_NM
 		FROM QUESTS A
-				 LEFT OUTER JOIN QUEST_LOGS B ON
-								A.QUEST_SN = B.QUEST_SN
-								AND B.REQ_DATE = DATE_FORMAT(NOW(), '%Y%m%d')
-								AND B.MBER_SN = #{mberSn}
+				 LEFT OUTER JOIN QUEST_LOGS B ON A.QUEST_SN = B.QUEST_SN
+												AND B.REQ_DATE = DATE_FORMAT(NOW(), '%Y%m%d')
+												AND B.MBER_SN = #{mberSn}
 		WHERE A.USE_AT = 'Y'
-			AND A.QUEST_SN != 2
+		  AND A.QUEST_SN != 2
 	</select>
 
 	<insert id="questDo" parameterType="app.psn.stu.vo.QuestPendingVO">

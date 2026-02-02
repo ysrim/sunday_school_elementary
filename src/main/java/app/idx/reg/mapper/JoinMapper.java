@@ -11,11 +11,11 @@ public interface JoinMapper {
 
 	String sltMberSn();
 
-	Integer insMberInfo(JoinMemberVO joinMemberVO);
+	void insMberInfo(JoinMemberVO joinMemberVO);
 
-	Integer insAvatarInfo(JoinMemberVO joinMemberVO);
+	void insAvatarInfo(JoinMemberVO joinMemberVO);
 
-	Integer insGuildMberList(JoinMemberVO joinMemberVO);
+	void insGuildMberList(JoinMemberVO joinMemberVO);
 
 	String sltGuildInfo(JoinMemberVO joinMemberVO);
 

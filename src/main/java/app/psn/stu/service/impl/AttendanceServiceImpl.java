@@ -31,11 +31,11 @@ public class AttendanceServiceImpl implements AttendanceService {
 	}
 
 	@Override
-	public boolean attendanceDo() {
+	public void attendanceDo() {
 		QuestPendingVO vo = new QuestPendingVO();
 		vo.setMberSn(SessionUtil.getMberInfo().getMberSn());
 		vo.setQuestSn(2);
-		return questService.questDo(vo);
+		questService.questDo(vo);
 	}
 
 }
