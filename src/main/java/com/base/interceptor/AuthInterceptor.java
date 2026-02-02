@@ -2,6 +2,7 @@ package com.base.interceptor;
 
 import java.io.IOException;
 
+import org.jspecify.annotations.NonNull;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -28,7 +29,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 	private static final String LOGIN_PAGE_URL = "/idx/login.pg";
 
 	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
+	public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws IOException {
 
 		// 1. HandlerMethod 체크
 		if (!(handler instanceof HandlerMethod handlerMethod)) {
@@ -98,8 +99,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 	}
 
 	private boolean hasPassAuth(HandlerMethod handler) {
-		return AnnotatedElementUtils.hasAnnotation(handler.getMethod(), PassAuth.class) ||
-			AnnotatedElementUtils.hasAnnotation(handler.getBeanType(), PassAuth.class);
+		return AnnotatedElementUtils.hasAnnotation(handler.getMethod(), PassAuth.class) || AnnotatedElementUtils.hasAnnotation(handler.getBeanType(), PassAuth.class);
 	}
 
 	private boolean isAuthorized(SessionVO session, MenuInfo menuInfo) {

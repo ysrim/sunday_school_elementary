@@ -67,8 +67,7 @@ public class CacheServiceImpl implements CacheService {
 
 	@Cacheable(value = CacheKeys.OnlineMbersEnum, key = "#p0")
 	@Override
-	public boolean addOnlineMber(String mberId) {
-		return true;
+	public void addOnlineMber(String mberId) {
 	}
 
 	public boolean checkKeyExists(String cacheName, String key) {

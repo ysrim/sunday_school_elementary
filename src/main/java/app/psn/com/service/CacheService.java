@@ -19,7 +19,7 @@ public interface CacheService {
 
 	TodayBibleVerseVO sltTodayBibleVerse(); // 오늘의 말씀
 
-	boolean addOnlineMber(String mberId);
+	void addOnlineMber(String mberId);
 
 	boolean checkKeyExists(String cacheName, String key);
 
