@@ -10,7 +10,6 @@ import app.psn.com.vo.AvatarVO;
 import app.psn.com.vo.QuestContinuityRulesVO;
 import app.psn.com.vo.QuestContinuityVO;
 import app.psn.com.vo.QuestVO;
-import app.psn.com.vo.ToastMsgVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,27 +22,27 @@ public class DomainServiceImpl implements DomainService {
 	private final DomainMapper domainMapper;
 
 	@Override
-	public QuestVO sltQuest(int questSn) {
+	public QuestVO sltQuest(Integer questSn) {
 		return domainMapper.sltQuest(questSn);
 	}
 
 	@Override
-	public AvatarVO sltAvatar(int mberSn) {
+	public AvatarVO sltAvatar(Integer mberSn) {
 		return domainMapper.sltAvatar(mberSn);
 	}
 
 	@Override
-	public AvatarLevelRulesVO sltAvatarLevelRules(int level) {
+	public AvatarLevelRulesVO sltAvatarLevelRules(Integer level) {
 		return domainMapper.sltAvatarLevelRules(level);
 	}
 
 	@Override
-	public QuestContinuityRulesVO sltQuestContinuityRules(int questSn) {
+	public QuestContinuityRulesVO sltQuestContinuityRules(Integer questSn) {
 		return domainMapper.sltQuestContinuityRules(questSn);
 	}
 
 	@Override
-	public QuestContinuityVO sltQuestContinuity(int mberSn, int questSn) {
+	public QuestContinuityVO sltQuestContinuity(Integer mberSn, Integer questSn) {
 		return domainMapper.sltQuestContinuity(mberSn, questSn);
 	}
 

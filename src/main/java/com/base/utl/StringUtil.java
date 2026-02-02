@@ -22,8 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 public class StringUtil {
 
 	private static final String ALGORITHM = "AES/GCM/NoPadding";
-	private static final int TAG_LENGTH_BIT = 128;
-	private static final int IV_LENGTH_BYTE = 12;
+	private static final Integer TAG_LENGTH_BIT = 128;
+	private static final Integer IV_LENGTH_BYTE = 12;
 	private static final String KOREA_ZONE = "Asia/Seoul";
 
 	// 인스턴스화 방지
@@ -143,8 +143,7 @@ public class StringUtil {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 		long betweenDay = ChronoUnit.DAYS.between(LocalDate.now(), LocalDate.parse(date1, formatter));
 		try {
-			int intValue = Math.toIntExact(betweenDay);
-			return intValue == 1;
+			return Math.toIntExact(betweenDay) == 1;
 		} catch (ArithmeticException e) {
 			log.error("error: {}", e.getMessage());
 		}

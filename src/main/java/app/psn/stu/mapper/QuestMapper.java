@@ -12,6 +12,6 @@ public interface QuestMapper {
 
 	List<QuestListVO> sltQuestList(String mberSn);
 
-	int questDo(QuestPendingVO questVO);
+	Integer questDo(QuestPendingVO questVO);
 
 }

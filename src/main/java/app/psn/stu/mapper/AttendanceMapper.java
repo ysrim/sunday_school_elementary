@@ -12,8 +12,8 @@ import app.psn.stu.vo.HomeGuildListVO;
 @Mapper
 public interface AttendanceMapper {
 
-	List<AttendanceVO> sltAttendanceList(int mberSn); // 출석 목록
+	List<AttendanceVO> sltAttendanceList(Integer mberSn); // 출석 목록
 
-	int insAttendanceDo(int mberSn); //출석하기
+	Integer insAttendanceDo(Integer mberSn); //출석하기
 
 }

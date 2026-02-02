@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="app.psn.stu.mapper.AttendanceMapper">
 
-	<select id="sltAttendanceList" parameterType="int" resultType="app.psn.stu.vo.AttendanceVO">
+	<select id="sltAttendanceList" parameterType="Integer" resultType="app.psn.stu.vo.AttendanceVO">
 		SELECT
 		    DATE_FORMAT(A.DATE, '%Y-%m-%d') AS date
 		  , A.WEEK
@@ -24,7 +24,7 @@
 		) A LEFT OUTER JOIN QUEST_LOGS B ON B.MBER_SN = #{mberSn} AND B.QUEST_SN = 2 AND DATE_FORMAT(A.DATE, '%Y%m%d') = B.REQ_DATE
 	</select>
 
-	<insert id="insAttendanceDo" parameterType="int">
+	<insert id="insAttendanceDo" parameterType="Integer">
 		INSERT INTO ATTENDANCE_LOG (ATTENDANCE_DATE, MBER_SN) VALUES(DATE_FORMAT(NOW(), '%Y%m%d'), #{mberSn})
 	</insert>
 

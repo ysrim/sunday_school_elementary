@@ -32,7 +32,7 @@ public class QuestServiceImpl implements QuestService {
 	}
 
 	public boolean questDo(QuestPendingVO questVO) {
-		int cnt = questMapper.questDo(questVO);
+		Integer cnt = questMapper.questDo(questVO);
 		log.info("insert count: {}", cnt);
 		if (cnt < 1) { // 비즈니스 로직상 필수라면 예외 처리
 			throw new RuntimeException("퀘스트 수행 내역 저장 중 오류가 발생했습니다.");

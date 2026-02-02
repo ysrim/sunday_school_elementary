@@ -2,19 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="app.psn.com.mapper.CacheMapper">
 
-	<select id="sltPont" parameterType="int" resultType="int">
+	<select id="sltPont" parameterType="Integer" resultType="Integer">
 		SELECT POINT
 		FROM AVATAR_INFO
 		WHERE MBER_SN = #{mberSn}
 	</select>
 
-	<select id="sltLevel" parameterType="int" resultType="int">
+	<select id="sltLevel" parameterType="Integer" resultType="Integer">
 		SELECT LEVEL
 		FROM AVATAR_INFO
 		WHERE MBER_SN = #{mberSn}
 	</select>
 
-	<select id="sltExp" parameterType="int" resultType="app.psn.com.vo.AvatarLevelVO">
+	<select id="sltExp" parameterType="Integer" resultType="app.psn.com.vo.AvatarLevelVO">
 		SELECT CUR_LVL.LEVEL                                                                                   AS CURRENT_LEVEL
 			 , CUR_LVL.REQUIRED_EXP                                                                            AS CURRENT_REQUIRED_EXP
 			 , NEXT_LVL.LEVEL                                                                                  AS NEXT_LEVEL

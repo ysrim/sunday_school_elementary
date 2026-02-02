@@ -19,7 +19,7 @@ public class IntroServiceImpl implements IntroService {
 	private final IntroMapper introMapper;
 
 	@Override
-	public int stuMberCnt() {
+	public Integer stuMberCnt() {
 		return introMapper.sltStuMberCnt();
 	}
 }

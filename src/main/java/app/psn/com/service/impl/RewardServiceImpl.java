@@ -91,7 +91,7 @@ public class RewardServiceImpl implements RewardService {
 	private void handleQuestContinuity(QuestCompleteEvent event, QuestContinuityRulesVO rules) {
 
 		// 1. 연속퀘스트 수행 일수 카운트
-		int newStreak = 1;
+		Integer newStreak = 1;
 
 		// 2. 회원이 수행하고 있는 연속퀘스트 수행이력 정보 받아오기
 		QuestContinuityVO currentStreak = domainService.sltQuestContinuity(event.mberSn(), event.questSn());

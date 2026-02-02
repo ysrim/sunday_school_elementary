@@ -35,7 +35,7 @@ public class DailyVerseScheduler {
 
 		try {
 			// 1. 오늘 날짜(SCHEDULE_DATE)에 이미 할당된 성구가 있는지 확인 (관리자 수동 지정 등)
-			int count = bibleVerseMapper.sltVerseByDateCnt(today);
+			Integer count = bibleVerseMapper.sltVerseByDateCnt(today);
 
 			if (count > 0) {
 				log.warn("오늘 지정된 성구가 이미 존재합니다. (SKIP)");
@@ -43,7 +43,7 @@ public class DailyVerseScheduler {
 			}
 
 			// 2. 없다면 랜덤으로 하나 선택하여 INSERT
-			int result = bibleVerseMapper.insRandomVerseForDate(today);
+			Integer result = bibleVerseMapper.insRandomVerseForDate(today);
 			log.warn(result > 0 ? "새로운 오늘의 말씀이 등록되었습니다." : "등록 가능한 성구 데이터가 부족합니다 (DB 확인 필요).");
 
 		} catch (Exception e) {

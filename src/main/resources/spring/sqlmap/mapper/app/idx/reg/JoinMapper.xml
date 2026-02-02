@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="app.idx.reg.mapper.JoinMapper">
 
-	<select id="idDupleChk" parameterType="string" resultType="int">
+	<select id="idDupleChk" parameterType="string" resultType="Integer">
 		SELECT COUNT(*) AS cnt
 		FROM MBER_INFO
 		WHERE MBER_ID = #{mberId}

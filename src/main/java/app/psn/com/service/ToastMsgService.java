@@ -10,8 +10,8 @@ public interface ToastMsgService {
 
 	void insToastMsg(ToastMsgEvent toastMsgEvent);
 
-	List<ToastMsgVO> sltToastMsgList(int mberSn);
+	List<ToastMsgVO> sltToastMsgList(Integer mberSn);
 
-	void removeToast(int toastSn);
+	void removeToast(Integer toastSn);
 
 }

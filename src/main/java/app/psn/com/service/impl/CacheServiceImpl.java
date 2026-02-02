@@ -28,35 +28,35 @@ public class CacheServiceImpl implements CacheService {
 
 	@Cacheable(value = CacheKeys.MberPointEnum, key = "#p0")
 	@Override
-	public int sltPont(int mberSn) {
+	public Integer sltPont(Integer mberSn) {
 		return cacheMapper.sltPont(mberSn);
 	}
 
 	@CacheEvict(value = CacheKeys.MberPointEnum, key = "#p0")
 	@Override
-	public void evictPont(int mberSn) {
+	public void evictPont(Integer mberSn) {
 	}
 
 	@Cacheable(value = CacheKeys.MberLvEnum, key = "#p0")
 	@Override
-	public int sltLevel(int mberSn) {
+	public Integer sltLevel(Integer mberSn) {
 		return cacheMapper.sltLevel(mberSn);
 	}
 
 	@CacheEvict(value = CacheKeys.MberLvEnum, key = "#p0")
 	@Override
-	public void evictLevel(int mberSn) {
+	public void evictLevel(Integer mberSn) {
 	}
 
 	@Cacheable(value = CacheKeys.MberExpEnum, key = "#p0")
 	@Override
-	public AvatarLevelVO sltExp(int mberSn) {
+	public AvatarLevelVO sltExp(Integer mberSn) {
 		return cacheMapper.sltExp(mberSn);
 	}
 
 	@CacheEvict(value = CacheKeys.MberExpEnum, key = "#p0")
 	@Override
-	public void evictExp(int mberSn) {
+	public void evictExp(Integer mberSn) {
 	}
 
 	@Cacheable(value = CacheKeys.TodayBibleVerseEnum)
@@ -92,13 +92,13 @@ public class CacheServiceImpl implements CacheService {
 	}
 
 	@Override
-	public int checkKeySize(String cacheName) {
+	public Integer checkKeySize(String cacheName) {
 		Cache springCache = cacheManager.getCache(cacheName);
 		if (springCache != null) {
 			com.github.benmanes.caffeine.cache.Cache nativeCache = (com.github.benmanes.caffeine.cache.Cache)springCache.getNativeCache();
 			try {
 				long bigValue = nativeCache.estimatedSize();
-				int intValue = Math.toIntExact(bigValue); // 여기서 예외 발생
+				Integer intValue = Math.toIntExact(bigValue); // 여기서 예외 발생
 				return intValue;
 			} catch (ArithmeticException e) {
 				throw new RuntimeException("시스템 오류" + e.getMessage());

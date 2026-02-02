@@ -8,11 +8,11 @@ import app.psn.com.vo.TodayBibleVerseVO;
 @Mapper
 public interface CacheMapper {
 
-	int sltPont(int mberSn); // 캐쉬데이터 달란트
+	Integer sltPont(Integer mberSn); // 캐쉬데이터 달란트
 
-	int sltLevel(int mberSn); // 캐쉬데이터 레벨
+	Integer sltLevel(Integer mberSn); // 캐쉬데이터 레벨
 
-	AvatarLevelVO sltExp(int mberSn); // 캐쉬데이터 경험치
+	AvatarLevelVO sltExp(Integer mberSn); // 캐쉬데이터 경험치
 
 	TodayBibleVerseVO sltTodayBibleVerse(); // 오늘의 성경말씀
 

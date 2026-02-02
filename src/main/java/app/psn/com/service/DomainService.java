@@ -9,14 +9,14 @@ import app.psn.com.vo.ToastMsgVO;
 
 public interface DomainService {
 
-	QuestVO sltQuest(int questSn);
+	QuestVO sltQuest(Integer questSn);
 
-	AvatarVO sltAvatar(int mberSn);
+	AvatarVO sltAvatar(Integer mberSn);
 
-	AvatarLevelRulesVO sltAvatarLevelRules(int level);
+	AvatarLevelRulesVO sltAvatarLevelRules(Integer level);
 
-	QuestContinuityRulesVO sltQuestContinuityRules(int questSn);
+	QuestContinuityRulesVO sltQuestContinuityRules(Integer questSn);
 
-	QuestContinuityVO sltQuestContinuity(int mberSn, int questSn);
+	QuestContinuityVO sltQuestContinuity(Integer mberSn, Integer questSn);
 
 }

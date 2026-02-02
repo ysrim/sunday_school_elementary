@@ -2,6 +2,7 @@ package app.psn.stu.vo;
 
 import com.base.utl.SessionUtil;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,8 +12,9 @@ import lombok.ToString;
 @ToString
 public class QuestPendingVO {
 
-	private int questSn; // 퀘스트_일련번호
+	@NotEmpty(message = "퀘스트 일련번호를 입력해주세요!")
+	private Integer questSn; // 퀘스트_일련번호
 
-	private int mberSn = SessionUtil.getMberInfo().getMberSn(); // 회원_일련번호
+	private Integer mberSn = SessionUtil.getMberInfo().getMberSn(); // 회원_일련번호
 
 }

@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 public class TodayBibleVerseVO {
 
-	private int verseSn;
+	private Integer verseSn;
 
 	private String bookName;
 
@@ -23,6 +23,6 @@ public class TodayBibleVerseVO {
 
 	private String opinion;
 
-	private int seq;
+	private Integer seq;
 
 }

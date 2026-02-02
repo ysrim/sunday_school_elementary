@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="app.psn.com.mapper.BibleVerseMapper">
 
-	<select id="sltVerseByDateCnt" parameterType="java.time.LocalDate" resultType="int">
+	<select id="sltVerseByDateCnt" parameterType="java.time.LocalDate" resultType="Integer">
 		SELECT COUNT(*)
 		FROM BIBLE_VERSE_DAILY_SCHEDULES
 		WHERE SCHEDULE_DATE = #{date}

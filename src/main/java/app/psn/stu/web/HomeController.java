@@ -36,8 +36,8 @@ public class HomeController {
 	@RequestMapping("/home.pg")
 	public String homePg(Model model) {
 
-		int mberSn = SessionUtil.getMberInfo().getMberSn();
-		int guildSn = SessionUtil.getMberInfo().getGuildSn();
+		Integer mberSn = SessionUtil.getMberInfo().getMberSn();
+		Integer guildSn = SessionUtil.getMberInfo().getGuildSn();
 
 		// cache
 		model.addAttribute("mberPoint", cacheService.sltPont(mberSn)); // 달란트

@@ -25,7 +25,7 @@ public class GuildController {
 	@RequestMapping("/gild.pg")
 	public String guildPg(Model model) {
 
-		int guildSn = SessionUtil.getMberInfo().getGuildSn();
+		Integer guildSn = SessionUtil.getMberInfo().getGuildSn();
 		model.addAttribute("guildMberCnt", homeService.sltGuildMberList(guildSn).size()); // 길드 숫자
 		model.addAttribute("guildMberAccessList", homeService.sltGuildMberList(guildSn)); // 길드접속자 목록
 		model.addAttribute("guildInfo", homeService.sltGuildInfo(guildSn)); // 길드정보

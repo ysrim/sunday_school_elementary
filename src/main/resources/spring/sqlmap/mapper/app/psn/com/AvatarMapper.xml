@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="app.psn.com.mapper.AvatarMapper">
 
-	<select id="sltLevelRulesExp" parameterType="int" resultType="int">
+	<select id="sltLevelRulesExp" parameterType="Integer" resultType="Integer">
 		SELECT LEVEL
 		FROM AVATAR_LEVEL_RULES
 		<![CDATA[

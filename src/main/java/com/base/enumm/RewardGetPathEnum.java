@@ -13,7 +13,7 @@ public enum RewardGetPathEnum {
 	CONTINUITY(4, "연퀘완료"),     //
 	LEVEL_UP(5, "레벨업");         //
 
-	private final int seq;
+	private final Integer seq;
 
 	private final String rewardGetName;
 

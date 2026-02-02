@@ -29,7 +29,7 @@ public class HomeServiceImpl implements HomeService {
 	private final CacheService cacheService;
 
 	@Override
-	public List<HomeGuildListVO> sltGuildMberList(int guildSn) {
+	public List<HomeGuildListVO> sltGuildMberList(Integer guildSn) {
 		List<HomeGuildListVO> list = homeMapper.sltGuildMberList(guildSn);
 		if (list != null) {
 			list.parallelStream().forEach(vo -> {
@@ -40,7 +40,7 @@ public class HomeServiceImpl implements HomeService {
 	}
 
 	@Override
-	public List<HomeGuildListVO> sltGuildMberAccessList(int guildSn) {
+	public List<HomeGuildListVO> sltGuildMberAccessList(Integer guildSn) {
 		List<HomeGuildListVO> list = homeMapper.sltGuildMberList(guildSn);
 		return Optional.ofNullable(list)
 			.orElseGet(Collections::emptyList)
@@ -50,7 +50,7 @@ public class HomeServiceImpl implements HomeService {
 	}
 
 	@Override
-	public HomeGuildInfoVO sltGuildInfo(int guildSn) {
+	public HomeGuildInfoVO sltGuildInfo(Integer guildSn) {
 		return homeMapper.sltGuildInfo(guildSn);
 	}
 

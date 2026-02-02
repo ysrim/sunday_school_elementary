@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="app.psn.com.mapper.DomainMapper">
 
-	<select id="sltQuest" parameterType="int" resultType="app.psn.com.vo.QuestVO">
+	<select id="sltQuest" parameterType="Integer" resultType="app.psn.com.vo.QuestVO">
 		SELECT QUEST_SN
 			 , TITLE
 			 , DESCRIPTION
@@ -16,7 +16,7 @@
 		  AND QUEST_SN = #{questSn}
 	</select>
 
-	<select id="sltAvatar" parameterType="int" resultType="app.psn.com.vo.AvatarVO">
+	<select id="sltAvatar" parameterType="Integer" resultType="app.psn.com.vo.AvatarVO">
 		SELECT MBER_SN
 			 , NCNM
 			 , LEVEL
@@ -27,7 +27,7 @@
 		WHERE MBER_SN = #{mberSn}
 	</select>
 
-	<select id="sltQuestContinuityRules" parameterType="int" resultType="app.psn.com.vo.QuestContinuityRulesVO">
+	<select id="sltQuestContinuityRules" parameterType="Integer" resultType="app.psn.com.vo.QuestContinuityRulesVO">
 		SELECT QUEST_SN
 			 , CONTINUITY_DAYS
 			 , BONUS_EXP
@@ -38,7 +38,7 @@
 		  AND QUEST_SN = #{questSn}
 	</select>
 
-	<select id="sltQuestContinuity" parameterType="int" resultType="app.psn.com.vo.QuestContinuityRulesVO">
+	<select id="sltQuestContinuity" parameterType="Integer" resultType="app.psn.com.vo.QuestContinuityRulesVO">
 		SELECT MBER_SN,
 			   QUEST_SN,
 			   CURRENT_STREAK,
@@ -48,7 +48,7 @@
 		  AND QUEST_SN = #{questSn}
 	</select>
 
-	<select id="sltAvatarLevelRules" parameterType="int" resultType="app.psn.com.vo.AvatarLevelRulesVO">
+	<select id="sltAvatarLevelRules" parameterType="Integer" resultType="app.psn.com.vo.AvatarLevelRulesVO">
 		SELECT LEVEL
 			 , REQUIRED_EXP
 			 , RANK_NAME

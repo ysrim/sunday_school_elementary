@@ -27,12 +27,12 @@ public class ToastMsgServiceImpl implements ToastMsgService {
 	}
 
 	@Override
-	public List<ToastMsgVO> sltToastMsgList(int mberSn) {
+	public List<ToastMsgVO> sltToastMsgList(Integer mberSn) {
 		return toastMsgMapper.sltToastMsgList(mberSn);
 	}
 
 	@Override
-	public void removeToast(int toastSn) {
+	public void removeToast(Integer toastSn) {
 		toastMsgMapper.removeToast(toastSn);
 	}
 

@@ -1,13 +1,9 @@
 package app.idx.qrc.service.impl;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.base.utl.SessionUtil;
 import com.base.utl.StringUtil;
 
 import app.idx.qrc.mapper.QrCodeMapper;

@@ -9,15 +9,15 @@ import lombok.ToString;
 @ToString
 public class HomeGuildInfoVO {
 
-	private int guildSn; // 길드_일련번호
+	private Integer guildSn; // 길드_일련번호
 
 	private String guildNm; // 길드_이름
 
-	private int guildLevel; // 길드_레벨
+	private Integer guildLevel; // 길드_레벨
 
-	private int grade; // 학년
+	private Integer grade; // 학년
 
-	private int cla; // 반
+	private Integer cla; // 반
 
 	private String guildImage; // 길드_이미지
 

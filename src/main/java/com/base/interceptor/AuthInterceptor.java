@@ -85,7 +85,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 	private void setupUserContext(HttpServletRequest request, SessionVO sessionVO) {
 
 		String mberId = sessionVO.getMberId();
-		int mberSn = sessionVO.getMberSn();
+		Integer mberSn = sessionVO.getMberSn();
 
 		// 온라인 상태 업데이트
 		cacheService.addOnlineMber(mberId);

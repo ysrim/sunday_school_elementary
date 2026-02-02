@@ -16,7 +16,7 @@ public enum NaviEnum {
 	STD_OPTS_1(51, "마이 페이지 > QR코드"),
 	EMPT(0, "");
 
-	private final int seq;
+	private final Integer seq;
 
 	private final String naviNm;
 

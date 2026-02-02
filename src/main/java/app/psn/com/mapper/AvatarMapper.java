@@ -6,8 +6,8 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface AvatarMapper {
 
-	void udtAvatarLevel(@Param("mberSn") int mberSn, @Param("targetLevel") int targetLevel);
+	void udtAvatarLevel(@Param("mberSn") Integer mberSn, @Param("targetLevel") Integer targetLevel);
 
-	int sltLevelRulesExp(int exp);
+	Integer sltLevelRulesExp(Integer exp);
 
 }

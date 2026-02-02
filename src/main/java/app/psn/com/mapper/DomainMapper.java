@@ -13,14 +13,14 @@ import app.psn.com.vo.ToastMsgVO;
 @Mapper
 public interface DomainMapper {
 
-	QuestVO sltQuest(int questSn);
+	QuestVO sltQuest(Integer questSn);
 
-	AvatarVO sltAvatar(int mberSn);
+	AvatarVO sltAvatar(Integer mberSn);
 
-	AvatarLevelRulesVO sltAvatarLevelRules(int level);
+	AvatarLevelRulesVO sltAvatarLevelRules(Integer level);
 
-	QuestContinuityRulesVO sltQuestContinuityRules(int questSn);
+	QuestContinuityRulesVO sltQuestContinuityRules(Integer questSn);
 
-	QuestContinuityVO sltQuestContinuity(@Param("mberSn") int mberSn, @Param("questSn") int questSn);
+	QuestContinuityVO sltQuestContinuity(@Param("mberSn") Integer mberSn, @Param("questSn") Integer questSn);
 
 }

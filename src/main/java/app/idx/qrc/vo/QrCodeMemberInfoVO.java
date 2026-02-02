@@ -17,9 +17,9 @@ public class QrCodeMemberInfoVO {
 
 	private String occpCode; // 직업_코드
 
-	private int exp; // 경험치
+	private Integer exp; // 경험치
 
-	private int level; // 캐릭터_래벨
+	private Integer level; // 캐릭터_래벨
 
 	private String guildNm; // 길드_이름
 

@@ -10,7 +10,7 @@ public enum RewardTypeEnum {
 	POINT(1, "달란트"),
 	EXP(2, "경험치");
 
-	private final int seq;
+	private final Integer seq;
 
 	private final String rewardName;
 

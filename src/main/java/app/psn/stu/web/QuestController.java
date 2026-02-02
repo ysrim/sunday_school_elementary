@@ -13,6 +13,7 @@ import com.base.utl.StringUtil;
 
 import app.psn.stu.service.QuestService;
 import app.psn.stu.vo.QuestPendingVO;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,7 +35,7 @@ public class QuestController {
 
 	@MenuInfo(role = MberGrdEnum.STD)
 	@RequestMapping("/qest/qest.ax")
-	public ResponseEntity qestAx(QuestPendingVO questVO) {
+	public ResponseEntity qestAx(@Valid QuestPendingVO questVO) {
 		if ("".equals(questVO.getQuestSn())) {
 			return ResUtil.resValid("퀘스트 정보가 없습니다.");
 		} else {

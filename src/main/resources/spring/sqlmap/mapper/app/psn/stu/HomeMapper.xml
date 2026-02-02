@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="app.psn.stu.mapper.HomeMapper">
 
-	<select id="sltGuildMberList" parameterType="int" resultType="app.psn.stu.vo.HomeGuildListVO">
+	<select id="sltGuildMberList" parameterType="Integer" resultType="app.psn.stu.vo.HomeGuildListVO">
 		SELECT M.MBER_SN
 			 , M.MBER_ID
 			 , M.MBER_NM
@@ -19,7 +19,7 @@
 							WHERE GUILD_SN = #{guildSn})
 	</select>
 
-	<select id="sltGuildInfo" parameterType="int" resultType="app.psn.stu.vo.HomeGuildInfoVO">
+	<select id="sltGuildInfo" parameterType="Integer" resultType="app.psn.stu.vo.HomeGuildInfoVO">
 		SELECT GUILD_SN
 			 , GUILD_NM
 			 , GUILD_LEVEL

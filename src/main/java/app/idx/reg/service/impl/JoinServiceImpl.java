@@ -1,6 +1,5 @@
 package app.idx.reg.service.impl;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,10 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class JoinServiceImpl implements JoinService {
 
-	// Properties는 생성자 주입이 번거로울 수 있어 필드 주입을 유지하거나,
-	// @ConfigurationProperties 사용을 권장하지만 여기선 간단히 유지합니다.
-	@Value("#{globalsProps['Service.year']}")
-	private String srvYear;
+	// @Value("#{globalsProps['Service.year']}")
+	// private String srvYear;
 
 	private final JoinMapper joinMapper;
 

@@ -33,14 +33,14 @@ public class AvatarServiceImpl implements AvatarService {
 
 	@Override
 	@Transactional
-	public void udtAvatarLevel(int mberSn) {
+	public void udtAvatarLevel(Integer mberSn) {
 
 		// 1. 아바타 정보 조회 (현재 레벨, 누적 경험치)
 		AvatarVO avatar = domainService.sltAvatar(mberSn);
-		int currentLevel = avatar.level();
+		Integer currentLevel = avatar.level();
 
 		// 2. 현재 경험치 기준 도달해야 할 '목표 레벨' 산출
-		int targetLevel = avatarMapper.sltLevelRulesExp(avatar.exp());
+		Integer targetLevel = avatarMapper.sltLevelRulesExp(avatar.exp());
 
 		// 3. 레벨 변동이 없으면 즉시 종료
 		if (targetLevel <= currentLevel) {
