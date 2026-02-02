@@ -2,14 +2,13 @@ package app.psn.stu.service;
 
 import java.util.List;
 
-import app.psn.stu.vo.HomeGuildListVO;
 import app.psn.stu.vo.QuestListVO;
-import app.psn.stu.vo.QuestVO;
+import app.psn.stu.vo.QuestPendingVO;
 
 public interface QuestService {
 
 	List<QuestListVO> sltQuestList(); // 길드원 목록
 
-	boolean questDo(QuestVO questVO);
+	boolean questDo(QuestPendingVO questVO);
 
 }

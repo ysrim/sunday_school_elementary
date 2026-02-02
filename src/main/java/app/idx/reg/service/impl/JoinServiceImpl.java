@@ -12,8 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service("joinService")
-@RequiredArgsConstructor // 1. final 필드에 대한 생성자를 자동 생성 (생성자 주입)
-@Transactional(readOnly = true) // 2. 기본적으로 읽기 전용으로 설정 (성능 최적화)
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class JoinServiceImpl implements JoinService {
 
 	// Properties는 생성자 주입이 번거로울 수 있어 필드 주입을 유지하거나,

@@ -3,7 +3,7 @@
 <mapper namespace="app.psn.stu.mapper.QuestMapper">
 
 	<select id="sltQuestList" parameterType="string" resultType="app.psn.stu.vo.QuestListVO">
-		select A.QUEST_SN
+		SELECT A.QUEST_SN
 			 , A.TITLE
 			 , A.DESCRIPTION
 			 , A.REWARD_EXP
@@ -12,15 +12,16 @@
 			 , A.EMOJI
 			 , B.STATUS
 			 , FN_GET_CODE_NM('REQ_STATUS', B.STATUS) as STATUS_NM
-		from QUESTS A
+		FROM QUESTS A
 				 LEFT OUTER JOIN QUEST_LOGS B ON
 								A.QUEST_SN = B.QUEST_SN
 								AND B.REQ_DATE = DATE_FORMAT(NOW(), '%Y%m%d')
 								AND B.MBER_SN = #{mberSn}
-		where A.USE_AT = 'Y'
+		WHERE A.USE_AT = 'Y'
+			AND A.QUEST_SN != 2
 	</select>
 
-	<insert id="questDo" parameterType="app.psn.stu.vo.QuestVO">
+	<insert id="questDo" parameterType="app.psn.stu.vo.QuestPendingVO">
 		INSERT INTO QUEST_LOGS (REQ_DATE, MBER_SN, QUEST_SN) VALUES(DATE_FORMAT(NOW(), '%Y%m%d'), #{mberSn}, #{questSn});
 	</insert>
 

@@ -871,24 +871,6 @@ h3 {
     }
 }
 
-.slot-circle.checked {
-    background: #4A90E2 !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 12px;
-}
-
-.slot-circle.checked::after {
-    content: '✔';
-}
-
-.slot-circle.today {
-    border: 2px solid #4A90E2;
-    box-shadow: 0 0 8px rgba(74, 144, 226, 0.4);
-}
-
 /* 퀘스트 컨테이너 스타일 보정 */
 .quest-container {
     background: #ffffff;

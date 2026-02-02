@@ -35,17 +35,9 @@ public class AttendanceController {
 	@MenuInfo(navi = NaviEnum.STD_ATND, role = MberGrdEnum.STD)
 	@RequestMapping("/atnd.pg")
 	public String attendancePg(Model model) {
-
-		Map<String, Object> resultMap = attendanceService.sltAttendanceList();
-		model.addAttribute("attendanceList", resultMap.get("attendanceList"));
-		model.addAttribute("attendanceToday", resultMap.get("attendanceToday")); // 출석여부
+		model.addAttribute("attendanceList", attendanceService.sltAttendanceList());
 		model.addAttribute("isAttendance", StringUtil.isTodaySunday()); // 주일 여부
 		model.addAttribute("currMonth", LocalDate.now(ZoneId.of("Asia/Seoul")).getMonthValue());
-
-		// 경우의 수
-		// 주일여부: Y/N
-		// 출석여부: Y/N
-
 		return "/app/psn/stu/page/atnd/atnd";
 	}
 

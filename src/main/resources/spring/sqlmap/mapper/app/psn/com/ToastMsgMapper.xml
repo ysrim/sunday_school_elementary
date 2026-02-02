@@ -9,9 +9,9 @@
 		, TITLE
 		, MESSAGE)
 		VALUES ( #{mberSn}
+			   , #{toastType}
 			   , #{title}
-			   , #{message}
-			   , #{emoji})
+			   , #{message})
 	</insert>
 
 	<select id="sltToastMsgList" parameterType="int" resultType="app.psn.com.vo.ToastMsgVO">

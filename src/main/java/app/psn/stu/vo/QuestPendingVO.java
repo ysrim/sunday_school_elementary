@@ -9,7 +9,7 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class QuestVO {
+public class QuestPendingVO {
 
 	private int questSn; // 퀘스트_일련번호
 

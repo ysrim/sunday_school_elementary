@@ -12,14 +12,14 @@ import com.base.vo.QuestCompleteEvent;
 import app.psn.stu.mapper.QuestMapper;
 import app.psn.stu.service.QuestService;
 import app.psn.stu.vo.QuestListVO;
-import app.psn.stu.vo.QuestVO;
+import app.psn.stu.vo.QuestPendingVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service("questService")
-@RequiredArgsConstructor // 1. final 필드에 대한 생성자를 자동 생성 (생성자 주입)
-@Transactional(readOnly = true) // 2. 기본적으로 읽기 전용으로 설정 (성능 최적화)
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class QuestServiceImpl implements QuestService {
 
 	private final ApplicationEventPublisher publisher;
@@ -31,7 +31,7 @@ public class QuestServiceImpl implements QuestService {
 		return questMapper.sltQuestList(SessionUtil.getMberInfo().getMberSn() + "");
 	}
 
-	public boolean questDo(QuestVO questVO) {
+	public boolean questDo(QuestPendingVO questVO) {
 		int cnt = questMapper.questDo(questVO);
 		log.info("insert count: {}", cnt);
 		if (cnt < 1) { // 비즈니스 로직상 필수라면 예외 처리

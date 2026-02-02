@@ -3,29 +3,25 @@
 <mapper namespace="app.psn.stu.mapper.AttendanceMapper">
 
 	<select id="sltAttendanceList" parameterType="int" resultType="app.psn.stu.vo.AttendanceVO">
-		SELECT DATE_FORMAT(A.DATE, '%Y-%m-%d') AS date
-			 , A.WEEK AS week
-			 , CASE
-				 WHEN B.MBER_SN > 0 THEN 'checked'
-				ELSE '' END attendance
-			 , CASE
-				 WHEN DATE_FORMAT(A.DATE, '%Y-%m-%d') =  DATE_FORMAT(NOW(), '%Y-%m-%d') THEN 'today'
-				ELSE '' END today
-			 , CASE
-				 WHEN DATE_FORMAT(A.DATE, '%Y-%m-%d') =  DATE_FORMAT(NOW(), '%Y-%m-%d') AND B.MBER_SN > 0 THEN 'Y'
-				ELSE 'N' END attendanceToday
-		FROM (SELECT DT AS DATE, WEEK(DT, 0) - WEEK(DATE_FORMAT(NOW(), '%Y-%m-01'), 0) + 1 AS WEEK
-			  FROM (
-				  SELECT DATE_ADD(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL SEQ DAY) AS dt
-				  FROM (SELECT T1.I + T2.J * 10 AS seq
-				  FROM (
-				  SELECT 0 i UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
-				  UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9
-				  ) T1, (SELECT 0 j UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) T2
-				  ) NUMS
-				  WHERE DATE_ADD(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL SEQ DAY) <![CDATA[<=]]> LAST_DAY(NOW())) DATES
-			  WHERE DAYOFWEEK(DT) = 1) A
-				 LEFT OUTER JOIN ATTENDANCE_LOG B ON MBER_SN = #{mberSn} AND DATE_FORMAT(A.DATE, '%Y%m%d') = B.ATTENDANCE_DATE
+		SELECT
+		    DATE_FORMAT(A.DATE, '%Y-%m-%d') AS date
+		  , A.WEEK
+		  , IFNULL(B.STATUS, '') as STATUS
+		FROM (
+		    SELECT DT AS DATE, WEEK(DT, 0) - WEEK(DATE_FORMAT(NOW(), '%Y-%m-01'), 0) + 1 AS WEEK
+			FROM (
+				SELECT DATE_ADD(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL SEQ DAY) AS dt
+				FROM (
+					SELECT T1.I + T2.J * 10 AS seq
+					FROM (
+						SELECT 0 i UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+						UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9
+						) T1, (SELECT 0 j UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) T2
+					) NUMS
+				WHERE DATE_ADD(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL SEQ DAY) <![CDATA[<=]]> LAST_DAY(NOW())
+			) DATES
+			WHERE DAYOFWEEK(DT) = 1
+		) A LEFT OUTER JOIN QUEST_LOGS B ON B.MBER_SN = #{mberSn} AND B.QUEST_SN = 2 AND DATE_FORMAT(A.DATE, '%Y%m%d') = B.REQ_DATE
 	</select>
 
 	<insert id="insAttendanceDo" parameterType="int">

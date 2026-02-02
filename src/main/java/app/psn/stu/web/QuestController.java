@@ -4,18 +4,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.base.annotation.MenuInfo;
 import com.base.enumm.MberGrdEnum;
 import com.base.enumm.NaviEnum;
 import com.base.utl.ResUtil;
-import com.base.utl.SessionUtil;
 import com.base.utl.StringUtil;
 
-import app.psn.stu.service.OptionService;
 import app.psn.stu.service.QuestService;
-import app.psn.stu.vo.QuestVO;
+import app.psn.stu.vo.QuestPendingVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,7 +34,7 @@ public class QuestController {
 
 	@MenuInfo(role = MberGrdEnum.STD)
 	@RequestMapping("/qest/qest.ax")
-	public ResponseEntity qestAx(QuestVO questVO) {
+	public ResponseEntity qestAx(QuestPendingVO questVO) {
 		if ("".equals(questVO.getQuestSn())) {
 			return ResUtil.resValid("퀘스트 정보가 없습니다.");
 		} else {
