@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.base.utl.SessionUtil;
 import com.base.vo.QuestCompleteEvent;
 
+import app.psn.com.service.DomainService;
+import app.psn.com.vo.QuestVO;
 import app.psn.stu.mapper.QuestMapper;
 import app.psn.stu.service.QuestService;
 import app.psn.stu.vo.QuestListVO;
@@ -26,17 +28,32 @@ public class QuestServiceImpl implements QuestService {
 
 	private final QuestMapper questMapper;
 
+	private final DomainService domainService;
+
 	@Override
 	public List<QuestListVO> sltQuestList() {
 		return questMapper.sltQuestList(SessionUtil.getMberInfo().getMberSn() + "");
 	}
 
-	public void questDo(QuestPendingVO questVO) {
-		Integer cnt = questMapper.questDo(questVO);
-		log.info("insert count: {}", cnt);
+	public void questDo(QuestPendingVO questPendingVO) {
+
+		QuestVO questVO = domainService.sltQuest(questPendingVO.getQuestSn());
+		log.debug("QuestVO info: {}", questVO);
+
+		Integer cnt = questMapper.questDo(questPendingVO);
+		log.debug("insert count: {}", cnt);
 		if (cnt < 1) { // 비즈니스 로직상 필수라면 예외 처리
 			throw new RuntimeException("퀘스트 수행 내역 저장 중 오류가 발생했습니다.");
 		}
-		publisher.publishEvent(new QuestCompleteEvent(questVO.getMberSn(), questVO.getQuestSn(), 1));
+
+		if ("Y".equals(questVO.immediatePayYn())) { // 퀘스트가 즉시 보상이면 바로 보상
+			publisher.publishEvent(new QuestCompleteEvent(questPendingVO.getMberSn(), questPendingVO.getQuestSn(), 0));
+		}
+
+	}
+
+	@Override
+	public boolean questCompleteChk(QuestPendingVO questVO) {
+		return questMapper.questCompleteChk(questVO) > 0 ? true : false;
 	}
 }

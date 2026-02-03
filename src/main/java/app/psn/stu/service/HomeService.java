@@ -13,4 +13,6 @@ public interface HomeService {
 
 	HomeGuildInfoVO sltGuildInfo(Integer guildSn); // 길드정보
 
+	boolean wordsAmenDo();
+
 }

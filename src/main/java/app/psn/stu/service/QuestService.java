@@ -11,4 +11,6 @@ public interface QuestService {
 
 	void questDo(QuestPendingVO questVO);
 
+	boolean questCompleteChk(QuestPendingVO questVO);
+
 }

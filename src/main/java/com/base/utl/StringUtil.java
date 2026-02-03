@@ -16,6 +16,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import app.psn.stu.vo.QuestPendingVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -127,6 +128,13 @@ public class StringUtil {
 			log.error("error: {}", e.getMessage());
 		}
 		return false;
+	}
+
+	public static QuestPendingVO setQuestPendingVO(Integer sn) {
+		QuestPendingVO questPendingVO = new QuestPendingVO();
+		questPendingVO.setMberSn(SessionUtil.getMberInfo().getMberSn());
+		questPendingVO.setQuestSn(sn);
+		return questPendingVO;
 	}
 
 }

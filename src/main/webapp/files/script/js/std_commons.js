@@ -44,15 +44,14 @@ function _showToast(id, title, msg, type = 'info') {
 	};
 	const icon = icons[type] || '🔔';
 	const toastHtml = `
-        <div class="toast-item ${type}" id="toast-${id}">
-            <div class="toast-icon">${icon}</div>
-            <div class="toast-content">
-                <span class="toast-title">${title}</span>
-                <span class="toast-msg">${msg}</span>
-            </div>
-            <button class="toast-close" onclick="_removeToast(${id})">&times;</button>
-        </div>
-    `;
+            <div class="toast-item ${type}" id="toast-${id}">
+                <div style="font-size:1.5rem;">${icon}</div>
+                <div class="flex-col">
+                    <span class="text-bold" style="font-size:0.95rem; color:#333;">${title}</span>
+                    <span class="text-sub">${msg}</span>
+                </div>
+                <button class="toast-close" onclick="_removeToast(${id})">&times;</button>
+            </div>`;
 	$('#toast-container').append(toastHtml);
 }
 

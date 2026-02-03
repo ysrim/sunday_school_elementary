@@ -27,4 +27,6 @@ public class HomeGuildListVO {
 
 	private boolean isAccess; // 접속중 여부
 
+	private Integer point; // 캐릭터_래벨
+
 }

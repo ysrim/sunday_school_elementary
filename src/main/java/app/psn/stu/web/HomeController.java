@@ -11,10 +11,13 @@ import com.base.enumm.MberGrdEnum;
 import com.base.enumm.NaviEnum;
 import com.base.utl.ResUtil;
 import com.base.utl.SessionUtil;
+import com.base.utl.StringUtil;
 
 import app.psn.com.service.CacheService;
 import app.psn.com.service.ToastMsgService;
 import app.psn.stu.service.HomeService;
+import app.psn.stu.service.QuestService;
+import app.psn.stu.vo.QuestPendingVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,6 +30,8 @@ public class HomeController {
 	private final CacheService cacheService;
 
 	private final HomeService homeService;
+
+	private final QuestService questService;
 
 	private final ToastMsgService toastMsgService;
 
@@ -48,6 +53,7 @@ public class HomeController {
 		model.addAttribute("guildMberAccessList", homeService.sltGuildMberAccessList(guildSn)); // 길드접속자 목록
 		model.addAttribute("guildInfo", homeService.sltGuildInfo(guildSn)); // 길드정보
 		model.addAttribute("toastMsgList", toastMsgService.sltToastMsgList(mberSn)); // 토스트 메시지
+		model.addAttribute("qestCmpleteYn", questService.questCompleteChk(StringUtil.setQuestPendingVO(4)) ? "Y" : "N"); // 맑씀읽기 퀘스트 여부
 
 		// 미구현 기능: 공지사항, 길드마크
 
@@ -58,7 +64,7 @@ public class HomeController {
 	@MenuInfo(navi = NaviEnum.STD_HOME_1, role = MberGrdEnum.STD)
 	@RequestMapping("/home/noticeCont.pg")
 	public String noticeContPg(Model model) {
-		// 공지사항 컨텐츠 to-be
+		// TODO 공지사항 컨텐츠 구현
 		return "/app/psn/stu/page/home/noticeCont";
 
 	}
@@ -71,6 +77,12 @@ public class HomeController {
 		}
 		toastMsgService.removeToast(Integer.parseInt(toastSn));
 		return ResUtil.resSucc();
+	}
+
+	@MenuInfo(role = MberGrdEnum.STD)
+	@RequestMapping("/home/wordsAmen.ax")
+	public ResponseEntity wordsAmenAx() {
+		return homeService.wordsAmenDo() ? ResUtil.resSucc() : ResUtil.resFail("이미 수행");
 	}
 
 }

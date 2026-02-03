@@ -9,8 +9,9 @@
 			 , M.SEXDSTN
 			 , A.NCNM
 			 , A.OCCP_CODE
-		     , FN_GET_CODE_NM('OCCP', A.OCCP_CODE) as OCCP_NM
+			 , FN_GET_CODE_NM('OCCP', A.OCCP_CODE) as OCCP_NM
 			 , A.LEVEL
+			 , A.POINT
 		FROM MBER_INFO M
 				 INNER JOIN AVATAR_INFO A ON
 			M.MBER_SN = A.MBER_SN
@@ -26,6 +27,7 @@
 			 , GUILD_IMAGE
 			 , GRADE
 			 , CLA
+			 , RM
 		FROM GUILD_INFO
 		WHERE USE_AT = 'Y'
 		  AND GUILD_SN = #{guildSn}

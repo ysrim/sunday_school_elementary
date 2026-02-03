@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.base.utl.SessionUtil;
+import com.base.utl.StringUtil;
 
 import app.psn.stu.mapper.AttendanceMapper;
 import app.psn.stu.service.AttendanceService;
@@ -32,10 +33,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 	@Override
 	public void attendanceDo() {
-		QuestPendingVO vo = new QuestPendingVO();
-		vo.setMberSn(SessionUtil.getMberInfo().getMberSn());
-		vo.setQuestSn(2);
-		questService.questDo(vo);
+		questService.questDo(StringUtil.setQuestPendingVO(2));
 	}
 
 }

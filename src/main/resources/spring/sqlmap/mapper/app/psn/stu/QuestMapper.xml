@@ -14,14 +14,30 @@
 			 , FN_GET_CODE_NM('REQ_STATUS', B.STATUS) as STATUS_NM
 		FROM QUESTS A
 				 LEFT OUTER JOIN QUEST_LOGS B ON A.QUEST_SN = B.QUEST_SN
-												AND B.REQ_DATE = DATE_FORMAT(NOW(), '%Y%m%d')
-												AND B.MBER_SN = #{mberSn}
+			AND B.REQ_DATE = DATE_FORMAT(NOW(), '%Y%m%d')
+			AND B.MBER_SN = #{mberSn}
 		WHERE A.USE_AT = 'Y'
-		  AND A.QUEST_SN != 2
+		  AND A.QUEST_SN NOT IN (2, 4)
 	</select>
 
 	<insert id="questDo" parameterType="app.psn.stu.vo.QuestPendingVO">
-		INSERT INTO QUEST_LOGS (REQ_DATE, MBER_SN, QUEST_SN) VALUES(DATE_FORMAT(NOW(), '%Y%m%d'), #{mberSn}, #{questSn});
+		INSERT INTO QUEST_LOGS (REQ_DATE, MBER_SN, QUEST_SN, STATUS)
+		VALUES (DATE_FORMAT(NOW(), '%Y%m%d'), #{mberSn}, #{questSn}, (SELECT IF(IMMEDIATE_PAY_YN = 'N', 'PENDING', 'APPROVED') AS REWARD_TYPE FROM QUESTS WHERE QUEST_SN = #{questSn}));
 	</insert>
+
+	<select id="questCompleteChk" parameterType="app.psn.stu.vo.QuestPendingVO" resultType="integer">
+		SELECT
+			COUNT(1) AS CNT
+		FROM
+			QUESTS A
+				LEFT OUTER JOIN QUEST_LOGS B ON
+				A.QUEST_SN = B.QUEST_SN
+					AND B.REQ_DATE = DATE_FORMAT(NOW(), '%Y%m%d')
+					AND B.MBER_SN = #{mberSn}
+		WHERE
+			A.USE_AT = 'Y'
+		  AND A.QUEST_SN = #{questSn}
+		  AND B.STATUS = 'APPROVED'
+	</select>
 
 </mapper>

@@ -1,68 +1,220 @@
 /* =========================================
-   1. 기본 설정 (Reset & Variables)
-   ========================================= */
+          1. CSS Variables (테마 설정)
+          ========================================= */
 :root {
-    --primary: #FFD700; /* 포인트 컬러 (노랑) */
-    --secondary: #4A90E2; /* 메인 테마 (파랑) */
-    --bg: #E3F2FD; /* 배경색 */
-    --text: #333; /* 글자색 */
+    /* Colors */
+    --primary: #FFD700;
+    --primary-dark: #FFC107;
+    --secondary: #4A90E2;
+    --secondary-dark: #1565C0;
+    --bg-color: #E3F2FD;
     --white: #ffffff;
-    --gray: #999;
-    --light-gray: #f0f0f0;
+
+    /* Text Colors */
+    --text-main: #333333;
+    --text-sub: #666666;
+    --text-light: #999999;
+    --text-blue: #4A90E2;
+    --text-red: #FF5252;
+    --text-gold: #FFD700;
+
+    /* Gradients */
+    --grad-header: linear-gradient(135deg, #1565C0 0%, #42A5F5 100%);
+    --grad-guild: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    --grad-attendance: linear-gradient(135deg, #FF9966 0%, #FF5E62 100%);
+    --grad-point: linear-gradient(135deg, #64B5F6 0%, #1976D2 100%);
+    --grad-gold: linear-gradient(90deg, #FFD700, #FFC107);
+
+    /* Shadows & Radius */
+    --shadow-sm: 0 4px 10px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 6px 15px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+    --radius-sm: 12px;
+    --radius-md: 20px;
+    --radius-lg: 25px;
+    --radius-full: 50px;
+
+    /* Spacing */
+    --safe-area-bottom: env(safe-area-inset-bottom);
 }
 
+/* =========================================
+   2. Reset & Base Styles
+   ========================================= */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
     font-family: 'Noto Sans KR', sans-serif;
-    background-color: var(--bg);
+    background-color: var(--bg-color);
     background-image: url('https://www.transparenttextures.com/patterns/clouds.png');
-    color: var(--text);
-    line-height: 1.6;
+    color: var(--text-main);
+    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
+    overflow-y: scroll; /* 스크롤바 튀는 현상 방지 */
 }
 
+button {
+    font-family: inherit;
+    border: none;
+    cursor: pointer;
+    outline: none;
+}
+
+input {
+    font-family: inherit;
+    outline: none;
+}
+
+/* =========================================
+   3. Layout Container
+   ========================================= */
 .app-container {
     max-width: 480px;
     margin: 0 auto;
     min-height: 100vh;
-    background: #ffffff;
+    background: var(--white);
     position: relative;
-    padding-bottom: 80px; /* 하단 네비게이션 공간 */
-    overflow-x: hidden;
+    padding-bottom: calc(80px + var(--safe-area-bottom));
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: column;
 }
 
-/* 페이지 전환 애니메이션 */
 .page {
     display: none;
-    padding-bottom: 20px;
-    animation: fadeIn 0.3s ease;
     width: 100%;
+    animation: fadeIn 0.3s ease-out;
+    padding-bottom: 20px;
 }
 
 .page.active {
     display: block;
 }
 
-/* 공통 카드 스타일 */
-.card {
-    margin: 15px 20px;
-    width: calc(100% - 40px);
-    background: var(--white);
-    border-radius: 25px;
-    padding: 20px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
-    border: none;
-    transition: transform 0.2s;
+/* =========================================
+   4. Utility Classes
+   ========================================= */
+/* Flexbox */
+.flex-row {
+    display: flex;
+    align-items: center;
 }
 
-/* 섹션 타이틀 */
+.flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+/* Gaps */
+.gap-5 {
+    gap: 5px;
+}
+
+.gap-10 {
+    gap: 10px;
+}
+
+.gap-15 {
+    gap: 15px;
+}
+
+/* Margins */
+.mt-10 {
+    margin-top: 10px;
+}
+
+.mt-15 {
+    margin-top: 15px;
+}
+
+.mt-20 {
+    margin-top: 20px;
+}
+
+.mt-30 {
+    margin-top: 30px;
+}
+
+.mb-5 {
+    margin-bottom: 5px;
+}
+
+.mb-10 {
+    margin-bottom: 10px;
+}
+
+.mb-15 {
+    margin-bottom: 15px;
+}
+
+.mb-20 {
+    margin-bottom: 20px;
+}
+
+.mb-25 {
+    margin-bottom: 25px;
+}
+
+/* Typography */
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-bold {
+    font-weight: 700;
+}
+
+.text-sub {
+    font-size: 0.85rem;
+    color: var(--text-sub);
+}
+
+.text-light {
+    font-size: 0.75rem;
+    color: var(--text-light);
+}
+
+.text-blue {
+    color: var(--text-blue);
+}
+
+.text-red {
+    color: var(--text-red);
+}
+
+.text-gold {
+    color: var(--text-gold);
+}
+
+.text-white {
+    color: var(--white);
+}
+
 .section-title {
     margin: 25px 20px 10px 25px;
     font-size: 1rem;
@@ -73,17 +225,33 @@ body {
     gap: 5px;
 }
 
-/* 공통 버튼 */
+/* =========================================
+   5. Common Components
+   ========================================= */
+/* Cards */
+.card {
+    margin: 15px 20px;
+    width: calc(100% - 40px);
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.2s;
+}
+
+/* Buttons */
 .btn {
     width: 100%;
     padding: 15px;
-    border-radius: 50px;
-    border: none;
+    border-radius: var(--radius-full);
     font-weight: bold;
     font-size: 1rem;
-    cursor: pointer;
     transition: 0.2s;
     margin-top: 10px;
+}
+
+.btn:active {
+    transform: scale(0.98);
 }
 
 .btn-main {
@@ -97,24 +265,27 @@ body {
     color: white;
 }
 
+.btn-outline {
+    background: #fff;
+    border: 1px solid #ddd;
+    color: #666;
+}
+
 .icon-btn {
     width: 36px;
     height: 36px;
-    border: none;
     border-radius: 12px;
     background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(8px);
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     transition: all 0.2s;
 }
 
 .icon-btn:active {
     transform: scale(0.9);
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.4);
 }
 
 .icon-btn img {
@@ -123,137 +294,204 @@ body {
     filter: brightness(0) invert(1);
 }
 
+/* Inputs */
 input[type="text"], input[type="password"] {
     width: 100%;
     padding: 12px;
-    margin-bottom: 10px;
     border: 1px solid #ddd;
     border-radius: 10px;
     font-size: 0.9rem;
+    transition: border-color 0.2s;
+}
+
+input:focus {
+    border-color: var(--secondary);
 }
 
 /* =========================================
-   2. 헤더 (Header)
+   6. Header & Navigation
    ========================================= */
+/* Main Header */
 header {
-    padding: 20px 20px 40px 20px;
-    background: linear-gradient(135deg, #4A90E2 0%, #2196F3 100%);
-    border-radius: 0 0 35px 35px;
+    padding: 20px 20px 35px 20px;
+    background: var(--grad-header);
+    border-radius: 0 0 30px 30px;
     position: relative;
-    box-shadow: 0 10px 20px rgba(74, 144, 226, 0.2);
+    box-shadow: var(--shadow-lg);
+    z-index: 100;
 }
 
-header .header-top {
+header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
+    opacity: 0.15;
+    pointer-events: none;
+    border-radius: 0 0 30px 30px;
+}
+
+.header-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
+    position: relative;
+    z-index: 2;
 }
 
-header h1 {
+.header-branding h1 {
     font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.95);
-    font-weight: 700;
+    color: #fff;
+    font-weight: 800;
+    margin: 0;
+    line-height: 1.2;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.header-actions {
+.app-subtitle {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 500;
+}
+
+.header-center-badge {
     position: absolute;
-    right: 20px;
-    top: 15px;
-    display: flex;
-    gap: 10px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    backdrop-filter: blur(5px);
 }
 
-/* 서브 페이지 헤더 (좌우 간격 넓힘) */
+/* Sub Header */
 .sub-header {
-    padding: 15px 10px; /* 좌우 여백 축소 (20px -> 10px) */
-    background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+    padding: 15px;
+    background: var(--grad-header);
     display: flex;
     align-items: center;
-    justify-content: space-between; /* 양쪽 끝으로 밀어내기 */
+    justify-content: space-between;
     position: sticky;
     top: 0;
-    z-index: 100;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 99;
+    box-shadow: var(--shadow-md);
     color: white;
-    width: 100%;
-}
-
-.sub-header-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
 }
 
 .sub-header h2 {
     font-size: 1.1rem;
     font-weight: 700;
     margin: 0;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-.sub-header-info {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.btn-back-game {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 5px;
-    display: flex;
-}
-
-.btn-back-game img {
-    width: 24px;
-    height: 24px;
-    filter: brightness(0) invert(1);
 }
 
 .sub-info-badge {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
 }
 
 .sub-info-badge.money {
-    color: #FFD700;
+    color: #FFD54F;
     font-weight: 800;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 4px 10px;
+    border-radius: 12px;
+}
+
+/* Bottom Nav */
+.nav-bar {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    background: #ffffff;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 8px 0 calc(var(--safe-area-bottom) + 8px);
+    border-top: 1px solid #eee;
+    z-index: 1000;
+}
+
+.nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: #111;
+    font-size: 0.7rem;
+    background: none;
+}
+
+.nav-item img {
+    width: 26px;
+    height: 26px;
+    opacity: 0.8;
+    transition: transform 0.2s;
+}
+
+.nav-item.active {
+    color: var(--secondary);
+    font-weight: bold;
+}
+
+.nav-item.active img {
+    opacity: 1;
+    transform: scale(1.05);
+    filter: invert(47%) sepia(88%) saturate(1458%) hue-rotate(193deg) brightness(96%) contrast(92%);
 }
 
 /* =========================================
-   3. 메인 페이지 (Main Home)
+   7. Specific Modules
    ========================================= */
+/* Profile Section */
 .profile-card {
-    position: relative;
-    z-index: 10;
-    margin: -40px 20px 20px 20px;
+    margin: -20px 20px 20px;
     padding: 20px;
-    background: #ffffff;
-    border-radius: 25px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    position: relative;
+    z-index: 101;
+    background: #fff;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
 }
 
-.profile-avatar-wrap {
+.profile-avatar-frame {
     width: 75px;
     height: 75px;
     border-radius: 22px;
     border: 4px solid #FFF9E6;
     background: #fff;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-sm);
     overflow: hidden;
 }
 
-.user-rank-badge {
+.profile-avatar-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.rank-badge {
     display: inline-block;
     font-size: 0.7rem;
     padding: 3px 10px;
     border-radius: 8px;
     font-weight: bold;
-    margin-bottom: 5px;
 }
 
+/* Exp Bar */
 .exp-container {
     background: #F0F2F5;
     height: 10px;
@@ -270,20 +508,20 @@ header h1 {
     transition: width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* Bible & Notice */
 .btn-amen {
     width: 100%;
     padding: 12px;
     border: 2px solid #E3F2FD;
     background: #F1F8FF;
-    color: #4A90E2;
-    border-radius: 12px;
+    color: var(--secondary);
+    border-radius: var(--radius-sm);
     font-weight: bold;
-    cursor: pointer;
     transition: 0.2s;
 }
 
 .btn-amen:active {
-    background: #4A90E2;
+    background: var(--secondary);
     color: white;
 }
 
@@ -292,83 +530,6 @@ header h1 {
     color: #aaa;
     border-color: #eee;
     cursor: default;
-}
-
-.guild-section {
-    margin: 15px 20px;
-    width: calc(100% - 40px);
-    background: var(--white);
-    border-radius: 25px;
-    padding: 20px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
-    border: none;
-}
-
-.guild-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.guild-tag {
-    background: #FFF3E0;
-    color: #EF6C00;
-    font-size: 0.7rem;
-    padding: 2px 8px;
-    border-radius: 6px;
-    font-weight: bold;
-}
-
-.guild-member-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.member-item {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    background: #F8FAFC;
-    border-radius: 15px;
-}
-
-.member-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
-    margin-right: 12px;
-    background: #eee;
-}
-
-.member-info {
-    flex: 1;
-}
-
-.member-name {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: #444;
-}
-
-.member-status {
-    font-size: 0.7rem;
-    color: #999;
-}
-
-.master-badge {
-    font-size: 0.65rem;
-    color: #FFB800;
-    border: 1px solid #FFB800;
-    padding: 1px 5px;
-    border-radius: 4px;
-    margin-left: 5px;
-}
-
-.notice-list {
-    display: flex;
-    flex-direction: column;
 }
 
 .notice-item {
@@ -381,81 +542,165 @@ header h1 {
     border-bottom: none;
 }
 
-/* =========================================
-   4. 퀘스트 페이지 (Quest) - 타일형 디자인
-   ========================================= */
+.notice-tag {
+    font-size: 0.65rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+/* Guild Card (Home) */
+.home-guild-card {
+    cursor: pointer;
+    overflow: hidden;
+    padding: 0 !important;
+    border: none;
+}
+
+.home-guild-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: var(--grad-guild);
+    padding: 15px 20px;
+    border-radius: 20px 20px 0 0;
+    color: white;
+    box-shadow: 0 5px 15px rgba(30, 60, 114, 0.3);
+}
+
+.home-guild-emblem {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    background: #fff;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.home-guild-emblem img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.guild-progress-bg {
+    flex: 1;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    max-width: 90px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.guild-progress-fill {
+    width: 60%;
+    height: 100%;
+    background: #4FD1C5;
+    border-radius: 3px;
+    box-shadow: 0 0 5px rgba(79, 209, 197, 0.6);
+}
+
+/* Member List */
+.member-list-card {
+    padding: 15px;
+}
+
+.member-row {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background: #F8FAFC;
+    border-radius: 15px;
+    margin-bottom: 10px;
+    border: 1px solid #f0f0f0;
+}
+
+.member-row.my-row {
+    background: #F1F8FF;
+    border-color: #D6E4FF;
+}
+
+.member-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    margin-right: 12px;
+    background: #eee;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 4px;
+}
+
+.status-dot.online {
+    background: #4CAF50;
+    box-shadow: 0 0 4px #4CAF50;
+}
+
+.status-dot.offline {
+    background: #ccc;
+}
+
+.master-badge {
+    font-size: 0.65rem;
+    color: #FFB800;
+    border: 1px solid #FFB800;
+    padding: 1px 5px;
+    border-radius: 4px;
+    margin-left: 5px;
+}
+
+/* Quest Items */
 .quest-card {
     background: transparent !important;
     box-shadow: none !important;
     border: none !important;
     padding: 0 20px !important;
     margin: 10px 0 !important;
-    position: relative;
 }
 
 .q-item {
-    background: #ffffff;
+    background: #fff;
     border-radius: 20px;
     padding: 20px;
     margin-bottom: 15px;
     display: flex;
     align-items: center;
     gap: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    box-shadow: var(--shadow-sm);
     border: 1px solid #f0f0f0;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s;
 }
 
 .q-item:active {
     transform: scale(0.98);
 }
 
-.q-item:last-child {
-    border-bottom: 1px solid #f0f0f0;
-    margin-bottom: 15px;
-}
-
 .q-icon-box {
-    width: 45px;
-    height: 45px;
+    width: 50px;
+    height: 50px;
     background: #F1F8FF;
     border-radius: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     flex-shrink: 0;
-    box-shadow: 0 2px 5px rgba(74, 144, 226, 0.1);
+    color: #333;
 }
 
 .q-icon-box.sunday {
     background: #FFF8E1;
-    box-shadow: 0 2px 5px rgba(255, 143, 0, 0.1);
-}
-
-.q-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 3px;
-}
-
-.q-title {
-    font-size: 1rem;
-    font-weight: 700;
-    color: #333;
-    line-height: 1.3;
-}
-
-.q-desc {
-    font-size: 0.8rem;
-    color: #999;
 }
 
 .q-reward-tag {
     display: inline-block;
-    width: fit-content;
     font-size: 0.75rem;
     padding: 3px 8px;
     background: #f5f5f5;
@@ -471,9 +716,8 @@ header h1 {
 }
 
 .q-item.done {
+    opacity: 0.7;
     background: #f9f9f9;
-    box-shadow: none;
-    opacity: 0.8;
 }
 
 .q-item.done .q-title {
@@ -481,1027 +725,145 @@ header h1 {
     color: #bbb;
 }
 
-.q-item.done .q-desc {
-    color: #ccc;
-}
-
 .q-item.done .q-icon-box {
-    filter: grayscale(100%);
+    filter: grayscale(1);
     opacity: 0.5;
 }
 
+/* Quest Button States */
 .btn-quest-action {
-    padding: 10px 14px;
+    width: 75px;
+    padding: 10px 0;
     border-radius: 12px;
     font-size: 0.85rem;
     font-weight: 800;
     cursor: pointer;
-    transition: all 0.2s;
-    min-width: 75px;
     text-align: center;
     border: none;
-    outline: none;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    flex-shrink: 0;
 }
 
 .state-ready {
     background: #fff;
-    border: 1px solid #4A90E2;
-    color: #4A90E2;
-}
-
-.state-ready:active {
-    background: #E3F2FD;
+    border: 1px solid var(--secondary);
+    color: var(--secondary);
 }
 
 .state-wait {
     background: #FF9800;
     border: 1px solid #FF9800;
     color: white;
-    box-shadow: 0 4px 10px rgba(255, 152, 0, 0.3);
-    animation: pulse-orange 2s infinite;
+    animation: pulse 2s infinite;
 }
 
 .state-done {
     background: #e0e0e0;
     border: 1px solid #e0e0e0;
     color: #999;
-    box-shadow: none;
     cursor: default;
 }
 
-#sunday-lock-overlay {
-    border-radius: 20px !important;
-    margin: 0 20px;
-    width: auto !important;
-    left: 0;
-    right: 0;
-}
-
-.quest-guide-box {
-    margin: 20px 20px 15px 20px;
-    background: #ffffff;
-    border-radius: 15px;
-    padding: 15px;
-    text-align: center;
-    border: 1px dashed #ced4da;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-}
-
-.guide-title {
-    font-size: 0.85rem;
-    font-weight: bold;
-    color: #555;
-    margin-bottom: 12px;
-    display: inline-block;
-    background: #f8f9fa;
-    padding: 4px 12px;
-    border-radius: 12px;
-}
-
-.guide-steps {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
-}
-
-.step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-}
-
-.step-icon {
-    font-size: 1.2rem;
-    width: 36px;
-    height: 36px;
-    background: #F1F8FF;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.step span {
-    font-size: 0.75rem;
-    font-weight: bold;
-    color: #444;
-}
-
-.step-arrow {
-    color: #ccc;
-    font-size: 0.8rem;
-    margin-top: -15px;
-}
-
-.guide-sub-text {
-    font-size: 0.75rem;
-    color: #999;
-    margin-top: 10px;
-    letter-spacing: -0.5px;
-}
-
-/* =========================================
-   5. 길드 페이지 (Guild Detail)
-   ========================================= */
+/* Guild Detail Banner */
 .guild-banner-card {
     margin: 20px;
     padding: 25px;
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-    border-radius: 25px;
+    background: var(--grad-guild);
+    border-radius: var(--radius-lg);
     color: white;
     text-align: center;
-    position: relative;
-    box-shadow: 0 10px 20px rgba(30, 60, 114, 0.3);
+    box-shadow: var(--shadow-lg);
     overflow: hidden;
-}
-
-.guild-banner-card::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url("https://www.transparenttextures.com/patterns/cubes.png");
-    opacity: 0.1;
-    pointer-events: none;
 }
 
 .guild-badge-wrapper {
-    width: 60px;
-    height: 60px;
-    margin: 0 auto 10px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.guild-badge-icon {
-    font-size: 2rem;
-}
-
-.guild-main-name {
-    font-size: 1.4rem;
-    margin: 5px 0;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.guild-desc {
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.8);
-    margin-bottom: 20px;
-    font-style: italic;
-}
-
-.guild-stats-row {
-    display: flex;
-    justify-content: space-around;
-    background: rgba(0, 0, 0, 0.2);
-    padding: 10px;
-    border-radius: 15px;
-}
-
-.g-stat {
-    display: flex;
-    flex-direction: column;
-}
-
-.g-stat .label {
-    font-size: 0.7rem;
-    color: rgba(255, 255, 255, 0.6);
-}
-
-.g-stat .val {
-    font-size: 0.95rem;
-    font-weight: bold;
-}
-
-.guild-buff-container {
-    display: flex;
-    gap: 10px;
-    overflow-x: auto;
-    padding: 0 20px 10px 20px;
-}
-
-.buff-item {
-    min-width: 130px;
-    background: white;
-    padding: 12px;
-    border-radius: 15px;
-    border: 1px solid #eee;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-}
-
-.buff-item.locked {
-    background: #f5f5f5;
-    opacity: 0.7;
-}
-
-.buff-icon {
-    font-size: 1.5rem;
-}
-
-.buff-info {
-    display: flex;
-    flex-direction: column;
-}
-
-.buff-info strong {
-    font-size: 0.8rem;
-}
-
-.buff-info span {
-    font-size: 0.7rem;
-    color: #4A90E2;
-    font-weight: bold;
-}
-
-.guild-mission-card {
-    padding: 20px;
-}
-
-.mission-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
-
-.mission-tag {
-    background: #FFF3E0;
-    color: #EF6C00;
-    font-size: 0.7rem;
-    padding: 3px 8px;
-    border-radius: 6px;
-    font-weight: bold;
-}
-
-.mission-percent {
-    color: #4A90E2;
-    font-weight: 800;
-}
-
-.progress-container {
-    width: 100%;
-    height: 10px;
-    background: #eee;
-    border-radius: 10px;
-    margin: 10px 0;
-    overflow: hidden;
-}
-
-.progress-bar {
-    height: 100%;
-    background: linear-gradient(90deg, #4A90E2, #64B5F6);
-    border-radius: 10px;
-}
-
-.mission-reward {
-    font-size: 0.8rem;
-    color: #666;
-    margin-bottom: 15px;
-}
-
-.chat-list {
-    max-height: 150px;
-    overflow-y: auto;
-    background: #F8F9FA;
-    border-radius: 10px;
-    padding: 10px;
-    margin-bottom: 10px;
-}
-
-.chat-msg {
-    margin-bottom: 8px;
-    font-size: 0.85rem;
-}
-
-.chat-user {
-    font-weight: bold;
-    color: #333;
-    margin-right: 5px;
-}
-
-.chat-input-area {
-    display: flex;
-    gap: 5px;
-}
-
-.chat-input-area input {
-    flex: 1;
-    padding: 8px 12px;
-    margin: 0;
-}
-
-.chat-input-area button {
-    background: #4A90E2;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    padding: 0 15px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.member-li {
-    display: flex;
-    align-items: center;
-    padding: 12px 10px;
-    border-bottom: 1px solid #f5f5f5;
-}
-
-.m-avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 12px;
-    margin-right: 12px;
-    background: #eee;
-}
-
-.m-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.m-contribution {
-    font-size: 0.75rem;
-    color: #4A90E2;
-    font-weight: bold;
-    background: #E3F2FD;
-    padding: 3px 8px;
-    border-radius: 15px;
-}
-
-.btn-more-member {
-    width: 100%;
-    padding: 10px;
-    background: none;
-    border: none;
-    color: #999;
-    cursor: pointer;
-    margin-top: 5px;
-}
-
-/* =========================================
-   6. 마이페이지 (My Page & Settings)
-   ========================================= */
-/* --- 마이페이지 프로필 배너 (깔끔한 화이트 + 은은한 입체감) --- */
-.mypage-banner-card {
-    margin: 20px;
-    padding: 0;
-    /* 아주 은은한 그라데이션으로 살짝 볼록한 느낌 주기 */
-    background: linear-gradient(to bottom, #ffffff 40%, #f8f9fa 100%);
-    border-radius: 25px;
-    text-align: center;
-    position: relative;
-    /* 이중 그림자로 더 깊이 있는 입체감 표현 */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05), /* 가까운 그림자 (선명) */ 0 15px 35px rgba(50, 50, 93, 0.1); /* 먼 그림자 (부드러움) */
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid #ffffff; /* 테두리를 배경색과 맞춰 빛반사 느낌 */
-}
-
-/* 상단 장식용 컬러 바 (동일) */
-.mypage-banner-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 6px;
-    background: linear-gradient(90deg, #4A90E2, #56CCF2);
-    z-index: 5;
-}
-
-/* 프로필 정보 영역 */
-.mp-banner-top {
-    padding: 35px 20px 25px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.mp-banner-avatar {
     position: relative;
     width: 80px;
     height: 80px;
-    margin-bottom: 12px;
-    /* 아바타가 카드 위로 붕 뜬 느낌 */
-    filter: drop-shadow(0 8px 15px rgba(0, 0, 0, 0.15));
+    margin: 0 auto 20px;
 }
 
-.mp-banner-avatar img {
+/* [수정] 길드 배지 아이콘 스타일 개선 */
+.guild-badge-icon {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    border-radius: 25px;
-    border: 3px solid #ffffff; /* 흰색 테두리로 입체감 강조 */
-    background: #fff;
+    border-radius: 22px;
+    /* 배경을 약간 밝게 처리하여 투명 이미지나 작은 이미지도 어색하지 않게 함 */
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.mp-banner-lvl {
+/* [수정] 이미지 사이즈 대응 (큰/작은 이미지 모두 최적화) */
+.guild-badge-icon img {
+    width: 100%;
+    height: 100%;
+    /* contain: 비율 유지하며 전체 다 보여줌 (잘림 없음) */
+    /* cover: 비율 유지하며 꽉 채움 (가장자리 잘림) - 원하시면 이 값을 사용 */
+    object-fit: contain;
+}
+
+.guild-lvl-badge {
     position: absolute;
-    bottom: -6px;
-    right: -6px;
-    background: #333;
-    color: #FFD700;
-    font-size: 0.65rem;
-    font-weight: 800;
-    padding: 3px 8px;
-    border-radius: 12px;
-    border: 2px solid #fff;
-    /* 뱃지도 입체적으로 튀어나오게 */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.mp-banner-info h2 {
-    font-size: 1.4rem;
-    margin: 5px 0;
-    color: #222;
-    font-weight: 800;
-    /* 텍스트에 아주 미세한 하이라이트 */
-    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
-}
-
-.mp-class-badge {
-    display: inline-block;
-    background: #E3F2FD;
-    color: #1565C0;
-    font-size: 0.7rem;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--grad-gold);
+    color: #4e342e;
+    font-size: 0.75rem;
+    font-weight: 900;
     padding: 4px 12px;
     border-radius: 20px;
-    font-weight: 700;
-    margin-bottom: 5px;
-    box-shadow: 0 2px 5px rgba(74, 144, 226, 0.15); /* 뱃지 입체감 */
+    border: 2px solid #fff;
+    white-space: nowrap;
 }
 
-.mp-desc {
-    font-size: 0.85rem;
-    color: #888;
-    font-weight: 500;
-}
-
-/* 하단 통계 영역 (살짝 안으로 들어간 느낌 - Inset) */
-.mp-stats-row {
-    display: flex;
-    justify-content: space-around;
-    background: #FAFAFA;
-    padding: 20px 0;
-    /* 안쪽 그림자로 눌린 느낌 구현 */
-    box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.03);
-    border-top: 1px solid #f0f0f0;
-    margin-top: 10px;
-    position: relative;
-}
-
-.mp-stat {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex: 1;
-    position: relative;
-}
-
-/* 구분선에 하이라이트 추가 */
-.mp-stat:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 25%;
-    height: 50%;
-    width: 1px;
-    background: #e0e0e0;
-    border-right: 1px solid #fff; /* 옆에 흰선을 붙여 입체감 */
-}
-
-.mp-stat .label {
-    font-size: 0.7rem;
-    color: #999;
-    margin-bottom: 4px;
-    font-weight: 500;
-}
-
-.mp-stat .val {
-    font-size: 1rem;
-    font-weight: 800;
-    color: #333;
-}
-
-.mp-profile-top {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.mp-avatar {
-    position: relative;
-    width: 90px;
-    height: 90px;
-    margin-bottom: 10px;
-}
-
-.mp-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 25px;
-    border: 3px solid #f8f9fa;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.mp-level-badge {
-    position: absolute;
-    bottom: -5px;
-    right: -5px;
-    background: #333;
-    color: #FFD700;
-    font-size: 0.7rem;
-    padding: 3px 8px;
-    border-radius: 10px;
-    font-weight: bold;
-    border: 2px solid white;
-}
-
-.mp-class-tag {
-    display: inline-block;
-    background: #E3F2FD;
-    color: #4A90E2;
-    font-size: 0.75rem;
-    padding: 4px 10px;
-    border-radius: 15px;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-#mypage-name {
-    font-size: 1.4rem;
-    color: #333;
-    margin: 5px 0;
-}
-
-.mp-desc {
-    color: #999;
-    font-size: 0.85rem;
-}
-
-.mp-stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    background: #F8F9FA;
-    padding: 15px;
-    border-radius: 15px;
-}
-
-.mp-stat-item {
+.guild-stat-box {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.mp-stat-item .label {
-    font-size: 0.7rem;
-    color: #aaa;
-    margin-bottom: 3px;
-}
-
-.mp-stat-item .value {
-    font-size: 0.95rem;
-    font-weight: bold;
-    color: #555;
-}
-
-.quick-action-row {
-    display: flex;
-    gap: 15px;
-    margin: 0 20px;
-}
-
-.btn-quick-action {
-    flex: 1;
-    background: white;
-    border: none;
-    padding: 15px;
-    border-radius: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-    transition: transform 0.2s;
-}
-
-.btn-quick-action:active {
-    transform: scale(0.95);
-}
-
-.btn-quick-action .icon-box {
-    font-size: 1.5rem;
-    background: #F1F8FF;
-    width: 45px;
-    height: 45px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 15px;
-}
-
-.btn-quick-action span {
-    font-size: 0.85rem;
-    font-weight: bold;
-    color: #555;
-}
-
-.settings-group-title {
-    margin: 25px 25px 10px 25px;
-    font-size: 0.85rem;
-    font-weight: bold;
-    color: #999;
-}
-
-.menu-list-group {
-    background: white;
-    padding: 5px 20px !important;
-    border-radius: 20px !important;
-    border: none !important;
-    margin: 0 20px !important;
-    width: auto !important;
-}
-
-.menu-list-group .menu-item {
-    padding: 16px 5px;
-    border-bottom: 1px solid #f5f5f5;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-}
-
-.menu-list-group .menu-item:last-child {
-    border-bottom: none;
-}
-
-.menu-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.menu-icon {
-    font-size: 1.1rem;
-}
-
-.menu-item span {
-    font-size: 0.95rem;
-    color: #444;
-    font-weight: 500;
-}
-
-.menu-item .arrow {
-    color: #ccc;
-    font-size: 1.2rem;
-}
-
-.app-version-text {
-    text-align: center;
-    font-size: 0.75rem;
-    color: #ccc;
-    margin-top: 30px;
-    font-family: monospace;
-}
-
-.menu-list {
-    margin: 15px 20px;
-    background: white;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-}
-
-/* =========================================
-   7. 출석부 (Attendance)
-   ========================================= */
-.attendance-streak-banner {
-    margin: 20px 20px 0 20px;
-    background: linear-gradient(135deg, #FF9966 0%, #FF5E62 100%);
-    border-radius: 15px;
-    padding: 18px 20px;
+/* Attendance Page */
+.attendance-card {
+    background: var(--grad-attendance);
     color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 10px 20px rgba(255, 94, 98, 0.4);
-    position: relative;
-    overflow: hidden;
-    animation: slideDown 0.5s ease;
+    margin-top: 20px;
 }
 
-.attendance-streak-banner::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 100%);
-    transform: rotate(30deg);
-    animation: shine-banner 3s infinite;
-}
-
-.streak-content {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1rem;
-    z-index: 1;
-}
-
-.streak-content b {
-    font-size: 1.2rem;
-    color: #FFF;
-    font-weight: 900;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.fire-icon {
-    font-size: 1.5rem;
-    animation: pulse-fire 1.5s infinite;
-}
-
-.streak-bonus {
-    font-size: 0.8rem;
-    background: rgba(255, 255, 255, 0.25);
-    color: white;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-weight: bold;
-    backdrop-filter: blur(5px);
-    z-index: 1;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-}
-
-.stamp-main-card {
-    text-align: center;
-    padding: 30px 20px;
-    position: relative;
-    background: #ffffff;
-    border-radius: 20px;
-    border: 1px solid #f0f0f0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    min-height: 250px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 20px;
-}
-
-.stamp-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 10px;
-    width: 100%;
-}
-
-#attendance-date-title {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: #333;
-    margin: 0;
-}
-
-.today-badge {
-    background: #4A90E2;
-    color: white;
-    font-size: 0.7rem;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-weight: 500;
-}
-
-.today-reward-text {
-    font-size: 0.9rem;
-    color: #666;
-    background: #F8F9FA;
-    padding: 6px 12px;
-    border-radius: 8px;
-    margin-bottom: 25px;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.today-reward-text::before {
-    content: '🎁';
-    font-size: 1rem;
-}
-
-.today-reward-text b {
-    color: #4A90E2 !important;
-}
-
-.stamp-btn-area {
-    width: 140px;
-    height: 140px;
-    margin: 0 auto;
+.stamp-btn {
+    width: 160px;
+    height: 160px;
+    margin: 20px auto;
     background: #fff;
-    border: 1px solid #e0e0e0;
     border-radius: 50%;
+    box-shadow: var(--shadow-sm);
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
+    position: relative;
+    border: 4px solid transparent;
+    background-image: linear-gradient(#fff, #fff), linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
     cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
-.stamp-btn-area:active {
-    transform: scale(0.98);
-    background: #f5f5f5;
+.stamp-btn.checked {
+    border-color: var(--secondary);
 }
 
-.stamp-btn-area.checked {
-    border: 2px solid #4A90E2;
-    background: #F0F7FF;
-    box-shadow: none;
-}
-
-.stamp-btn-area.disabled {
-    background: #f9f9f9;
-    border-color: #eee;
-    cursor: default;
-    opacity: 0.6;
-}
-
-.stamp-icon-before {
-    width: 40px;
-    height: 40px;
-    margin-bottom: 5px;
-    opacity: 0.5;
-    filter: grayscale(100%);
-}
-
-.stamped-mark img {
-    width: 100px;
-    height: auto;
-    animation: stampIn 0.2s ease-out;
-}
-
-.sunday-list-container {
-    padding: 0 20px 30px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.sunday-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: white;
-    padding: 15px;
-    border-radius: 12px;
-    border: 1px solid #f0f0f0;
-    transition: background 0.2s;
-}
-
-.sunday-left {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.s-date-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 40px;
-    text-align: center;
-}
-
-.s-month {
-    font-size: 0.65rem;
-    color: #999;
-    margin-bottom: 2px;
-}
-
-.s-day {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #444;
-    line-height: 1;
-}
-
-.sunday-item.this-week {
-    border: 1px solid #4A90E2;
-    background: #fff;
-}
-
-.sunday-item.this-week .s-day {
-    color: #4A90E2;
-}
-
-.status-icon {
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: #888;
-}
-
-#today-status-text {
-    color: #4A90E2 !important;
-    font-weight: bold;
-}
-
-/* =========================================
-   8. 포인트 내역 (Point History)
-   ========================================= */
+/* Point History */
 .point-summary-card {
     margin: 20px;
     padding: 25px;
-    background: linear-gradient(135deg, #64B5F6 0%, #1976D2 100%);
-    border-radius: 25px;
+    background: var(--grad-point);
+    border-radius: var(--radius-lg);
     color: white;
-    box-shadow: 0 10px 25px rgba(25, 118, 210, 0.3);
-    position: relative;
-    overflow: hidden;
-}
-
-.point-summary-card::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -20%;
-    width: 200px;
-    height: 200px;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 50%;
-    pointer-events: none;
-}
-
-.total-point {
-    font-size: 3rem;
-    font-weight: 800;
-    margin: 15px 0 25px 0;
+    box-shadow: var(--shadow-lg);
     text-align: center;
-    letter-spacing: -1px;
-}
-
-.total-point small {
-    font-size: 1.2rem;
-    font-weight: 500;
-    opacity: 0.8;
-    margin-left: 5px;
-}
-
-.point-card-bottom {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    background: rgba(0, 0, 0, 0.08);
-    border-radius: 15px;
-    padding: 12px;
-    backdrop-filter: blur(5px);
-}
-
-.mini-stat {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-size: 0.8rem;
-}
-
-.mini-stat strong {
-    font-size: 1rem;
-    font-weight: bold;
-}
-
-.divider {
-    width: 1px;
-    height: 25px;
-    background: rgba(255, 255, 255, 0.3);
-}
-
-.history-filter-tabs {
-    display: flex;
-    gap: 10px;
-    margin: 20px 20px 10px 20px;
 }
 
 .filter-tab {
@@ -1517,87 +879,62 @@ header h1 {
 }
 
 .filter-tab.active {
-    background: #4A90E2;
+    background: var(--secondary);
     color: white;
     box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
 }
 
-#point-history-list .menu-item {
-    cursor: default;
+/* Menu List */
+.menu-list {
+    padding: 0 15px;
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    margin: 15px 20px;
 }
 
-.btn-load-more {
-    display: block;
-    width: calc(100% - 40px);
-    margin: 15px 20px 30px 20px;
-    padding: 12px;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 50px;
-    color: #666;
-    font-weight: bold;
+.menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 5px;
+    border-bottom: 1px solid #f0f0f0;
     cursor: pointer;
+}
+
+.menu-item:last-child {
+    border-bottom: none;
+}
+
+/* My Page */
+.mypage-profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 25px;
+    border: 3px solid #fff;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.mypage-stat-row {
+    display: flex;
+    justify-content: space-around;
+    background: #FAFAFA;
+    padding: 20px 0;
+    border-top: 1px solid #f0f0f0;
 }
 
 /* =========================================
-   9. 네비게이션 & 알림 (Nav & Toast)
+   8. Feedback & Modals
    ========================================= */
-.nav-bar {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 480px;
-    background: #ffffff;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 8px 0 calc(env(safe-area-inset-bottom) + 8px);
-    border-top: 1px solid #eeeeee;
-    z-index: 1000;
-}
-
-.nav-item {
-    border: none;
-    background: none;
-    color: #111;
-    font-size: 0.7rem;
-    cursor: pointer;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.nav-item img {
-    width: 26px;
-    height: 26px;
-    opacity: 0.8;
-    transition: transform 0.2s;
-}
-
-.nav-item.active {
-    color: #2196F3;
-    font-weight: bold;
-}
-
-.nav-item.active img {
-    opacity: 1;
-    transform: scale(1.05);
-    filter: invert(47%) sepia(88%) saturate(1458%) hue-rotate(193deg) brightness(96%) contrast(92%);
-}
-
-/* 토스트 알림 */
 #toast-container {
     position: fixed;
     bottom: 90px;
     right: 20px;
     left: 20px;
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column-reverse; /* 理쒖떊 �뚮┝�� �꾨옒�� �볦씠�꾨줉 */
     gap: 12px;
     z-index: 10001;
     pointer-events: none;
@@ -1612,26 +949,35 @@ header h1 {
     display: flex;
     align-items: center;
     gap: 12px;
+    animation: toastSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     pointer-events: auto;
     border: 1px solid #eee;
-    animation: toastSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.toast-item.success {
+/* �좏삎蹂� �ㅽ��� */
+.toast-item.SUCCESS {
     border-left: 6px solid #4CAF50;
 }
 
-.toast-item.reward {
+.toast-item.REWARD {
     border-left: 6px solid #FFD700;
     background: #FFFDF0;
 }
 
-.toast-item.warning {
+.toast-item.WARNING {
     border-left: 6px solid #FF5252;
 }
 
-.toast-item.info {
+.toast-item.INFO {
     border-left: 6px solid #2196F3;
+}
+
+.toast-icon {
+    font-size: 1.6rem;
+}
+
+.toast-content {
+    flex: 1;
 }
 
 .toast-title {
@@ -1648,19 +994,44 @@ header h1 {
     line-height: 1.3;
 }
 
+/* �リ린 踰꾪듉 (X) */
 .toast-close {
     position: absolute;
     right: 12px;
     top: 50%;
     transform: translateY(-50%);
-    border: none;
     background: none;
+    border: none;
+    color: #ccc;
     font-size: 1.2rem;
     cursor: pointer;
-    color: #ccc;
+    padding: 5px;
+    line-height: 1;
+    transition: color 0.2s;
 }
 
-/* 커스텀 알림창 */
+.toast-close:hover {
+    color: #888;
+}
+
+@keyframes toastSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes toastFadeOut {
+    to {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+}
+
 #custom-alert {
     display: none;
     position: fixed;
@@ -1672,31 +1043,11 @@ header h1 {
     z-index: 9999;
     align-items: center;
     justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
     backdrop-filter: blur(3px);
 }
 
 #custom-alert.active {
     display: flex !important;
-    opacity: 1;
-}
-
-#custom-alert .card {
-    max-width: 320px;
-    text-align: center;
-    padding: 30px;
-    transform: scale(0.7);
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-#custom-alert.active .card {
-    transform: scale(1);
-}
-
-#alert-icon {
-    display: inline-block;
-    animation: alert-float 2s ease-in-out infinite;
 }
 
 /* Keyframes */
@@ -1711,48 +1062,7 @@ header h1 {
     }
 }
 
-@keyframes shine-banner {
-    0% {
-        transform: translateX(-100%) rotate(30deg);
-    }
-    20%, 100% {
-        transform: translateX(100%) rotate(30deg);
-    }
-}
-
-@keyframes pulse-fire {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.2) rotate(5deg);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
-
-@keyframes stampIn {
-    from {
-        transform: scale(1.5);
-        opacity: 0;
-    }
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-@keyframes alert-float {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-10px);
-    }
-}
-
-@keyframes toastSlideIn {
+@keyframes slideUp {
     from {
         opacity: 0;
         transform: translateY(20px) scale(0.9);
@@ -1763,7 +1073,7 @@ header h1 {
     }
 }
 
-@keyframes pulse-orange {
+@keyframes pulse {
     0% {
         transform: scale(1);
     }

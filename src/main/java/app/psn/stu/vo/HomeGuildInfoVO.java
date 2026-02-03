@@ -21,4 +21,6 @@ public class HomeGuildInfoVO {
 
 	private String guildImage; // 길드_이미지
 
+	private String rm; // 길드 비고
+
 }

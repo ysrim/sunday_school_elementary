@@ -14,4 +14,6 @@ public interface QuestMapper {
 
 	Integer questDo(QuestPendingVO questVO);
 
+	Integer questCompleteChk(QuestPendingVO questVO);
+
 }

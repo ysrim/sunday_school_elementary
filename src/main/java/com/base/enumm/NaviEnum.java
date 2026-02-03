@@ -7,13 +7,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum NaviEnum {
 
-	STD_HOME(1, "HOME"),
-	STD_HOME_1(2, "HOME > 공지사항"),
-	STD_ATND(20, "출석체크"),
-	STD_GILD(30, "나의 길드"),
-	STD_QEST(40, "일일 퀘스트"),
-	STD_OPTS(50, "마이 페이지"),
-	STD_OPTS_1(51, "마이 페이지 > QR코드"),
+	STD_HOME(1, "HOME"),           //
+	STD_HOME_1(2, "공지사항"),      //
+	STD_ATND(20, "주일 출석부"),    //
+	STD_GILD(30, "길드 본부"),      //
+	STD_QEST(40, "퀘스트 보드"),    //
+	STD_OPTS(50, "마이 페이지"),    //
+	STD_OPTS_1(51, "나의 QR코드"),  //
 	EMPT(0, "");
 
 	private final Integer seq;

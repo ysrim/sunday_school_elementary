@@ -1,25 +1,33 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>봉동중앙교회 초등부 RPG</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <style>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>봉동중앙교회 초등부 RPG</title>
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+	<style>
         /* =========================================
            1. 기본 설정 (Reset & Variables)
            ========================================= */
         :root {
-            --primary: #FFD700;       /* 포인트 (골드) */
-            --secondary: #4A90E2;     /* 메인 (블루) */
-            --bg: #E3F2FD;            /* 배경 */
-            --text: #333;             /* 텍스트 */
+            --primary: #FFD700; /* 포인트 (골드) */
+            --secondary: #4A90E2; /* 메인 (블루) */
+            --bg: #E3F2FD; /* 배경 */
+            --text: #333; /* 텍스트 */
+            --text-sub: #666; /* 보조 텍스트 */
+            --text-light: #999; /* 연한 텍스트 */
             --white: #ffffff;
-            --gray: #999;
             --border: #f0f0f0;
+            --danger: #FF5252;
+            --success: #4CAF50;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
 
         body {
             font-family: 'Noto Sans KR', sans-serif;
@@ -38,7 +46,8 @@
             position: relative;
             padding-bottom: 80px;
             overflow-x: hidden;
-            display: flex; flex-direction: column;
+            display: flex;
+            flex-direction: column;
         }
 
         /* 페이지 전환 애니메이션 */
@@ -48,9 +57,131 @@
             animation: fadeIn 0.3s ease;
             width: 100%;
         }
-        .page.active { display: block; }
 
-        /* 공통 유틸리티 */
+        .page.active {
+            display: block;
+        }
+
+        /* =========================================
+           2. 유틸리티 클래스 (Utilities) - 인라인 스타일 대체용
+           ========================================= */
+        .flex-row {
+            display: flex;
+            align-items: center;
+        }
+
+        .flex-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .flex-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .flex-between {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .gap-5 {
+            gap: 5px;
+        }
+
+        .gap-10 {
+            gap: 10px;
+        }
+
+        .gap-15 {
+            gap: 15px;
+        }
+
+        .mt-5 {
+            margin-top: 5px;
+        }
+
+        .mt-10 {
+            margin-top: 10px;
+        }
+
+        .mt-15 {
+            margin-top: 15px;
+        }
+
+        .mt-20 {
+            margin-top: 20px;
+        }
+
+        .mt-30 {
+            margin-top: 30px;
+        }
+
+        .mb-5 {
+            margin-bottom: 5px;
+        }
+
+        .mb-10 {
+            margin-bottom: 10px;
+        }
+
+        .mb-15 {
+            margin-bottom: 15px;
+        }
+
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+
+        .mb-25 {
+            margin-bottom: 25px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-bold {
+            font-weight: bold;
+        }
+
+        .text-sub {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+        }
+
+        .text-light {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        .text-blue {
+            color: var(--secondary);
+        }
+
+        .text-red {
+            color: var(--danger);
+        }
+
+        .w-100 {
+            width: 100%;
+        }
+
+        .h-20 {
+            height: 20px;
+        }
+
+        /* Spacer */
+
+        /* =========================================
+           3. 공통 컴포넌트 (Components)
+           ========================================= */
         .card {
             margin: 15px 20px;
             width: calc(100% - 40px);
@@ -67,222 +198,292 @@
             font-size: 1rem;
             font-weight: 800;
             color: #444;
-            display: flex; align-items: center; gap: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .btn {
-            width: 100%; padding: 15px; border-radius: 50px; border: none;
-            font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.2s; margin-top: 10px;
+            width: 100%;
+            padding: 15px;
+            border-radius: 50px;
+            border: none;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 10px;
         }
-        .btn-main { background: var(--primary); color: #444; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); }
-        .btn-sub { background: var(--secondary); color: white; }
-        
+
+        .btn-main {
+            background: var(--primary);
+            color: #444;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .btn-sub {
+            background: var(--secondary);
+            color: white;
+        }
+
         .icon-btn {
-            width: 36px; height: 36px; border: none; border-radius: 12px;
-            background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(8px);
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); transition: all 0.2s;
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
         }
-        .icon-btn:active { transform: scale(0.9); background: rgba(255, 255, 255, 0.8); }
-        .icon-btn img { width: 20px; height: 20px; filter: brightness(0) invert(1); }
+
+        .icon-btn:active {
+            transform: scale(0.9);
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .icon-btn img {
+            width: 20px;
+            height: 20px;
+            filter: brightness(0) invert(1);
+        }
 
         input[type="text"], input[type="password"] {
-            width: 100%; padding: 12px; margin-bottom: 10px;
-            border: 1px solid #ddd; border-radius: 10px; font-size: 0.9rem;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 0.9rem;
         }
 
         /* =========================================
-           2. 헤더 (Header)
+           4. 헤더 (Header)
            ========================================= */
-/* =========================================
-   2. 헤더 (Header) - RPG 대시보드 스타일
-   ========================================= */
-header {
-    /* 넉넉한 패딩으로 여유 공간 확보 */
-    padding: 20px 20px 35px 20px;
-    /* 깊이감 있는 로얄 블루 그라데이션 */
-    background: linear-gradient(135deg, #1565C0 0%, #42A5F5 100%);
-    border-radius: 0 0 30px 30px; /* 둥근 하단 모서리 */
-    position: relative;
-    box-shadow: 0 10px 25px rgba(21, 101, 192, 0.25); /* 부드러운 그림자 */
-    z-index: 100;
-}
+        header {
+            padding: 20px 20px 35px 20px;
+            background: linear-gradient(135deg, #1565C0 0%, #42A5F5 100%);
+            border-radius: 0 0 30px 30px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(21, 101, 192, 0.25);
+            z-index: 100;
+        }
 
-/* 배경 패턴 (선택사항 - 은은한 반짝임) */
-header::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
-    opacity: 0.15;
-    pointer-events: none;
-    border-radius: 0 0 30px 30px;
-}
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
+            opacity: 0.15;
+            pointer-events: none;
+            border-radius: 0 0 30px 30px;
+        }
 
-.header-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-    z-index: 2; /* 배경 패턴보다 위에 배치 */
-}
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
 
-/* 왼쪽 브랜딩 영역 */
-.header-branding {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
+        .header-branding h1 {
+            font-size: 1.1rem;
+            color: #fff;
+            font-weight: 800;
+            margin: 0;
+            line-height: 1.2;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-.app-title-group {
-    display: flex;
-    flex-direction: column;
-}
+        .app-subtitle {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 500;
+        }
 
-header h1 {
-    font-size: 1.1rem;
-    color: #fff;
-    font-weight: 800;
-    margin: 0;
-    letter-spacing: -0.5px;
-    line-height: 1.2;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
+        .header-btn {
+            width: 38px !important;
+            height: 38px !important;
+            border-radius: 50% !important;
+            background: rgba(255, 255, 255, 0.15) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            backdrop-filter: blur(5px);
+            padding: 0;
+        }
 
-.app-subtitle {
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.85);
-    font-weight: 500;
-}
+        .header-btn:active {
+            transform: scale(0.92);
+            background: rgba(255, 255, 255, 0.3) !important;
+        }
 
-/* 오른쪽 버튼 영역 */
-.header-actions {
-    display: flex;
-    gap: 8px;
-}
+        .header-btn img {
+            opacity: 1;
+        }
 
-/* 헤더 전용 버튼 스타일 (반투명 원형) */
-.header-btn {
-    width: 38px !important;
-    height: 38px !important;
-    border-radius: 50% !important; /* 원형 */
-    background: rgba(255, 255, 255, 0.15) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    backdrop-filter: blur(5px);
-    transition: transform 0.2s, background 0.2s;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+        /* 서브 헤더 */
+        .sub-header {
+            padding: 15px 15px;
+            background: linear-gradient(135deg, #1565C0 0%, #42A5F5 100%);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 15px rgba(21, 101, 192, 0.2);
+            color: white;
+            width: 100%;
+        }
 
-.header-btn:active {
-    transform: scale(0.92);
-    background: rgba(255, 255, 255, 0.3) !important;
-}
+        .sub-header h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
 
-.header-btn img {
-    width: 18px;
-    height: 18px;
-    opacity: 1; /* 흰색 필터 적용됨 */
-}
+        .btn-back-game {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background 0.2s;
+            display: flex;
+        }
 
-/* --- 서브 페이지 헤더 (기존 유지하되 스타일 통일) --- */
-.sub-header {
-    padding: 15px 15px; /* 패딩 조정 */
-    background: linear-gradient(135deg, #1565C0 0%, #42A5F5 100%); /* 메인과 동일한 톤 */
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky; top: 0; z-index: 100;
-    box-shadow: 0 4px 15px rgba(21, 101, 192, 0.2); 
-    color: white;
-    width: 100%;
-}
-.sub-header-left { display: flex; align-items: center; gap: 5px; }
-.sub-header h2 { font-size: 1.1rem; font-weight: 700; margin: 0; text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-.sub-header-info { display: flex; align-items: center; gap: 10px; }
+        .btn-back-game:active {
+            background: rgba(255, 255, 255, 0.2);
+        }
 
-/* 뒤로가기 버튼도 헤더 버튼 스타일과 맞춤 */
-.btn-back-game {
-    background: none; border: none; cursor: pointer; padding: 8px; display: flex;
-    border-radius: 50%; transition: background 0.2s;
-}
-.btn-back-game:active { background: rgba(255,255,255,0.2); }
-.btn-back-game img { width: 22px; height: 22px; filter: brightness(0) invert(1); }
+        .btn-back-game img {
+            width: 22px;
+            height: 22px;
+            filter: brightness(0) invert(1);
+        }
 
-.sub-info-badge { font-size: 0.8rem; color: rgba(255,255,255,0.9); font-weight: 500; }
-.sub-info-badge.money { color: #FFD54F; font-weight: 800; background: rgba(0,0,0,0.2); padding: 4px 10px; border-radius: 12px; }
+        .sub-info-badge {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+        }
+
+        .sub-info-badge.money {
+            color: #FFD54F;
+            font-weight: 800;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
 
         /* =========================================
-           3. 메인 페이지 (Main Home)
+           5. 메인 페이지 요소
            ========================================= */
-		.profile-card {
-			position: relative;
-			/* 헤더(z-index: 100)보다 높아야 위로 올라옵니다 */
-			z-index: 110; 
-			margin: -20px 20px 20px 20px; 
-			padding: 20px;
-			background: #ffffff; 
-			border-radius: 25px;
-			box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-		}
+        .profile-card {
+            position: relative;
+            z-index: 110;
+            margin: -20px 20px 20px 20px;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+
         .profile-avatar-wrap {
-            width: 75px; height: 75px; border-radius: 22px;
-            border: 4px solid #FFF9E6; background: #fff;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); overflow: hidden;
+            width: 75px;
+            height: 75px;
+            border-radius: 22px;
+            border: 4px solid #FFF9E6;
+            background: #fff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
         }
+
         .user-rank-badge {
-            display: inline-block; font-size: 0.7rem; padding: 3px 10px;
-            border-radius: 8px; font-weight: bold; margin-bottom: 5px;
+            display: inline-block;
+            font-size: 0.7rem;
+            padding: 3px 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-bottom: 5px;
         }
+
         .exp-container {
-            background: #F0F2F5; height: 10px; border-radius: 10px; margin-top: 8px; overflow: hidden;
+            background: #F0F2F5;
+            height: 10px;
+            border-radius: 10px;
+            margin-top: 8px;
+            overflow: hidden;
         }
+
         .exp-bar-fill {
-            width: 0%; height: 100%;
+            width: 0%;
+            height: 100%;
             background: linear-gradient(90deg, #4A90E2, #64B5F6);
-            border-radius: 10px; transition: width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-radius: 10px;
+            transition: width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .btn-amen {
-            width: 100%; padding: 12px; border: 2px solid #E3F2FD;
-            background: #F1F8FF; color: var(--secondary); border-radius: 12px;
-            font-weight: bold; cursor: pointer; transition: 0.2s;
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #E3F2FD;
+            background: #F1F8FF;
+            color: var(--secondary);
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
         }
-        .btn-amen:active { background: var(--secondary); color: white; }
-        .btn-amen.disabled { background: #eee; color: #aaa; border-color: #eee; cursor: default; }
 
-        .guild-section {
-            margin: 15px 20px; width: calc(100% - 40px);
-            background: var(--white); border-radius: 25px; padding: 20px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05); border: none;
+        .btn-amen:active {
+            background: var(--secondary);
+            color: white;
         }
-        .guild-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .guild-tag { background: #FFF3E0; color: #EF6C00; font-size: 0.7rem; padding: 2px 8px; border-radius: 6px; font-weight: bold; }
-        
-        .guild-member-list { display: flex; flex-direction: column; gap: 10px; }
-        .member-item { display: flex; align-items: center; padding: 10px; background: #F8FAFC; border-radius: 15px; }
-        .member-avatar { width: 40px; height: 40px; border-radius: 12px; margin-right: 12px; background: #eee; }
-        .member-info { flex: 1; }
-        .member-name { font-size: 0.9rem; font-weight: 700; color: #444; }
-        .member-status { font-size: 0.7rem; color: #999; }
-        .master-badge { font-size: 0.65rem; color: #FFB800; border: 1px solid #FFB800; padding: 1px 5px; border-radius: 4px; margin-left: 5px; }
 
-        .notice-list { display: flex; flex-direction: column; }
-        .notice-item { padding: 12px 0; border-bottom: 1px solid var(--border); cursor: pointer; }
-        .notice-item:last-child { border-bottom: none; }
+        .btn-amen.disabled {
+            background: #eee;
+            color: #aaa;
+            border-color: #eee;
+            cursor: default;
+        }
+
+        .notice-item {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+        .notice-item:last-child {
+            border-bottom: none;
+        }
+
+        .notice-tag {
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-right: 5px;
+        }
 
         /* =========================================
-           4. 퀘스트 페이지 (Quest) - 타일형 최적화
+           6. 퀘스트 & 길드
            ========================================= */
+        /* 퀘스트 */
         .quest-card {
             background: transparent !important;
             box-shadow: none !important;
             border: none !important;
             padding: 0 20px !important;
             margin: 10px 0 !important;
-            position: relative;
         }
 
         .q-item {
@@ -291,1600 +492,1511 @@ header h1 {
             padding: 20px;
             margin-bottom: 15px;
             display: flex;
-            align-items: center; /* 수직 중앙 정렬 */
+            align-items: center;
             gap: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
             border: 1px solid var(--border);
-            transition: transform 0.2s, box-shadow 0.2s;
-            min-height: 100px; /* 타일 최소 높이 고정 (사이즈 불균형 해결) */
+            min-height: 100px;
+            transition: transform 0.2s;
         }
-        .q-item:active { transform: scale(0.98); }
-        
+
+        .q-item:active {
+            transform: scale(0.98);
+        }
+
         .q-icon-box {
-            width: 50px; /* 아이콘 박스 크기 고정 */
-            height: 50px; 
-            background: #F1F8FF; border-radius: 15px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.6rem; 
-            flex-shrink: 0; /* 줄어들지 않도록 설정 */
+            width: 50px;
+            height: 50px;
+            background: #F1F8FF;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            flex-shrink: 0;
             box-shadow: 0 2px 5px rgba(74, 144, 226, 0.1);
         }
-        .q-icon-box.sunday { background: #FFF8E1; box-shadow: 0 2px 5px rgba(255, 143, 0, 0.1); }
 
-        .q-content { 
-            flex: 1; /* 남은 공간 모두 차지 */
-            display: flex; flex-direction: column; justify-content: center; 
+        .q-icon-box.sunday {
+            background: #FFF8E1;
+            box-shadow: 0 2px 5px rgba(255, 143, 0, 0.1);
+        }
+
+        .q-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
             gap: 4px;
-            min-width: 0; /* 텍스트 넘침 방지 */
+            min-width: 0;
         }
-        .q-title { 
-            font-size: 1rem; font-weight: 700; color: #333; line-height: 1.3; 
-            word-break: keep-all; /* 단어 단위 줄바꿈 */
+
+        .q-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #333;
+            line-height: 1.3;
+            word-break: keep-all;
         }
-        .q-desc { font-size: 0.8rem; color: #999; }
+
+        .q-desc {
+            font-size: 0.8rem;
+            color: #999;
+        }
 
         .q-reward-tag {
-            display: inline-block; width: fit-content; font-size: 0.75rem;
-            padding: 3px 8px; background: #f5f5f5; border-radius: 6px;
-            color: #555; font-weight: bold; margin-top: 5px;
+            display: inline-block;
+            width: fit-content;
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            background: #f5f5f5;
+            border-radius: 6px;
+            color: #555;
+            font-weight: bold;
+            margin-top: 5px;
         }
-        .q-reward-tag.sunday { color: #FF8F00; background: #FFF3E0; }
 
-        .q-item.done { background: #f9f9f9; box-shadow: none; opacity: 0.8; }
-        .q-item.done .q-title { text-decoration: line-through; color: #bbb; }
-        .q-item.done .q-desc { color: #ccc; }
-        .q-item.done .q-icon-box { filter: grayscale(100%); opacity: 0.5; }
+        .q-reward-tag.sunday {
+            color: #FF8F00;
+            background: #FFF3E0;
+        }
+
+        /* 퀘스트 상태 */
+        .q-item.done {
+            background: #f9f9f9;
+            box-shadow: none;
+            opacity: 0.8;
+        }
+
+        .q-item.done .q-title {
+            text-decoration: line-through;
+            color: #bbb;
+        }
+
+        .q-item.done .q-icon-box {
+            filter: grayscale(100%);
+            opacity: 0.5;
+        }
 
         .btn-quest-action {
-            padding: 10px 0; /* 좌우 패딩 대신 너비 고정 */
-            width: 75px; /* 버튼 너비 고정 */
-            border-radius: 12px; font-size: 0.85rem; font-weight: 800;
-            cursor: pointer; transition: all 0.2s; text-align: center;
-            border: none; outline: none; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            flex-shrink: 0; /* 버튼이 찌그러지지 않도록 고정 */
+            width: 75px;
+            padding: 10px 0;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            cursor: pointer;
+            text-align: center;
+            border: none;
+            flex-shrink: 0;
         }
-        .state-ready { background: #fff; border: 1px solid var(--secondary); color: var(--secondary); }
-        .state-ready:active { background: #E3F2FD; }
+
+        .state-ready {
+            background: #fff;
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+        }
+
         .state-wait {
-            background: #FF9800; border: 1px solid #FF9800; color: white;
-            box-shadow: 0 4px 10px rgba(255, 152, 0, 0.3); animation: pulse-orange 2s infinite;
+            background: #FF9800;
+            border: 1px solid #FF9800;
+            color: white;
+            animation: pulse-orange 2s infinite;
         }
-        .state-done { background: #e0e0e0; border: 1px solid #e0e0e0; color: #999; box-shadow: none; cursor: default; }
 
-        #sunday-lock-overlay { border-radius: 20px !important; margin: 0 20px; width: auto !important; left: 0; right: 0; }
+        .state-done {
+            background: #e0e0e0;
+            border: 1px solid #e0e0e0;
+            color: #999;
+            cursor: default;
+        }
 
-        .quest-guide-box {
-            margin: 20px 20px 15px 20px; background: #ffffff; border-radius: 15px;
-            padding: 15px; text-align: center; border: 1px dashed #ced4da;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-        }
-        .guide-title {
-            font-size: 0.85rem; font-weight: bold; color: #555; margin-bottom: 12px;
-            display: inline-block; background: #f8f9fa; padding: 4px 12px; border-radius: 12px;
-        }
-        .guide-steps { display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 8px; }
-        .step { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-        .step-icon {
-            font-size: 1.2rem; width: 36px; height: 36px; background: #F1F8FF;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-        }
-        .step span { font-size: 0.75rem; font-weight: bold; color: #444; }
-        .step-arrow { color: #ccc; font-size: 0.8rem; margin-top: -15px; }
-        .guide-sub-text { font-size: 0.75rem; color: #999; margin-top: 10px; letter-spacing: -0.5px; }
-
-        /* =========================================
-           5. 길드 페이지 (Guild Detail)
-           ========================================= */
+        /* 길드 배너 & 배지 (최적화됨) */
         .guild-banner-card {
-            margin: 20px; padding: 25px;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            border-radius: 25px; color: white; text-align: center;
-            position: relative; box-shadow: 0 10px 20px rgba(30, 60, 114, 0.3); overflow: hidden;
-        }
-        .guild-banner-card::after {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url("https://www.transparenttextures.com/patterns/cubes.png"); opacity: 0.1; pointer-events: none;
-        }
-        .guild-badge-wrapper {
-            width: 60px; height: 60px; margin: 0 auto 10px; background: rgba(255,255,255,0.1);
-            border-radius: 18px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.2);
-        }
-        .guild-badge-icon { font-size: 2rem; }
-        .guild-main-name { font-size: 1.4rem; margin: 5px 0; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-        .guild-desc { font-size: 0.85rem; color: rgba(255,255,255,0.8); margin-bottom: 20px; font-style: italic; }
-        
-        .guild-stats-row { display: flex; justify-content: space-around; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 15px; }
-        .g-stat { display: flex; flex-direction: column; }
-        .g-stat .label { font-size: 0.7rem; color: rgba(255,255,255,0.6); }
-        .g-stat .val { font-size: 0.95rem; font-weight: bold; }
-
-        .guild-buff-container { display: flex; gap: 10px; overflow-x: auto; padding: 0 20px 10px 20px; }
-        .buff-item {
-            min-width: 130px; background: white; padding: 12px; border-radius: 15px;
-            border: 1px solid #eee; display: flex; align-items: center; gap: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-        }
-        .buff-item.locked { background: #f5f5f5; opacity: 0.7; }
-        .buff-icon { font-size: 1.5rem; }
-        .buff-info { display: flex; flex-direction: column; }
-        .buff-info strong { font-size: 0.8rem; }
-        .buff-info span { font-size: 0.7rem; color: var(--secondary); font-weight: bold; }
-
-        .guild-mission-card { padding: 20px; }
-        .mission-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
-        .mission-tag { background: #FFF3E0; color: #EF6C00; font-size: 0.7rem; padding: 3px 8px; border-radius: 6px; font-weight: bold; }
-        .mission-percent { color: var(--secondary); font-weight: 800; }
-        .progress-container { width: 100%; height: 10px; background: #eee; border-radius: 10px; margin: 10px 0; overflow: hidden; }
-        .progress-bar { height: 100%; background: linear-gradient(90deg, #4A90E2, #64B5F6); border-radius: 10px; }
-        .mission-reward { font-size: 0.8rem; color: #666; margin-bottom: 15px; }
-
-        .chat-list { max-height: 150px; overflow-y: auto; background: #F8F9FA; border-radius: 10px; padding: 10px; margin-bottom: 10px; }
-        .chat-msg { margin-bottom: 8px; font-size: 0.85rem; }
-        .chat-user { font-weight: bold; color: #333; margin-right: 5px; }
-        .chat-input-area { display: flex; gap: 5px; }
-        .chat-input-area input { flex: 1; padding: 8px 12px; margin: 0; }
-        .chat-input-area button { background: var(--secondary); color: white; border: none; border-radius: 10px; padding: 0 15px; font-weight: bold; cursor: pointer; }
-        
-        .member-li { display: flex; align-items: center; padding: 12px 10px; border-bottom: 1px solid var(--border); }
-        .m-avatar { width: 36px; height: 36px; border-radius: 12px; margin-right: 12px; background: #eee; }
-        .m-info { flex: 1; display: flex; flex-direction: column; }
-        .m-contribution { font-size: 0.75rem; color: var(--secondary); font-weight: bold; background: #E3F2FD; padding: 3px 8px; border-radius: 15px; }
-        .btn-more-member { width: 100%; padding: 10px; background: none; border: none; color: #999; cursor: pointer; margin-top: 5px; }
-
-        /* =========================================
-           6. 마이페이지 (My Page & Settings)
-           ========================================= */
-        /* 프로필 배너 (깔끔한 화이트 + 은은한 입체감) */
-        .mypage-banner-card {
             margin: 20px;
-            padding: 0;
-            background: linear-gradient(to bottom, #ffffff 40%, #f8f9fa 100%);
+            padding: 25px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             border-radius: 25px;
+            color: white;
             text-align: center;
             position: relative;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05), 0 15px 35px rgba(50, 50, 93, 0.1);
+            box-shadow: 0 10px 20px rgba(30, 60, 114, 0.3);
             overflow: hidden;
-            display: flex; flex-direction: column;
-            border: 1px solid #ffffff;
-        }
-        .mypage-banner-card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 6px;
-            background: linear-gradient(90deg, #4A90E2, #56CCF2); z-index: 5;
         }
 
-        .mp-banner-top { padding: 35px 20px 25px 20px; display: flex; flex-direction: column; align-items: center; }
-        .mp-banner-avatar { position: relative; width: 80px; height: 80px; margin-bottom: 12px; filter: drop-shadow(0 8px 15px rgba(0,0,0,0.15)); }
-        .mp-banner-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 25px; border: 3px solid #ffffff; background: #fff; }
-        .mp-banner-lvl {
-            position: absolute; bottom: -6px; right: -6px; background: #333; color: var(--primary);
-            font-size: 0.65rem; font-weight: 800; padding: 3px 8px; border-radius: 12px; border: 2px solid #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        .mp-banner-info h2 { font-size: 1.4rem; margin: 5px 0; color: #222; font-weight: 800; text-shadow: 0 1px 1px rgba(255,255,255,0.8); }
-        .mp-class-badge {
-            display: inline-block; background: #E3F2FD; color: #1565C0; font-size: 0.7rem;
-            padding: 4px 12px; border-radius: 20px; font-weight: 700; margin-bottom: 5px; box-shadow: 0 2px 5px rgba(74, 144, 226, 0.15);
-        }
-        .mp-desc { font-size: 0.85rem; color: #888; font-weight: 500; }
-
-        .mp-stats-row {
-            display: flex; justify-content: space-around; background: #FAFAFA; padding: 20px 0;
-            box-shadow: inset 0 3px 10px rgba(0,0,0,0.03); border-top: 1px solid #f0f0f0; margin-top: 10px; position: relative;
-        }
-        .mp-stat { display: flex; flex-direction: column; align-items: center; flex: 1; position: relative; }
-        .mp-stat:not(:last-child)::after {
-            content: ''; position: absolute; right: 0; top: 25%; height: 50%; width: 1px;
-            background: #e0e0e0; border-right: 1px solid #fff;
-        }
-        .mp-stat .label { font-size: 0.7rem; color: #999; margin-bottom: 4px; font-weight: 500; }
-        .mp-stat .val { font-size: 1rem; font-weight: 800; color: #333; }
-
-        .quick-action-row { display: flex; gap: 15px; margin: 0 20px; }
-        .btn-quick-action {
-            flex: 1; background: white; border: none; padding: 15px; border-radius: 20px;
-            display: flex; flex-direction: column; align-items: center; gap: 8px;
-            cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.03); transition: transform 0.2s;
-        }
-        .btn-quick-action:active { transform: scale(0.95); }
-        .btn-quick-action .icon-box {
-            font-size: 1.5rem; background: #F1F8FF; width: 45px; height: 45px;
-            display: flex; align-items: center; justify-content: center; border-radius: 15px;
-        }
-        .btn-quick-action span { font-size: 0.85rem; font-weight: bold; color: #555; }
-
-        .settings-group-title { margin: 25px 25px 10px 25px; font-size: 0.85rem; font-weight: bold; color: #999; }
-        .menu-list-group {
-            background: white; padding: 5px 20px !important; border-radius: 20px !important;
-            border: none !important; margin: 0 20px !important; width: auto !important;
-        }
-        .menu-list-group .menu-item {
-            padding: 16px 5px; border-bottom: 1px solid #f5f5f5;
-            display: flex; justify-content: space-between; align-items: center; cursor: pointer;
-        }
-        .menu-list-group .menu-item:last-child { border-bottom: none; }
-        .menu-left { display: flex; align-items: center; gap: 12px; }
-        .menu-icon { font-size: 1.1rem; }
-        .menu-item span { font-size: 0.95rem; color: #444; font-weight: 500; }
-        .menu-item .arrow { color: #ccc; font-size: 1.2rem; }
-        .app-version-text { text-align: center; font-size: 0.75rem; color: #ccc; margin-top: 30px; font-family: monospace; }
-        
-        .menu-list {
-            margin: 15px 20px; background: white; border-radius: 20px;
-            overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        .guild-badge-wrapper {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: transparent;
+            overflow: visible;
         }
 
-        /* =========================================
-           7. 출석부 (Attendance)
-           ========================================= */
-        .attendance-streak-banner {
-            margin: 20px 20px 0 20px;
-            background: linear-gradient(135deg, #FF9966 0%, #FF5E62 100%);
-            border-radius: 15px; padding: 18px 20px; color: white;
-            display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 10px 20px rgba(255, 94, 98, 0.4);
-            position: relative; overflow: hidden; animation: slideDown 0.5s ease;
-        }
-        .attendance-streak-banner::after {
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%);
-            transform: rotate(30deg); animation: shine-banner 3s infinite;
-        }
-        .streak-content { display: flex; align-items: center; gap: 10px; font-size: 1rem; z-index: 1; }
-        .streak-content b { font-size: 1.2rem; color: #FFF; font-weight: 900; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        .fire-icon { font-size: 1.5rem; animation: pulse-fire 1.5s infinite; }
-        .streak-bonus { 
-            font-size: 0.8rem; background: rgba(255, 255, 255, 0.25); color: white;
-            padding: 6px 12px; border-radius: 20px; font-weight: bold;
-            backdrop-filter: blur(5px); z-index: 1; border: 1px solid rgba(255,255,255,0.4);
+        .guild-badge-icon {
+            width: 100%;
+            height: 100%;
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .stamp-main-card {
-            text-align: center; padding: 30px 20px; position: relative;
-            background: #ffffff; border-radius: 20px; border: 1px solid #f0f0f0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); min-height: 250px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            margin-bottom: 20px;
-        }
-        .stamp-header { display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 10px; width: 100%; }
-        #attendance-date-title { font-size: 1.3rem; font-weight: 700; color: #333; margin: 0; }
-        .today-badge { background: var(--secondary); color: white; font-size: 0.7rem; padding: 3px 8px; border-radius: 4px; font-weight: 500; }
-        
-        .today-reward-text {
-            font-size: 0.9rem; color: #666; background: #F8F9FA; padding: 6px 12px;
-            border-radius: 8px; margin-bottom: 25px; display: inline-flex; align-items: center; gap: 5px;
-        }
-        .today-reward-text::before { content: '🎁'; font-size: 1rem; }
-        .today-reward-text b { color: var(--secondary) !important; }
-
-        .stamp-btn-area {
-            width: 160px; height: 160px; margin: 20px auto; background: #ffffff;
-            border: 4px solid transparent;
-            background-image: linear-gradient(#fff, #fff), linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
-            background-origin: border-box; background-clip: content-box, border-box;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05), inset 0 0 20px rgba(0,0,0,0.02);
-            border-radius: 50%;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            flex-shrink: 0; cursor: pointer; position: relative; z-index: 5;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); overflow: visible;
-        }
-        .stamp-btn-area:not(.checked):not(.disabled) { animation: float-btn 3s ease-in-out infinite; border-color: #E3F2FD; }
-        .stamp-btn-area:active { transform: scale(0.9); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .stamp-btn-area.checked {
-            border: 4px solid var(--secondary); background: #F0F7FF;
-            box-shadow: 0 0 0 5px rgba(74, 144, 226, 0.1), 0 10px 30px rgba(74, 144, 226, 0.3), inset 0 0 30px rgba(255, 255, 255, 0.8);
-            transform: scale(1); animation: none;
-        }
-        .stamp-btn-area.disabled { background: #f5f5f5; border-color: #ddd; cursor: not-allowed; opacity: 0.7; box-shadow: none; filter: grayscale(100%); }
-
-        .stamp-inner-content { display: flex; flex-direction: column; align-items: center; pointer-events: none; position: relative; z-index: 2; }
-        .stamp-icon-before { width: 48px; height: 48px; margin-bottom: 8px; opacity: 0.8; transition: transform 0.3s; }
-        .stamp-guide-text { font-size: 0.85rem; color: var(--secondary); font-weight: 800; text-align: center; line-height: 1.3; }
-        .pulse-ring {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 100%; height: 100%; border-radius: 50%; border: 2px solid var(--secondary);
-            opacity: 0; z-index: -1; animation: pulse-ring-anim 2s infinite;
-        }
-        .stamped-mark img {
-            width: 130px; height: auto; animation: stamp-slam 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.2)); transform-origin: center center;
+        .guild-badge-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-        .sunday-list-container { padding: 0 20px 30px 20px; display: flex; flex-direction: column; gap: 10px; }
-        .sunday-item {
-            display: flex; align-items: center; justify-content: space-between;
-            background: white; padding: 15px; border-radius: 12px;
-            border: 1px solid var(--border); transition: background 0.2s;
+        .guild-lvl-badge {
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(45deg, #FFD700, #FFC107);
+            color: #4e342e;
+            font-size: 0.75rem;
+            font-weight: 900;
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 2px solid #ffffff;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+            z-index: 10;
         }
-        .sunday-left { display: flex; align-items: center; gap: 15px; }
-        .s-date-box { display: flex; flex-direction: column; align-items: center; min-width: 40px; text-align: center; }
-        .s-month { font-size: 0.65rem; color: #999; margin-bottom: 2px; }
-        .s-day { font-size: 1.1rem; font-weight: 700; color: #444; line-height: 1; }
-        .sunday-item.this-week { border: 1px solid var(--secondary); background: #fff; }
-        .sunday-item.this-week .s-day { color: var(--secondary); }
-        .status-icon { font-size: 0.8rem; font-weight: 500; color: #888; }
-        #today-status-text { color: var(--secondary) !important; font-weight: bold; }
+
+        /* 길드 멤버 리스트 */
+        .member-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #F8FAFC;
+            border-radius: 15px;
+            margin-bottom: 10px;
+        }
+
+        .member-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            margin-right: 12px;
+            background: #eee;
+        }
+
+        .master-badge {
+            font-size: 0.65rem;
+            color: #FFB800;
+            border: 1px solid #FFB800;
+            padding: 1px 5px;
+            border-radius: 4px;
+            margin-left: 5px;
+        }
 
         /* =========================================
-           8. 포인트 내역 (Point History)
+           7. 포인트 내역 및 설정
            ========================================= */
         .point-summary-card {
-            margin: 20px; padding: 25px;
+            margin: 20px;
+            padding: 25px;
             background: linear-gradient(135deg, #64B5F6 0%, #1976D2 100%);
-            border-radius: 25px; color: white;
+            border-radius: 25px;
+            color: white;
             box-shadow: 0 10px 25px rgba(25, 118, 210, 0.3);
-            position: relative; overflow: hidden;
+            position: relative;
+            overflow: hidden;
         }
-        .point-summary-card::before {
-            content: ''; position: absolute; top: -50%; right: -20%; width: 200px; height: 200px;
-            background: rgba(255, 255, 255, 0.15); border-radius: 50%; pointer-events: none;
-        }
-        .total-point { font-size: 3rem; font-weight: 800; margin: 15px 0 25px 0; text-align: center; letter-spacing: -1px; }
-        .total-point small { font-size: 1.2rem; font-weight: 500; opacity: 0.8; margin-left: 5px; }
-        .point-card-bottom {
-            display: flex; justify-content: space-around; align-items: center;
-            background: rgba(0, 0, 0, 0.08); border-radius: 15px; padding: 12px; backdrop-filter: blur(5px);
-        }
-        .mini-stat { display: flex; flex-direction: column; align-items: center; font-size: 0.8rem; }
-        .mini-stat strong { font-size: 1rem; font-weight: bold; }
-        .divider { width: 1px; height: 25px; background: rgba(255, 255, 255, 0.3); }
 
-        .history-filter-tabs { display: flex; gap: 10px; margin: 20px 20px 10px 20px; }
-        .filter-tab {
-            flex: 1; padding: 10px; border: none; border-radius: 12px;
-            background: #f1f3f5; color: #888; font-weight: bold; cursor: pointer; transition: 0.2s;
+        .total-point {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 15px 0 25px 0;
+            text-align: center;
+            letter-spacing: -1px;
         }
-        .filter-tab.active { background: var(--secondary); color: white; box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3); }
-        
-        #point-history-list .menu-item { cursor: default; }
+
+        .point-card-bottom {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.08);
+            border-radius: 15px;
+            padding: 12px;
+            backdrop-filter: blur(5px);
+        }
+
+        .history-filter-tabs {
+            display: flex;
+            gap: 10px;
+            margin: 20px 20px 10px 20px;
+        }
+
+        .filter-tab {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 12px;
+            background: #f1f3f5;
+            color: #888;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .filter-tab.active {
+            background: var(--secondary);
+            color: white;
+            box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
+        }
+
+        .menu-list {
+            padding: 0 15px;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin: 15px 20px;
+        }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-date-header {
+            background: #f8f9fa;
+            padding: 5px 10px;
+            border-radius: 8px;
+            display: inline-block;
+            margin: 15px 5px 5px 5px;
+            font-weight: bold;
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        /* 더보기 버튼 */
         .btn-load-more {
-            display: block; width: calc(100% - 40px); margin: 15px 20px 30px 20px;
-            padding: 12px; background: #fff; border: 1px solid #ddd; border-radius: 50px;
-            color: #666; font-weight: bold; cursor: pointer;
+            display: block;
+            width: 150px;
+            margin: 20px auto 40px;
+            padding: 10px 20px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 50px;
+            color: #666;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-load-more:active {
+            transform: scale(0.95);
+            background: #e9ecef;
         }
 
         /* =========================================
-           9. 네비게이션 & 알림 (Nav & Toast)
+           8. 하단 네비게이션
            ========================================= */
         .nav-bar {
-            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
-            width: 100%; max-width: 480px; background: #ffffff;
-            display: flex; justify-content: space-around; align-items: center;
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: #ffffff;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
             padding: 8px 0 calc(env(safe-area-inset-bottom) + 8px);
-            border-top: 1px solid #eeeeee; z-index: 1000;
+            border-top: 1px solid #eeeeee;
+            z-index: 1000;
         }
+
         .nav-item {
-            border: none; background: none; color: #111; font-size: 0.7rem;
-            cursor: pointer; flex: 1; display: flex; flex-direction: column;
-            align-items: center; gap: 4px; -webkit-tap-highlight-color: transparent;
+            border: none;
+            background: none;
+            color: #111;
+            font-size: 0.7rem;
+            cursor: pointer;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
         }
-        .nav-item img { width: 26px; height: 26px; opacity: 0.8; transition: transform 0.2s; }
-        .nav-item.active { color: var(--secondary); font-weight: bold; }
+
+        .nav-item img {
+            width: 26px;
+            height: 26px;
+            opacity: 0.8;
+            transition: transform 0.2s;
+        }
+
+        .nav-item.active {
+            color: var(--secondary);
+            font-weight: bold;
+        }
+
         .nav-item.active img {
-            opacity: 1; transform: scale(1.05);
+            opacity: 1;
+            transform: scale(1.05);
             filter: invert(47%) sepia(88%) saturate(1458%) hue-rotate(193deg) brightness(96%) contrast(92%);
         }
 
-        /* 토스트 알림 */
+        /* =========================================
+           9. 기타 (Toast, Modal, Animations)
+           ========================================= */
         #toast-container {
-            position: fixed; bottom: 90px; right: 20px; left: 20px;
-            display: flex; flex-direction: column-reverse; gap: 12px;
-            z-index: 10001; pointer-events: none;
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            left: 20px;
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 12px;
+            z-index: 10001;
+            pointer-events: none;
         }
+
         .toast-item {
-            position: relative; background: #ffffff; border-radius: 18px;
-            padding: 16px 45px 16px 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            display: flex; align-items: center; gap: 12px; pointer-events: auto; border: 1px solid #eee;
-            animation: toastSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 16px 45px 16px 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            pointer-events: auto;
+            border: 1px solid #eee;
+            animation: toastSlideIn 0.4s;
+            position: relative;
         }
-        .toast-item.success { border-left: 6px solid #4CAF50; }
-        .toast-item.reward  { border-left: 6px solid #FFD700; background: #FFFDF0; }
-        .toast-item.warning { border-left: 6px solid #FF5252; }
-        .toast-item.info    { border-left: 6px solid #2196F3; }
-        .toast-title { font-weight: 800; font-size: 0.95rem; color: #333; display: block; margin-bottom: 2px; }
-        .toast-msg { font-size: 0.85rem; color: #666; line-height: 1.3; }
-        .toast-close { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); border: none; background: none; font-size: 1.2rem; cursor: pointer; color: #ccc; }
+
+        .toast-item.success {
+            border-left: 6px solid var(--success);
+        }
+
+        .toast-item.reward {
+            border-left: 6px solid var(--primary);
+            background: #FFFDF0;
+        }
+
+        .toast-item.warning {
+            border-left: 6px solid var(--danger);
+        }
+
+        .toast-item.info {
+            border-left: 6px solid #2196F3;
+        }
+
+        .toast-close {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #ccc;
+        }
 
         /* 커스텀 알림창 */
         #custom-alert {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6); z-index: 9999; align-items: center; justify-content: center;
-            opacity: 0; transition: opacity 0.3s ease; backdrop-filter: blur(3px);
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(3px);
         }
-        #custom-alert.active { display: flex !important; opacity: 1; }
-        #custom-alert .card { max-width: 320px; text-align: center; padding: 30px; transform: scale(0.7); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        #custom-alert.active .card { transform: scale(1); }
-        #alert-icon { display: inline-block; animation: alert-float 2s ease-in-out infinite; }
+
+        #custom-alert.active {
+            display: flex !important;
+        }
 
         /* 애니메이션 Keyframes */
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes shine-banner { 0% { transform: translateX(-100%) rotate(30deg); } 20%, 100% { transform: translateX(100%) rotate(30deg); } }
-        @keyframes pulse-fire { 0% { transform: scale(1); } 50% { transform: scale(1.2) rotate(5deg); } 100% { transform: scale(1); } }
-        @keyframes stampIn { from { transform: scale(1.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        @keyframes alert-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        @keyframes toastSlideIn { from { opacity: 0; transform: translateY(20px) scale(0.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
-        @keyframes pulse-orange { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-        @keyframes float-btn { 0%, 100% { transform: translateY(0); box-shadow: 0 10px 25px rgba(74, 144, 226, 0.15); } 50% { transform: translateY(-8px); box-shadow: 0 18px 30px rgba(74, 144, 226, 0.1); } }
-        @keyframes pulse-ring-anim { 0% { width: 100%; height: 100%; opacity: 0.5; border-width: 2px; } 100% { width: 140%; height: 140%; opacity: 0; border-width: 0px; } }
-        @keyframes stamp-slam { 0% { transform: scale(3) rotate(-15deg); opacity: 0; } 50% { transform: scale(0.9) rotate(0deg); opacity: 1; } 75% { transform: scale(1.05) rotate(0deg); } 100% { transform: scale(1) rotate(-5deg); } }
-    </style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes toastSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes pulse-orange {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* 중앙 배지 스타일 */
+        .header-center-badge {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+
+            background: rgba(0, 0, 0, 0.15); /* 어두운 반투명 배경 */
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 4px 12px;
+            border-radius: 20px;
+            letter-spacing: 1px;
+            backdrop-filter: blur(5px);
+        }
+	</style>
 </head>
 <body>
-    <div id="toast-container"></div>
-    <div class="app-container">
+<div id="toast-container"></div>
+<div class="app-container">
 
-        <div id="page-main" class="page active">
-			<header>
-				<div class="header-top">
-					<div class="header-branding">
-						<div class="app-title-group">
-							<h1>봉동중앙교회</h1>
-							<span class="app-subtitle">초등부 RPG 어드벤처</span>
-						</div>
-					</div>
-
-					<div class="header-actions">
-						<button class="icon-btn header-btn" onclick="showToast('알림', '새로운 퀘스트가 도착했습니다!', 'info')">
-							<img src="https://cdn-icons-png.flaticon.com/512/3602/3602145.png" alt="알림" style="filter: brightness(0) invert(1);">
-						</button>
-						<button class="icon-btn header-btn" onclick="handleLogout()">
-							<img src="https://cdn-icons-png.flaticon.com/512/1828/1828445.png" alt="로그아웃" style="filter: brightness(0) invert(1);">
-						</button>
+	<div id="page-main" class="page active">
+		<header>
+			<div class="header-top">
+				<div class="header-branding">
+					<div class="flex-col">
+						<h1>봉동중앙교회</h1>
+						<span class="app-subtitle">초등부 RPG 어드벤처</span>
 					</div>
 				</div>
-			</header>
+				<div class="header-center-badge">
+					SEASON 1<br>믿음의 갑주
+				</div>
+				<div class="header-actions flex-row gap-5">
+					<button class="icon-btn header-btn" onclick="showToast('알림', '새로운 퀘스트가 도착했습니다!', 'info')">
+						<img src="https://cdn-icons-png.flaticon.com/512/3602/3602145.png" alt="알림" style="filter: brightness(0) invert(1);">
+					</button>
+					<button class="icon-btn header-btn" onclick="handleLogout()">
+						<img src="https://cdn-icons-png.flaticon.com/512/1828/1828445.png" alt="로그아웃" style="filter: brightness(0) invert(1);">
+					</button>
+				</div>
+			</div>
+		</header>
 
-            <div class="profile-card">
-                <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                    <div class="profile-avatar-wrap">
-                        <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/warrior.png" id="user-profile-img" alt="내 캐릭터">
-                    </div>
-                    <div style="margin-left: 15px;">
-                        <div style="display: flex; gap: 5px;">
-                            <span class="user-rank-badge" style="background: #E3F2FD; color: #4A90E2;" id="user-grade-display">XXX 길드</span>
-                            <span class="user-rank-badge" style="background: #FFF3E0; color: #EF6C00;"><span id="user-level">2,500</span> 달란트</span>
+		<div class="profile-card">
+			<div class="flex-row mb-20">
+				<div class="profile-avatar-wrap">
+					<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/warrior.png" id="user-profile-img" alt="내 캐릭터" style="width:100%; height:100%; object-fit:cover;">
+				</div>
+				<div style="margin-left: 15px;">
+					<div class="flex-row gap-5">
+						<span class="user-rank-badge" style="background: #E3F2FD; color: #4A90E2;" id="user-grade-display">XXX 길드</span>
+						<span class="user-rank-badge" style="background: #FFF3E0; color: #EF6C00;"><span id="user-level">2,500</span> 달란트</span>
+					</div>
+					<h2 id="user-display-name" style="font-size: 1.3rem; color: #333;">신입 용사님</h2>
+				</div>
+			</div>
+
+			<div style="background: #FAFBFC; padding: 12px; border-radius: 15px;">
+				<div class="flex-between text-bold" style="font-size: 0.75rem; color: #777;">
+					<span>성장 경험치 (EXP)</span>
+					<span><span id="current-exp">60</span> / 100</span>
+				</div>
+				<div class="exp-container">
+					<div id="exp-bar" class="exp-bar-fill" style="width: 60%;"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="card text-center">
+			<div class="flex-between mb-10">
+				<h4 style="margin:0;">오늘의 말씀 📖</h4>
+				<span class="text-light">매일 1회</span>
+			</div>
+			<p style="font-style:italic; min-height: 1.6em; margin-bottom: 15px; text-align: left;">
+				<span id="typing-bible">내게 능력 주시는 자 안에서 내가 모든 것을 할 수 있느니라</span>
+			</p>
+			<button id="btn-amen" class="btn-amen" onclick="handleAmen()">
+				🙏 아멘! (믿음 +1)
+			</button>
+		</div>
+
+		<div class="card">
+			<div class="flex-between mb-15">
+				<div class="flex-row gap-5">
+					<h4 style="color: #4A90E2;">🛡️ 다윗의 용사들</h4>
+					<span style="background: #FFF3E0; color: #EF6C00; font-size: 0.7rem; padding: 2px 8px; border-radius: 6px; font-weight: bold;">LV.5</span>
+				</div>
+				<span style="font-size: 0.75rem; color: #666; font-weight: bold;">길드원 12/20</span>
+			</div>
+			<div class="flex-col gap-10">
+				<div class="member-item">
+					<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/warrior.png" class="member-avatar">
+					<div style="flex: 1;">
+						<div class="text-bold text-sub" style="color:#444;">김용사 (나) <span class="master-badge">MASTER</span></div>
+						<div class="text-light">오늘도 퀘스트 완료! 🔥</div>
+					</div>
+					<div class="text-right">
+						<div class="text-bold text-blue" style="font-size: 0.8rem;">Lv.15</div>
+					</div>
+				</div>
+				<div class="member-item" style="opacity: 0.8;">
+					<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/wizard.png" class="member-avatar">
+					<div style="flex: 1;">
+						<div class="text-bold text-sub" style="color:#444;">이마법</div>
+						<div class="text-light">접속 중</div>
+					</div>
+					<div class="text-right">
+						<div class="text-bold text-blue" style="font-size: 0.8rem;">Lv.12</div>
+					</div>
+				</div>
+				<button style="width: 100%; padding: 10px; border: 1px dashed #DDD; background: none; border-radius: 15px; color: #999; font-size: 0.8rem; cursor: pointer;">
+					+ 길드원 더보기
+				</button>
+			</div>
+		</div>
+
+		<div class="card mt-15">
+			<div class="flex-between mb-15">
+				<h4 style="margin: 0;">공지사항 📢</h4>
+				<span class="text-light" style="cursor: pointer;" onclick="showPage('page-notice-detail')">전체보기 ></span>
+			</div>
+			<div class="flex-col">
+				<div class="notice-item" onclick="showPage('page-notice-detail')">
+					<div class="flex-row mb-5">
+						<span class="notice-tag" style="background: #FFEBEB; color: #FF4D4D;">중요</span>
+						<span class="text-bold" style="font-size: 0.9rem;">이번 주 주일 야외 활동 안내</span>
+					</div>
+					<p class="text-sub" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">교회 근처 공원에서 보물찾기가 진행됩니다!</p>
+				</div>
+				<div class="notice-item" onclick="showPage('page-notice-detail')">
+					<div class="flex-row mb-5">
+						<span class="notice-tag" style="background: #E3F2FD; color: #2196F3;">안내</span>
+						<span class="text-bold" style="font-size: 0.9rem;">새 친구 환영 파티 (다음 주)</span>
+					</div>
+					<p class="text-sub" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">새로 온 친구들을 위해 맛있는 간식이 준비되어 있어요.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="page-notice-detail" class="page">
+		<div class="sub-header">
+			<div class="flex-row gap-5">
+				<button class="btn-back-game" onclick="showPage('page-main')">
+					<img src="https://cdn-icons-png.flaticon.com/512/271/271220.png" alt="뒤로">
+				</button>
+				<h2>공지사항</h2>
+			</div>
+			<div class="flex-row gap-10">
+				<div class="sub-info-badge">Lv.<span class="sub-lvl">1</span></div>
+				<div class="sub-info-badge money"><span class="sub-money">2500</span> P</div>
+			</div>
+		</div>
+		<div class="card">
+			<span class="text-bold text-blue" style="font-size: 0.8rem;">[야외 활동 안내]</span>
+			<h4 style="font-size:1.3rem; margin: 10px 0;">이번 주 주일 야외 활동 안내</h4>
+			<div style="width: 100%; height: 1px; background: #eee; margin: 15px 0;"></div>
+			<p style="color:#555; font-size:1rem; line-height: 1.8;">
+				안녕하세요, 용사 여러분!<br><br>
+				이번 주 주일에는 교회 근처 공원에서 <b>'말씀 보물찾기'</b>가 진행됩니다. <br><br>
+				준비물: 편한 옷차림, 운동화, 개인 물통<br>
+				일시: 이번 주 주일 11시 예배 후<br><br>
+				보물을 많이 찾는 용사에게는 특별한 달란트 보상이 기다리고 있으니 기대해 주세요!
+			</p>
+			<button class="btn btn-main" onclick="showPage('page-main')">목록으로</button>
+		</div>
+	</div>
+
+	<div id="page-attendance" class="page">
+		<div class="sub-header">
+			<div class="flex-row gap-5">
+				<button class="btn-back-game" onclick="showPage('page-main')">
+					<img src="https://cdn-icons-png.flaticon.com/512/271/271220.png" alt="뒤로">
+				</button>
+				<h2>주일 출석부</h2>
+			</div>
+			<div class="flex-row gap-10">
+				<div class="sub-info-badge">Lv.<span class="sub-lvl">1</span></div>
+				<div class="sub-info-badge money"><span class="sub-money">2500</span> P</div>
+			</div>
+		</div>
+
+		<div class="card" style="background: linear-gradient(135deg, #FF9966 0%, #FF5E62 100%); color: white; margin-top: 20px;">
+			<div class="flex-between">
+				<div class="flex-row gap-10">
+					<span style="font-size: 1.5rem;">🔥</span>
+					<span>현재 <b>3주 연속</b> 개근 중!</span>
+				</div>
+				<div style="background: rgba(255,255,255,0.25); padding: 6px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem;">개근상 도전!</div>
+			</div>
+		</div>
+
+		<div class="card text-center" style="padding: 30px 20px;">
+			<div class="flex-center gap-10 mb-10">
+				<h3 id="attendance-date-title">2월 1주차</h3>
+				<span class="text-white" id="sunday-badge" style="display:none; background: var(--secondary); font-size: 0.7rem; padding: 3px 8px; border-radius: 4px;">오늘은 주일!</span>
+			</div>
+
+			<p style="background: #F8F9FA; padding: 6px 12px; border-radius: 8px; display: inline-block; margin-bottom: 25px; color: #666; font-size: 0.9rem;">
+				🎁 주일 예배 출석 보상: <b style="color:#FFD700">100 P</b>
+			</p>
+
+			<div id="btn-attendance-check"
+				 style="width: 160px; height: 160px; margin: 20px auto; background: #ffffff; border-radius: 50%; box-shadow: 0 10px 25px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; position: relative; border: 4px solid transparent; background-image: linear-gradient(#fff, #fff), linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%); background-origin: border-box; background-clip: content-box, border-box;"
+				 onclick="handleSundayAttendance()">
+				<div class="stamp-inner-content" style="display: flex; flex-direction: column; align-items: center; z-index: 2;">
+					<img src="https://cdn-icons-png.flaticon.com/512/2919/2919600.png" class="stamp-icon-before" alt="교회" style="width: 48px; margin-bottom: 8px; opacity: 0.8;">
+					<span class="stamp-guide-text" id="stamp-guide-msg" style="color: var(--secondary); font-weight: 800; font-size: 0.85rem; line-height: 1.3;">터치하여<br>출석하기</span>
+				</div>
+				<div class="stamped-mark" style="display:none;">
+					<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/attendance.png" alt="참잘했어요" style="width: 130px;">
+				</div>
+			</div>
+			<p class="text-light mt-15">* 매주 일요일, 교회에 와서 도장을 꾹! 눌러주세요.</p>
+		</div>
+
+		<div class="section-title">📅 2월의 주일(Sunday)</div>
+		<div id="sunday-list-container" class="flex-col gap-10" style="padding: 0 20px 30px 20px;">
+		</div>
+	</div>
+
+	<div id="page-quest" class="page">
+		<div class="sub-header">
+			<div class="flex-row gap-5">
+				<button class="btn-back-game" onclick="showPage('page-main')">
+					<img src="https://cdn-icons-png.flaticon.com/512/271/271220.png" alt="뒤로">
+				</button>
+				<h2>퀘스트 보드</h2>
+			</div>
+			<div class="flex-row gap-10">
+				<div class="sub-info-badge">Lv.<span class="sub-lvl">1</span></div>
+				<div class="sub-info-badge money"><span class="sub-money">2500</span> P</div>
+			</div>
+		</div>
+
+		<div class="card" style="border: 1px dashed #ced4da; text-align: center;">
+			<div class="text-bold mb-10" style="background: #f8f9fa; display: inline-block; padding: 4px 12px; border-radius: 12px; color: #555;">💡 퀘스트 진행 방법</div>
+			<div class="flex-center gap-10 mb-10">
+				<div class="flex-col flex-center">
+					<span style="font-size: 1.2rem;">🏃</span><span class="text-bold" style="font-size:0.7rem;">미션 실천</span>
+				</div>
+				<span style="color:#ccc;">▶</span>
+				<div class="flex-col flex-center">
+					<span style="font-size: 1.2rem;">🟧</span><span class="text-bold" style="font-size:0.7rem;">승인 요청</span>
+				</div>
+				<span style="color:#ccc;">▶</span>
+				<div class="flex-col flex-center">
+					<span style="font-size: 1.2rem;">🎁</span><span class="text-bold" style="font-size:0.7rem;">보상 획득</span>
+				</div>
+			</div>
+			<p class="text-light">* 부모님(선생님)이 확인하면 완료됩니다!</p>
+		</div>
+
+		<div class="section-title">⚔️ 용사의 매일 훈련 (Daily)</div>
+		<div class="quest-card">
+			<div class="q-item" data-id="d1" data-reward="50">
+				<div class="q-icon-box">🙏</div>
+				<div class="q-content">
+					<div class="q-title">아침에 일어나서 기도하기</div>
+					<div class="q-desc">하루의 시작을 하나님과 함께!</div>
+					<div class="q-reward-tag">50 P</div>
+				</div>
+				<button class="btn-quest-action state-ready" onclick="handleQuestClick(this)">도전</button>
+			</div>
+			<div class="q-item" data-id="d2" data-reward="50">
+				<div class="q-icon-box">📖</div>
+				<div class="q-content">
+					<div class="q-title">성경 말씀 1장 읽기</div>
+					<div class="q-desc">오늘의 양식을 섭취해요</div>
+					<div class="q-reward-tag">50 P</div>
+				</div>
+				<button class="btn-quest-action state-ready" onclick="handleQuestClick(this)">도전</button>
+			</div>
+		</div>
+
+		<div class="section-title">👑 주일 스페셜 퀘스트 (Sunday)</div>
+		<div class="quest-card" style="position: relative;">
+			<div id="sunday-lock-overlay"
+				 style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.85); z-index:10; border-radius:25px; display:flex; flex-direction:column; align-items:center; justify-content:center; backdrop-filter: blur(2px);">
+				<div style="font-size:2.5rem; margin-bottom:10px;">🔒</div>
+				<p class="text-bold" style="color:#555;">주일(일요일)에 열립니다!</p>
+			</div>
+			<div class="q-item" data-id="s1" data-reward="100">
+				<div class="q-icon-box sunday">💒</div>
+				<div class="q-content">
+					<div class="q-title">주일 예배 지각하지 않기</div>
+					<div class="q-desc">10분 전에 자리에 앉아요</div>
+					<div class="q-reward-tag sunday">100 P</div>
+				</div>
+				<button class="btn-quest-action state-ready" onclick="handleQuestClick(this)">도전</button>
+			</div>
+			<div class="q-item" data-id="s2" data-reward="50">
+				<div class="q-icon-box sunday">💌</div>
+				<div class="q-content">
+					<div class="q-title">정성껏 헌금 준비하기</div>
+					<div class="q-desc">감사하는 마음을 담아요</div>
+					<div class="q-reward-tag sunday">50 P</div>
+				</div>
+				<button class="btn-quest-action state-ready" onclick="handleQuestClick(this)">도전</button>
+			</div>
+		</div>
+		<div class="h-20"></div>
+	</div>
+
+	<div id="page-guild" class="page">
+		<div class="sub-header">
+			<div class="flex-row gap-5">
+				<button class="btn-back-game" onclick="showPage('page-main')">
+					<img src="https://cdn-icons-png.flaticon.com/512/271/271220.png" alt="뒤로">
+				</button>
+				<h2>길드 본부</h2>
+			</div>
+			<div class="flex-row gap-10">
+				<div class="sub-info-badge">Lv.<span class="sub-lvl">1</span></div>
+				<div class="sub-info-badge money"><span class="sub-money">2500</span> P</div>
+			</div>
+		</div>
+
+		<div class="guild-banner-card">
+			<div class="guild-badge-wrapper">
+				<div class="guild-badge-icon">
+					<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/guild/grade/guid_image_4_1.png" alt="길드이미지">
+				</div>
+				<div class="guild-lvl-badge">LV. 5</div>
+			</div>
+			<h2 class="guild-main-name" style="margin: 5px 0;">다윗의 용사들</h2>
+			<p class="guild-desc" style="opacity: 0.8; font-style: italic; margin-bottom: 20px;">"두려워 말고 믿음으로 나아가자!"</p>
+			<div class="guild-stats-row" style="display: flex; justify-content: space-around; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 15px;">
+				<div class="flex-col">
+					<span style="font-size: 0.7rem; opacity: 0.6;">길드원</span>
+					<span style="font-weight: bold;">12/20</span>
+				</div>
+				<div class="flex-col">
+					<span style="font-size: 0.7rem; opacity: 0.6;">랭킹</span>
+					<span style="font-weight: bold;">3위</span>
+				</div>
+				<div class="flex-col">
+					<span style="font-size: 0.7rem; opacity: 0.6;">포인트</span>
+					<span style="font-weight: bold;">15,400</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="section-title">✨ 우리 길드 효과 (버프)</div>
+		<div class="flex-row gap-10" style="overflow-x: auto; padding: 0 20px 10px 20px;">
+			<div class="card flex-row gap-10" style="min-width: 130px; margin: 0; padding: 12px; border-radius: 15px;">
+				<div style="font-size: 1.5rem;">💰</div>
+				<div class="flex-col">
+					<strong style="font-size: 0.8rem;">달란트 보너스</strong>
+					<span class="text-blue" style="font-size: 0.7rem; font-weight: bold;">획득량 +5%</span>
+				</div>
+			</div>
+			<div class="card flex-row gap-10" style="min-width: 130px; margin: 0; padding: 12px; border-radius: 15px;">
+				<div style="font-size: 1.5rem;">⚔️</div>
+				<div class="flex-col">
+					<strong style="font-size: 0.8rem;">경험치 부스트</strong>
+					<span class="text-blue" style="font-size: 0.7rem; font-weight: bold;">성장속도 +10%</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="section-title">🔥 이번 주 협동 미션</div>
+		<div class="card">
+			<div class="flex-between mb-10">
+				<span class="q-reward-tag sunday" style="color: #EF6C00;">진행 중</span>
+				<span class="text-blue text-bold mission-percent">75%</span>
+			</div>
+			<h4>함께 성경 100장 읽기</h4>
+			<div style="width: 100%; height: 10px; background: #eee; border-radius: 10px; margin: 10px 0; overflow: hidden;">
+				<div class="progress-bar" style="width: 75%; height: 100%; background: linear-gradient(90deg, #4A90E2, #64B5F6);"></div>
+			</div>
+			<p class="text-sub mb-15">🎁 완료 시 전원 <b>500 달란트</b> 지급!</p>
+			<button class="btn btn-sub btn-contribute" onclick="handleGuildContribute()">
+				🙌 나도 기여하기 (말씀 읽기)
+			</button>
+		</div>
+
+		<div class="section-title">💬 길드원 응원방</div>
+		<div class="card">
+			<div id="guild-chat-list" style="max-height: 150px; overflow-y: auto; background: #F8F9FA; border-radius: 10px; padding: 10px; margin-bottom: 10px;">
+				<div class="mb-5 text-sub">
+					<span class="text-bold" style="color: #333; margin-right: 5px;">김하늘:</span>
+					<span>오늘 미션 다들 했어? 화이팅!</span>
+				</div>
+				<div class="mb-5 text-sub">
+					<span class="text-bold" style="color: #333; margin-right: 5px;">이믿음:</span>
+					<span>응! 나도 방금 완료했어 ㅎㅎ</span>
+				</div>
+			</div>
+			<div class="flex-row gap-5">
+				<input type="text" id="guild-chat-input" placeholder="응원 메시지를 남겨보세요!" style="margin: 0; flex: 1;">
+				<button onclick="sendGuildChat()" style="background: var(--secondary); color: white; border: none; border-radius: 10px; padding: 0 15px; font-weight: bold; height: 42px;">전송</button>
+			</div>
+		</div>
+	</div>
+
+	<div id="page-mypage" class="page">
+		<div class="sub-header">
+			<div class="flex-row gap-5">
+				<button class="btn-back-game" onclick="showPage('page-main')">
+					<img src="https://cdn-icons-png.flaticon.com/512/271/271220.png" alt="뒤로">
+				</button>
+				<h2>설정 / 내 정보</h2>
+			</div>
+			<div class="flex-row gap-10">
+				<div class="sub-info-badge">Lv.<span class="sub-lvl">1</span></div>
+				<div class="sub-info-badge money"><span class="sub-money">2500</span> P</div>
+			</div>
+		</div>
+
+		<div class="card text-center" style="padding: 0; overflow: hidden;">
+			<div style="height: 6px; background: linear-gradient(90deg, #4A90E2, #56CCF2);"></div>
+			<div style="padding: 30px 20px;">
+				<div style="position: relative; width: 80px; height: 80px; margin: 0 auto 12px;">
+					<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/warrior.png" id="mypage-img"
+						 style="width: 100%; height: 100%; object-fit: cover; border-radius: 25px; border: 3px solid #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+					<div style="position: absolute; bottom: -6px; right: -6px; background: #333; color: var(--primary); font-size: 0.65rem; font-weight: 800; padding: 3px 8px; border-radius: 12px; border: 2px solid #fff;">
+						LV.1
+					</div>
+				</div>
+				<div style="display: inline-block; background: #E3F2FD; color: #1565C0; font-size: 0.7rem; padding: 4px 12px; border-radius: 20px; font-weight: 700; margin-bottom: 5px;">⚔️ 전사
+					(Warrior)
+				</div>
+				<h2 id="mypage-name" style="font-size: 1.4rem; margin: 5px 0;">신입 용사님</h2>
+				<p class="text-light">봉동중앙교회 초등부 1학년 1반</p>
+			</div>
+			<div style="display: flex; justify-content: space-around; background: #FAFAFA; padding: 20px 0; border-top: 1px solid #f0f0f0;">
+				<div class="flex-col flex-center" style="flex: 1;">
+					<span class="text-light mb-5">보유 달란트</span>
+					<span style="font-size: 1rem; font-weight: 800;">2,500 P</span>
+				</div>
+				<div style="width: 1px; height: 30px; background: #e0e0e0;"></div>
+				<div class="flex-col flex-center" style="flex: 1;">
+					<span class="text-light mb-5">누적 출석</span>
+					<span style="font-size: 1rem; font-weight: 800; color: #333;">12일</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="flex-row gap-15" style="margin: 0 20px;">
+			<button class="card flex-col flex-center gap-10" style="margin: 0; flex: 1; cursor: pointer;" onclick="showPage('page-qrcode')">
+				<div class="flex-center" style="font-size: 1.5rem; background: #F1F8FF; width: 45px; height: 45px; border-radius: 15px;">🔍</div>
+				<span class="text-bold text-sub">QR 체크인</span>
+			</button>
+			<button class="card flex-col flex-center gap-10" style="margin: 0; flex: 1; cursor: pointer;" onclick="showPage('page-point-history')">
+				<div class="flex-center" style="font-size: 1.5rem; background: #F1F8FF; width: 45px; height: 45px; border-radius: 15px;">💰</div>
+				<span class="text-bold text-sub">포인트 내역</span>
+			</button>
+		</div>
+
+		<div class="section-title text-light">계정 관리</div>
+		<div class="menu-list">
+			<div class="menu-item" onclick="showPage('page-name-change')">
+				<div class="flex-row gap-10">
+					<span style="font-size: 1.1rem;">🏷️</span>
+					<span class="text-bold text-sub">캐릭터 이름 변경</span>
+				</div>
+				<span style="color:#ccc;">›</span>
+			</div>
+			<div class="menu-item" onclick="showPage('page-password-change')">
+				<div class="flex-row gap-10">
+					<span style="font-size: 1.1rem;">🔐</span>
+					<span class="text-bold text-sub">비밀번호 변경</span>
+				</div>
+				<span style="color:#ccc;">›</span>
+			</div>
+		</div>
+		<div class="section-title text-light">앱 설정</div>
+		<div class="menu-list">
+			<div class="menu-item" onclick="handleLogout()">
+				<div class="flex-row gap-10">
+					<span style="font-size: 1.1rem;">🚪</span>
+					<span class="text-bold text-red">로그아웃</span>
+				</div>
+				<span style="color:#ccc;">›</span>
+			</div>
+		</div>
+		<div class="app-version-text text-center text-light mt-30 mb-20">Ver 1.0.0</div>
+	</div>
+
+	<div id="page-point-history" class="page">
+		<div class="sub-header">
+			<div class="flex-row gap-5">
+				<button class="btn-back-game" onclick="showPage('page-mypage')">
+					<img src="https://cdn-icons-png.flaticon.com/512/271/271220.png" alt="뒤로">
+				</button>
+				<h2>포인트 내역</h2>
+			</div>
+			<div class="flex-row gap-10">
+				<div class="sub-info-badge">Lv.<span class="sub-lvl">1</span></div>
+				<div class="sub-info-badge money"><span class="sub-money">2500</span> P</div>
+			</div>
+		</div>
+
+		<div class="point-summary-card">
+			<span style="font-size: 0.85rem; opacity: 0.8;">현재 보유 달란트</span>
+			<h2 class="total-point">
+				<span class="sub-money">2,500</span> <small style="font-size: 1.2rem;">P</small>
+			</h2>
+			<div class="point-card-bottom">
+				<div class="flex-col flex-center text-sub" style="color: white;">
+					<span>이번 주 획득</span>
+					<strong style="font-size: 1rem;">+150 P</strong>
+				</div>
+				<div style="width: 1px; height: 25px; background: rgba(255,255,255,0.3);"></div>
+				<div class="flex-col flex-center text-sub" style="color: white;">
+					<span>이번 주 사용</span>
+					<strong style="font-size: 1rem; color: #FFCDD2;">-500 P</strong>
+				</div>
+			</div>
+		</div>
+
+		<div class="history-filter-tabs">
+			<button class="filter-tab active" onclick="setHistoryFilter('all')">전체</button>
+			<button class="filter-tab" onclick="setHistoryFilter('earn')">적립 (+)</button>
+			<button class="filter-tab" onclick="setHistoryFilter('use')">사용 (-)</button>
+		</div>
+		<div class="menu-list" id="point-history-list" style="min-height: 200px;"></div>
+		<button id="btn-load-more" class="btn-load-more" onclick="loadMoreHistory()">👇 더 보기 (More)</button>
+	</div>
+
+	<div id="page-qrcode" class="page">
+		<div class="sub-header">
+			<div class="flex-row gap-5">
+				<button class="btn-back-game" onclick="showPage('page-mypage')"><img src="https://cdn-icons-png.flaticon.com/512/271/271220.png" alt="뒤로"></button>
+				<h2>나의 QR코드</h2>
+			</div>
+		</div>
+		<div class="card text-center" style="margin-top: 30px; padding: 40px 20px;">
+			<div class="mb-20">
+				<h4 id="qr-user-name" style="margin-bottom: 5px;">신입 용사님</h4>
+				<p class="text-light">출석체크나 달란트 시장에서 보여주세요!</p>
+			</div>
+			<div style="background: white; padding: 15px; display: inline-block; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 25px;">
+				<img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=BongdongUser" id="user-qr-image" alt="QR Code" style="width: 180px; height: 180px; display: block;">
+			</div>
+			<p class="text-light">선생님께 이 화면을 보여드리면<br>빠르게 출석 확인을 할 수 있어요! 🛡️</p>
+		</div>
+	</div>
+
+	<div id="page-name-change" class="page">
+		<div class="sub-header">
+			<div class="flex-row gap-5">
+				<button class="btn-back-game" onclick="showPage('page-mypage')"><img src="https://cdn-icons-png.flaticon.com/512/271/271220.png" alt="뒤로"></button>
+				<h2>캐릭터명 변경</h2>
+			</div>
+		</div>
+		<div class="card" style="margin-top: 20px;">
+			<div class="text-center mb-25">
+				<div style="font-size: 3rem; margin-bottom: 10px;">🏷️</div>
+				<p class="text-sub">모험가님의 새로운 이름을 정해주세요!</p>
+			</div>
+			<div class="mb-25">
+				<label class="text-bold text-sub mb-5" style="display: block; margin-left: 5px;">새로운 캐릭터명</label>
+				<input type="text" id="new-character-name" placeholder="2~8자 사이로 입력해 주세요" maxlength="8">
+			</div>
+			<button class="btn btn-main" onclick="handleNameChange()">변경하기</button>
+		</div>
+	</div>
+
+	<div id="page-password-change" class="page">
+		<div class="sub-header">
+			<div class="flex-row gap-5">
+				<button class="btn-back-game" onclick="showPage('page-mypage')"><img src="https://cdn-icons-png.flaticon.com/512/271/271220.png" alt="뒤로"></button>
+				<h2>비밀번호 변경</h2>
+			</div>
+		</div>
+		<div class="card" style="margin-top: 20px;">
+			<div class="text-center mb-25">
+				<div style="font-size: 3rem; margin-bottom: 10px;">🔐</div>
+				<p class="text-sub">안전한 모험을 위해<br>비밀번호를 변경해 주세요!</p>
+			</div>
+			<div class="mb-15"><input type="password" id="current-pw" placeholder="기존 비밀번호 입력"></div>
+			<div class="mb-15"><input type="password" id="new-pw" placeholder="새 비밀번호 입력"></div>
+			<div class="mb-25"><input type="password" id="new-pw-confirm" placeholder="새 비밀번호 다시 입력"></div>
+			<button class="btn btn-main" onclick="handlePasswordChange()">비밀번호 변경 완료</button>
+		</div>
+	</div>
+
+	<nav class="nav-bar" id="bottom-nav">
+		<button class="nav-item active" onclick="showPage('page-main')">
+			<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/navi/home.png"><span>홈</span>
+		</button>
+		<button class="nav-item" onclick="showPage('page-attendance')">
+			<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/navi/stamp.png"><span>출석</span>
+		</button>
+		<button class="nav-item" onclick="showPage('page-guild')">
+			<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/navi/guild.png"><span>길드</span>
+		</button>
+		<button class="nav-item" onclick="showPage('page-quest')">
+			<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/navi/quest.png"><span>퀘스트</span>
+		</button>
+		<button class="nav-item" onclick="showPage('page-mypage')">
+			<img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/navi/settings.png"><span>설정</span>
+		</button>
+	</nav>
+</div>
+
+<div id="custom-alert">
+	<div class="card text-center" style="max-width:320px; padding:30px; margin: 20px;">
+		<div id="alert-icon" style="font-size: 3rem; margin-bottom: 15px;">✨</div>
+		<h4 id="alert-title" class="mb-10 text-blue">알림</h4>
+		<p id="alert-message" class="text-sub mb-25" style="line-height: 1.5; word-break: keep-all;"></p>
+		<button class="btn btn-main" onclick="closeAlert()" style="margin-top:0;">확인</button>
+	</div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+	let currentTalent = 2500;
+
+	// 페이지 전환 함수
+	function showPage(pageId) {
+		$('.page').hide();
+		$('#' + pageId).show();
+		$('#bottom-nav').css('display', 'flex');
+
+		if (pageId === 'page-main') {
+			const targetExp = $('#current-exp').text();
+			const totalExp = 100;
+			const percentage = (targetExp / totalExp) * 100;
+			$('#exp-bar').css('width', '0%');
+			setTimeout(() => {
+				$('#exp-bar').css('width', percentage + '%');
+			}, 100);
+			typeBible();
+		}
+
+		$('.nav-item').removeClass('active');
+		if (pageId === 'page-main') $('.nav-item').eq(0).addClass('active');
+		if (pageId === 'page-attendance') {
+			initSundayAttendance();
+			$('.nav-item').eq(1).addClass('active');
+		}
+		if (pageId === 'page-guild') $('.nav-item').eq(2).addClass('active');
+		if (pageId === 'page-quest') {
+			initQuestPage();
+			$('.nav-item').eq(3).addClass('active');
+		}
+		if (pageId === 'page-mypage') $('.nav-item').eq(4).addClass('active');
+		if (pageId === 'page-point-history') {
+			setHistoryFilter('all');
+		}
+	}
+
+	function updateTalent(amount) {
+		let $subDisplay = $('.sub-money, #user-level');
+		let startValue = currentTalent;
+		let endValue = currentTalent + amount;
+		$({val: startValue}).animate({val: endValue}, {
+			duration: 800, easing: 'swing',
+			step: function () {
+				$subDisplay.text(Math.floor(this.val).toLocaleString());
+			},
+			complete: function () {
+				currentTalent = endValue;
+				$subDisplay.text(currentTalent.toLocaleString());
+			}
+		});
+	}
+
+	function showAlert(msg, icon = '✨', title = '알림') {
+		$('#alert-message').html(msg);
+		$('#alert-icon').html(icon);
+		$('#alert-title').text(title);
+		$('#custom-alert').addClass('active');
+	}
+
+	function closeAlert() {
+		$('#custom-alert').removeClass('active');
+	}
+
+	$(document).ready(function () {
+		// 초기화
+		updateTalent(0);
+	});
+
+	const bibleText = "내게 능력 주시는 자 안에서 내가 모든 것을 할 수 있느니라";
+	let typingIdx = 0;
+	let isTyping = false;
+
+	function typeBible() {
+		if (isTyping) return;
+		const $target = $('#typing-bible');
+		$target.text("");
+		typingIdx = 0;
+		isTyping = true;
+
+		function typing() {
+			if (typingIdx < bibleText.length) {
+				$target.append(bibleText[typingIdx]);
+				typingIdx++;
+				setTimeout(typing, 100);
+			} else {
+				isTyping = false;
+			}
+		}
+
+		typing();
+	}
+
+	function handleLogout() {
+		location.href = 'intro.html';
+	}
+
+	function handlePasswordChange() {
+		const currentPw = $('#current-pw').val();
+		const newPw = $('#new-pw').val();
+		const newPwConfirm = $('#new-pw-confirm').val();
+
+		if (!currentPw || !newPw || !newPwConfirm) {
+			showAlert('모든 항목을 입력해주세요!', '⚠️', '입력 오류');
+			return;
+		}
+		if (newPw !== newPwConfirm) {
+			showAlert('새 비밀번호가 서로 일치하지 않아요.', '❌', '확인 실패');
+			return;
+		}
+		if (newPw.length < 4) {
+			showAlert('비밀번호는 4자리 이상으로 해주세요!', '🔑', '보안 약함');
+			return;
+		}
+		showAlert('비밀번호가 안전하게 변경되었습니다!<br>새로운 마음으로 모험을 떠나볼까요?', '✨', '변경 완료');
+		$('#current-pw, #new-pw, #new-pw-confirm').val('');
+		showPage('page-mypage');
+	}
+
+	function showToast(title, msg, type = 'info') {
+		const id = Date.now();
+		const icons = {success: '✅', reward: '💰', warning: '⚠️', info: '📢'};
+		const icon = icons[type] || '🔔';
+		const toastHtml = `
+            <div class="toast-item ${type}" id="toast-${id}">
+                <div style="font-size:1.5rem;">${icon}</div>
+                <div class="flex-col">
+                    <span class="text-bold" style="font-size:0.95rem; color:#333;">${title}</span>
+                    <span class="text-sub">${msg}</span>
+                </div>
+                <button class="toast-close" onclick="removeToast(${id})">&times;</button>
+            </div>`;
+		$('#toast-container').append(toastHtml);
+	}
+
+	function removeToast(id) {
+		const $target = $(`#toast-${id}`);
+		if ($target.length) {
+			$target.css('animation', 'toastFadeOut 0.3s forwards');
+			setTimeout(() => $target.remove(), 300);
+		}
+	}
+
+	function handleNameChange() {
+		const newName = $('#new-character-name').val().trim();
+		if (!newName) {
+			showToast('입력 오류', '변경할 이름을 입력해주세요.', 'warning');
+			return;
+		}
+		if (newName.length < 2) {
+			showToast('입력 오류', '이름은 최소 2글자 이상이어야 합니다.', 'warning');
+			return;
+		}
+		$('#user-display-name').text(newName);
+		$('#mypage-name').text(newName);
+		$('#qr-user-name').text(newName);
+		showAlert(`이제부터 모험가님의 이름은<br><b>[${newName}]</b> 입니다!`, '✨', '변경 완료');
+		showToast('변경 성공', '캐릭터명이 성공적으로 바뀌었습니다.', 'success');
+		$('#new-character-name').val('');
+		showPage('page-mypage');
+	}
+
+	function handleAmen() {
+		const $btn = $('#btn-amen');
+		if ($btn.hasClass('disabled')) return;
+		$btn.addClass('disabled').text('오늘의 말씀을 마음에 새겼습니다 ✨');
+		showToast('믿음이 성장했습니다!', '말씀 보상으로 10P를 획득했어요.', 'reward');
+		updateTalent(10);
+		showAlert('오늘 하루도 말씀 안에서 승리하세요!', '💖', '아멘!');
+	}
+
+	// 데이터 부분 (축약함)
+	const historyData = [
+		{type: 'earn', category: 'attendance', title: '주일 출석 보상', date: '2025.02.02', amount: 100, balance: 2600},
+		{type: 'earn', category: 'quest', title: '일일 퀘스트 완료', date: '2025.02.02', amount: 50, balance: 2500},
+		{type: 'use', category: 'shop', title: '달란트 시장 (학용품)', date: '2025.02.01', amount: -500, balance: 2450},
+		{type: 'earn', category: 'event', title: '성경 암송 대회', date: '2025.01.28', amount: 300, balance: 2950},
+		{type: 'earn', category: 'food', title: '간식 나눔', date: '2025.01.28', amount: 50, balance: 2650},
+		{type: 'use', category: 'shop', title: '친구 선물 구매', date: '2025.01.25', amount: -200, balance: 2600},
+		{type: 'earn', category: 'attendance', title: '주일 출석 보상', date: '2025.01.26', amount: 100, balance: 2800},
+		{type: 'earn', category: 'quest', title: '성경 필사 완료', date: '2025.01.25', amount: 150, balance: 2700},
+		{type: 'earn', category: 'quest', title: '부모님 안마', date: '2025.01.24', amount: 50, balance: 2550},
+		{type: 'use', category: 'event', title: '지각 벌금', date: '2025.01.22', amount: -50, balance: 2500},
+		{type: 'earn', category: 'attendance', title: '주일 출석 보상', date: '2025.01.19', amount: 100, balance: 2550},
+		{type: 'earn', category: 'quest', title: '큐티(QT) 인증', date: '2025.01.18', amount: 30, balance: 2450},
+		{type: 'earn', category: 'quest', title: '큐티(QT) 인증', date: '2025.01.17', amount: 30, balance: 2420},
+		{type: 'earn', category: 'quest', title: '큐티(QT) 인증', date: '2025.01.16', amount: 30, balance: 2390},
+		{type: 'earn', category: 'event', title: '신년 감사 예배', date: '2025.01.01', amount: 500, balance: 2360},
+		{type: 'use', category: 'shop', title: '떡볶이 파티', date: '2024.12.31', amount: -1000, balance: 1860},
+		{type: 'earn', category: 'attendance', title: '송구영신 예배', date: '2024.12.31', amount: 200, balance: 2860},
+		{type: 'earn', category: 'quest', title: '전도 축제 친구초청', date: '2024.12.25', amount: 1000, balance: 2660},
+		{type: 'earn', category: 'attendance', title: '성탄절 예배', date: '2024.12.25', amount: 200, balance: 1660},
+		{type: 'earn', category: 'attendance', title: '주일 출석 보상', date: '2024.12.22', amount: 100, balance: 1460},
+	];
+
+	const categoryIcons = {attendance: '⛪', quest: '⚔️', shop: '🛒', food: '🍔', event: '🎉', default: '💰'};
+	let currentHistoryFilter = 'all';
+	let currentPage = 1;
+	const itemsPerPage = 7;
+	let filteredData = [];
+
+	function setHistoryFilter(filterType) {
+		currentHistoryFilter = filterType;
+		currentPage = 1;
+		$('.filter-tab').removeClass('active');
+		$(`.filter-tab[onclick="setHistoryFilter('${filterType}')"]`).addClass('active');
+		renderHistory(true);
+	}
+
+	function loadMoreHistory() {
+		currentPage++;
+		renderHistory(false);
+	}
+
+	function handleGuildContribute() {
+		const btn = document.querySelector('.btn-contribute');
+		if (btn.disabled) {
+			showToast('이미 완료', '오늘의 기여를 이미 마쳤습니다!', 'warning');
+			return;
+		}
+		btn.innerHTML = '기여 중...⏳';
+		setTimeout(() => {
+			btn.innerHTML = '✅ 기여 완료! (내일 또 만나요)';
+			btn.disabled = true;
+			btn.style.background = '#ccc';
+			btn.style.color = '#fff';
+			showToast('기여 성공!', '길드 공헌도 +10, 개인 달란트 +20 획득!', 'success');
+			updateTalent(20);
+			$('.guild-mission-card .progress-bar').css('width', '78%');
+			$('.guild-mission-card .mission-percent').text('78%');
+		}, 1000);
+	}
+
+	function sendGuildChat() {
+		const $input = $('#guild-chat-input');
+		const msg = $input.val().trim();
+		if (!msg) return;
+		const myName = $('#user-display-name').text();
+		const chatHtml = `<div class="mb-5 text-sub" style="animation: fadeIn 0.3s;"><span class="text-bold text-blue" style="margin-right:5px;">${myName}:</span><span>${msg}</span></div>`;
+		$('#guild-chat-list').append(chatHtml);
+		const chatList = document.getElementById('guild-chat-list');
+		chatList.scrollTop = chatList.scrollHeight;
+		$input.val('');
+	}
+
+	$('#guild-chat-input').on('keypress', function (e) {
+		if (e.which === 13) sendGuildChat();
+	});
+
+	function initSundayAttendance() {
+		const today = new Date();
+		const currentYear = today.getFullYear();
+		const currentMonth = today.getMonth();
+		$('#attendance-date-title').text(`${currentMonth + 1}월 출석부`);
+		const isSunday = (today.getDay() === 0);
+		if (isSunday) {
+			$('#sunday-badge').show();
+			$('#stamp-guide-msg').html('주일 예배<br>왔어요!');
+			$('#btn-attendance-check').removeClass('disabled');
+		} else {
+			$('#sunday-badge').hide();
+			$('#stamp-guide-msg').html('주일(일요일)에<br>만나요!');
+			$('#btn-attendance-check').addClass('disabled');
+			$('.stamp-icon-before').attr('src', 'https://cdn-icons-png.flaticon.com/512/2693/2693507.png');
+		}
+		renderSundayList(currentYear, currentMonth, today);
+	}
+
+	function renderSundayList(year, month, todayObj) {
+		const $container = $('#sunday-list-container');
+		$container.empty();
+		let date = new Date(year, month, 1);
+		const todayDate = todayObj.getDate();
+		while (date.getDay() !== 0) {
+			date.setDate(date.getDate() + 1);
+		}
+		while (date.getMonth() === month) {
+			const sundayDate = date.getDate();
+			let statusHtml = '';
+			let itemClass = 'menu-item sunday-item'; // 클래스 사용
+			if (sundayDate < todayDate) {
+				statusHtml = '<span class="text-bold text-sub">✅ 출석완료 (+100P)</span>';
+			} else if (sundayDate === todayDate) {
+				itemClass += ' this-week';
+				statusHtml = '<span class="text-bold text-red">👉 도장을 찍어주세요</span>';
+			} else {
+				statusHtml = '<span class="text-light">⏳ 기다리는 중</span>';
+			}
+			// CSS 클래스로 대체하여 인라인 스타일 제거
+			const html = `
+                <div class="${itemClass}" style="border: 1px solid #f0f0f0; border-radius:12px; padding:15px; cursor:default;">
+                    <div class="flex-row gap-15">
+                        <div class="flex-col text-center" style="min-width:40px;">
+                            <span class="text-light">${month + 1}월</span>
+                            <span class="text-bold" style="font-size:1.1rem; color:#444;">${sundayDate}</span>
                         </div>
-                        <h2 id="user-display-name" style="font-size: 1.3rem; color: #333;">신입 용사님</h2>
+                        <div class="text-bold text-sub">주일 예배</div>
                     </div>
-                </div>
+                    <div>${statusHtml}</div>
+                </div>`;
+			$container.append(html);
+			date.setDate(date.getDate() + 7);
+		}
+	}
 
-                <div style="background: #FAFBFC; padding: 12px; border-radius: 15px;">
-                    <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: bold; color: #777;">
-                        <span>성장 경험치 (EXP)</span>
-                        <span><span id="current-exp">60</span> / 100</span>
-                    </div>
-                    <div class="exp-container">
-                        <div id="exp-bar" class="exp-bar-fill" style="width: 60%;"></div>
-                    </div>
-                </div>
-            </div>
+	function handleSundayAttendance() {
+		const $btn = $('#btn-attendance-check');
+		if ($btn.hasClass('checked')) {
+			showToast('이미 완료', '오늘 출석은 이미 완료되었습니다.', 'info');
+			return;
+		}
+		$btn.addClass('checked');
+		$btn.find('.stamp-inner-content').fadeOut(100, function () {
+			$btn.find('.stamped-mark').show();
+		});
+		updateTalent(100);
+		setTimeout(() => {
+			showAlert('주일 출석 완료!', '하나님 말씀 안에서<br>행복한 주일 보내세요! (100P 획득)', '🎉 아멘!');
+			showToast('출석 성공', '3주 연속 개근 중입니다!', 'success');
+		}, 400);
+	}
 
-            <div class="card" style="text-align: center;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                    <h4 style="margin:0;">오늘의 말씀 📖</h4>
-                    <span style="font-size:0.7rem; color:#999;">매일 1회</span>
-                </div>
-                <p style="font-style:italic; min-height: 1.6em; margin-bottom: 15px; text-align: left;">
-                    <span id="typing-bible">내게 능력 주시는 자 안에서 내가 모든 것을 할 수 있느니라</span>
-                </p>
-                <button id="btn-amen" class="btn-amen" onclick="handleAmen()">
-                    🙏 아멘! (믿음 +1)
-                </button>
-            </div>
+	function initQuestPage() {
+		const today = new Date();
+		const isSunday = (today.getDay() === 0);
+		if (isSunday) {
+			$('#sunday-lock-overlay').hide();
+		} else {
+			$('#sunday-lock-overlay').hide();
+		}
+	}
 
-            <div class="guild-section">
-                <div class="guild-header">
-                    <div class="guild-name">
-                        <h4 style="color: #4A90E2;">🛡️ 다윗의 용사들</h4>
-                        <span class="guild-tag">LV.5</span>
-                    </div>
-                    <span style="font-size: 0.75rem; color: #666; font-weight: bold;">길드원 12/20</span>
-                </div>
-                <div class="guild-member-list">
-                    <div class="member-item">
-                        <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/warrior.png" class="member-avatar">
-                        <div class="member-info">
-                            <div class="member-name">김용사 (나) <span class="master-badge">MASTER</span></div>
-                            <div class="member-status">오늘도 퀘스트 완료! 🔥</div>
+	function handleQuestClick(btn) {
+		const $btn = $(btn);
+		const $item = $btn.closest('.q-item');
+		const reward = parseInt($item.data('reward'));
+		if ($btn.hasClass('state-ready')) {
+			$btn.removeClass('state-ready').addClass('state-wait');
+			$btn.text('승인요청');
+			showToast('승인 요청 완료', '선생님께 확인 요청을 보냈습니다. (가상)', 'info');
+		} else if ($btn.hasClass('state-wait')) {
+			if (!confirm('선생님(부모님)께 미션 완료를 확인 받으셨나요?')) return;
+			$btn.removeClass('state-wait').addClass('state-done');
+			$btn.text('완료됨');
+			$item.addClass('done');
+			updateTalent(reward);
+			showAlert('퀘스트 승인 완료!', `참 잘했어요! 보상으로<br><b>${reward}P</b>를 받았습니다.`, '🎉 성공');
+			showToast('보상 지급', `${reward} 포인트 획득!`, 'reward');
+		} else if ($btn.hasClass('state-done')) {
+			showToast('이미 완료', '오늘의 보상을 이미 받았습니다.', 'warning');
+		}
+	}
+
+	// [수정] renderHistory 함수에서 인라인 스타일 제거 및 CSS 클래스 사용
+	function renderHistory(reset = false) {
+		const $list = $('#point-history-list');
+		const $btnMore = $('#btn-load-more');
+
+		if (reset) {
+			$list.empty();
+			if (currentHistoryFilter === 'all') filteredData = historyData;
+			else filteredData = historyData.filter(item => item.type === currentHistoryFilter);
+		}
+
+		const startIndex = (currentPage - 1) * itemsPerPage;
+		const endIndex = startIndex + itemsPerPage;
+		const pageData = filteredData.slice(startIndex, endIndex);
+
+		if (filteredData.length === 0) {
+			$list.html('<div class="empty-history text-light">내역이 없습니다. 텅! 🗑️</div>');
+			$btnMore.hide();
+			return;
+		}
+
+		let lastDate = null;
+		if (!reset && $('.history-date-header').last().length > 0) {
+			lastDate = $('.history-date-header').last().data('date');
+		}
+
+		pageData.forEach(item => {
+			if (item.date !== lastDate) {
+				$list.append(`<div class="history-date-header" data-date="${item.date}">${item.date}</div>`);
+				lastDate = item.date;
+			}
+
+			const isPlus = item.amount > 0;
+			const colorClass = isPlus ? 'text-blue' : 'text-red';
+			const amountStr = (isPlus ? '+' : '') + item.amount.toLocaleString();
+			const iconChar = categoryIcons[item.category] || categoryIcons.default;
+
+			// HTML 생성 부분 최적화 (유틸리티 클래스 사용)
+			const html = `
+                <div class="menu-item" style="cursor: default;">
+                    <div class="flex-row">
+                        <div class="flex-center" style="width: 40px; height: 40px; background: #F8F9FA; border-radius: 12px; font-size: 1.2rem; margin-right: 12px;">
+                            ${iconChar}
                         </div>
-                        <div style="text-align: right;">
-                            <div style="font-size: 0.8rem; font-weight: bold; color: #4A90E2;">Lv.15</div>
+                        <div class="flex-col">
+                            <span class="text-bold" style="font-size: 0.9rem; color:#333;">${item.title}</span>
+                            <small class="text-light">${item.category === 'shop' ? '사용 완료' : '지급 완료'}</small>
                         </div>
                     </div>
-                    <div class="member-item" style="opacity: 0.8;">
-                        <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/wizard.png" class="member-avatar">
-                        <div class="member-info">
-                            <div class="member-name">이마법</div>
-                            <div class="member-status">접속 중</div>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-size: 0.8rem; font-weight: bold; color: #4A90E2;">Lv.12</div>
-                        </div>
+                    <div class="text-right">
+                        <div class="${colorClass} text-bold" style="font-size: 1rem;">${amountStr}</div>
+                        ${item.balance ? `<small class="text-light">잔액 ${item.balance.toLocaleString()}</small>` : ''}
                     </div>
-                    <button style="width: 100%; padding: 10px; border: 1px dashed #DDD; background: none; border-radius: 15px; color: #999; font-size: 0.8rem; cursor: pointer;">
-                        + 길드원 더보기
-                    </button>
-                </div>
-            </div>
-
-            <div class="card" style="margin-top:15px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h4 style="margin: 0;">공지사항 📢</h4>
-                    <span style="font-size: 0.7rem; color: var(--gray); cursor: pointer;" onclick="showPage('page-notice-detail')">전체보기 ></span>
-                </div>
-                <div class="notice-list">
-                    <div class="notice-item" onclick="showPage('page-notice-detail')">
-                        <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
-                            <span style="background: #FFEBEB; color: #FF4D4D; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: bold;">중요</span>
-                            <span style="font-size: 0.9rem; font-weight: 700; color: #333;">이번 주 주일 야외 활동 안내</span>
-                        </div>
-                        <p style="font-size: 0.8rem; color: #777; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">교회 근처 공원에서 보물찾기가 진행됩니다!</p>
-                    </div>
-                    <div class="notice-item" onclick="showPage('page-notice-detail')">
-                        <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
-                            <span style="background: #E3F2FD; color: #2196F3; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: bold;">안내</span>
-                            <span style="font-size: 0.9rem; font-weight: 700; color: #333;">새 친구 환영 파티 (다음 주)</span>
-                        </div>
-                        <p style="font-size: 0.8rem; color: #777; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">새로 온 친구들을 위해 맛있는 간식이 준비되어 있어요.</p>
-                    </div>
-                    <div class="notice-item" onclick="showPage('page-notice-detail')">
-                        <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
-                            <span style="background: #F5F5F5; color: #666; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: bold;">필독</span>
-                            <span style="font-size: 0.9rem; font-weight: 700; color: #333;">달란트 시장 개최 공지</span>
-                        </div>
-                        <p style="font-size: 0.8rem; color: #777; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">열심히 모은 달란트를 사용할 시간이 왔습니다!</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="page-notice-detail" class="page">
-            <div class="sub-header">
-                <div class="sub-header-left">
-                    <button class="btn-back-game" onclick="showPage('page-main')">
-                        <img src="https://cdn-icons-png.flaticon.com/512/271/271220.png" alt="뒤로">
-                    </button>
-                    <h2>공지사항</h2>
-                </div>
-                <div class="sub-header-info">
-                    <div class="sub-info-badge">Lv.<span class="sub-lvl">1</span></div>
-                    <div class="sub-info-badge money"><span class="sub-money">2500</span> P</div>
-                    <button class="icon-btn btn-logout-new" onclick="handleLogout()" title="로그아웃" style="width: 28px; height: 28px; background: rgba(255,255,255,0.15);">
-                        <img src="https://cdn-icons-png.flaticon.com/512/1828/1828445.png" alt="로그아웃" style="width: 14px; height: 14px;">
-                    </button>
-                </div>
-            </div>
-            <div class="card" style="padding: 25px;">
-                <span style="color: #2196F3; font-weight: bold; font-size: 0.8rem;">[야외 활동 안내]</span>
-                <h4 style="font-size:1.3rem; margin: 10px 0; text-align: left;">이번 주 주일 야외 활동 안내</h4>
-                <div style="width: 100%; height: 1px; background: #eee; margin: 15px 0;"></div>
-                <p style="color:#555; font-size:1rem; line-height: 1.8;">
-                    안녕하세요, 용사 여러분!<br><br>
-                    이번 주 주일에는 교회 근처 공원에서 <b>'말씀 보물찾기'</b>가 진행됩니다. <br><br>
-                    준비물: 편한 옷차림, 운동화, 개인 물통<br>
-                    일시: 이번 주 주일 11시 예배 후<br><br>
-                    보물을 많이 찾는 용사에게는 특별한 달란트 보상이 기다리고 있으니 기대해 주세요!
-                </p>
-                <button class="btn btn-main" onclick="showPage('page-main')">목록으로</button>
-            </div>
-        </div>
-
-        <div id="page-attendance" class="page">
-            <div class="sub-header">
-                <div class="sub-header-left">
-                    <button class="btn-back-game" onclick="showPage('page-main')">
-                        <img src="https://cdn-icons-png.flaticon.com/512/271/271220.png" alt="뒤로">
-                    </button>
-                    <h2>주일 출석부</h2>
-                </div>
-                <div class="sub-header-info">
-                    <div class="sub-info-badge">Lv.<span class="sub-lvl">1</span></div>
-                    <div class="sub-info-badge money"><span class="sub-money">2500</span> P</div>
-                    <button class="icon-btn btn-logout-new" onclick="handleLogout()" title="로그아웃" style="width: 28px; height: 28px; background: rgba(255,255,255,0.15);">
-                        <img src="https://cdn-icons-png.flaticon.com/512/1828/1828445.png" alt="로그아웃" style="width: 14px; height: 14px;">
-                    </button>
-                </div>
-            </div>
-
-            <div class="attendance-streak-banner">
-                <div class="streak-content">
-                    <span class="fire-icon">🔥</span>
-                    <span>현재 <b>3주 연속</b> 개근 중!</span>
-                </div>
-                <div class="streak-bonus">개근상 도전!</div>
-            </div>
-
-            <div class="card stamp-main-card">
-                <div class="stamp-header">
-                    <h3 id="attendance-date-title">2월 1주차</h3>
-                    <span class="today-badge" id="sunday-badge" style="display:none;">오늘은 주일!</span>
-                </div>
-                
-                <p class="today-reward-text">주일 예배 출석 보상: <b style="color:#FFD700">100 P</b></p>
-                
-                <div id="btn-attendance-check" class="stamp-btn-area" onclick="handleSundayAttendance()">
-                    <div class="stamp-inner-content">
-                        <div class="pulse-ring"></div> <img src="https://cdn-icons-png.flaticon.com/512/2919/2919600.png" class="stamp-icon-before" alt="교회">
-                        <span class="stamp-guide-text" id="stamp-guide-msg">터치하여<br>출석하기</span>
-                    </div>
-                    <div class="stamped-mark" style="display:none;">
-                        <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/attendance.png" alt="참잘했어요">
-                    </div>
-                </div>
-                <p style="font-size: 0.8rem; color: #999; margin-top: 15px;">
-                    * 매주 일요일, 교회에 와서 도장을 꾹! 눌러주세요.
-                </p>
-            </div>
-
-            <div class="section-title">📅 2월의 주일(Sunday)</div>
-            <div class="sunday-list-container" id="sunday-list-container">
-                </div>
-        </div>
-
-        <div id="page-quest" class="page">
-            <div class="sub-header">
-                <div class="sub-header-left">
-                    <button class="btn-back-game" onclick="showPage('page-main')">
-                        <img src="https://cdn-icons-png.flaticon.com/512/271/271220.png" alt="뒤로">
-                    </button>
-                    <h2>퀘스트 보드</h2>
-                </div>
-                <div class="sub-header-info">
-                    <div class="sub-info-badge">Lv.<span class="sub-lvl">1</span></div>
-                    <div class="sub-info-badge money"><span class="sub-money">2500</span> P</div>
-                    <button class="icon-btn btn-logout-new" onclick="handleLogout()" title="로그아웃" style="width: 28px; height: 28px; background: rgba(255,255,255,0.15);">
-                        <img src="https://cdn-icons-png.flaticon.com/512/1828/1828445.png" alt="로그아웃" style="width: 14px; height: 14px;">
-                    </button>
-                </div>
-            </div>
-
-            <div class="quest-guide-box">
-                <div class="guide-title">💡 퀘스트 진행 방법</div>
-                <div class="guide-steps">
-                    <div class="step">
-                        <div class="step-icon">🏃</div>
-                        <span>미션 실천</span>
-                    </div>
-                    <div class="step-arrow">▶</div>
-                    <div class="step">
-                        <div class="step-icon">🟧</div>
-                        <span>승인 요청</span>
-                    </div>
-                    <div class="step-arrow">▶</div>
-                    <div class="step">
-                        <div class="step-icon">🎁</div>
-                        <span>보상 획득</span>
-                    </div>
-                </div>
-                <p class="guide-sub-text">
-                    * 부모님(선생님)이 확인하면 완료됩니다!
-                </p>
-            </div>
-
-            <div class="section-title">⚔️ 용사의 매일 훈련 (Daily)</div>
-            
-            <div class="quest-card daily-theme">
-                <div class="q-item" data-id="d1" data-reward="50">
-                    <div class="q-icon-box">🙏</div>
-                    <div class="q-content">
-                        <div class="q-title">아침에 일어나서 기도하기</div>
-                        <div class="q-desc">하루의 시작을 하나님과 함께!</div>
-                        <div class="q-reward-tag">50 P</div>
-                    </div>
-                    <button class="btn-quest-action state-ready" onclick="handleQuestClick(this)">도전</button>
-                </div>
-                <div class="q-item" data-id="d2" data-reward="50">
-                    <div class="q-icon-box">📖</div>
-                    <div class="q-content">
-                        <div class="q-title">성경 말씀 1장 읽기</div>
-                        <div class="q-desc">오늘의 양식을 섭취해요</div>
-                        <div class="q-reward-tag">50 P</div>
-                    </div>
-                    <button class="btn-quest-action state-ready" onclick="handleQuestClick(this)">도전</button>
-                </div>
-                <div class="q-item" data-id="d3" data-reward="50">
-                    <div class="q-icon-box">💖</div>
-                    <div class="q-content">
-                        <div class="q-title">부모님 안마 해드리기</div>
-                        <div class="q-desc">효도는 하나님의 명령!</div>
-                        <div class="q-reward-tag">50 P</div>
-                    </div>
-                    <button class="btn-quest-action state-ready" onclick="handleQuestClick(this)">도전</button>
-                </div>
-            </div>
-
-            <div class="section-title">👑 주일 스페셜 퀘스트 (Sunday)</div>
-            
-            <div class="quest-card sunday-theme">
-                <div id="sunday-lock-overlay" style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.85); z-index:10; border-radius:25px; display:flex; flex-direction:column; align-items:center; justify-content:center; backdrop-filter: blur(2px);">
-                    <div style="font-size:2.5rem; margin-bottom:10px;">🔒</div>
-                    <p style="font-size:1rem; font-weight:bold; color:#555;">주일(일요일)에 열립니다!</p>
-                    <small style="color:#888;">조금만 기다려주세요</small>
-                </div>
-
-                <div class="q-item" data-id="s1" data-reward="100">
-                    <div class="q-icon-box sunday">💒</div>
-                    <div class="q-content">
-                        <div class="q-title">주일 예배 지각하지 않기</div>
-                        <div class="q-desc">10분 전에 자리에 앉아요</div>
-                        <div class="q-reward-tag sunday">100 P</div>
-                    </div>
-                    <button class="btn-quest-action state-ready" onclick="handleQuestClick(this)">도전</button>
-                </div>
-                <div class="q-item" data-id="s2" data-reward="50">
-                    <div class="q-icon-box sunday">💌</div>
-                    <div class="q-content">
-                        <div class="q-title">정성껏 헌금 준비하기</div>
-                        <div class="q-desc">감사하는 마음을 담아요</div>
-                        <div class="q-reward-tag sunday">50 P</div>
-                    </div>
-                    <button class="btn-quest-action state-ready" onclick="handleQuestClick(this)">도전</button>
-                </div>
-                <div class="q-item" data-id="s3" data-reward="100">
-                    <div class="q-icon-box sunday">🗣️</div>
-                    <div class="q-content">
-                        <div class="q-title">이번 주 요절 암송하기</div>
-                        <div class="q-desc">선생님 앞에서 외워보세요!</div>
-                        <div class="q-reward-tag sunday">100 P</div>
-                    </div>
-                    <button class="btn-quest-action state-ready" onclick="handleQuestClick(this)">도전</button>
-                </div>
-            </div>
-            <div style="height: 20px;"></div>
-        </div>
-
-        <div id="page-guild" class="page">
-            <div class="sub-header">
-                <div class="sub-header-left">
-                    <button class="btn-back-game" onclick="showPage('page-main')">
-                        <img src="https://cdn-icons-png.flaticon.com/512/271/271220.png" alt="뒤로">
-                    </button>
-                    <h2>길드 본부</h2>
-                </div>
-                <div class="sub-header-info">
-                    <div class="sub-info-badge">Lv.<span class="sub-lvl">1</span></div>
-                    <div class="sub-info-badge money"><span class="sub-money">2500</span> P</div>
-                    <button class="icon-btn btn-logout-new" onclick="handleLogout()" title="로그아웃" style="width: 28px; height: 28px; background: rgba(255,255,255,0.15);">
-                        <img src="https://cdn-icons-png.flaticon.com/512/1828/1828445.png" alt="로그아웃" style="width: 14px; height: 14px;">
-                    </button>
-                </div>
-            </div>
-
-            <div class="guild-banner-card">
-                <div class="guild-badge-wrapper">
-                    <div class="guild-badge-icon">🛡️</div>
-                    <div class="guild-lvl-badge">LV. 5</div>
-                </div>
-                <h2 class="guild-main-name">다윗의 용사들</h2>
-                <p class="guild-desc">"두려워 말고 믿음으로 나아가자!"</p>
-                <div class="guild-stats-row">
-                    <div class="g-stat">
-                        <span class="label">길드원</span>
-                        <span class="val">12/20</span>
-                    </div>
-                    <div class="g-stat">
-                        <span class="label">랭킹</span>
-                        <span class="val">3위</span>
-                    </div>
-                    <div class="g-stat">
-                        <span class="label">포인트</span>
-                        <span class="val">15,400</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="section-title">✨ 우리 길드 효과 (버프)</div>
-            <div class="guild-buff-container">
-                <div class="buff-item active">
-                    <div class="buff-icon">💰</div>
-                    <div class="buff-info">
-                        <strong>달란트 보너스</strong>
-                        <span>획득량 +5%</span>
-                    </div>
-                </div>
-                <div class="buff-item active">
-                    <div class="buff-icon">⚔️</div>
-                    <div class="buff-info">
-                        <strong>경험치 부스트</strong>
-                        <span>성장속도 +10%</span>
-                    </div>
-                </div>
-                <div class="buff-item locked" onclick="showToast('잠김', '길드 레벨 10 달성 시 해제됩니다.', 'warning')">
-                    <div class="buff-icon">🔒</div>
-                    <div class="buff-info">
-                        <strong>레벨 10 해금</strong>
-                        <span>???</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="section-title">🔥 이번 주 협동 미션</div>
-            <div class="card guild-mission-card">
-                <div class="mission-header">
-                    <span class="mission-tag">진행 중</span>
-                    <span class="mission-percent">75%</span>
-                </div>
-                <h4>함께 성경 100장 읽기</h4>
-                <div class="progress-container">
-                    <div class="progress-bar" style="width: 75%;"></div>
-                </div>
-                <p class="mission-reward">🎁 완료 시 전원 <b>500 달란트</b> 지급!</p>
-                <button class="btn btn-sub btn-contribute" onclick="handleGuildContribute()">
-                    🙌 나도 기여하기 (말씀 읽기)
-                </button>
-            </div>
-
-            <div class="section-title">💬 길드원 응원방</div>
-            <div class="card chat-card">
-                <div id="guild-chat-list" class="chat-list">
-                    <div class="chat-msg">
-                        <span class="chat-user">김하늘:</span>
-                        <span class="chat-text">오늘 미션 다들 했어? 화이팅!</span>
-                    </div>
-                    <div class="chat-msg">
-                        <span class="chat-user">이믿음:</span>
-                        <span class="chat-text">응! 나도 방금 완료했어 ㅎㅎ</span>
-                    </div>
-                </div>
-                <div class="chat-input-area">
-                    <input type="text" id="guild-chat-input" placeholder="응원 메시지를 남겨보세요!">
-                    <button onclick="sendGuildChat()">전송</button>
-                </div>
-            </div>
-
-            <div class="section-title" style="margin-top: 20px;">👥 길드 멤버</div>
-            <div class="card" style="padding: 10px;">
-                <ul class="guild-member-ul">
-                    <li class="member-li">
-                        <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/warrior.png" class="m-avatar">
-                        <div class="m-info">
-                            <strong>김용사 (나)</strong>
-                            <span class="m-role master">길드장</span>
-                        </div>
-                        <div class="m-contribution">기여도 1등 👑</div>
-                    </li>
-                    <li class="member-li">
-                        <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/healer.png" class="m-avatar">
-                        <div class="m-info">
-                            <strong>이믿음</strong>
-                            <span class="m-role">길드원</span>
-                        </div>
-                        <div class="m-contribution">기여도 340</div>
-                    </li>
-                    <li class="member-li">
-                        <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/wizard.png" class="m-avatar">
-                        <div class="m-info">
-                            <strong>박지혜</strong>
-                            <span class="m-role">길드원</span>
-                        </div>
-                        <div class="m-contribution">기여도 210</div>
-                    </li>
-                </ul>
-                <button class="btn-more-member">🔽 전체 멤버 보기</button>
-            </div>
-        </div>
-
-        <div id="page-mypage" class="page">
-            <div class="sub-header">
-                <div class="sub-header-left">
-                    <button class="btn-back-game" onclick="showPage('page-main')">
-                        <img src="https://cdn-icons-png.flaticon.com/512/271/271220.png" alt="뒤로">
-                    </button>
-                    <h2>설정 / 내 정보</h2>
-                </div>
-                <div class="sub-header-info">
-                    <div class="sub-info-badge">Lv.<span class="sub-lvl">1</span></div>
-                    <div class="sub-info-badge money"><span class="sub-money">2500</span> P</div>
-                    <button class="icon-btn btn-logout-new" onclick="handleLogout()" title="로그아웃" style="width: 28px; height: 28px; background: rgba(255,255,255,0.15);">
-                        <img src="https://cdn-icons-png.flaticon.com/512/1828/1828445.png" alt="로그아웃" style="width: 14px; height: 14px;">
-                    </button>
-                </div>
-            </div>
-
-            <div class="mypage-banner-card">
-                <div class="mp-banner-top">
-                    <div class="mp-banner-avatar">
-                        <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/warrior.png" id="mypage-img" alt="내 캐릭터">
-                        <div class="mp-banner-lvl">LV.1</div>
-                    </div>
-                    <div class="mp-banner-info">
-                        <div class="mp-class-badge">⚔️ 전사 (Warrior)</div>
-                        <h2 id="mypage-name">신입 용사님</h2>
-                        <p class="mp-desc">봉동중앙교회 초등부 1학년 1반</p>
-                    </div>
-                </div>
-                
-                <div class="mp-stats-row">
-                    <div class="mp-stat">
-                        <span class="label">보유 달란트</span>
-                        <span class="val" style="color: #FBC02D;">2,500 P</span>
-                    </div>
-                    <div class="mp-stat">
-                        <span class="label">누적 출석</span>
-                        <span class="val">12일</span>
-                    </div>
-                    <div class="mp-stat">
-                        <span class="label">완료 퀘스트</span>
-                        <span class="val">45개</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="quick-action-row">
-                <button class="btn-quick-action" onclick="showPage('page-qrcode')">
-                    <div class="icon-box">🔍</div>
-                    <span>QR 체크인</span>
-                </button>
-                <button class="btn-quick-action" onclick="showPage('page-point-history')">
-                    <div class="icon-box">💰</div>
-                    <span>포인트 내역</span>
-                </button>
-            </div>
-
-            <div class="settings-group-title">계정 관리</div>
-            <div class="card menu-list-group">
-                <div class="menu-item" onclick="showPage('page-name-change')">
-                    <div class="menu-left">
-                        <span class="menu-icon">🏷️</span>
-                        <span>캐릭터 이름 변경</span>
-                    </div>
-                    <span class="arrow">›</span>
-                </div>
-                <div class="menu-item" onclick="showPage('page-password-change')">
-                    <div class="menu-left">
-                        <span class="menu-icon">🔐</span>
-                        <span>비밀번호 변경</span>
-                    </div>
-                    <span class="arrow">›</span>
-                </div>
-                <div class="menu-item" onclick="showToast('준비 중', '캐릭터 꾸미기는 곧 오픈됩니다!', 'info')">
-                    <div class="menu-left">
-                        <span class="menu-icon">🛡️</span>
-                        <span>아바타 변경 (준비중)</span>
-                    </div>
-                    <span class="arrow">›</span>
-                </div>
-            </div>
-
-            <div class="settings-group-title">앱 설정</div>
-            <div class="card menu-list-group">
-                <div class="menu-item" onclick="window.open('https://church-website.com', '_blank')">
-                    <div class="menu-left">
-                        <span class="menu-icon">📢</span>
-                        <span>공지사항 / 홈페이지</span>
-                    </div>
-                    <span class="arrow">›</span>
-                </div>
-                <div class="menu-item" onclick="handleLogout()">
-                    <div class="menu-left">
-                        <span class="menu-icon">🚪</span>
-                        <span style="color: #FF5252;">로그아웃</span>
-                    </div>
-                    <span class="arrow">›</span>
-                </div>
-            </div>
-            <div class="app-version-text">봉동중앙교회 초등부 RPG Ver 1.0.0</div>
-            <div style="height: 20px;"></div>
-        </div>
-
-        <div id="page-qrcode" class="page">
-            <div class="sub-header">
-                <div class="sub-header-left">
-                    <button class="btn-back-game" onclick="showPage('page-mypage')">
-                        <img src="https://cdn-icons-png.flaticon.com/512/271/271220.png" alt="뒤로">
-                    </button>
-                    <h2>나의 QR코드</h2>
-                </div>
-                <div class="sub-header-info">
-                    <div class="sub-info-badge">Lv.<span class="sub-lvl">1</span></div>
-                    <div class="sub-info-badge money"><span class="sub-money">2500</span> P</div>
-                    <button class="icon-btn btn-logout-new" onclick="handleLogout()" title="로그아웃" style="width: 28px; height: 28px; background: rgba(255,255,255,0.15);">
-                        <img src="https://cdn-icons-png.flaticon.com/512/1828/1828445.png" alt="로그아웃" style="width: 14px; height: 14px;">
-                    </button>
-                </div>
-            </div>
-            <div class="card" style="margin-top: 30px; text-align: center; padding: 40px 20px;">
-                <div style="margin-bottom: 20px;">
-                    <h4 style="color: #333; margin-bottom: 5px;" id="qr-user-name">신입 용사님</h4>
-                    <p style="font-size: 0.85rem; color: #888;">출석체크나 달란트 시장에서 보여주세요!</p>
-                </div>
-                <div style="background: white; padding: 15px; display: inline-block; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 25px;">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=BongdongUser" id="user-qr-image" alt="QR Code" style="width: 180px; height: 180px; display: block;">
-                </div>
-                <p style="font-size: 0.8rem; color: #999; line-height: 1.5;">
-                    선생님께 이 화면을 보여드리면<br>빠르게 출석 확인을 할 수 있어요! 🛡️
-                </p>
-            </div>
-        </div>
-
-        <div id="page-name-change" class="page">
-            <div class="sub-header">
-                <div class="sub-header-left">
-                    <button class="btn-back-game" onclick="showPage('page-mypage')">
-                        <img src="https://cdn-icons-png.flaticon.com/512/271/271220.png" alt="뒤로">
-                    </button>
-                    <h2>캐릭터명 변경</h2>
-                </div>
-                <div class="sub-header-info">
-                    <div class="sub-info-badge">Lv.<span class="sub-lvl">1</span></div>
-                    <div class="sub-info-badge money"><span class="sub-money">2500</span> P</div>
-                </div>
-            </div>
-            <div class="card" style="margin-top: 20px;">
-                <div style="text-align: center; margin-bottom: 25px;">
-                    <div style="font-size: 3rem; margin-bottom: 10px;">🏷️</div>
-                    <p style="color: #666; font-size: 0.9rem;">모험가님의 새로운 이름을 정해주세요!<br>이름은 언제든지 다시 바꿀 수 있습니다.</p>
-                </div>
-                <div style="margin-bottom: 25px;">
-                    <label style="font-size: 0.85rem; font-weight: bold; color: #555; display: block; margin-bottom: 5px; margin-left: 5px;">새로운 캐릭터명</label>
-                    <input type="text" id="new-character-name" placeholder="2~8자 사이로 입력해 주세요" maxlength="8">
-                </div>
-                <button class="btn btn-main" onclick="handleNameChange()">변경하기</button>
-            </div>
-        </div>
-
-        <div id="page-point-history" class="page">
-            <div class="sub-header">
-                <div class="sub-header-left">
-                    <button class="btn-back-game" onclick="showPage('page-mypage')">
-                        <img src="https://cdn-icons-png.flaticon.com/512/271/271220.png" alt="뒤로">
-                    </button>
-                    <h2>포인트 내역</h2>
-                </div>
-                <div class="sub-header-info">
-                    <div class="sub-info-badge">Lv.<span class="sub-lvl">1</span></div>
-                    <div class="sub-info-badge money"><span class="sub-money">2500</span> P</div>
-                    <button class="icon-btn btn-logout-new" onclick="handleLogout()" title="로그아웃" style="width: 28px; height: 28px; background: rgba(255,255,255,0.15);">
-                        <img src="https://cdn-icons-png.flaticon.com/512/1828/1828445.png" alt="로그아웃" style="width: 14px; height: 14px;">
-                    </button>
-                </div>
-            </div>
-
-            <div class="point-summary-card">
-                <div class="point-card-top">
-                    <span class="card-label">현재 보유 달란트</span>
-                </div>
-                <div class="point-amount-wrap">
-                    <h2 class="total-point">
-                        <span class="sub-money">2,500</span> <small>P</small>
-                    </h2>
-                </div>
-                <div class="point-card-bottom">
-                    <div class="mini-stat">
-                        <span>이번 주 획득</span>
-                        <strong>+150 P</strong>
-                    </div>
-                    <div class="divider"></div>
-                    <div class="mini-stat">
-                        <span>이번 주 사용</span>
-                        <strong style="color: #FFCDD2;">-500 P</strong>
-                    </div>
-                </div>
-            </div>
-
-            <div class="history-filter-tabs">
-                <button class="filter-tab active" onclick="setHistoryFilter('all')">전체</button>
-                <button class="filter-tab" onclick="setHistoryFilter('earn')">적립 (+)</button>
-                <button class="filter-tab" onclick="setHistoryFilter('use')">사용 (-)</button>
-            </div>
-            <div class="menu-list" id="point-history-list" style="min-height: 200px;"></div>
-            <button id="btn-load-more" class="btn-load-more" onclick="loadMoreHistory()">👇 더 보기 (More)</button>
-        </div>
-
-        <div id="page-password-change" class="page">
-            <div class="sub-header">
-                <div class="sub-header-left">
-                    <button class="btn-back-game" onclick="showPage('page-mypage')">
-                        <img src="https://cdn-icons-png.flaticon.com/512/271/271220.png" alt="뒤로">
-                    </button>
-                    <h2>비밀번호 변경</h2>
-                </div>
-                <div class="sub-header-info">
-                    <div class="sub-info-badge">Lv.<span class="sub-lvl">1</span></div>
-                    <div class="sub-info-badge money"><span class="sub-money">2500</span> P</div>
-                    <button class="icon-btn btn-logout-new" onclick="handleLogout()" title="로그아웃" style="width: 28px; height: 28px; background: rgba(255,255,255,0.15);">
-                        <img src="https://cdn-icons-png.flaticon.com/512/1828/1828445.png" alt="로그아웃" style="width: 14px; height: 14px;">
-                    </button>
-                </div>
-            </div>
-            <div class="card" style="margin-top: 20px;">
-                <div style="text-align: center; margin-bottom: 25px;">
-                    <div style="font-size: 3rem; margin-bottom: 10px;">🔐</div>
-                    <p style="color: #666; font-size: 0.9rem;">안전한 모험을 위해<br>비밀번호를 정기적으로 변경해 주세요!</p>
-                </div>
-                <div style="margin-bottom: 15px;">
-                    <label style="font-size: 0.85rem; font-weight: bold; color: #555; display: block; margin-bottom: 5px; margin-left: 5px;">현재 비밀번호</label>
-                    <input type="password" id="current-pw" placeholder="기존 비밀번호 입력">
-                </div>
-                <div style="margin-bottom: 15px;">
-                    <label style="font-size: 0.85rem; font-weight: bold; color: #555; display: block; margin-bottom: 5px; margin-left: 5px;">새 비밀번호</label>
-                    <input type="password" id="new-pw" placeholder="새 비밀번호 입력">
-                </div>
-                <div style="margin-bottom: 25px;">
-                    <label style="font-size: 0.85rem; font-weight: bold; color: #555; display: block; margin-bottom: 5px; margin-left: 5px;">새 비밀번호 확인</label>
-                    <input type="password" id="new-pw-confirm" placeholder="새 비밀번호 다시 입력">
-                </div>
-                <button class="btn btn-main" onclick="handlePasswordChange()">비밀번호 변경 완료</button>
-            </div>
-        </div>
-
-        <nav class="nav-bar" id="bottom-nav">
-            <button class="nav-item active" onclick="showPage('page-main')">
-                <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/navi/home.png">
-                <span>홈</span>
-            </button>
-            <button class="nav-item" onclick="showPage('page-attendance')">
-                <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/navi/stamp.png">
-                <span>출석</span>
-            </button>
-            <button class="nav-item" onclick="showPage('page-guild')">
-                <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/navi/guild.png">
-                <span>길드</span>
-            </button>
-            <button class="nav-item" onclick="showPage('page-quest')">
-                <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/navi/quest.png">
-                <span>퀘스트</span>
-            </button>
-            <button class="nav-item" onclick="showPage('page-mypage')">
-                <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/navi/settings.png">
-                <span>설정</span>
-            </button>
-        </nav>
-    </div>
-
-    <div id="custom-alert">
-        <div class="card" style="max-width:320px; text-align:center; padding:30px; transform: scale(0.9); transition: transform 0.2s;">
-            <div id="alert-icon" style="font-size: 3rem; margin-bottom: 15px;">✨</div>
-            <h4 id="alert-title" style="margin-bottom: 10px; color: var(--secondary);">알림</h4>
-            <p id="alert-message" style="font-size: 0.95rem; color: #666; margin-bottom: 25px; line-height: 1.5; word-break: keep-all;"></p>
-            <button class="btn btn-main" onclick="closeAlert()" style="margin-top:0;">확인</button>
-        </div>
-    </div>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        let currentTalent = 2500;
-
-        // 페이지 전환 함수
-        function showPage(pageId) {
-            $('.page').hide();
-            $('#' + pageId).show();
-            $('#bottom-nav').css('display', 'flex');
-
-            // --- 경험치 바 애니메이션 로직 ---
-            if (pageId === 'page-main') {
-                const targetExp = $('#current-exp').text(); 
-                const totalExp = 100; 
-                const percentage = (targetExp / totalExp) * 100;
-
-                $('#exp-bar').css('width', '0%');
-                setTimeout(() => {
-                    $('#exp-bar').css('width', percentage + '%');
-                }, 100);
-
-                typeBible();
-            }
-            
-            $('.nav-item').removeClass('active');
-            if (pageId === 'page-main') $('.nav-item').eq(0).addClass('active');
-            if (pageId === 'page-attendance'){
-                initSundayAttendance();
-                $('.nav-item').eq(1).addClass('active');
-            }
-            if (pageId === 'page-guild') $('.nav-item').eq(2).addClass('active');
-            if (pageId === 'page-quest'){
-                initQuestPage();
-                $('.nav-item').eq(3).addClass('active');
-            }
-            if (pageId === 'page-mypage') $('.nav-item').eq(4).addClass('active');
-            if (pageId === 'page-point-history') { setHistoryFilter('all'); }
-        }
-
-        // 달란트 카운팅 애니메이션 함수
-        function updateTalent(amount) {
-            let $subDisplay = $('.sub-money, #user-level'); 
-
-            let startValue = currentTalent;
-            let endValue = currentTalent + amount;
-
-            $({val: startValue}).animate({val: endValue}, {
-                duration: 800,
-                easing: 'swing',
-                step: function () {
-                    let formatted = Math.floor(this.val).toLocaleString();
-                    $subDisplay.text(formatted);
-                },
-                complete: function () {
-                    currentTalent = endValue;
-                    $subDisplay.text(currentTalent.toLocaleString());
-                }
-            });
-        }
-
-        function showAlert(msg, icon = '✨', title = '알림') {
-            $('#alert-message').html(msg);
-            $('#alert-icon').html(icon);
-            $('#alert-title').text(title);
-            $('#custom-alert').addClass('active');
-        }
-
-        function closeAlert() {
-            $('#custom-alert').removeClass('active');
-        }
-
-        $(document).ready(function () {
-            $('#current-date').text(
-                new Date().toLocaleDateString('ko-KR', {year: 'numeric', month: 'long', day: 'numeric'}));
-            // 초기 애니메이션 등
-            updateTalent(0); 
-        });
-
-        const bibleText = "내게 능력 주시는 자 안에서 내가 모든 것을 할 수 있느니라";
-        let typingIdx = 0;
-        let isTyping = false; 
-
-        function typeBible() {
-            if (isTyping) return; 
-
-            const $target = $('#typing-bible');
-            $target.text(""); 
-            typingIdx = 0;
-            isTyping = true;
-
-            function typing() {
-                if (typingIdx < bibleText.length) {
-                    $target.append(bibleText[typingIdx]);
-                    typingIdx++;
-                    setTimeout(typing, 100); 
-                } else {
-                    isTyping = false; 
-                }
-            }
-            typing();
-        }
-
-        function handleLogout(){
-            location.href = 'intro.html';
-        }
-
-        function handlePasswordChange() {
-            const currentPw = $('#current-pw').val();
-            const newPw = $('#new-pw').val();
-            const newPwConfirm = $('#new-pw-confirm').val();
-
-            if (!currentPw || !newPw || !newPwConfirm) {
-                showAlert('모든 항목을 입력해주세요!', '⚠️', '입력 오류');
-                return;
-            }
-            if (newPw !== newPwConfirm) {
-                showAlert('새 비밀번호가 서로 일치하지 않아요.', '❌', '확인 실패');
-                return;
-            }
-            if (newPw.length < 4) {
-                showAlert('비밀번호는 4자리 이상으로 해주세요!', '🔑', '보안 약함');
-                return;
-            }
-            showAlert('비밀번호가 안전하게 변경되었습니다!<br>새로운 마음으로 모험을 떠나볼까요?', '✨', '변경 완료');
-            $('#current-pw, #new-pw, #new-pw-confirm').val('');
-            showPage('page-mypage');
-        }
-
-        function showToast(title, msg, type = 'info') {
-            const id = Date.now();
-            const icons = { success: '✅', reward: '💰', warning: '⚠️', info: '📢' };
-            const icon = icons[type] || '🔔';
-
-            const toastHtml = `
-                <div class="toast-item ${type}" id="toast-${id}">
-                    <div class="toast-icon">${icon}</div>
-                    <div class="toast-content">
-                        <span class="toast-title">${title}</span>
-                        <span class="toast-msg">${msg}</span>
-                    </div>
-                    <button class="toast-close" onclick="removeToast(${id})">&times;</button>
                 </div>
             `;
-            $('#toast-container').append(toastHtml);
-            // setTimeout(() => removeToast(id), 5000); // 자동 닫힘
-        }
+			$list.append(html);
+		});
 
-        function removeToast(id) {
-            const $target = $(`#toast-${id}`);
-            if ($target.length) {
-                $target.css('animation', 'toastFadeOut 0.3s forwards');
-                setTimeout(() => $target.remove(), 300);
-            }
-        }
-
-        function handleNameChange() {
-            const newName = $('#new-character-name').val().trim();
-            if (!newName) {
-                showToast('입력 오류', '변경할 이름을 입력해주세요.', 'warning');
-                return;
-            }
-            if (newName.length < 2) {
-                showToast('입력 오류', '이름은 최소 2글자 이상이어야 합니다.', 'warning');
-                return;
-            }
-            $('#user-display-name').text(newName);
-            $('#mypage-name').text(newName);
-            $('#qr-user-name').text(newName);
-            
-            showAlert(`이제부터 모험가님의 이름은<br><b>[${newName}]</b> 입니다!`, '✨', '변경 완료');
-            showToast('변경 성공', '캐릭터명이 성공적으로 바뀌었습니다.', 'success');
-            $('#new-character-name').val('');
-            showPage('page-mypage');
-        }
-
-        function handleAmen() {
-            const $btn = $('#btn-amen');
-            if ($btn.hasClass('disabled')) return;
-            $btn.addClass('disabled').text('오늘의 말씀을 마음에 새겼습니다 ✨');
-            showToast('믿음이 성장했습니다!', '말씀 보상으로 10P를 획득했어요.', 'reward');
-            updateTalent(10);
-            showAlert('오늘 하루도 말씀 안에서 승리하세요!', '💖', '아멘!');
-        }
-
-        // --- 포인트 내역 로직 ---
-        const historyData = [
-            { type: 'earn', title: '주일 출석 보상', date: '2025.12.28', amount: 100 },
-            { type: 'earn', title: '일일 퀘스트 완료', date: '2025.12.27', amount: 50 },
-            { type: 'use',  title: '달란트 시장 (학용품)', date: '2025.12.20', amount: -500 },
-            { type: 'earn', title: '성경 암송 대회 우수상', date: '2025.12.15', amount: 300 },
-            { type: 'earn', title: '친구 전도 보상', date: '2025.12.10', amount: 200 },
-            { type: 'use',  title: '간식 구매 (떡볶이)', date: '2025.12.05', amount: -150 },
-            { type: 'earn', title: '특별 새벽 기도회', date: '2025.12.01', amount: 100 },
-            ...Array(20).fill({ type: 'earn', title: '지난 주 출석', date: '2025.11.xx', amount: 50 })
-        ];
-
-        let currentHistoryFilter = 'all';
-        let currentPage = 1;
-        const itemsPerPage = 7; 
-        let filteredData = []; 
-
-        function setHistoryFilter(filterType) {
-            currentHistoryFilter = filterType;
-            currentPage = 1;
-            $('.filter-tab').removeClass('active');
-            $(`.filter-tab[onclick="setHistoryFilter('${filterType}')"]`).addClass('active');
-            renderHistory(true);
-        }
-
-        function loadMoreHistory() {
-            currentPage++;
-            renderHistory(false);
-        }
-
-        function renderHistory(reset = false) {
-            const $list = $('#point-history-list');
-            const $btnMore = $('#btn-load-more');
-
-            if (reset) {
-                $list.empty();
-                if (currentHistoryFilter === 'all') {
-                    filteredData = historyData;
-                } else {
-                    filteredData = historyData.filter(item => item.type === currentHistoryFilter);
-                }
-            }
-
-            const startIndex = (currentPage - 1) * itemsPerPage;
-            const endIndex = startIndex + itemsPerPage;
-            const pageData = filteredData.slice(startIndex, endIndex);
-
-            if (filteredData.length === 0) {
-                $list.html('<div class="empty-history">내역이 없습니다. 텅! 🗑️</div>');
-                $btnMore.hide();
-                return;
-            }
-
-            pageData.forEach(item => {
-                const isPlus = item.amount > 0;
-                const colorClass = isPlus ? '#4A90E2' : '#e74c3c'; 
-                const amountStr = (isPlus ? '+' : '') + item.amount.toLocaleString() + ' P';
-                
-                const html = `
-                    <div class="menu-item" style="cursor: default; display: flex; justify-content: space-between; align-items: center; animation: fadeIn 0.5s;">
-                        <div style="display: flex; flex-direction: column;">
-                            <span style="font-size: 0.95rem; font-weight: bold; color:#444;">${item.title}</span>
-                            <small style="color: #999; font-weight: normal; margin-top:2px;">${item.date}</small>
-                        </div>
-                        <span style="color: ${colorClass}; font-weight: 800; font-size:1rem;">${amountStr}</span>
-                    </div>
-                `;
-                $list.append(html);
-            });
-
-            if (endIndex >= filteredData.length) {
-                $btnMore.hide(); 
-            } else {
-                $btnMore.show();
-                $btnMore.text(`👇 더 보기 (${filteredData.length - endIndex}개 남음)`);
-            }
-        }
-
-        // --- 길드 로직 ---
-        function handleGuildContribute() {
-            const btn = document.querySelector('.btn-contribute');
-            if(btn.disabled) {
-                showToast('이미 완료', '오늘의 기여를 이미 마쳤습니다!', 'warning');
-                return;
-            }
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '기여 중...⏳';
-            
-            setTimeout(() => {
-                btn.innerHTML = '✅ 기여 완료! (내일 또 만나요)';
-                btn.disabled = true;
-                btn.style.background = '#ccc';
-                btn.style.color = '#fff';
-                showToast('기여 성공!', '길드 공헌도 +10, 개인 달란트 +20 획득!', 'success');
-                updateTalent(20);
-                $('.guild-mission-card .progress-bar').css('width', '78%');
-                $('.guild-mission-card .mission-percent').text('78%');
-            }, 1000);
-        }
-
-        function sendGuildChat() {
-            const $input = $('#guild-chat-input');
-            const msg = $input.val().trim();
-            if (!msg) return;
-
-            const myName = $('#user-display-name').text();
-            const chatHtml = `
-                <div class="chat-msg" style="animation: fadeIn 0.3s;">
-                    <span class="chat-user" style="color:#4A90E2;">${myName}:</span>
-                    <span class="chat-text">${msg}</span>
-                </div>
-            `;
-            $('#guild-chat-list').append(chatHtml);
-            const chatList = document.getElementById('guild-chat-list');
-            chatList.scrollTop = chatList.scrollHeight;
-            $input.val('');
-
-            if (Math.random() > 0.7) {
-                setTimeout(() => {
-                    $('#guild-chat-list').append(`
-                        <div class="chat-msg" style="animation: fadeIn 0.3s;">
-                            <span class="chat-user">이믿음:</span>
-                            <span class="chat-text">아멘! 함께 힘내요! 🔥</span>
-                        </div>
-                    `);
-                    chatList.scrollTop = chatList.scrollHeight;
-                }, 1500);
-            }
-        }
-
-        $('#guild-chat-input').on('keypress', function(e) {
-            if (e.which === 13) sendGuildChat();
-        });
-
-        // --- 출석부 로직 ---
-        function initSundayAttendance() {
-            const today = new Date();
-            const currentYear = today.getFullYear();
-            const currentMonth = today.getMonth(); 
-            
-            $('#attendance-date-title').text(`${currentMonth + 1}월 출석부`);
-
-            const dayOfWeek = today.getDay(); 
-            const isSunday = (dayOfWeek === 0);
-
-            if (isSunday) {
-                $('#sunday-badge').show();
-                $('#stamp-guide-msg').html('주일 예배<br>왔어요!');
-                $('#btn-attendance-check').removeClass('disabled');
-            } else {
-                $('#sunday-badge').hide();
-                $('#stamp-guide-msg').html('주일(일요일)에<br>만나요!');
-                $('#btn-attendance-check').addClass('disabled');
-                $('.stamp-icon-before').attr('src', 'https://cdn-icons-png.flaticon.com/512/2693/2693507.png'); 
-            }
-            renderSundayList(currentYear, currentMonth, today);
-        }
-
-        function renderSundayList(year, month, todayObj) {
-            const $container = $('#sunday-list-container');
-            $container.empty();
-
-            let date = new Date(year, month, 1);
-            const todayDate = todayObj.getDate();
-            
-            while (date.getDay() !== 0) {
-                date.setDate(date.getDate() + 1);
-            }
-
-            while (date.getMonth() === month) {
-                const sundayDate = date.getDate();
-                let statusHtml = '';
-                let itemClass = 'sunday-item';
-                
-                if (sundayDate < todayDate) {
-                    itemClass += ' done';
-                    statusHtml = '<span class="status-icon">✅ 출석완료 (+100P)</span>';
-                } else if (sundayDate === todayDate) {
-                    itemClass += ' this-week';
-                    statusHtml = '<span class="status-icon" id="today-status-text" style="color:#EF6C00;">👉 도장을 찍어주세요</span>';
-                } else {
-                    itemClass += ' locked';
-                    statusHtml = '<span class="status-icon" style="color:#aaa;">⏳ 기다리는 중</span>';
-                }
-
-                const html = `
-                    <div class="${itemClass}" id="sunday-row-${sundayDate}">
-                        <div class="sunday-left">
-                            <div class="s-date-box">
-                                <span class="s-month">${month + 1}월</span>
-                                <span class="s-day">${sundayDate}</span>
-                            </div>
-                            <div style="font-weight:bold; color:#555;">주일 예배</div>
-                        </div>
-                        <div>${statusHtml}</div>
-                    </div>
-                `;
-                $container.append(html);
-                date.setDate(date.getDate() + 7);
-            }
-        }
-
-        function handleSundayAttendance() {
-            const $btn = $('#btn-attendance-check');
-            if ($btn.hasClass('checked')) {
-                showToast('이미 완료', '오늘 출석은 이미 완료되었습니다.', 'info');
-                return;
-            }
-            // 평일 체크 방지 로직 (필요 시 주석 해제)
-            // const today = new Date();
-            // if (today.getDay() !== 0) return; 
-
-            $btn.addClass('checked');
-            $btn.find('.stamp-inner-content').fadeOut(100, function() {
-                $btn.find('.stamped-mark').show(); // 애니메이션 CSS 자동 실행됨
-            });
-
-            $('#today-status-text').html('✅ 출석완료 (+100P)').css('color', '#4CAF50');
-            $('.sunday-item.this-week').addClass('done');
-            
-            updateTalent(100);
-            
-            setTimeout(() => {
-                showAlert('주일 출석 완료!', '하나님 말씀 안에서<br>행복한 주일 보내세요! (100P 획득)', '🎉 아멘!');
-                showToast('출석 성공', '3주 연속 개근 중입니다!', 'success');
-            }, 400);
-        }
-
-        // --- 퀘스트 로직 ---
-        function initQuestPage() {
-            const today = new Date();
-            const isSunday = (today.getDay() === 0);
-            if (isSunday) {
-                $('#sunday-lock-overlay').hide();
-            } else {
-                $('#sunday-lock-overlay').hide(); // 테스트용 (항상 열림)
-            }
-        }
-
-        function handleQuestClick(btn) {
-            const $btn = $(btn);
-            const $item = $btn.closest('.q-item');
-            const reward = parseInt($item.data('reward'));
-
-            if ($btn.hasClass('state-ready')) {
-                $btn.removeClass('state-ready').addClass('state-wait');
-                $btn.text('승인요청');
-                showToast('승인 요청 완료', '선생님께 확인 요청을 보냈습니다. (가상)', 'info');
-            }
-            else if ($btn.hasClass('state-wait')) {
-                if(!confirm('선생님(부모님)께 미션 완료를 확인 받으셨나요?')) return;
-                $btn.removeClass('state-wait').addClass('state-done');
-                $btn.text('완료됨');
-                $item.addClass('done');
-                updateTalent(reward);
-                showAlert('퀘스트 승인 완료!', `참 잘했어요! 보상으로<br><b>${reward}P</b>를 받았습니다.`, '🎉 성공');
-                showToast('보상 지급', `${reward} 포인트 획득!`, 'reward');
-            }
-            else if ($btn.hasClass('state-done')) {
-                showToast('이미 완료', '오늘의 보상을 이미 받았습니다.', 'warning');
-            }
-        }
-    </script>
+		if (endIndex >= filteredData.length) {
+			$btnMore.hide();
+		} else {
+			$btnMore.show();
+			$btnMore.text(`👇 더 보기 (${filteredData.length - endIndex}개)`);
+		}
+	}
+</script>
 </body>
 </html>

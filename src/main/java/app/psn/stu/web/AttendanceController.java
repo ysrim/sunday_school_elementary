@@ -16,15 +16,16 @@ import com.base.utl.StringUtil;
 
 import app.psn.stu.service.AttendanceService;
 import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/std")
 public class AttendanceController {
 
-	@Resource(name = "attendanceService")
-	private AttendanceService attendanceService;
+	private final AttendanceService attendanceService;
 
 	@MenuInfo(navi = NaviEnum.STD_ATND, role = MberGrdEnum.STD)
 	@RequestMapping("/atnd.pg")

@@ -11,6 +11,7 @@
 			 , QUEST_TYPE
 			 , EMOJI
 			 , TARGET_GRADE
+			 , IMMEDIATE_PAY_YN
 		FROM QUESTS
 		WHERE USE_AT = 'Y'
 		  AND QUEST_SN = #{questSn}

@@ -40,6 +40,9 @@ public class RewardServiceImpl implements RewardService {
 	@Transactional
 	public void insMberReward(RewardVO reward) {
 
+		if (reward.amount() == 0) {
+			return;
+		}
 		rewardMapper.insMberRewardLogs(reward);  // 회원에게 리워드 테이블에 (경험치, 달란트)를 지급한다.
 		rewardMapper.updateAvatarAmount(reward); // 회원 아바타 정보(포인트, 경험치) 실제 업데이트 로직
 
