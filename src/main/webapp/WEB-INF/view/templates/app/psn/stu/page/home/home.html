@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http//www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/app/psn/stu/layouts/std_layout}" xml:lang="ko">
+<html xmlns:th="http//www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/app/psn/stu/layouts/std_layout}" lang="ko">
 <th:block layout:fragment="content">
 	<script th:inline="javascript">
 		const StdHomeUI = {
@@ -167,7 +167,7 @@
 			</div>
 
 			<div th:class="|member-row ${vo.mberId == session.mberInfo.mberId ? 'my-row' : ''}|" th:each="vo : ${guildMberAccessList}">
-				<img th:src="|https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/${vo.occpCode}_${#strings.toLowerCase(vo.sexdstn)}.png|" class="member-avatar">
+				<img th:src="|https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/${vo.occpCode}_${#strings.toLowerCase(vo.sexdstn)}.png|" alt="아바타" class="member-avatar">
 				<div class="flex-1">
 					<div class="text-bold" style="font-size: 0.9rem;">[[${vo.ncnm}]] [[${vo.mberId == session.mberInfo.mberId ? '(나)' : '('+session.mberInfo.mberNm+')'}]]
 						<!--<span class="master-badge">MASTER</span>--></div>
