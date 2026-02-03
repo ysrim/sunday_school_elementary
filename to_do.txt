@@ -25,3 +25,4 @@ Data Transfer Object: DTO(ex. AddressDTO) 계층간 데이터 이동 ctl -> srv�
         - 홈: 공지사항 (당분간 하드코드)
         - 설정: 캐릭터명변경, 비밀번호변경, 포인트변경(2.2)
         - 길드마크(2.2)
+        - 변경된 style대로 코딩(2.2)
