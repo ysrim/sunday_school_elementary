@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.base.enumm.CacheKeys;
-import com.base.utl.SessionUtil;
 import com.base.utl.StringUtil;
 
 import app.psn.com.service.CacheService;

@@ -12,7 +12,6 @@ import app.psn.stu.mapper.AttendanceMapper;
 import app.psn.stu.service.AttendanceService;
 import app.psn.stu.service.QuestService;
 import app.psn.stu.vo.AttendanceVO;
-import app.psn.stu.vo.QuestPendingVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

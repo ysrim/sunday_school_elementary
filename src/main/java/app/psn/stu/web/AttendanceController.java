@@ -15,7 +15,6 @@ import com.base.utl.ResUtil;
 import com.base.utl.StringUtil;
 
 import app.psn.stu.service.AttendanceService;
-import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

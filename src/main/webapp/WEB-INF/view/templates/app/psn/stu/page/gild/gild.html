@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
+<html xmlns:th="http://www.thymeleaf.org" lang="ko"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	  layout:decorate="~{/app/psn/stu/layouts/std_layout}">
 <th:block layout:fragment="content">
@@ -39,7 +39,7 @@
 			<div class="mb-5 text-sub" style="animation: fadeIn 0.3s;"><span class="text-bold text-blue" style="margin-right:5px;">신입 용사님:</span><span>123</span></div>
 		</div>
 		<div class="flex-row gap-5">
-			<input type="text" id="guild-chat-input" placeholder="응원 메시지를 남겨보세요!" style="margin: 0; flex: 1;">
+			<input type="text" id="guild-chat-input" name="guild-chat-input" placeholder="응원 메시지를 남겨보세요!" style="margin: 0; flex: 1;">
 			<button onclick="sendGuildChat()" style="background: var(--secondary); color: white; border: none; border-radius: 10px; padding: 0 15px; font-weight: bold; height: 42px;">전송</button>
 		</div>
 	</div>
