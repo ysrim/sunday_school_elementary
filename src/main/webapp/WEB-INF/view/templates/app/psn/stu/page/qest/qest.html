@@ -29,7 +29,7 @@
                                 $btn.removeClass('state-ready').addClass('state-wait').text('승인요청');
                                 _showAlert('선생님께 확인 요청을 보냈어요!', '🚀', '퀘스트 완료');
                             } else {
-                                _showAlert(data.msg || '오류가 발생했습니다.', '🔥', '오류');
+                                _showAlert(data.rtnMsg || '오류가 발생했습니다.', '🔥', '오류');
                             }
                         },
                         error: (e) => {

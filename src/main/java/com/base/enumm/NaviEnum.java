@@ -14,6 +14,7 @@ public enum NaviEnum {
 	STD_QEST(40, "퀘스트 보드"),    //
 	STD_OPTS(50, "마이 페이지"),    //
 	STD_OPTS_1(51, "나의 QR코드"),  //
+	STD_OPTS_2(52, "비밀번호 변경"),  //
 	EMPT(0, "");
 
 	private final Integer seq;

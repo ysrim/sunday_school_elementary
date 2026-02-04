@@ -143,39 +143,66 @@
 			</div>
 		</div>
 	</div>
-	<div class="card">
-		<div class="home-guild-header">
-			<div class="home-guild-emblem">
-				<img th:src="|https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/guild/grade/guid_image_${guildInfo.grade}_${guildInfo.cla}.png|" alt="길드마크">
-			</div>
-			<div class="guild-info-box">
-				<div class="flex-between mb-5">
-					<h4 style="margin: 0; font-size: 1.05rem; color: #fff;" th:text="|${guildInfo.guildNm}|">다윗의 용사들</h4>
-					<span style="background: linear-gradient(45deg, #FFD700, #FFC107); color: #fff; font-size: 0.7rem;
-						  padding: 3px 8px; border-radius: 8px; font-weight: 800; text-shadow: 0 1px 2px rgba(0,0,0,0.1);"
-						  th:text="|LV.${guildInfo.guildLevel}|">LV.5</span>
+	<div class="card" style="padding: 20px;">
+		<div style="display: flex; align-items: center; margin-bottom: 15px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 15px; border-radius: 16px; box-shadow: 0 4px 15px rgba(30, 60, 114, 0.2);">
+
+			<div style="position: relative; width: 56px; height: 56px; margin-right: 15px; flex-shrink: 0;">
+				<div style="width: 100%; height: 100%; border-radius: 14px; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.1); padding: 4px; display: flex; align-items: center; justify-content: center;">
+					<img th:src="|https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/guild/grade/guid_image_${guildInfo.grade}_${guildInfo.cla}.png|"
+						 alt="길드마크" style="width: 90%; height: 90%; object-fit: contain;">
 				</div>
-				<div class="flex-between">
-					<span style="font-size: 0.85rem; margin: 0; color: rgba(255, 255, 255, 0.8); font-weight: 500;" th:text="|${guildInfo.rm}|">"믿음으로 승리하자!"</span>
+				<div style="position: absolute; bottom: -5px; right: -5px; background: #FFD700; color: #333; font-size: 0.6rem; font-weight: 800; padding: 2px 6px; border-radius: 8px; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.2);"
+					 th:text="|Lv.${guildInfo.guildLevel}|">
+					Lv.5
 				</div>
-			</div>
-		</div>
-		<div class="member-list-card">
-			<div class="flex-between text-sub text-bold mb-10" style="font-size: 0.8rem;">
-				<span>접속 중인 동료</span>
-				<span class="text-blue" th:text="|길드원 ${guildMberAccessList.size()}/${guildMberCnt}명|">2명</span>
 			</div>
 
-			<div th:class="|member-row ${vo.mberId == session.mberInfo.mberId ? 'my-row' : ''}|" th:each="vo : ${guildMberAccessList}">
-				<img th:src="|https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/${vo.occpCode}_${#strings.toLowerCase(vo.sexdstn)}.png|" alt="아바타" class="member-avatar">
-				<div class="flex-1">
-					<div class="text-bold" style="font-size: 0.9rem;">[[${vo.ncnm}]] [[${vo.mberId == session.mberInfo.mberId ? '(나)' : '('+session.mberInfo.mberNm+')'}]]
-						<!--<span class="master-badge">MASTER</span>--></div>
-					<div class="text-sub" style="font-size: 0.75rem;"><span class="status-dot online"></span>접속 중</div>
-				</div>
-				<div class="text-right text-blue text-bold" style="font-size: 0.8rem;" th:text="|Lv.${vo.level}|">Lv.15</div>
+			<div style="flex: 1; overflow: hidden;">
+				<h4 style="margin: 0 0 4px 0; font-size: 1.1rem; color: #ffffff; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 1px 2px rgba(0,0,0,0.2);"
+					th:text="|${guildInfo.guildNm}|">다윗의 용사들</h4>
+				<div style="font-size: 0.8rem; color: rgba(255, 255, 255, 0.8); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+					 th:text="|❝ ${guildInfo.rm} ❞|">"믿음으로 승리하자!"</div>
 			</div>
-			<button class="btn btn-outline" style="margin-top: 10px;" th:onclick="|location.href='@{/std/gild.pg}'|">길드 본부 입장하기 ›</button>
+
+			<button onclick="location.href='/std/gild.pg'" style="background: none; border: none; padding: 5px; cursor: pointer;">
+				<span style="font-size: 1.2rem; color: rgba(255, 255, 255, 0.6);">›</span>
+			</button>
+		</div>
+
+		<div>
+			<div class="flex-between text-sub text-bold mb-10" style="font-size: 0.8rem; padding: 0 5px;">
+				<span>접속 중인 동료</span>
+				<span class="text-blue" th:text="|${guildMberAccessList.size()} / ${guildMberCnt}명|">2/15명</span>
+			</div>
+
+			<div th:if="${#lists.isEmpty(guildMberAccessList)}" class="text-center text-light" style="padding: 20px 0; font-size: 0.85rem;">
+				지금은 접속 중인 동료가 없어요 😴
+			</div>
+
+			<div style="display: flex; flex-direction: column; gap: 8px;">
+				<div th:each="vo : ${guildMberAccessList}"
+					 th:style="|display: flex; align-items: center; padding: 8px 10px; border-radius: 10px; ${vo.mberId == session.mberInfo.mberId ? 'background: #F0F7FF; border: 1px solid #D1E3FF;' : 'background: #FAFAFA;'}|">
+
+					<img th:src="|https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/${vo.occpCode}_${#strings.toLowerCase(vo.sexdstn)}.png|"
+						 alt="아바타" style="width: 32px; height: 32px; margin-right: 10px;">
+
+					<div style="flex: 1;">
+						<div style="font-size: 0.9rem; font-weight: 700; color: #444;">
+							<span th:text="${vo.ncnm}">닉네임</span>
+							<span th:if="${vo.mberId == session.mberInfo.mberId}" style="font-size: 0.7rem; color: #2196F3; margin-left: 4px;">(나)</span>
+						</div>
+					</div>
+
+					<div style="font-size: 0.8rem; font-weight: 700; color: #2196F3;" th:text="|Lv.${vo.level}|">Lv.15</div>
+				</div>
+			</div>
+
+			<button class="btn" style="width: 100%; margin-top: 15px; background: #fff; border: 1px solid #ddd; color: #555; font-size: 0.9rem; padding: 10px; border-radius: 8px; transition: 0.2s;"
+					th:onclick="|location.href='@{/std/gild.pg}'|">
+				길드 본부 입장하기
+			</button>
 		</div>
 	</div>
 </th:block>

@@ -25,4 +25,20 @@
 		) A LEFT OUTER JOIN QUEST_LOGS B ON B.MBER_SN = #{mberSn} AND B.QUEST_SN = 2 AND DATE_FORMAT(A.DATE, '%Y%m%d') = B.REQ_DATE
 	</select>
 
+	<select id="sltAttendanceCount" parameterType="Integer" resultType="Integer">
+		SELECT COUNT(*) AS STREAK_COUNT
+		FROM (SELECT REQ_DATE
+				   , (@RN := @RN + 1)                                               AS RN
+				   , DATE_ADD(STR_TO_DATE(REQ_DATE, '%Y%M%D'), INTERVAL (@RN) WEEK) AS DIFF_DATE
+			  FROM QUEST_LOGS
+				 , (SELECT @RN := 0) AS VARS
+			  WHERE MBER_SN = #{mberSn}
+				AND QUEST_SN = 2
+				AND STATUS = 'APPROVED'
+			  ORDER BY REQ_DATE DESC) AS T
+		GROUP BY DIFF_DATE
+		ORDER BY DIFF_DATE DESC
+		LIMIT 1
+	</select>
+
 </mapper>

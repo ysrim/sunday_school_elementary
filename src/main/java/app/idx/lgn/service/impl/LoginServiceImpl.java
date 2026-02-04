@@ -24,7 +24,8 @@ public class LoginServiceImpl implements LoginService {
 
 	private final PasswordEncoder passwordEncoder;
 
-	private SessionVO sltMber(LoginVO loginVO) {
+	@Override
+	public SessionVO sltMber(LoginVO loginVO) {
 		return loginMapper.sltMber(loginVO);
 	}
 

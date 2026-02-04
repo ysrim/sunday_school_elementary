@@ -8,6 +8,8 @@ public interface AttendanceService {
 
 	List<AttendanceVO> sltAttendanceList(); // 출석리스트
 
+	Integer sltAttendanceCount();
+
 	void attendanceDo(); // 출석하기
 
 }

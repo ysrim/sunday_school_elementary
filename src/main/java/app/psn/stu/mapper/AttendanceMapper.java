@@ -11,4 +11,6 @@ public interface AttendanceMapper {
 
 	List<AttendanceVO> sltAttendanceList(Integer mberSn); // 출석 목록
 
+	Integer sltAttendanceCount(Integer mberSn);
+
 }

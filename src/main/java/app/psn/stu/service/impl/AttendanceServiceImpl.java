@@ -31,6 +31,11 @@ public class AttendanceServiceImpl implements AttendanceService {
 	}
 
 	@Override
+	public Integer sltAttendanceCount() {
+		return attendanceMapper.sltAttendanceCount(SessionUtil.getMberInfo().getMberSn());
+	}
+
+	@Override
 	public void attendanceDo() {
 		questService.questDo(StringUtil.setQuestPendingVO(2));
 	}

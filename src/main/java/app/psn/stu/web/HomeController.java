@@ -48,7 +48,7 @@ public class HomeController {
 		model.addAttribute("todayBibleVerse", cacheService.sltTodayBibleVerse()); // 오늘의 말씀
 
 		// sql
-		model.addAttribute("guildMberCnt", homeService.sltGuildMberList(guildSn).size()); // 길드 숫자
+		model.addAttribute("guildMberCnt", homeService.sltGuildMberList(guildSn).size()); // 길드맴버 숫자
 		model.addAttribute("guildMberAccessList", homeService.sltGuildMberAccessList(guildSn)); // 길드접속자 목록
 		model.addAttribute("guildInfo", homeService.sltGuildInfo(guildSn)); // 길드정보
 		model.addAttribute("toastMsgList", toastMsgService.sltToastMsgList(mberSn)); // 토스트 메시지

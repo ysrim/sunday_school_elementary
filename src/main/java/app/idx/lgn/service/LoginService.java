@@ -6,6 +6,8 @@ import jakarta.servlet.http.HttpServletRequest;
 
 public interface LoginService {
 
+	SessionVO sltMber(LoginVO loginVO);
+
 	SessionVO loginAx(LoginVO loginVO);
 
 }

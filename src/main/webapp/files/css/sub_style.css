@@ -925,6 +925,86 @@ header::before {
     border-top: 1px solid #f0f0f0;
 }
 
+/* 비밀번호 입력 필드용 스타일 */
+.pw-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.pw-input-wrapper input {
+    padding-right: 45px !important; /* 아이콘 공간 확보 */
+}
+
+.btn-pw-toggle {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: #aaa;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-pw-toggle:active {
+    color: var(--secondary);
+}
+
+/* 비밀번호 강도 측정기 스타일 */
+.pw-strength-container {
+    margin-top: 8px;
+    margin-bottom: 5px;
+}
+
+.strength-bar-bg {
+    width: 100%;
+    height: 4px;
+    background-color: #eee;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 4px;
+}
+
+.strength-bar-fill {
+    height: 100%;
+    width: 0%;
+    background-color: #ff5252; /* 기본 빨강 */
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.strength-text {
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-align: right;
+    display: block;
+    color: #999;
+}
+
+/* 상태별 색상 클래스 */
+.strength-weak {
+    background-color: #ff5252;
+    color: #ff5252;
+}
+
+/* 약함 (빨강) */
+.strength-normal {
+    background-color: #ffb142;
+    color: #ffb142;
+}
+
+/* 보통 (주황) */
+.strength-safe {
+    background-color: #2cc990;
+    color: #2cc990;
+}
+
+/* 안전 (초록) */
+
 /* =========================================
    8. Feedback & Modals
    ========================================= */
@@ -954,7 +1034,6 @@ header::before {
     border: 1px solid #eee;
 }
 
-/* �좏삎蹂� �ㅽ��� */
 .toast-item.SUCCESS {
     border-left: 6px solid #4CAF50;
 }
@@ -994,7 +1073,6 @@ header::before {
     line-height: 1.3;
 }
 
-/* �リ린 踰꾪듉 (X) */
 .toast-close {
     position: absolute;
     right: 12px;
@@ -1032,22 +1110,43 @@ header::before {
     }
 }
 
+/* 알림창 배경 (딤처리) */
 #custom-alert {
-    display: none;
+    display: none; /* 기본은 숨김 */
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.5);
     z-index: 9999;
     align-items: center;
     justify-content: center;
-    backdrop-filter: blur(3px);
+    opacity: 0; /* 처음엔 투명하게 */
+    transition: opacity 0.3s ease; /* 투명도 변화 애니메이션 */
 }
 
+/* 알림창 본체 (카드) */
+#custom-alert .card {
+    max-width: 320px;
+    text-align: center;
+    padding: 30px;
+    background: white;
+    border-radius: 20px;
+    /* 처음 상태: 살짝 작고 아래에 위치 */
+    transform: scale(0.8) translateY(20px);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* 활성화 상태 클래스 */
 #custom-alert.active {
-    display: flex !important;
+    display: flex; /* 레이아웃을 보이게 함 */
+    opacity: 1;
+}
+
+#custom-alert.active .card {
+    /* 활성화 시: 정사이즈로 커지며 제자리로 */
+    transform: scale(1) translateY(0);
 }
 
 /* Keyframes */
