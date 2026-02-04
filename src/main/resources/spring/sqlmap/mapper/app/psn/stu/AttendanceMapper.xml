@@ -4,13 +4,14 @@
 
 	<select id="sltAttendanceList" parameterType="Integer" resultType="app.psn.stu.vo.AttendanceVO">
 		SELECT
-		    DATE_FORMAT(A.DATE, '%Y-%m-%d') AS date
+		    DATE_FORMAT(A.DATE, '%Y-%m-%d') AS DATE
+		  , DATE_FORMAT(A.DATE, '%d') AS DAY
 		  , A.WEEK
 		  , IFNULL(B.STATUS, '') as STATUS
 		FROM (
 		    SELECT DT AS DATE, WEEK(DT, 0) - WEEK(DATE_FORMAT(NOW(), '%Y-%m-01'), 0) + 1 AS WEEK
 			FROM (
-				SELECT DATE_ADD(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL SEQ DAY) AS dt
+				SELECT DATE_ADD(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL SEQ DAY) AS DT
 				FROM (
 					SELECT T1.I + T2.J * 10 AS seq
 					FROM (

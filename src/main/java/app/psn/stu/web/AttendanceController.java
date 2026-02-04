@@ -24,26 +24,25 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/std")
 public class AttendanceController {
 
-	private final AttendanceService attendanceService;
+    private final AttendanceService attendanceService;
 
-	@MenuInfo(navi = NaviEnum.STD_ATND, role = MberGrdEnum.STD)
-	@RequestMapping("/atnd.pg")
-	public String attendancePg(Model model) {
-		model.addAttribute("attendanceList", attendanceService.sltAttendanceList());
-		model.addAttribute("isAttendance", StringUtil.isTodaySunday()); // 주일 여부
-		model.addAttribute("currMonth", LocalDate.now(ZoneId.of("Asia/Seoul")).getMonthValue());
-		return "/app/psn/stu/page/atnd/atnd";
-	}
+    @MenuInfo(navi = NaviEnum.STD_ATND, role = MberGrdEnum.STD)
+    @RequestMapping("/atnd.pg")
+    public String attendancePg(Model model) {
+        //TODO 연속 출석일 수 숫자가져오기 구현
+        model.addAttribute("attendanceList", attendanceService.sltAttendanceList());
+        return "/app/psn/stu/page/atnd/atnd";
+    }
 
-	@MenuInfo(role = MberGrdEnum.STD)
-	@RequestMapping("/atnd.ax")
-	public ResponseEntity attendanceAx() {
-		if (StringUtil.isTodaySunday()) {
-			attendanceService.attendanceDo();
-			return ResUtil.resSucc();
-		} else {
-			return ResUtil.resFail("주일만 출석 가능합니다.");
-		}
-	}
+    @MenuInfo(role = MberGrdEnum.STD)
+    @RequestMapping("/atnd.ax")
+    public ResponseEntity attendanceAx() {
+        if (StringUtil.isTodaySunday()) {
+            attendanceService.attendanceDo();
+            return ResUtil.resSucc();
+        } else {
+            return ResUtil.resFail("주일만 출석 가능합니다.");
+        }
+    }
 
 }
