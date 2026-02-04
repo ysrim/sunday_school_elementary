@@ -1,68 +1,113 @@
 <!DOCTYPE html>
-<html xmlns:th="http//www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/app/psn/stu/layouts/std_layout}">
+<html xmlns:th="http//www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/app/psn/stu/layouts/std_layout}">
 <th:block layout:fragment="content">
-	<script th:inline="javascript">
-		function handleQuest(btn) {
-			$(btn).text("처리중...");
-			$(btn).addClass("disabled").prop("disabled", true);
-			$.ajax({
-				type: "POST",
-				url: "/std/qest/qest.ax",
-				data: {questSn: btn.dataset.sn},
-				success: (data) => {
-					if (data.rtnCd === '001') {
-						$(btn).text("승인요청");
-						$(btn).closest('.quest-row').addClass('done');
-						_showAlert('선생님께 확인 요청을 보냈어요. 조금만 기다려주세요!', '✨', '퀘스트 확인 요청');
-					} else {
-						_showAlert('오류가 발생했습니다!', '🔥', '오류');
-					}
-				},
-				error: (e) => {
-					_showAlert('통신 오류가 발생했습니다.', '🔥', '오류');
-				}
-			});
-		}
-	</script>
-	<div style="margin: 25px 25px 15px 25px; display: flex; align-items: center;">
-		<span style="color: #4A90E2; font-size: 0.8rem; margin-right: 8px;">●</span>
-		<h3 style="margin: 0; font-size: 1.1rem; color: #333;">일일 퀘스트</h3>
-	</div>
+    <script th:inline="javascript">
+        $(function () {
+            let isProcessing = false; // 중복 클릭 방지 플래그
+            $(document).on('click', '.btn-quest-action', function () {
+                const $btn = $(this);
+                const questSn = $btn.data('sn');
+                if (isProcessing) return; // 이미 통신 중이면 중단
+                // 1. 이미 완료된 퀘스트는 무시
+                if ($btn.hasClass('state-done')) return;
+                // 2. 승인 대기 중일 때 안내
+                if ($btn.hasClass('state-wait')) {
+                    _showAlert('선생님께 확인 요청을 보냈어요. 조금만 기다려주세요!', '✨', '퀘스트 확인 요청');
+                    return;
+                }
+                // 3. 도전/재도전인 경우 AJAX 실행
+                if ($btn.hasClass('state-ready')) {
+                    isProcessing = true;
+                    $btn.css('opacity', '0.5'); // 시각적으로 처리 중임을 표시
+                    $.ajax({
+                        type: "POST",
+                        url: "/std/qest/qest.ax",
+                        data: {questSn: questSn},
+                        success: (data) => {
+                            if (data.rtnCd === '001') {
+                                $btn.removeClass('state-ready').addClass('state-wait').text('승인요청');
+                                _showAlert('선생님께 확인 요청을 보냈어요!', '🚀', '퀘스트 완료');
+                            } else {
+                                _showAlert(data.msg || '오류가 발생했습니다.', '🔥', '오류');
+                            }
+                        },
+                        error: (e) => {
+                            _showAlert('서버와 통신이 원활하지 않아요.', '😥', '통신 장애');
+                        },
+                        complete: () => {
+                            isProcessing = false;
+                            $btn.css('opacity', '1');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    <div style="margin: 25px 25px 10px 25px; display: flex; align-items: center;">
+        <div style="width: 4px; height: 16px; background-color: #4A90E2; border-radius: 2px; margin-right: 10px;"></div>
+        <h3 style="margin: 0; font-size: 1.15rem; color: #333; font-weight: 800;">퀘스트 진행 방법</h3>
+    </div>
+    <div class="card text-center" style="border: 1px dashed #ced4da;">
+        <div class="text-bold mb-10"
+             style="background: #f8f9fa; display: inline-block; padding: 4px 12px; border-radius: 12px; color: #555;">
+            💡 퀘스트 진행 방법
+        </div>
+        <div class="flex-center gap-10 mb-10">
+            <div class="flex-col flex-center">
+                <span style="font-size: 1.2rem;">🏃</span>
+                <span class="text-bold" style="font-size:0.7rem;">미션 실천</span>
+            </div>
+            <span style="color:#ccc;">▶</span>
+            <div class="flex-col flex-center">
+                <span style="font-size: 1.2rem;">⏳</span>
+                <span class="text-bold" style="font-size:0.7rem;">승인 요청</span>
+            </div>
+            <span style="color:#ccc;">▶</span>
+            <div class="flex-col flex-center">
+                <span style="font-size: 1.2rem;">🎁</span>
+                <span class="text-bold" style="font-size:0.7rem;">보상 획득</span>
+            </div>
+        </div>
+        <p class="text-light">* 선생님이 확인하면 완료됩니다!</p>
+    </div>
+    <div class="section-title">⚔️ 용사의 매일 훈련 (Daily)</div>
+    <div class="quest-card">
+        <th:block th:each="vo : ${questList}" th:if="${vo.questType == 'DAILY'}">
+            <div th:replace="~{::questItemFragment(vo=${vo})}"></div>
+        </th:block>
+    </div>
 
-	<div class="card quest-container">
-		<div th:class="|quest-row${vo.status != null ? ' done': ''}|" th:each="vo : ${questList}" th:if="${vo.questType == 'DAILY'}">
-			<div class="quest-info" style="display: flex; align-items: center;">
-				<span class="quest-icon" style="font-size: 1.5rem; margin-right: 12px;" th:text="|${vo.emoji}|">🙏</span>
-				<div class="quest-text" style="display: flex; flex-direction: column;">
-					<span class="quest-title" style="font-weight: bold; color: #333;" th:text="|${vo.title} (${vo.description})|">아침 기도하기</span>
-					<span class="quest-reward" style="font-size: 0.75rem; color: #888;" th:text="|${vo.rewardExp} EXP / ${vo.rewardPoint} P|">10 EXP / 50 P</span>
-				</div>
-			</div>
-			<button class="btn-quest-action" th:data-sn="${vo.questSn}" th:disabled="${vo.status == 'PENDING' or vo.status == 'APPROVED' or vo.status == 'REJECTED'}" onclick="handleQuest(this)"
-					th:text="${vo.statusNm == null ? '완료하기' : vo.statusNm}">
-			</button>
-		</div>
-	</div>
-	<div th:if="${isAttendance}">
-		<!-- 주일만 가능 -->
-		<div style="margin: 25px 25px 15px 25px; display: flex; align-items: center;">
-			<span style="color: #4A90E2; font-size: 0.8rem; margin-right: 8px;">●</span>
-			<h3 style="margin: 0; font-size: 1.1rem; color: #333;">주일 퀘스트</h3>
-		</div>
-		<div class="card quest-container">
-			<div th:class="|quest-row${vo.status != null ? ' done': ''}|" th:each="vo : ${questList}" th:if="${vo.questType == 'WEEKLY'}">
-				<div class="quest-info" style="display: flex; align-items: center;">
-					<span class="quest-icon" style="font-size: 1.5rem; margin-right: 12px;" th:text="|${vo.emoji}|">🙏</span>
-					<div class="quest-text" style="display: flex; flex-direction: column;">
-						<span class="quest-title" style="font-weight: bold; color: #333;" th:text="|${vo.title} (${vo.description})|">아침 기도하기</span>
-						<span class="quest-reward" style="font-size: 0.75rem; color: #888;" th:text="|${vo.rewardExp} EXP / ${vo.rewardPoint} P|">10 EXP / 50 P</span>
-					</div>
-				</div>
-				<button class="btn-quest-action" th:data-sn="${vo.questSn}" th:disabled="${vo.status == 'PENDING' or vo.status == 'APPROVED' or vo.status == 'REJECTED'}" onclick="handleQuest(this)"
-						th:text="${vo.statusNm == null ? '완료하기' : vo.statusNm}">
-				</button>
-			</div>
-		</div>
-	</div>
+    <th:block th:if="${isAttendance}">
+        <div class="section-title">👑 주일 스페셜 퀘스트 (Sunday)</div>
+        <div class="quest-card">
+            <th:block th:each="wvo : ${questList}" th:if="${wvo.questType == 'WEEKLY'}">
+                <div th:replace="~{::questItemFragment(vo=${wvo})}"></div>
+            </th:block>
+        </div>
+    </th:block>
+
+    <th:block th:fragment="questItemFragment(vo)">
+        <th:block th:if="${vo != null}">
+            <div th:class="|q-item ${vo.status == 'APPROVED' ? 'done' : ''}|">
+                <div class="q-icon-box" th:text="${vo.emoji}">🙏</div>
+                <div class="q-content flex-1">
+                    <div class="q-title text-bold" th:text="${vo.title}">제목</div>
+                    <div class="q-desc text-sub" th:text="${vo.description}">설명</div>
+                    <div class="q-reward-tag" th:text="|${vo.rewardExp} EXP / ${vo.rewardPoint} P|">보상</div>
+                </div>
+                <div th:switch="${vo.status}">
+                    <button th:case="APPROVED" class="btn-quest-action state-done" disabled>완료</button>
+                    <button th:case="PENDING" class="btn-quest-action state-wait" th:data-sn="${vo.questSn}">승인요청
+                    </button>
+                    <button th:case="REJECTED" class="btn-quest-action state-ready" th:data-sn="${vo.questSn}">반려
+                    </button>
+                    <button th:case="*" class="btn-quest-action state-ready" th:data-sn="${vo.questSn}">도전</button>
+                </div>
+            </div>
+        </th:block>
+    </th:block>
+
+    <div class="h-20" style="height:20px;"></div>
 </th:block>
 </html>
