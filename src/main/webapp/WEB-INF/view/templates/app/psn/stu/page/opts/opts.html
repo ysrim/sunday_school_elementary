@@ -1,93 +1,127 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{/app/psn/stu/layouts/std_layout}">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/app/psn/stu/layouts/std_layout}">
 
 <th:block layout:fragment="content">
-	<div style="background-color: #f8fafe; min-height: 100vh; padding-top: 10px;">
+    <div style="margin: 25px 25px 10px 25px; display: flex; align-items: center;">
+        <div style="width: 4px; height: 16px; background-color: #4A90E2; border-radius: 2px; margin-right: 10px;"></div>
+        <h3 style="margin: 0; font-size: 1.15rem; color: #333; font-weight: 800;">용사/길드 정보</h3>
+    </div>
 
-		<div style="margin: 5px 25px 15px 25px; display: flex; align-items: center;">
-			<h3 style="margin: 0; font-size: 1.1rem; color: #333; font-weight: 700;">마이 페이지</h3>
-		</div>
-		<div style="margin: 0 15px 20px 15px; background: #fff; border-radius: 28px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border: none; overflow: hidden;">
+    <div class="card" style="padding: 0; overflow: hidden; margin-bottom: 20px;">
+        <div style="display: flex; border-bottom: 1px solid #eee;">
+            <div style="flex: 1; padding: 25px 10px; text-align: center; border-right: 1px solid #eee;">
+                <div style="position: relative; width: 65px; height: 65px; margin: 0 auto 10px;">
+                    <img th:src="|https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/${session.mberInfo.occpCode}_${#strings.toLowerCase(session.mberInfo.sexdstn)}.png|"
+                         alt="내 캐릭터" class="mypage-profile-img">
+                    <div style="position: absolute; bottom: -5px; right: -5px; background: #333; color: #fff; font-size: 0.6rem; font-weight: 800; padding: 2px 6px; border-radius: 8px; border: 2px solid #fff;"
+                         th:text="|Lv. ${_mberLevel}|">
+                        Lv.15
+                    </div>
+                </div>
 
-			<div style="background: #f8fbff; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f4f8;">
-				<div style="display: flex; align-items: center; gap: 6px;">
-					<span style="font-size: 1rem;">🛡️</span>
-					<span style="font-size: 0.85rem; color: #4A90E2; font-weight: 700;" th:text="|${session.mberInfo.guildNm} 길드|">길드명</span>
-				</div>
-				<span style="font-size: 0.75rem; color: #999; font-weight: 600;">길드 Lv.1</span>
-			</div>
-			<div style="padding: 30px 20px; text-align: center;">
+                <div style="font-size: 0.85rem; color: #0D47A1; font-weight: 700; margin-bottom: 4px;"
+                     th:text="|⚔️ ${session.mberInfo.occpNm}|">전사
+                </div>
 
-				<div style="width: 140px; height: 140px; margin: 0 auto 18px auto; position: relative;">
-					<div style="width: 100%; height: 100%; border: 5px solid #fff; border-radius: 50%; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden; background: #f0f7ff;">
-						<img th:src="|https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/${session.mberInfo.occpCode}_${#strings.toLowerCase(session.mberInfo.sexdstn)}.png|"
-							 alt="내 캐릭터" style="width: 100%; height: 100%; object-fit: cover;">
-					</div>
-				</div>
+                <h2 id="mypage-name"
+                    style="font-size: 1.25rem; margin: 0; color: #222; letter-spacing: -0.5px; font-weight: 800;"
+                    th:text="|${session.mberInfo.mberNm} (${session.mberInfo.ncnm})|">김용사</h2>
 
-				<div style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 12px;">
-                <span style="background: #4A90E2; color: #fff; padding: 3px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 700;">
-                   Lv.<span th:text="${_mberLevel}">1</span>
+                <div class="text-light" style="font-size: 0.8rem; margin-top: 5px; color: #777;"
+                     th:text="|초등부 ${session.mberInfo.grade}학년 ${session.mberInfo.cla}반|">1학년 1반
+                </div>
+            </div>
+
+            <div style="flex: 1; padding: 25px 10px; text-align: center; cursor: pointer;"
+                 onclick="showPage('page-guild')">
+                <div style="position: relative; width: 65px; height: 65px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center;">
+                    <img th:src="|https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/guild/grade/guid_image_${session.mberInfo.grade}_${session.mberInfo.cla}.png|"
+                         style="width: 100%; height: 100%; object-fit: contain;">
+                    <div style="position: absolute; bottom: -5px; right: -5px; background: #333; color: #fff; font-size: 0.6rem; font-weight: 800; padding: 2px 6px; border-radius: 8px; border: 2px solid #fff;">
+                        Lv. 1
+                    </div>
+                </div>
+
+                <div style="font-size: 0.85rem; color: #6D4C41; font-weight: 700; margin-bottom: 4px;"
+                     th:text="|길드원: 12명|">
+                </div>
+
+                <h2 style="font-size: 1.25rem; margin: 0; color: #4E342E; letter-spacing: -0.5px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 4px;">
+                    <span th:text="|${session.mberInfo.guildNm}|">다윗의 용사들</span>
+                </h2>
+
+                <div style="font-size: 0.8rem; margin-top: 5px; color: var(--primary); font-weight: 600;">
+                    길드 입장 ›
+                </div>
+            </div>
+        </div>
+        <div class="flex-row" style="padding: 15px 0; background-color: #fafafa; border-top: 1px solid #eee;">
+            <div class="flex-col flex-center flex-1" style="border-right: 1px solid #e0e0e0;">
+                <div class="flex-row gap-5 mb-5">
+                    <span style="font-size: 1rem;">💰</span>
+                    <span class="text-light" style="font-size: 0.8rem;">보유 달란트</span>
+                </div>
+                <span style="font-size: 1.2rem; font-weight: 800; color: #F59E0B;">
+                    <span class="sub-money"
+                          th:text="${#numbers.formatInteger(_mberPoint, 0, 'COMMA')}">2,500</span>
+                    <span style="font-size: 0.9rem; color: #999; font-weight: 600;">P</span>
                 </span>
-					<span style="background: #f0f7ff; color: #4A90E2; padding: 3px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; border: 1px solid #e0eeff;">
-                   EXP <span th:text="${#numbers.formatInteger(_mberExp.currentExp, 0, 'COMMA')}">0</span>
+            </div>
+
+            <div class="flex-col flex-center flex-1">
+                <div class="flex-row gap-5 mb-5">
+                    <span style="font-size: 1rem;">⚡</span>
+                    <span class="text-light" style="font-size: 0.8rem;">현재 경험치</span>
+                </div>
+                <span style="font-size: 1.2rem; font-weight: 800; color: #3B82F6;"
+                      th:text="${#numbers.formatInteger(_mberExp.currentExp, 0, 'COMMA')}">
+                    1,250
+                    <span style="font-size: 0.9rem; color: #999; font-weight: 600;">XP</span>
                 </span>
-				</div>
-				<h2 style="margin: 0; font-size: 1.6rem; color: #222; font-weight: 900; letter-spacing: -1px;">
-					<span th:text="${session.mberInfo.ncnm}" style="color: #4A90E2;">닉네임</span>
-					<small style="color: #333; font-size: 1.3rem;"
-						   th:text="|(${session.mberInfo.mberNm})|">
-					</small>
-				</h2>
+            </div>
+        </div>
+    </div>
 
-				<p style="margin: 6px 0 0 0; color: #999; font-size: 0.85rem;"
-				   th:text="|봉동중앙교회 초등부 ${session.mberInfo.grade}학년 ${session.mberInfo.cla}반|">소속 정보</p>
-			</div>
-			<div class="info-row">
-				<div class="info-item">
-					<label>직업</label>
-					<span th:text="|(${session.mberInfo.occpNm})|">전사</span>
-				</div>
-				<div style="width: 1px; background: #eee; height: 30px; align-self: center;"></div>
-				<div class="info-item highlight">
-					<label>현재 달란트</label>
-					<span th:text="|${_mberPoint} P|">100 P</span>
-				</div>
-			</div>
-		</div>
+    <div class="section-title">바로가기</div>
+    <div class="flex-row gap-10" style="margin: 0 20px 20px;">
+        <button class="card flex-col flex-center gap-5" style="margin: 0; flex: 1; padding: 15px; cursor: pointer;"
+                th:onclick="|location.href='@{/std/opts/qrCode.pg}'|">
+            <span style="font-size: 1.8rem;">🔍</span>
+            <span class="text-bold" style="font-size: 0.9rem;">QR체크인</span>
+        </button>
+        <button class="card flex-col flex-center gap-5" style="margin: 0; flex: 1; padding: 15px; cursor: pointer;"
+                th:onclick="|location.href='@{/std/gild.pg}'|">
+            <span style="font-size: 1.8rem;">🧾</span>
+            <span class="text-bold" style="font-size: 0.9rem;">내역확인</span>
+        </button>
+    </div>
 
-		<div style="margin: 0 15px; display: flex; flex-direction: column; gap: 10px; padding-bottom: 30px;">
-			<div th:onclick="|location.href='@{/std/opts/qrCode.pg}'|" class="menu-item-style">
-				<div style="display: flex; align-items: center; gap: 12px;">
-					<span>🔍</span>
-					<span style="font-size: 0.95rem; color: #444; font-weight: 600;">나의 QR코드 확인</span>
-				</div>
-				<span style="color: #ddd;">&rsaquo;</span>
-			</div>
-			<div th:onclick="|location.href='@{/std/gild.pg}'|" class="menu-item-style">
-				<div style="display: flex; align-items: center; gap: 12px;">
-					<span>🛡️</span>
-					<span style="font-size: 0.95rem; color: #444; font-weight: 600;">캐릭터명 변경</span>
-				</div>
-				<span style="color: #ddd;">&rsaquo;</span>
-			</div>
-			<div th:onclick="|location.href='@{/std/gild.pg}'|" class="menu-item-style">
-				<div style="display: flex; align-items: center; gap: 12px;">
-					<span>🔑</span>
-					<span style="font-size: 0.95rem; color: #444; font-weight: 600;">비밀번호 변경</span>
-				</div>
-				<span style="color: #ddd;">&rsaquo;</span>
-			</div>
-			<div th:onclick="|location.href='@{/std/gild.pg}'|" class="menu-item-style">
-				<div style="display: flex; align-items: center; gap: 12px;">
-					<span>✨</span>
-					<span style="font-size: 0.95rem; color: #444; font-weight: 600;">포인트 내역</span>
-				</div>
-				<span style="color: #ddd;">&rsaquo;</span>
-			</div>
-		</div>
-	</div>
+    <div class="menu-list" style="margin-top: 0;">
+        <div class="menu-item" th:onclick="|location.href='@{/std/gild.pg}'|">
+            <div class="flex-row gap-10">
+                <span style="font-size: 1.2rem;">🏷️</span>
+                <span class="text-bold text-sub" style="font-size: 1rem;">이름 변경</span>
+            </div>
+            <span style="color:#ccc;">›</span>
+        </div>
+        <div class="menu-item" th:onclick="|location.href='@{/std/gild.pg}'|">
+            <div class="flex-row gap-10">
+                <span style="font-size: 1.2rem;">🔐</span>
+                <span class="text-bold text-sub" style="font-size: 1rem;">비밀번호 변경</span>
+            </div>
+            <span style="color:#ccc;">›</span>
+        </div>
+        <div class="menu-item" th:onclick="|location.href='@{/idx/logOut.pg}'|">
+            <div class="flex-row gap-10">
+                <span style="font-size: 1.2rem;">🚪</span>
+                <span class="text-bold text-red" style="font-size: 1rem;">로그아웃</span>
+            </div>
+            <span style="color:#ccc;">›</span>
+        </div>
+    </div>
+
+    <div class="text-center text-light mt-30 mb-20" style="font-size:0.75rem;">Ver 1.0.0</div>
 </th:block>
 </html>

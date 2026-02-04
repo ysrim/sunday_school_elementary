@@ -23,7 +23,7 @@ public class SessionVO {
 
 	private String occpCode; // 직업_코드
 
-	private String occpNm; // 직업_코드
+	private String occpNm; // 직업_이름
 
 	private Integer exp; // 경험치
 
