@@ -15,31 +15,31 @@ public record RewardVO( //
     public static RewardVO ofQuestPoint(QuestCompleteEvent event, QuestVO quest) {
         return new RewardVO(event.mberSn(), RewardTypeEnum.POINT.name(), //
                 quest.rewardPoint(), RewardGetPathEnum.QUEST.name(), //
-                event.logSn(), quest.description() + " 퀘스트 완료 달란트 보상");
+                event.logSn(), quest.description() + " 퀘스트 보상");
     }
 
     public static RewardVO ofQuestExp(QuestCompleteEvent event, QuestVO quest) {
         return new RewardVO(event.mberSn(), RewardTypeEnum.EXP.name(), //
                 quest.rewardExp(), RewardGetPathEnum.QUEST.name(), //
-                event.logSn(), quest.description() + " 퀘스트 완료 경험치 보상");
+                event.logSn(), quest.description() + " 퀘스트 보상");
     }
 
     public static RewardVO ofContinuityPoint(QuestCompleteEvent event, QuestContinuityRulesVO questContinuityRules) {
         return new RewardVO(event.mberSn(), RewardTypeEnum.POINT.name(), //
                 questContinuityRules.BonusPoint(), RewardGetPathEnum.QUEST.name(), //
-                -1, questContinuityRules.description() + " 연속 퀘스트 달란트 보상");
+                -1, questContinuityRules.description() + " 연퀘 보상");
     }
 
     public static RewardVO ofContinuityExp(QuestCompleteEvent event, QuestContinuityRulesVO questContinuityRules) {
         return new RewardVO(event.mberSn(), RewardTypeEnum.EXP.name(), //
                 questContinuityRules.bonusExp(), RewardGetPathEnum.QUEST.name(), //
-                -2, questContinuityRules.description() + "연속 퀘스트 경험치 보상");
+                -2, questContinuityRules.description() + "연퀘 보상");
     }
 
     public static RewardVO ofLevelUpPoint(Integer mberSn, Integer Point) {
         return new RewardVO(mberSn, RewardTypeEnum.POINT.name(), //
                 Point, RewardGetPathEnum.LEVEL_UP.name(), //
-                0, "Level Up! 축하 달란트 지급");
+                0, "Level Up 축하!");
     }
 
 }

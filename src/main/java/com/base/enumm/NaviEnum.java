@@ -15,7 +15,7 @@ public enum NaviEnum {
     STD_OPTS(50, "마이 페이지"),    //
     STD_OPTS_1(51, "나의 QR코드"),  //
     STD_OPTS_2(52, "비밀번호 변경"),  //
-    STD_OPTS_3(53, "포인트 내역"),  //
+    STD_OPTS_3(53, "포인트/경험치 내역"),  //
     EMPT(0, "");
 
     private final Integer seq;
