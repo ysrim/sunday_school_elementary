@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{/app/psn/stu/layouts/std_layout}" lang="ko">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/app/psn/stu/layouts/std_layout}" lang="ko">
 <th:block layout:fragment="content">
 	<script src="/files/script/libs/qrcode.min.js"></script>
 	<script th:inline="javascript">
@@ -14,14 +13,11 @@
 				emoji: '[(${vo.emoji})]',
 				title: '[(${vo.description})]',
 				date: '[(${vo.creatDe})]',
-				amount: [(${vo.amount}
-		)],
-		balance: [(${vo.balanceAfter}
-		)]
-		},
-		/*[/]*/
-		]
-		;
+				amount: [(${vo.amount})],
+				balance: [(${vo.balanceAfter})]
+			},
+			/*[/]*/
+		];
 
 		let currentHistoryFilter = '*';
 		let currentPage = 1;
