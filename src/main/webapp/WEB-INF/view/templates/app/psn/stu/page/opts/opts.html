@@ -93,12 +93,12 @@
 	<div class="flex-row gap-10" style="margin: 0 20px 20px;">
 		<button class="card flex-col flex-center gap-5" style="margin: 0; flex: 1; padding: 15px; cursor: pointer;"
 				th:onclick="|location.href='@{/std/opts/qrCode.pg}'|">
-			<span style="font-size: 1.8rem;">🔍</span>
+			<div class="flex-center" style="font-size: 1.5rem; background: #F1F8FF; width: 45px; height: 45px; border-radius: 15px;">🔍</div>
 			<span class="text-bold" style="font-size: 0.9rem;">QR체크인</span>
 		</button>
 		<button class="card flex-col flex-center gap-5" style="margin: 0; flex: 1; padding: 15px; cursor: pointer;"
 				th:onclick="|location.href='@{/std/opts/pointHistory.pg}'|">
-			<span style="font-size: 1.8rem;">🧾</span>
+			<div class="flex-center" style="font-size: 1.5rem; background: #F1F8FF; width: 45px; height: 45px; border-radius: 15px;">💰</div>
 			<span class="text-bold" style="font-size: 0.9rem;">내역확인</span>
 		</button>
 	</div>

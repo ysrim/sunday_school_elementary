@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.base.utl.SessionUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,8 +35,8 @@ public class HomeServiceImpl implements HomeService {
 	private final CacheService cacheService;
 
 	@Override
-	public List<HomeGuildListVO> sltGuildMberList(Integer guildSn) {
-		List<HomeGuildListVO> list = homeMapper.sltGuildMberList(guildSn);
+	public List<HomeGuildListVO> sltGuildMberList() {
+		List<HomeGuildListVO> list = homeMapper.sltGuildMberList(SessionUtil.getMberInfo().getGuildSn());
 		if (list != null) {
 			list.parallelStream().forEach(vo -> {
 				vo.setAccess(cacheService.checkKeyExists(CacheKeys.OnlineMbers.name(), vo.getMberId()));
@@ -45,15 +46,15 @@ public class HomeServiceImpl implements HomeService {
 	}
 
 	@Override
-	public List<HomeGuildListVO> sltGuildMberAccessList(Integer guildSn) {
-		List<HomeGuildListVO> list = homeMapper.sltGuildMberList(guildSn);
+	public List<HomeGuildListVO> sltGuildMberAccessList() {
+		List<HomeGuildListVO> list = homeMapper.sltGuildMberList(SessionUtil.getMberInfo().getGuildSn());
 		return Optional.ofNullable(list).orElseGet(Collections::emptyList).stream().filter(vo -> cacheService.checkKeyExists(CacheKeys.OnlineMbers.name(), vo.getMberId())) // 길드원이 온라인만 리스트업
 			.collect(Collectors.toList());
 	}
 
 	@Override
-	public HomeGuildInfoVO sltGuildInfo(Integer guildSn) {
-		return homeMapper.sltGuildInfo(guildSn);
+	public HomeGuildInfoVO sltGuildInfo() {
+		return homeMapper.sltGuildInfo(SessionUtil.getMberInfo().getGuildSn());
 	}
 
 	@Override

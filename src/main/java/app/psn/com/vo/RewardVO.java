@@ -39,7 +39,7 @@ public record RewardVO( //
     public static RewardVO ofLevelUpPoint(Integer mberSn, Integer Point) {
         return new RewardVO(mberSn, RewardTypeEnum.POINT.name(), //
                 Point, RewardGetPathEnum.LEVEL_UP.name(), //
-                0, " Level Up! 축하 달란트 지급");
+                0, "Level Up! 축하 달란트 지급");
     }
 
 }

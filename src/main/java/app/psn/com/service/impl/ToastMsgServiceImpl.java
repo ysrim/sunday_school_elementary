@@ -2,6 +2,7 @@ package app.psn.com.service.impl;
 
 import java.util.List;
 
+import com.base.utl.SessionUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,21 +20,21 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class ToastMsgServiceImpl implements ToastMsgService {
 
-	private final ToastMsgMapper toastMsgMapper;
+    private final ToastMsgMapper toastMsgMapper;
 
-	@Override
-	public void insToastMsg(ToastMsgEvent toastMsgEvent) {
-		toastMsgMapper.insToastMsg(toastMsgEvent);
-	}
+    @Override
+    public void insToastMsg(ToastMsgEvent toastMsgEvent) {
+        toastMsgMapper.insToastMsg(toastMsgEvent);
+    }
 
-	@Override
-	public List<ToastMsgVO> sltToastMsgList(Integer mberSn) {
-		return toastMsgMapper.sltToastMsgList(mberSn);
-	}
+    @Override
+    public List<ToastMsgVO> sltToastMsgList() {
+        return toastMsgMapper.sltToastMsgList(SessionUtil.getMberInfo().getMberSn());
+    }
 
-	@Override
-	public void removeToast(Integer toastSn) {
-		toastMsgMapper.removeToast(toastSn);
-	}
+    @Override
+    public void removeToast(Integer toastSn) {
+        toastMsgMapper.removeToast(toastSn);
+    }
 
 }

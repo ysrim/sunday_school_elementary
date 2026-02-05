@@ -30,7 +30,7 @@ public class OptionController {
     @MenuInfo(navi = NaviEnum.STD_OPTS, role = MberGrdEnum.STD)
     @RequestMapping("/opts.pg")
     public String guildPg(Model model) {
-        model.addAttribute("guildMberCnt", homeService.sltGuildMberList(SessionUtil.getMberInfo().getGuildSn()).size()); // 길드맴버 숫자
+        model.addAttribute("guildMberCnt", homeService.sltGuildMberList().size()); // 길드맴버 숫자
         return "/app/psn/stu/page/opts/opts";
     }
 
@@ -52,8 +52,9 @@ public class OptionController {
     // 마이페이지 - 패스워드 변경 - 요청
     @MenuInfo(navi = NaviEnum.STD_OPTS_2, role = MberGrdEnum.STD)
     @RequestMapping("/opts/pwChg.ax")
-    public ResponseEntity pwChgAx(@RequestParam(value = "currentPw", defaultValue = "") String currentPw
-            , @RequestParam(value = "newPw", defaultValue = "") String newPw, Model model) {
+    public ResponseEntity pwChgAx(@RequestParam(value = "currentPw", defaultValue = "") String currentPw // 기존 패스워드
+            , @RequestParam(value = "newPw", defaultValue = "") String newPw // 기존 패스워드
+    ) {
         if ("".equals(newPw) || "".equals(currentPw)) {
             ResUtil.resFail("변수가 부족합니다.");
         }
@@ -64,7 +65,8 @@ public class OptionController {
     // 마이페이지 - 포인트 내역
     @MenuInfo(navi = NaviEnum.STD_OPTS_3, role = MberGrdEnum.STD)
     @RequestMapping("/opts/pointHistory.pg")
-    public String pointHistoryPg() {
+    public String pointHistoryPg(Model model) {
+        model.addAttribute("guildMberCnt", optionService.sltPointHistory()); // 길드맴버 숫자
         return "/app/psn/stu/page/opts/pointHistory";
     }
 

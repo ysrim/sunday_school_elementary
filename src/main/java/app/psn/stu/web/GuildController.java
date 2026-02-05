@@ -19,20 +19,19 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/std")
 public class GuildController {
 
-	private final HomeService homeService;
+    private final HomeService homeService;
 
-	@MenuInfo(navi = NaviEnum.STD_GILD, role = MberGrdEnum.STD)
-	@RequestMapping("/gild.pg")
-	public String guildPg(Model model) {
+    @MenuInfo(navi = NaviEnum.STD_GILD, role = MberGrdEnum.STD)
+    @RequestMapping("/gild.pg")
+    public String guildPg(Model model) {
 
-		Integer guildSn = SessionUtil.getMberInfo().getGuildSn();
-		model.addAttribute("guildMberCnt", homeService.sltGuildMberList(guildSn).size()); // 길드 숫자
-		model.addAttribute("guildMberAccessList", homeService.sltGuildMberList(guildSn)); // 길드접속자 목록
-		model.addAttribute("guildInfo", homeService.sltGuildInfo(guildSn)); // 길드정보
+        model.addAttribute("guildMberCnt", homeService.sltGuildMberList().size()); // 길드 숫자
+        model.addAttribute("guildMberAccessList", homeService.sltGuildMberList()); // 길드접속자 목록
+        model.addAttribute("guildInfo", homeService.sltGuildInfo()); // 길드정보
 
-		// 길드원 목록
+        // 길드원 목록
 
-		return "/app/psn/stu/page/gild/gild";
-	}
+        return "/app/psn/stu/page/gild/gild";
+    }
 
 }
