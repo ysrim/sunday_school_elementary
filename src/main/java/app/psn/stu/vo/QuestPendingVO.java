@@ -18,4 +18,6 @@ public class QuestPendingVO {
 
     private Integer mberSn = SessionUtil.getMberInfo().getMberSn(); // 회원_일련번호
 
+    private Integer logSn;
+
 }

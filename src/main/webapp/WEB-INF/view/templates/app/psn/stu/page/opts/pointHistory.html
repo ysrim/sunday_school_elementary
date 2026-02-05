@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/app/psn/stu/layouts/std_layout}" lang="ko">
+<th:block layout:fragment="content">
+    <script src="/files/script/libs/qrcode.min.js"></script>
+    <script th:inline="javascript">
+
+        // 데이터 부분
+        const historyData = [
+            {type: '+', category: 'attendance', title: '주일 출석 보상', date: '2025.02.02', amount: 100, balance: 2600},
+            {type: '+', category: 'quest', title: '일일 퀘스트 완료', date: '2025.02.02', amount: 50, balance: 2500},
+            {type: '-', category: 'shop', title: '달란트 시장 (학용품)', date: '2025.02.01', amount: -500, balance: 2450},
+            {type: '+', category: 'event', title: '성경 암송 대회', date: '2025.01.28', amount: 300, balance: 2950},
+            {type: '+', category: 'food', title: '간식 나눔', date: '2025.01.28', amount: 50, balance: 2650},
+            {type: '-', category: 'shop', title: '친구 선물 구매', date: '2025.01.25', amount: -200, balance: 2600},
+            {type: '+', category: 'attendance', title: '주일 출석 보상', date: '2025.01.26', amount: 100, balance: 2800},
+            {type: '+', category: 'quest', title: '성경 필사 완료', date: '2025.01.25', amount: 150, balance: 2700},
+            {type: '+', category: 'quest', title: '부모님 안마', date: '2025.01.24', amount: 50, balance: 2550},
+            {type: '-', category: 'event', title: '지각 벌금', date: '2025.01.22', amount: -50, balance: 2500},
+            {type: '+', category: 'attendance', title: '주일 출석 보상', date: '2025.01.19', amount: 100, balance: 2550},
+            {type: '+', category: 'quest', title: '큐티(QT) 인증', date: '2025.01.18', amount: 30, balance: 2450},
+            {type: '+', category: 'quest', title: '큐티(QT) 인증', date: '2025.01.17', amount: 30, balance: 2420},
+            {type: '+', category: 'quest', title: '큐티(QT) 인증', date: '2025.01.16', amount: 30, balance: 2390},
+            {type: '+', category: 'event', title: '신년 감사 예배', date: '2025.01.01', amount: 500, balance: 2360},
+            {type: '-', category: 'shop', title: '떡볶이 파티', date: '2024.12.31', amount: -1000, balance: 1860},
+            {type: '+', category: 'attendance', title: '송구영신 예배', date: '2024.12.31', amount: 200, balance: 2860},
+            {type: '+', category: 'quest', title: '전도 축제 친구초청', date: '2024.12.25', amount: 1000, balance: 2660},
+            {type: '+', category: 'attendance', title: '성탄절 예배', date: '2024.12.25', amount: 200, balance: 1660},
+            {type: '+', category: 'attendance', title: '주일 출석 보상', date: '2024.12.22', amount: 100, balance: 1460},
+        ];
+
+        const categoryIcons = {attendance: '⛪', quest: '⚔️', shop: '🛒', food: '🍔', event: '🎉', default: '💰'};
+        let currentHistoryFilter = '*';
+        let currentPage = 1;
+        const itemsPerPage = 7;
+        let filteredData = [];
+
+        function setHistoryFilter(filterType) {
+            currentHistoryFilter = filterType;
+            currentPage = 1;
+            $('.filter-tab').removeClass('active');
+            $(`.filter-tab[onclick="setHistoryFilter('${filterType}')"]`).addClass('active');
+            renderHistory(true);
+        }
+
+        function loadMoreHistory() {
+            currentPage++;
+            renderHistory(false);
+        }
+
+        function renderHistory(reset = false) {
+            const $list = $('#point-history-list');
+            const $btnMore = $('#btn-load-more');
+
+            if (reset) {
+                $list.empty();
+                if (currentHistoryFilter === '*') filteredData = historyData;
+                else filteredData = historyData.filter(item => item.type === currentHistoryFilter);
+            }
+
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageData = filteredData.slice(startIndex, endIndex);
+
+            if (filteredData.length === 0) {
+                $list.html('<div class="empty-history text-light text-center" style="padding:20px;">내역이 없습니다. 텅! 🗑️</div>');
+                $btnMore.hide();
+                return;
+            }
+
+            let lastDate = null;
+            if (!reset && $('.history-date-header').last().length > 0) {
+                lastDate = $('.history-date-header').last().data('date');
+            }
+
+            pageData.forEach(item => {
+                if (item.date !== lastDate) {
+                    $list.append(`<div class="history-date-header" data-date="${item.date}" style="background: #f8f9fa; padding: 5px 10px; border-radius: 8px; display: inline-block; margin: 15px 5px 5px 5px; font-weight: bold; font-size: 0.75rem; color: #888;">${item.date}</div>`);
+                    lastDate = item.date;
+                }
+
+                const isPlus = item.amount > 0;
+                const colorClass = isPlus ? 'text-blue' : 'text-red';
+                const amountStr = (isPlus ? '+' : '') + item.amount.toLocaleString();
+                const iconChar = categoryIcons[item.category] || categoryIcons.default;
+
+                const html = `
+                <div class="menu-item" style="cursor: default;">
+                    <div class="flex-row">
+                        <div class="flex-center" style="width: 40px; height: 40px; background: #F8F9FA; border-radius: 12px; font-size: 1.2rem; margin-right: 12px;">
+                            ${iconChar}
+                        </div>
+                        <div class="flex-col">
+                            <span class="text-bold" style="font-size: 0.9rem; color:#333;">${item.title}</span>
+                            <small class="text-light">${item.category === 'shop' ? '사용 완료' : '지급 완료'}</small>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="${colorClass} text-bold" style="font-size: 1rem;">${amountStr}</div>
+                        ${item.balance ? `<small class="text-light">잔액 ${item.balance.toLocaleString()}</small>` : ''}
+                    </div>
+                </div>
+            `;
+                $list.append(html);
+            });
+
+            if (endIndex >= filteredData.length) {
+                $btnMore.hide();
+            } else {
+                $btnMore.show();
+                $btnMore.text(`👇 더 보기 (${filteredData.length - endIndex}개)`);
+            }
+        }
+
+
+        $(function () {
+            setHistoryFilter('*');
+        });
+    </script>
+    <div style="margin: 25px 25px 10px 25px; display: flex; align-items: center;">
+        <div style="width: 4px; height: 16px; background-color: #4A90E2; border-radius: 2px; margin-right: 10px;"></div>
+        <h3 style="margin: 0; font-size: 1.15rem; color: #333; font-weight: 800;">포인트 적립/사용</h3>
+    </div>
+    <div class="point-summary-card">
+        <span style="font-size: 0.85rem; opacity: 0.8;">현재 보유 달란트</span>
+        <h2 style="font-size: 3rem; font-weight: 800; margin: 15px 0 25px 0; letter-spacing: -1px;">
+            <span class="sub-money">2,500</span> <small style="font-size: 1.2rem;">P</small>
+        </h2>
+        <div class="flex-row"
+             style="justify-content: space-around; background: rgba(0,0,0,0.08); border-radius: 15px; padding: 12px; backdrop-filter: blur(5px);">
+            <div class="flex-col flex-center text-sub" style="color: white;">
+                <span>이번 주 획득</span>
+                <strong style="font-size: 1rem;">+150 P</strong>
+            </div>
+            <div style="width: 1px; height: 25px; background: rgba(255,255,255,0.3);"></div>
+            <div class="flex-col flex-center text-sub" style="color: white;">
+                <span>이번 주 사용</span>
+                <strong style="font-size: 1rem; color: #FFCDD2;">-500 P</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex-row gap-10" style="margin: 20px 20px 10px 20px;">
+        <button class="filter-tab active" onclick="setHistoryFilter('*')">전체</button>
+        <button class="filter-tab" onclick="setHistoryFilter('+')">적립 (+)</button>
+        <button class="filter-tab" onclick="setHistoryFilter('-')">사용 (-)</button>
+    </div>
+    <div class="menu-list" id="point-history-list" style="min-height: 200px;">
+    </div>
+    <button id="btn-load-more" class="btn-outline"
+            style="display: block; width: 150px; margin: 20px auto 40px; padding: 10px 20px; border-radius: 50px;"
+            onclick="loadMoreHistory()">👇 더 보기
+        (More)
+    </button>
+</th:block>
+</html>
