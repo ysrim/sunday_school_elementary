@@ -56,4 +56,5 @@ public class QuestServiceImpl implements QuestService {
     public boolean questCompleteChk(QuestPendingVO questVO) {
         return questMapper.questCompleteChk(questVO) > 0 ? true : false;
     }
+
 }
