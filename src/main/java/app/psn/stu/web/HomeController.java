@@ -61,7 +61,7 @@ public class HomeController {
 
     @MenuInfo(navi = NaviEnum.STD_HOME_1, role = MberGrdEnum.STD)
     @RequestMapping("/home/noticeCont.pg")
-    public String noticeContPg(Model model) {
+    public String noticeContPg() {
         // TODO 공지사항 컨텐츠 구현
         return "/app/psn/stu/page/home/noticeCont";
 

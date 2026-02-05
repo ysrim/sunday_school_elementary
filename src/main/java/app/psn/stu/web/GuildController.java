@@ -1,17 +1,14 @@
 package app.psn.stu.web;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-
+import app.psn.stu.service.HomeService;
 import com.base.annotation.MenuInfo;
 import com.base.enumm.MberGrdEnum;
 import com.base.enumm.NaviEnum;
-import com.base.utl.SessionUtil;
-
-import app.psn.stu.service.HomeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
 @Controller
