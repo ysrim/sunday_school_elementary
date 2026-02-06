@@ -7,13 +7,13 @@ import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import com.base.annotation.MenuInfo;
-import com.base.annotation.PassAuth;
-import com.base.enumm.std.NaviEnum;
+import com.base.annotation.std.StdMenuInfo;
+import com.base.annotation.com.PassAuth;
+import com.base.enumm.std.StdNaviEnum;
 import com.base.utl.SessionUtil;
 import com.base.utl.StringUtil;
 
-import app.psn.std.login.vo.SessionVO;
+import app.psn.std.login.vo.StdSessionVO;
 import app.psn.com.service.CacheService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -42,41 +42,41 @@ public class StdAuthInterceptor implements HandlerInterceptor {
 		}
 
 		// 3. 세션 인증 체크
-		SessionVO sessionVO = SessionUtil.getMberInfo();
-		if (sessionVO == null) {
+		StdSessionVO stdSessionVO = SessionUtil.getStdMberInfo();
+		if (stdSessionVO == null) {
 			handleAuthFail(request, response, "Login Required", "401");
 			return false;
 		}
 
 		// 4. 권한(인가) 체크
-		if (!checkMenuAuthorization(request, handlerMethod, sessionVO)) {
+		if (!checkMenuAuthorization(request, handlerMethod, stdSessionVO)) {
 			handleAuthFail(request, response, "Access Denied", "403");
 			return false;
 		}
 
 		// 5. 사용자 부가 정보 설정 (Cache & Request Attributes)
-		setupUserContext(request, sessionVO);
+		setupUserContext(request, stdSessionVO);
 
 		return true;
 
 	}
 
-	private boolean checkMenuAuthorization(HttpServletRequest request, HandlerMethod handlerMethod, SessionVO sessionVO) {
+	private boolean checkMenuAuthorization(HttpServletRequest request, HandlerMethod handlerMethod, StdSessionVO stdSessionVO) {
 
-		MenuInfo menuInfo = AnnotatedElementUtils.findMergedAnnotation(handlerMethod.getMethod(), MenuInfo.class);
+		StdMenuInfo menuInfo = AnnotatedElementUtils.findMergedAnnotation(handlerMethod.getMethod(), StdMenuInfo.class);
 
 		if (menuInfo == null)
 			return true;
 
 		// 권한 체크
-		if (!isAuthorized(sessionVO, menuInfo)) {
+		if (!isAuthorized(stdSessionVO, menuInfo)) {
 			return false;
 		}
 
 		// 메뉴 정보 설정
 		try {
 			String naviKey = menuInfo.navi().toString();
-			NaviEnum navi = NaviEnum.valueOf(naviKey);
+			StdNaviEnum navi = StdNaviEnum.valueOf(naviKey);
 			request.setAttribute("_menuInfo", naviKey);
 			request.setAttribute("_menuNm", navi.getNaviNm());
 		} catch (IllegalArgumentException e) {
@@ -87,10 +87,10 @@ public class StdAuthInterceptor implements HandlerInterceptor {
 
 	}
 
-	private void setupUserContext(HttpServletRequest request, SessionVO sessionVO) {
+	private void setupUserContext(HttpServletRequest request, StdSessionVO stdSessionVO) {
 
-		String mberId = sessionVO.mberId();
-		Integer mberSn = sessionVO.mberSn();
+		String mberId = stdSessionVO.mberId();
+		Integer mberSn = stdSessionVO.mberSn();
 
 		// 온라인 상태 업데이트
 		cacheService.addOnlineMber(mberId);
@@ -108,11 +108,12 @@ public class StdAuthInterceptor implements HandlerInterceptor {
 
 	}
 
-	private boolean isAuthorized(SessionVO session, MenuInfo menuInfo) {
+	private boolean isAuthorized(StdSessionVO session, StdMenuInfo menuInfo) {
 
-		// 등급코드가 없는 경우 방어 코드 추가
-		if (session.gradeCode() == null)
+		// 관리자 계정으로는 학생페이지 접근 못한다.
+		if ("300".equals(session.gradeCode())) {
 			return false;
+		}
 
 		return session.gradeCode().equals(menuInfo.role().getCode());
 
@@ -129,4 +130,5 @@ public class StdAuthInterceptor implements HandlerInterceptor {
 		}
 
 	}
+
 }

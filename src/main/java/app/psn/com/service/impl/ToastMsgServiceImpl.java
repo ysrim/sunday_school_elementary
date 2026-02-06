@@ -33,7 +33,7 @@ public class ToastMsgServiceImpl implements ToastMsgService {
 	@Override
 	public List<ToastMsgVO> sltToastMsgList() {
 
-		return toastMsgMapper.sltToastMsgList(SessionUtil.getMberInfo().mberSn());
+		return toastMsgMapper.sltToastMsgList(SessionUtil.getStdMberInfo().mberSn());
 
 	}
 

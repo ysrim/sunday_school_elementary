@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintValidatorContext;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
 
-import com.base.annotation.XssCheck;
+import com.base.annotation.com.XssCheck;
 
 public class XssCheckValidator implements ConstraintValidator<XssCheck, String> {
 

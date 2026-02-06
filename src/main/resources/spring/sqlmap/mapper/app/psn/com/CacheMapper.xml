@@ -15,18 +15,19 @@
 	</select>
 
 	<select id="sltExp" parameterType="Integer" resultType="app.psn.com.vo.AvatarLevelVO">
-		SELECT CUR_LVL.LEVEL                                                                                   AS CURRENT_LEVEL
-			 , CUR_LVL.REQUIRED_EXP                                                                            AS CURRENT_REQUIRED_EXP
-			 , NEXT_LVL.LEVEL                                                                                  AS NEXT_LEVEL
-			 , NEXT_LVL.REQUIRED_EXP                                                                           AS NEXT_REQUIRED_EXP
-			 , NEXT_LVL.REQUIRED_EXP - CUR_LVL.REQUIRED_EXP                                                    AS LEVEL_UP_REQUIRED_EXP
-			 , U.EXP                                                                                           AS TOTAL_EXP
-			 , (U.EXP - CUR_LVL.REQUIRED_EXP)                                                                  AS CURRENT_EXP
-			 , (NEXT_LVL.REQUIRED_EXP - U.EXP)                                                                 AS EXP_NEEDED
-			 , ROUND((U.EXP - CUR_LVL.REQUIRED_EXP) / (NEXT_LVL.REQUIRED_EXP - CUR_LVL.REQUIRED_EXP) * 100, 1) AS PROGRESS_PERCENT
+		SELECT CUR_LVL.LEVEL                                                                                              AS CURRENT_LEVEL
+			 , CUR_LVL.REQUIRED_EXP                                                                                       AS CURRENT_REQUIRED_EXP
+			 , NEXT_LVL.LEVEL                                                                                             AS NEXT_LEVEL
+			 , NEXT_LVL.REQUIRED_EXP                                                                                      AS NEXT_REQUIRED_EXP
+			 , NEXT_LVL.REQUIRED_EXP - CUR_LVL.REQUIRED_EXP                                                               AS LEVEL_UP_REQUIRED_EXP
+			 , U.EXP                                                                                                      AS TOTAL_EXP
+			 , (U.EXP - IFNULL(PRE_LVL.REQUIRED_EXP, 0))                                                                  AS CURRENT_EXP
+			 , (CUR_LVL.REQUIRED_EXP - U.EXP)                                                                             AS EXP_NEEDED
+			 , ROUND((U.EXP - IFNULL(PRE_LVL.REQUIRED_EXP, 0)) / (NEXT_LVL.REQUIRED_EXP - CUR_LVL.REQUIRED_EXP) * 100, 1) AS PROGRESS_PERCENT
 		FROM AVATAR_INFO U
-				 JOIN AVATAR_LEVEL_RULES CUR_LVL ON CUR_LVL.LEVEL = U.LEVEL
-				 JOIN AVATAR_LEVEL_RULES NEXT_LVL ON NEXT_LVL.LEVEL = U.LEVEL + 1
+				 LEFT OUTER JOIN AVATAR_LEVEL_RULES PRE_LVL ON PRE_LVL.LEVEL = U.LEVEL - 1
+				 LEFT OUTER JOIN AVATAR_LEVEL_RULES CUR_LVL ON CUR_LVL.LEVEL = U.LEVEL
+				 LEFT OUTER JOIN AVATAR_LEVEL_RULES NEXT_LVL ON NEXT_LVL.LEVEL = U.LEVEL + 1
 		WHERE U.MBER_SN = #{mberSn}
 	</select>
 

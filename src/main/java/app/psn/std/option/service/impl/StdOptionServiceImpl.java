@@ -1,0 +1,88 @@
+package app.psn.std.option.service.impl;
+
+import java.util.HashMap;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.base.utl.SessionUtil;
+import com.base.utl.StringUtil;
+
+import app.psn.std.login.service.StdLoginService;
+import app.psn.com.vo.LoginVO;
+import app.psn.std.login.vo.StdSessionVO;
+import app.psn.std.option.mapper.StdOptionMapper;
+import app.psn.std.option.service.StdOptionService;
+import app.psn.std.option.vo.StdRewardHistoryVO;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service("optionService")
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class StdOptionServiceImpl implements StdOptionService {
+
+	private final StdLoginService stdLoginService;
+
+	private final PasswordEncoder passwordEncoder;
+
+	private final StdOptionMapper stdOptionMapper;
+
+	private @Value("#{globalsProps['secretKey.key.qr']}") String secretKey;
+
+	@Override
+	public String QrCodeStr() {
+
+		try {
+			StdSessionVO stdSessionVo = SessionUtil.getStdMberInfo();
+			return StringUtil.encrypt(stdSessionVo.mberSn() + "", secretKey);
+		} catch (Exception e) {
+			throw new RuntimeException("QR코드 생성중 에러가 발생했습니다.");
+		}
+
+	}
+
+	@Override
+	public boolean pwChg(String currentPw, String newPw) {
+
+		LoginVO loginVO = new LoginVO();
+		loginVO.setMberId(SessionUtil.getStdMberInfo().mberId());
+		loginVO.setPwd(currentPw);
+
+		// 1. id로 회원정보 찾기
+		StdSessionVO stdSessionVO = stdLoginService.sltMber(loginVO);
+		if (stdSessionVO == null) {
+			throw new RuntimeException("일치하는 회원정보가 없습니다.");
+		}
+
+		// 2. pwd 검증
+		if (!passwordEncoder.matches(loginVO.getPwd(), stdSessionVO.pwd())) {
+			throw new RuntimeException("기존 패스워드가 틀렸습니다.");
+		}
+
+		// 3. 패스워드 업데이트
+		stdOptionMapper.pwChg(SessionUtil.getStdMberInfo().mberSn(), passwordEncoder.encode(newPw));
+
+		return true;
+
+	}
+
+	@Override
+	public List<StdRewardHistoryVO> sltRewardHistory() {
+
+		return stdOptionMapper.sltRewardHistory(SessionUtil.getStdMberInfo().mberSn());
+
+	}
+
+	@Override
+	public HashMap<String, Integer> sltWeekStatics() {
+
+		return stdOptionMapper.sltWeekStatics(SessionUtil.getStdMberInfo().mberSn());
+
+	}
+
+}

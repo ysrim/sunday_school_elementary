@@ -81,7 +81,7 @@
                     Lv.<span th:text="${qrInfo.level}">1</span>
                 </span>
 				<span style="background: #f0f7ff; color: #4A90E2; padding: 4px 12px; border-radius: 10px; font-size: 0.8rem; font-weight: 700; border: 1px solid #e0eeff;">
-                    EXP <span th:text="${#numbers.formatInteger(qrInfo.exp, 0, 'COMMA')}">0</span>
+                    EXP <span th:text="${#numbers.formatInteger(qrInfo.exp, 1, 'COMMA')}">0</span>
                 </span>
 			</div>
 
@@ -105,7 +105,7 @@
 			<div style="width: 1px; background: #eee; height: 30px; align-self: center;"></div>
 			<div class="info-item highlight">
 				<label>현재 달란트</label>
-				<span th:text="|${#numbers.formatInteger(qrInfo.point, 0, 'COMMA')} P|">2,500 P</span>
+				<span th:text="|${#numbers.formatInteger(qrInfo.point, 1, 'COMMA')} P|">2,500 P</span>
 			</div>
 		</div>
 	</div>
