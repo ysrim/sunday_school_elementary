@@ -47,7 +47,7 @@ public class StdOptionServiceImpl implements StdOptionService {
 	}
 
 	@Override
-	public boolean pwChg(String currentPw, String newPw) {
+	public void pwChg(String currentPw, String newPw) {
 
 		LoginVO loginVO = new LoginVO();
 		loginVO.setMberId(SessionUtil.getStdMberInfo().mberId());
@@ -66,8 +66,6 @@ public class StdOptionServiceImpl implements StdOptionService {
 
 		// 3. 패스워드 업데이트
 		stdOptionMapper.pwChg(SessionUtil.getStdMberInfo().mberSn(), passwordEncoder.encode(newPw));
-
-		return true;
 
 	}
 

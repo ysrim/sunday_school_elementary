@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.base.utl.ResUtil;
+import com.base.vo.BodyResVO;
 
 import app.psn.std.join.service.StdJoinService;
 import app.psn.std.join.vo.StdJoinMemberVO;
@@ -43,7 +44,7 @@ public class StdJoinController {
      */
     @RequestMapping(path = "/join.ax")
     @ResponseBody
-    public ResponseEntity joinAx(@Valid StdJoinMemberVO stdJoinMemberVO) {
+    public ResponseEntity<BodyResVO<Object>> joinAx(@Valid StdJoinMemberVO stdJoinMemberVO) {
 
         stdJoinMemberVO.setPwd(passwordEncoder.encode(stdJoinMemberVO.getPwd()));
 
@@ -58,7 +59,7 @@ public class StdJoinController {
      */
     @RequestMapping(path = "/idDupleChk.ax")
     @ResponseBody
-    public ResponseEntity idDupleChkAx(@RequestParam(name = "mberId", defaultValue = "") String mberId) {
+    public ResponseEntity<BodyResVO<Object>> idDupleChkAx(@RequestParam(name = "mberId", defaultValue = "") String mberId) {
 
         if ("".equals(mberId)) {
             return ResUtil.resValid("잘못된 형식의 아이디입니다.");

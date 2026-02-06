@@ -7,7 +7,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import com.base.enumm.com.MberGrdEnum;
-import com.base.enumm.std.StdNaviEnum;
 import com.base.enumm.tch.TchNaviEnum;
 
 @Target({ElementType.TYPE, ElementType.METHOD})
@@ -15,8 +14,8 @@ import com.base.enumm.tch.TchNaviEnum;
 @Documented
 public @interface ThdMenuInfo {
 
-	public abstract MberGrdEnum role();
+	MberGrdEnum role();
 
-	public abstract TchNaviEnum navi() default TchNaviEnum.EMPTY;
+	TchNaviEnum navi() default TchNaviEnum.EMPTY;
 
 }

@@ -8,6 +8,7 @@ import com.base.enumm.com.MberGrdEnum;
 import com.base.enumm.com.ViewPathEnum;
 import com.base.enumm.std.StdNaviEnum;
 import com.base.utl.ResUtil;
+import com.base.vo.BodyResVO;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -70,7 +71,7 @@ public class StdOptionController {
      */
     @StdMenuInfo(navi = StdNaviEnum.STD_OPTS_2, role = MberGrdEnum.STD)
     @RequestMapping("/opts/pwChg.ax")
-    public ResponseEntity pwChgAx(@RequestParam(value = "currentPw", defaultValue = "") String currentPw // 기존 패스워드
+    public ResponseEntity<BodyResVO<Object>> pwChgAx(@RequestParam(value = "currentPw", defaultValue = "") String currentPw // 기존 패스워드
             , @RequestParam(value = "newPw", defaultValue = "") String newPw // 기존 패스워드
     ) {
 

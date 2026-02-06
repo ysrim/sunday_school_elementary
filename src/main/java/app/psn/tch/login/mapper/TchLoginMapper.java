@@ -11,6 +11,6 @@ public interface TchLoginMapper {
 	/**
 	 * 학생 회원 사용자 정보 요청
 	 */
-	public TchSessionVO sltMber(TchLoginVO loginVO);
+	TchSessionVO sltMber(TchLoginVO loginVO);
 
 }

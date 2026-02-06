@@ -40,11 +40,8 @@ public class StdHomeServiceImpl implements StdHomeService {
 
 		List<StdHomeGuildListVO> list = stdHomeMapper.sltGuildMberList(SessionUtil.getStdMberInfo().guildSn());
 
-		if (list != null) {
-			list.parallelStream().forEach(vo -> {
-				vo.setAccess(cacheService.checkKeyExists(CacheKeys.OnlineMbers.name(), vo.getMberId()));
-			});
-		}
+		if (list != null)
+			list.parallelStream().forEach(vo -> vo.setAccess(cacheService.checkKeyExists(CacheKeys.OnlineMbers.name(), vo.getMberId())));
 
 		return list != null ? list : Collections.emptyList();
 

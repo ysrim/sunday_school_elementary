@@ -24,7 +24,7 @@ public class StdJoinServiceImpl implements StdJoinService {
 
     @Override
     @Transactional
-    public boolean joinMber(StdJoinMemberVO stdJoinMemberVO) {
+    public void joinMber(StdJoinMemberVO stdJoinMemberVO) {
 
         // 1. 회원 번호(SN) 채번
         String mberSn = stdJoinMapper.sltMberSn();

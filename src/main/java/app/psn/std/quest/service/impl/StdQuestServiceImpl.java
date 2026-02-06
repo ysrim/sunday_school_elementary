@@ -56,7 +56,7 @@ public class StdQuestServiceImpl implements StdQuestService {
 	@Override
 	public boolean questCompleteChk(StdQuestPendingVO questVO) {
 
-		return stdQuestMapper.questCompleteChk(questVO) > 0 ? true : false;
+		return stdQuestMapper.questCompleteChk(questVO) > 0;
 
 	}
 

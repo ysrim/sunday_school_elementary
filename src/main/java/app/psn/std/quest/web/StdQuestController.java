@@ -12,6 +12,7 @@ import com.base.enumm.com.MberGrdEnum;
 import com.base.enumm.std.StdNaviEnum;
 import com.base.utl.ResUtil;
 import com.base.utl.StringUtil;
+import com.base.vo.BodyResVO;
 
 import app.psn.std.quest.service.StdQuestService;
 import app.psn.std.quest.vo.StdQuestPendingVO;
@@ -44,12 +45,10 @@ public class StdQuestController {
 
 	/**
 	 * 퀘스트 수행 요청
-	 *
-	 * @return
 	 */
 	@StdMenuInfo(role = MberGrdEnum.STD)
 	@RequestMapping("/qest/qest.ax")
-	public ResponseEntity qestAx(@Valid StdQuestPendingVO questVO) {
+	public ResponseEntity<BodyResVO<Object>> qestAx(@Valid StdQuestPendingVO questVO) {
 
 		stdQuestService.questDo(questVO);
 

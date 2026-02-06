@@ -8,6 +8,7 @@ import com.base.enumm.com.ViewPathEnum;
 import com.base.enumm.std.StdNaviEnum;
 import com.base.utl.ResUtil;
 import com.base.utl.StringUtil;
+import com.base.vo.BodyResVO;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +46,7 @@ public class StdAttendanceController {
 	 */
 	@StdMenuInfo(role = MberGrdEnum.STD)
 	@RequestMapping("/atnd.ax")
-	public ResponseEntity attendanceAx() {
+	public ResponseEntity<BodyResVO<Object>> attendanceAx() {
 
 		if (StringUtil.isTodaySunday()) {
 			attendanceService.attendanceDo();

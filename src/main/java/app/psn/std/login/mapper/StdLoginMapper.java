@@ -8,9 +8,9 @@ import app.psn.std.login.vo.StdSessionVO;
 @Mapper
 public interface StdLoginMapper {
 
-    /**
-     * 학생 회원 사용자 정보 요청
-     */
-    public StdSessionVO sltMber(LoginVO loginVO);
+	/**
+	 * 학생 회원 사용자 정보 요청
+	 */
+	StdSessionVO sltMber(LoginVO loginVO);
 
 }

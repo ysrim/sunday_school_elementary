@@ -15,7 +15,7 @@ public interface StdOptionService {
     /**
      * 패스워드 수정 요청
      */
-    boolean pwChg(String currentPw, String newPw);
+    void pwChg(String currentPw, String newPw);
 
     /**
      * 누적 경험치 포인트 적립내역 목록

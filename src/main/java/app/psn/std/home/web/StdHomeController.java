@@ -14,6 +14,7 @@ import com.base.enumm.std.StdNaviEnum;
 import com.base.utl.ResUtil;
 import com.base.utl.SessionUtil;
 import com.base.utl.StringUtil;
+import com.base.vo.BodyResVO;
 
 import app.psn.com.service.CacheService;
 import app.psn.com.service.ToastMsgService;
@@ -80,7 +81,7 @@ public class StdHomeController {
 	 */
 	@StdMenuInfo(role = MberGrdEnum.STD)
 	@RequestMapping("/home/removeToast.ax")
-	public ResponseEntity removeToastAx(@RequestParam(name = "toastSn", defaultValue = "0") String toastSn) {
+	public ResponseEntity<BodyResVO<Object>> removeToastAx(@RequestParam(name = "toastSn", defaultValue = "0") String toastSn) {
 
 		if ("0".equals(toastSn)) {
 			return ResUtil.resFail("변수 부족");
@@ -97,7 +98,7 @@ public class StdHomeController {
 	 */
 	@StdMenuInfo(role = MberGrdEnum.STD)
 	@RequestMapping("/home/wordsAmen.ax")
-	public ResponseEntity wordsAmenAx() {
+	public ResponseEntity<BodyResVO<Object>> wordsAmenAx() {
 
 		return homeService.wordsAmenDo() ? ResUtil.resSucc() : ResUtil.resFail("이미 수행");
 

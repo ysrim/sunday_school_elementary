@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.base.enumm.com.ViewPathEnum;
 import com.base.utl.ResUtil;
+import com.base.vo.BodyResVO;
 
 import app.psn.tch.login.service.TchLoginService;
 import app.psn.tch.login.vo.TchLoginVO;
@@ -38,7 +39,7 @@ public class TchLoginController {
 	 * 로그인 요청
 	 */
 	@RequestMapping(path = "/login.ax")
-	public ResponseEntity loginAx(@RequestBody @Valid TchLoginVO loginVO) {
+	public ResponseEntity<BodyResVO<Object>> loginAx(@RequestBody @Valid TchLoginVO loginVO) {
 
 		TchSessionVO sessionVO = loginService.loginAx(loginVO);
 

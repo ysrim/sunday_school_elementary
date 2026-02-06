@@ -14,8 +14,8 @@ import com.base.enumm.std.StdNaviEnum;
 @Documented
 public @interface StdMenuInfo {
 
-	public abstract MberGrdEnum role();
+	MberGrdEnum role();
 
-	public abstract StdNaviEnum navi() default StdNaviEnum.EMPTY;
+	StdNaviEnum navi() default StdNaviEnum.EMPTY;
 
 }

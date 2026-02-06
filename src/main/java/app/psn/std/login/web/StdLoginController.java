@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.base.utl.ResUtil;
+import com.base.vo.BodyResVO;
 
 import app.psn.std.login.service.StdLoginService;
 import app.psn.com.vo.LoginVO;
@@ -39,7 +40,7 @@ public class StdLoginController {
 	 * 로그인 요청
 	 */
 	@RequestMapping(path = "/login.ax")
-	public ResponseEntity loginAx(@RequestBody @Valid LoginVO loginVO) {
+	public ResponseEntity<BodyResVO<Object>> loginAx(@RequestBody @Valid LoginVO loginVO) {
 
 		StdSessionVO stdSessionVO = stdLoginService.loginAx(loginVO);
 

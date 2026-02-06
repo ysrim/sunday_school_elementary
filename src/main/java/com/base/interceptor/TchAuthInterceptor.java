@@ -23,8 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class TchAuthInterceptor implements HandlerInterceptor {
 
-	private final CacheService cacheService;
-
 	private static final String LOGIN_PAGE_URL = "/tch/idx/login.pg";
 
 	@Override

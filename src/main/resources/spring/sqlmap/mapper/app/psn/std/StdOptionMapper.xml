@@ -30,8 +30,7 @@
 			 , A.AMOUNT
 			 , A.BALANCE_AFTER
 		FROM MBER_REWARD_LOGS A
-		WHERE 1 = 1
-		  AND A.MBER_SN = #{mberSn}
+		WHERE A.MBER_SN = #{mberSn}
 		ORDER BY A.CREAT_DE DESC
 		]]>
     </select>
