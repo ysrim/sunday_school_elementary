@@ -112,18 +112,18 @@
 	<div class="point-summary-card">
 		<span style="font-size: 0.85rem; opacity: 0.8;">현재 보유 달란트</span>
 		<h2 style="font-size: 3rem; font-weight: 800; margin: 15px 0 25px 0; letter-spacing: -1px;">
-			<span class="sub-money" th:text="|${#numbers.formatInteger(_mberPoint, 3, 'COMMA')}|">2,500</span> <small style="font-size: 1.2rem;">P</small>
+			<span class="sub-money" th:text="|${#numbers.formatInteger(_mberPoint, 1, 'COMMA')}|">2,500</span> <small style="font-size: 1.2rem;">P</small>
 		</h2>
 		<div class="flex-row"
 			 style="justify-content: space-around; background: rgba(0,0,0,0.08); border-radius: 15px; padding: 12px; backdrop-filter: blur(5px);">
 			<div class="flex-col flex-center text-sub" style="color: white;">
 				<span>달란트 획득(이번 주)</span>
-				<strong style="font-size: 1rem;" th:text="|${#numbers.formatInteger(weekStatics.WEEK_POINT_SUM, 3, 'COMMA')}|"> P</strong>
+				<strong style="font-size: 1rem;" th:text="|${#numbers.formatInteger(weekStatics.WEEK_POINT_SUM, 1, 'COMMA')}|"> P</strong>
 			</div>
 			<div style="width: 1px; height: 25px; background: rgba(255,255,255,0.3);"></div>
 			<div class="flex-col flex-center text-sub" style="color: white;">
 				<span>경험치 획득(이번 주)</span>
-				<strong style="font-size: 1rem; color: #FFCDD2;" th:text="|${#numbers.formatInteger(weekStatics.WEEK_EXP_SUM, 3, 'COMMA')}|">-500 P</strong>
+				<strong style="font-size: 1rem; color: #FFCDD2;" th:text="|${#numbers.formatInteger(weekStatics.WEEK_EXP_SUM, 1, 'COMMA')}|">-500 P</strong>
 			</div>
 		</div>
 	</div>

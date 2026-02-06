@@ -7,10 +7,19 @@ import app.psn.com.vo.RewardVO;
 
 public interface RewardService {
 
+	/**
+	 * 리워드 지급
+	 */
 	void insMberReward(RewardVO vo);
 
+	/**
+	 * 퀘스트 수행에 따른 리워드 지급 프로세스
+	 */
 	void processQuestRewards(QuestCompleteEvent vo);
 
+	/**
+	 * 퀘스트 연속퀘 수행정보 저장
+	 */
 	void insQuestContinuity(QuestContinuityVO vo);
 
 }

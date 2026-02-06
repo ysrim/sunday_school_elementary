@@ -1,8 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{/app/psn/std/layouts/std_layout}" lang="ko">
-
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/app/psn/std/layouts/std_layout}" lang="ko">
 <th:block layout:fragment="content">
 	<div style="margin: 25px 25px 10px 25px; display: flex; align-items: center;">
 		<div style="width: 4px; height: 16px; background-color: #4A90E2; border-radius: 2px; margin-right: 10px;"></div>
@@ -70,7 +67,7 @@
 				</div>
 				<span style="font-size: 1.2rem; font-weight: 800; color: #F59E0B;">
                     <span class="sub-money"
-						  th:text="${#numbers.formatInteger(_mberPoint, 0, 'COMMA')}">2,500</span>
+						  th:text="${#numbers.formatInteger(_mberPoint, 1, 'COMMA')}">2,500</span>
                     <span style="font-size: 0.9rem; color: #999; font-weight: 600;">P</span>
                 </span>
 			</div>
@@ -82,7 +79,7 @@
 				</div>
 				<span style="font-size: 1.2rem; font-weight: 800; color: #3B82F6;"
 					  >
-                    [[${#numbers.formatInteger(_mberExp.currentExp, 0, 'COMMA')}]]
+                    [[${#numbers.formatInteger(_mberExp.currentExp, 1, 'COMMA')}]]
                     <span style="font-size: 0.9rem; color: #999; font-weight: 600;">EXP</span>
                 </span>
 			</div>

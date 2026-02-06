@@ -3,7 +3,7 @@
 <mapper namespace="app.psn.com.mapper.AvatarMapper">
 
 	<select id="sltLevelRulesExp" parameterType="Integer" resultType="Integer">
-		SELECT LEVEL
+		SELECT LEVEL+1
 		FROM AVATAR_LEVEL_RULES
 		<![CDATA[
 		where REQUIRED_EXP <= #{exp}

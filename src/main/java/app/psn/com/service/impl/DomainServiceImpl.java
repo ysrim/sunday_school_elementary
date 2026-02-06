@@ -23,27 +23,37 @@ public class DomainServiceImpl implements DomainService {
 
 	@Override
 	public QuestVO sltQuest(Integer questSn) {
+
 		return domainMapper.sltQuest(questSn);
+
 	}
 
 	@Override
 	public AvatarVO sltAvatar(Integer mberSn) {
+
 		return domainMapper.sltAvatar(mberSn);
+
 	}
 
 	@Override
 	public AvatarLevelRulesVO sltAvatarLevelRules(Integer level) {
+
 		return domainMapper.sltAvatarLevelRules(level);
+
 	}
 
 	@Override
 	public QuestContinuityRulesVO sltQuestContinuityRules(Integer questSn) {
+
 		return domainMapper.sltQuestContinuityRules(questSn);
+
 	}
 
 	@Override
 	public QuestContinuityVO sltQuestContinuity(Integer mberSn, Integer questSn) {
+
 		return domainMapper.sltQuestContinuity(mberSn, questSn);
+
 	}
 
 }
