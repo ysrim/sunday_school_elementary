@@ -1,14 +1,19 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-	<meta charset="utf-8"/>
-	<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-	<title>봉동중앙교회 초등부 RPG 어드벤처 - 가이드북</title>
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
-	<script src="https://cdn.tailwindcss.com"></script>
-	<style>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>봉동중앙교회 초등부 RPG 어드벤처 - 가이드북</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+        /* [NEW] 부드러운 스크롤 & 헤더 높이만큼 여백 확보 */
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px; /* 고정 헤더 높이만큼 여백 */
+        }
 
         body {
             font-family: 'Noto Sans KR', sans-serif;
@@ -22,18 +27,6 @@
             background-size: 20px 20px;
         }
 
-        /* 텍스트 그라디언트 */
-        .text-gradient {
-            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .text-gradient-gold {
-            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
         /* 카드 스타일 */
         .glass-card {
             background: rgba(255, 255, 255, 0.95);
@@ -42,465 +35,554 @@
             box-shadow: 0 10px 30px -5px rgba(14, 165, 233, 0.15);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+
         .glass-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 40px -5px rgba(14, 165, 233, 0.25);
         }
 
-        /* 애니메이션 */
-        .fade-in-section {
+        /* 스크롤 애니메이션 정의 */
+        .reveal {
             opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-            will-change: opacity, visibility;
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
         }
-        .fade-in-section.is-visible {
+
+        .reveal-up {
+            transform: translateY(50px);
+        }
+
+        .reveal-left {
+            transform: translateX(-50px);
+        }
+
+        .reveal-right {
+            transform: translateX(50px);
+        }
+
+        .reveal-zoom {
+            transform: scale(0.8);
+        }
+
+        .reveal.active {
             opacity: 1;
-            transform: none;
+            transform: translate(0) scale(1);
+        }
+
+        .delay-100 {
+            transition-delay: 0.1s;
+        }
+
+        .delay-200 {
+            transition-delay: 0.2s;
+        }
+
+        .delay-300 {
+            transition-delay: 0.3s;
+        }
+
+        .delay-400 {
+            transition-delay: 0.4s;
         }
 
         .floating {
             animation: float 6s ease-in-out infinite;
         }
+
         @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
         }
 
-        /* 강조 테두리 */
         .accent-border-l {
             border-left: 6px solid #0ea5e9;
         }
-	</style>
+
+        .mobile-mockup {
+            border: 8px solid #1e293b;
+            border-radius: 2rem;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            position: relative;
+            background-color: #fff;
+        }
+
+        .mobile-mockup::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40%;
+            height: 1.5rem;
+            background-color: #1e293b;
+            border-bottom-left-radius: 1rem;
+            border-bottom-right-radius: 1rem;
+            z-index: 10;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
 </head>
 <body class="bg-slate-50 text-slate-800">
 
-<nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-sky-100 py-3 px-6 flex justify-between items-center">
-	<div class="font-black text-sky-700 tracking-tighter text-xl">
-		<i class="fas fa-shield-cross mr-2"></i>봉동중앙교회 초등부 RPG
-	</div>
-	<div class="hidden md:flex gap-6 text-sm font-bold text-slate-500">
-		<a href="#intro" class="hover:text-sky-600 transition">Main</a>
-		<a href="#character" class="hover:text-sky-600 transition">Character</a>
-		<a href="#adventure" class="hover:text-sky-600 transition">Adventure</a>
-		<a href="#guild" class="hover:text-sky-600 transition">Guild</a>
-		<a href="#reward" class="hover:text-sky-600 transition">Reward</a>
-	</div>
-	<a href="/index.html" class="bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg transition transform hover:scale-105">
-		Start Game
-	</a>
+<nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-sky-100 py-3 px-6 flex justify-between items-center reveal reveal-up active">
+    <div class="font-black text-sky-700 tracking-tighter text-xl flex items-center">
+        <a href="#" class="flex items-center hover:text-sky-500 transition">
+            <i class="fas fa-shield-cross mr-2"></i>봉동중앙교회 초등부 RPG
+        </a>
+    </div>
+    <div class="hidden md:flex gap-6 text-sm font-bold text-slate-500">
+        <a href="#intro" class="hover:text-sky-600 transition">Main</a>
+        <a href="#character" class="hover:text-sky-600 transition">Character</a>
+        <a href="#adventure" class="hover:text-sky-600 transition">Adventure</a>
+        <a href="#guild" class="hover:text-sky-600 transition">Guild</a>
+        <a href="#reward" class="hover:text-sky-600 transition">Reward</a>
+    </div>
+    <a href="/index.html"
+       class="bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg transition transform hover:scale-105">
+        Start Game
+    </a>
 </nav>
 
-<section id="intro" class="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-50 via-white to-sky-100 overflow-hidden pt-20">
-	<div class="absolute top-20 left-10 w-32 h-32 bg-sky-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 floating"></div>
-	<div class="absolute bottom-20 right-10 w-48 h-48 bg-amber-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 floating" style="animation-delay: 2s"></div>
+<section id="intro"
+         class="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-50 via-white to-sky-100 overflow-hidden pt-12 pb-12">
+    <div class="absolute top-20 left-10 w-32 h-32 bg-sky-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 floating"></div>
+    <div class="absolute bottom-20 right-10 w-48 h-48 bg-amber-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 floating"
+         style="animation-delay: 2s"></div>
 
-	<div class="container mx-auto px-6 text-center z-10">
-		<div class="inline-block mb-4 px-4 py-1 rounded-full bg-sky-100 border border-sky-200">
-			<span class="text-sky-700 font-bold tracking-widest text-sm uppercase">Season 1. 믿음의 갑주</span>
-		</div>
-		<h1 class="text-6xl md:text-8xl font-black mb-6 leading-tight">
-			<span class="text-slate-900">봉동중앙교회 초등부</span><br/>
-			<span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-indigo-600 italic">RPG Adventure</span>
-		</h1>
-		<p class="text-xl md:text-2xl text-slate-600 font-medium mb-12 max-w-2xl mx-auto">
-			"말씀으로 성장하고 달란트를 모아라!"<br/>
-			<span class="text-sky-600">주일학교가 의무가 아닌 즐거운 모험이 됩니다.</span>
-		</p>
+    <div class="container mx-auto px-6 z-10 grid md:grid-cols-2 gap-12 items-center">
+        <div class="text-center md:text-left reveal reveal-left active">
+            <div class="inline-block mb-4 px-4 py-1 rounded-full bg-sky-100 border border-sky-200">
+                <span class="text-sky-700 font-bold tracking-widest text-sm uppercase">Season 1. 믿음의 갑주</span>
+            </div>
+            <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight">
+                <span class="text-slate-900">봉동중앙교회</span><br/>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-indigo-600 italic">RPG Adventure</span>
+            </h1>
+            <p class="text-lg md:text-xl text-slate-600 font-medium mb-12 max-w-2xl mx-auto md:mx-0">
+                "말씀으로 성장하고 달란트를 모아라!"<br/>
+                <span class="text-sky-600">주일학교가 의무가 아닌 즐거운 모험이 됩니다.</span>
+            </p>
 
-		<div class="flex justify-center gap-6">
-			<div class="flex flex-col items-center gap-2">
-				<div class="w-16 h-16 rounded-2xl bg-white shadow-lg border border-sky-100 flex items-center justify-center text-3xl text-sky-500 hover:scale-110 transition cursor-pointer">
-					<i class="fas fa-calendar-check"></i>
-				</div>
-				<span class="text-xs font-bold text-slate-500">출석체크</span>
-			</div>
-			<div class="flex flex-col items-center gap-2">
-				<div class="w-16 h-16 rounded-2xl bg-white shadow-lg border border-sky-100 flex items-center justify-center text-3xl text-amber-500 hover:scale-110 transition cursor-pointer">
-					<i class="fas fa-users"></i>
-				</div>
-				<span class="text-xs font-bold text-slate-500">길드활동</span>
-			</div>
-			<div class="flex flex-col items-center gap-2">
-				<div class="w-16 h-16 rounded-2xl bg-white shadow-lg border border-sky-100 flex items-center justify-center text-3xl text-emerald-500 hover:scale-110 transition cursor-pointer">
-					<i class="fas fa-qrcode"></i>
-				</div>
-				<span class="text-xs font-bold text-slate-500">QR보상</span>
-			</div>
-		</div>
-	</div>
+            <div class="flex justify-center md:justify-start gap-6">
+                <a href="#adventure" class="flex flex-col items-center gap-2 reveal reveal-up delay-100 active group">
+                    <div class="w-16 h-16 rounded-2xl bg-white shadow-lg border border-sky-100 flex items-center justify-center text-3xl text-sky-500 group-hover:scale-110 transition cursor-pointer">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <span class="text-xs font-bold text-slate-500">출석체크</span>
+                </a>
+                <a href="#guild" class="flex flex-col items-center gap-2 reveal reveal-up delay-200 active group">
+                    <div class="w-16 h-16 rounded-2xl bg-white shadow-lg border border-sky-100 flex items-center justify-center text-3xl text-amber-500 group-hover:scale-110 transition cursor-pointer">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <span class="text-xs font-bold text-slate-500">길드활동</span>
+                </a>
+                <a href="#reward" class="flex flex-col items-center gap-2 reveal reveal-up delay-300 active group">
+                    <div class="w-16 h-16 rounded-2xl bg-white shadow-lg border border-sky-100 flex items-center justify-center text-3xl text-emerald-500 group-hover:scale-110 transition cursor-pointer">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <span class="text-xs font-bold text-slate-500">QR보상</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="relative flex justify-center md:justify-end reveal reveal-right delay-200 active">
+            <div class="absolute inset-0 bg-gradient-to-tr from-sky-200 to-blue-300 rounded-full blur-3xl opacity-20 transform translate-x-10 translate-y-10"></div>
+            <div class="mobile-mockup w-64 md:w-72 transform rotate-3 hover:rotate-0 transition duration-500 floating">
+                <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/tmp/4_1_home.png" alt="App Home Screen"
+                     class="w-full h-auto">
+            </div>
+        </div>
+    </div>
 </section>
 
 <section class="py-24 bg-white bg-pattern">
-	<div class="container mx-auto px-6 max-w-6xl">
-		<div class="grid md:grid-cols-2 gap-12 items-center fade-in-section">
-			<div>
-				<h2 class="text-4xl font-black text-slate-900 mb-6 accent-border-l pl-6">
-					왜 <span class="text-sky-600">RPG</span>인가?
-				</h2>
-				<p class="text-lg text-slate-600 mb-8 leading-relaxed">
-					수동적인 예배 참석, 선생님과의 소통 부재, 단순 지식 전달...<br/>
-					우리의 고민을 해결하기 위해 <span class="font-bold text-slate-900">'게이미피케이션'</span>을 도입했습니다.
-				</p>
-				<div class="space-y-4">
-					<div class="flex items-start gap-4 p-4 rounded-xl bg-red-50 border border-red-100">
-						<i class="fas fa-exclamation-triangle text-red-500 text-xl mt-1"></i>
-						<div>
-							<h4 class="font-bold text-red-800">Problem</h4>
-							<p class="text-sm text-slate-600">참여 동기 부족 및 수동적 태도</p>
-						</div>
-					</div>
-					<div class="flex items-center justify-center">
-						<i class="fas fa-arrow-down text-slate-300"></i>
-					</div>
-					<div class="flex items-start gap-4 p-4 rounded-xl bg-sky-50 border border-sky-100 shadow-md">
-						<i class="fas fa-lightbulb text-sky-600 text-xl mt-1"></i>
-						<div>
-							<h4 class="font-bold text-sky-800">Solution: Gamification</h4>
-							<p class="text-sm text-slate-600">레벨업 시스템과 디지털 플랫폼을 통한 능동적 참여 유도</p>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="relative">
-				<div class="absolute inset-0 bg-gradient-to-r from-sky-400 to-blue-500 rounded-3xl transform rotate-3 opacity-20"></div>
-				<div class="glass-card p-8 rounded-3xl relative">
-					<h3 class="text-2xl font-bold mb-6 text-center">Adventure Goal</h3>
-					<div class="grid grid-cols-2 gap-4">
-						<div class="text-center p-4 bg-slate-50 rounded-xl">
-							<div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3 text-emerald-600">
-								<i class="fas fa-seedling"></i>
-							</div>
-							<div class="font-bold text-slate-800">신앙 습관</div>
-							<div class="text-xs text-slate-500">능동적인 훈련</div>
-						</div>
-						<div class="text-center p-4 bg-slate-50 rounded-xl">
-							<div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3 text-blue-600">
-								<i class="fas fa-chart-line"></i>
-							</div>
-							<div class="font-bold text-slate-800">데이터 관리</div>
-							<div class="text-xs text-slate-500">체계적인 케어</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="container mx-auto px-6 max-w-6xl">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div class="reveal reveal-left">
+                <h2 class="text-4xl font-black text-slate-900 mb-6 accent-border-l pl-6">
+                    왜 <span class="text-sky-600">RPG</span>인가?
+                </h2>
+                <p class="text-lg text-slate-600 mb-8 leading-relaxed">
+                    수동적인 예배 참석, 선생님과의 소통 부재, 단순 지식 전달...<br/>
+                    우리의 고민을 해결하기 위해 <span class="font-bold text-slate-900">'게이미피케이션'</span>을 도입했습니다.
+                </p>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-4 p-4 rounded-xl bg-red-50 border border-red-100 reveal reveal-up delay-100">
+                        <i class="fas fa-exclamation-triangle text-red-500 text-xl mt-1"></i>
+                        <div>
+                            <h4 class="font-bold text-red-800">Problem</h4>
+                            <p class="text-sm text-slate-600">참여 동기 부족 및 수동적 태도</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-center reveal reveal-zoom delay-200">
+                        <i class="fas fa-arrow-down text-slate-300"></i>
+                    </div>
+                    <div class="flex items-start gap-4 p-4 rounded-xl bg-sky-50 border border-sky-100 shadow-md reveal reveal-up delay-300">
+                        <i class="fas fa-lightbulb text-sky-600 text-xl mt-1"></i>
+                        <div>
+                            <h4 class="font-bold text-sky-800">Solution: Gamification</h4>
+                            <p class="text-sm text-slate-600">레벨업 시스템과 디지털 플랫폼을 통한 능동적 참여 유도</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="relative reveal reveal-right delay-200">
+                <div class="absolute inset-0 bg-gradient-to-r from-sky-400 to-blue-500 rounded-3xl transform rotate-3 opacity-20"></div>
+                <div class="glass-card p-8 rounded-3xl relative">
+                    <h3 class="text-2xl font-bold mb-6 text-center">Adventure Goal</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="text-center p-4 bg-slate-50 rounded-xl">
+                            <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3 text-emerald-600">
+                                <i class="fas fa-seedling"></i>
+                            </div>
+                            <div class="font-bold text-slate-800">신앙 습관</div>
+                            <div class="text-xs text-slate-500">능동적인 훈련</div>
+                        </div>
+                        <div class="text-center p-4 bg-slate-50 rounded-xl">
+                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3 text-blue-600">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="font-bold text-slate-800">데이터 관리</div>
+                            <div class="text-xs text-slate-500">체계적인 케어</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 
 <section id="character" class="py-24 bg-slate-900 text-white relative overflow-hidden">
-	<div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
 
-	<div class="container mx-auto px-6 max-w-6xl relative z-10">
-		<div class="text-center mb-16 fade-in-section">
-			<span class="text-amber-400 font-bold tracking-widest uppercase">System Core</span>
-			<h2 class="text-4xl md:text-5xl font-black mt-2">나만의 캐릭터 성장</h2>
-			<p class="text-slate-400 mt-4">"마법사, 전사, 궁수... 당신의 선택은?"</p>
-		</div>
+    <div class="container mx-auto px-6 max-w-6xl relative z-10">
+        <div class="text-center mb-16 reveal reveal-up">
+            <span class="text-amber-400 font-bold tracking-widest uppercase">System Core</span>
+            <h2 class="text-4xl md:text-5xl font-black mt-2">나만의 캐릭터 성장</h2>
+            <p class="text-slate-400 mt-4">"마법사, 전사, 궁수... 당신의 선택은?"</p>
+        </div>
 
-		<div class="grid md:grid-cols-3 gap-8 fade-in-section">
-			<div class="bg-slate-800 p-8 rounded-2xl border border-slate-700 hover:border-sky-500 transition duration-300">
-				<div class="w-16 h-16 bg-sky-900 rounded-xl flex items-center justify-center mb-6 text-3xl text-sky-400">
-					<i class="fas fa-user-shield"></i>
-				</div>
-				<h3 class="text-2xl font-bold mb-3">개인화 캐릭터</h3>
-				<ul class="text-slate-400 space-y-2 text-sm">
-					<li class="flex items-center gap-2"><i class="fas fa-check text-sky-500"></i> 실명 대신 캐릭터명 사용</li>
-					<li class="flex items-center gap-2"><i class="fas fa-check text-sky-500"></i> 직업 선택으로 몰입도 UP</li>
-				</ul>
-			</div>
-			<div class="bg-slate-800 p-8 rounded-2xl border border-slate-700 hover:border-amber-500 transition duration-300">
-				<div class="w-16 h-16 bg-amber-900 rounded-xl flex items-center justify-center mb-6 text-3xl text-amber-400">
-					<i class="fas fa-bolt"></i>
-				</div>
-				<h3 class="text-2xl font-bold mb-3">실시간 성장</h3>
-				<div class="mb-4 bg-slate-700 rounded-full h-2 w-full overflow-hidden">
-					<div class="bg-gradient-to-r from-amber-400 to-orange-500 w-3/4 h-full"></div>
-				</div>
-				<p class="text-slate-400 text-sm">미션 완료 즉시 EXP 획득.<br/>성장 지표를 시각적으로 확인.</p>
-			</div>
-			<div class="bg-slate-800 p-8 rounded-2xl border border-slate-700 hover:border-emerald-500 transition duration-300">
-				<div class="w-16 h-16 bg-emerald-900 rounded-xl flex items-center justify-center mb-6 text-3xl text-emerald-400">
-					<i class="fas fa-trophy"></i>
-				</div>
-				<h3 class="text-2xl font-bold mb-3">랭킹 시스템</h3>
-				<p class="text-slate-400 text-sm mb-4">전체 및 길드별 랭킹 제공으로<br/>선의의 경쟁 유도.</p>
-				<div class="flex items-center gap-3 text-xs font-mono text-emerald-400">
-					<span class="border border-emerald-500/30 px-2 py-1 rounded">Rank 1</span>
-					<span class="border border-emerald-500/30 px-2 py-1 rounded">Rank 2</span>
-					<span class="border border-emerald-500/30 px-2 py-1 rounded">...</span>
-				</div>
-			</div>
-		</div>
-	</div>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700 hover:border-sky-500 transition duration-300 reveal reveal-up delay-100">
+                <div class="w-16 h-16 bg-sky-900 rounded-xl flex items-center justify-center mb-6 text-3xl text-sky-400">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-3">개인화 캐릭터</h3>
+                <ul class="text-slate-400 space-y-2 text-sm">
+                    <li class="flex items-center gap-2"><i class="fas fa-check text-sky-500"></i> 실명 대신 캐릭터명 사용</li>
+                    <li class="flex items-center gap-2"><i class="fas fa-check text-sky-500"></i> 직업 선택으로 몰입도 UP</li>
+                </ul>
+            </div>
+            <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700 hover:border-amber-500 transition duration-300 reveal reveal-up delay-200">
+                <div class="w-16 h-16 bg-amber-900 rounded-xl flex items-center justify-center mb-6 text-3xl text-amber-400">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-3">실시간 성장</h3>
+                <div class="mb-4 bg-slate-700 rounded-full h-2 w-full overflow-hidden">
+                    <div class="bg-gradient-to-r from-amber-400 to-orange-500 w-3/4 h-full"></div>
+                </div>
+                <p class="text-slate-400 text-sm">미션 완료 즉시 EXP 획득.<br/>성장 지표를 시각적으로 확인.</p>
+            </div>
+            <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700 hover:border-emerald-500 transition duration-300 reveal reveal-up delay-300">
+                <div class="w-16 h-16 bg-emerald-900 rounded-xl flex items-center justify-center mb-6 text-3xl text-emerald-400">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-3">랭킹 시스템</h3>
+                <p class="text-slate-400 text-sm mb-4">전체 및 길드별 랭킹 제공으로<br/>선의의 경쟁 유도.</p>
+                <div class="flex items-center gap-3 text-xs font-mono text-emerald-400">
+                    <span class="border border-emerald-500/30 px-2 py-1 rounded">Rank 1</span>
+                    <span class="border border-emerald-500/30 px-2 py-1 rounded">Rank 2</span>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 
 <section id="adventure" class="py-24 bg-sky-50">
-	<div class="container mx-auto px-6 max-w-6xl space-y-32">
+    <div class="container mx-auto px-6 max-w-6xl space-y-32">
 
-		<div class="grid md:grid-cols-2 gap-16 items-center fade-in-section">
-			<div class="order-2 md:order-1 relative">
-				<div class="bg-white rounded-3xl shadow-2xl p-6 border-8 border-slate-800 transform -rotate-2">
-					<div class="flex justify-between items-center mb-6 border-b pb-4">
-						<span class="font-bold text-slate-800">10월 출석부</span>
-						<span class="bg-sky-100 text-sky-700 px-3 py-1 rounded-full text-xs font-bold">출석완료!</span>
-					</div>
-					<div class="grid grid-cols-7 gap-2 text-center text-sm mb-4">
-						<div class="aspect-square bg-sky-50 rounded flex items-center justify-center text-slate-400">1</div>
-						<div class="aspect-square bg-sky-500 text-white rounded flex items-center justify-center shadow-lg font-bold relative">2
-							<div class="absolute -top-2 -right-2 bg-amber-400 text-white rounded-full w-4 h-4 text-[10px] flex items-center justify-center"><i class="fas fa-check"></i></div>
-						</div>
-						<div class="aspect-square bg-sky-50 rounded flex items-center justify-center text-slate-400">3</div>
-						<div class="col-span-4 bg-slate-50 rounded flex items-center justify-center text-xs text-slate-400">...</div>
-					</div>
-					<div class="bg-amber-50 p-4 rounded-xl border border-amber-100 text-center">
-						<p class="text-amber-800 font-bold text-sm">"이번 주도 승리했어요! 참 잘했어요!"</p>
-					</div>
-				</div>
-			</div>
-			<div class="order-1 md:order-2">
-				<span class="text-sky-600 font-bold tracking-widest text-sm">KEY FEATURE 01</span>
-				<h2 class="text-4xl font-black text-slate-900 mt-2 mb-6">스마트 출석 체크</h2>
-				<p class="text-lg text-slate-600 mb-6">
-					"도장 찍는 재미가 있는 디지털 출석부"<br/>
-					달력 형태의 직관적인 UI로 자신의 출석 현황을 확인하고,
-					따뜻한 격려 메시지로 아이들의 마음을 터치합니다.
-				</p>
-				<ul class="space-y-4">
-					<li class="flex items-start gap-4">
-						<div class="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 flex-shrink-0"><i class="fas fa-calendar-alt"></i></div>
-						<div>
-							<h4 class="font-bold text-slate-800">직관적인 달력 UI</h4>
-							<p class="text-sm text-slate-500">한눈에 보는 나의 성실함</p>
-						</div>
-					</li>
-					<li class="flex items-start gap-4">
-						<div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 flex-shrink-0"><i class="fas fa-comment-dots"></i></div>
-						<div>
-							<h4 class="font-bold text-slate-800">격려 메시지</h4>
-							<p class="text-sm text-slate-500">접속할 때마다 힘이 되는 한마디</p>
-						</div>
-					</li>
-				</ul>
-			</div>
-		</div>
+        <div class="grid md:grid-cols-2 gap-16 items-center">
+            <div class="order-2 md:order-1 relative flex justify-center reveal reveal-left">
+                <div class="mobile-mockup w-64 transform -rotate-2 hover:rotate-0 transition duration-300">
+                    <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/tmp/5_1_Attendance.png"
+                         alt="Attendance Screen" class="w-full h-auto">
+                </div>
+            </div>
+            <div class="order-1 md:order-2 reveal reveal-right">
+                <span class="text-sky-600 font-bold tracking-widest text-sm">KEY FEATURE 01</span>
+                <h2 class="text-4xl font-black text-slate-900 mt-2 mb-6">스마트 출석 체크</h2>
+                <p class="text-lg text-slate-600 mb-6">
+                    "도장 찍는 재미가 있는 디지털 출석부"<br/>
+                    달력 형태의 직관적인 UI로 자신의 출석 현황을 확인하고,
+                    따뜻한 격려 메시지로 아이들의 마음을 터치합니다.
+                </p>
+                <ul class="space-y-4">
+                    <li class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 flex-shrink-0">
+                            <i class="fas fa-calendar-alt"></i></div>
+                        <div>
+                            <h4 class="font-bold text-slate-800">직관적인 달력 UI</h4>
+                            <p class="text-sm text-slate-500">한눈에 보는 나의 성실함</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 flex-shrink-0">
+                            <i class="fas fa-comment-dots"></i></div>
+                        <div>
+                            <h4 class="font-bold text-slate-800">격려 메시지</h4>
+                            <p class="text-sm text-slate-500">접속할 때마다 힘이 되는 한마디</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
-		<div class="grid md:grid-cols-2 gap-16 items-center fade-in-section">
-			<div>
-				<span class="text-sky-600 font-bold tracking-widest text-sm">KEY FEATURE 02</span>
-				<h2 class="text-4xl font-black text-slate-900 mt-2 mb-6">일일 미션 & 퀘스트</h2>
-				<p class="text-lg text-slate-600 mb-8">
-					매일 성경 1장 읽기, 오늘의 말씀 암송하기...<br/>
-					작은 실천들이 모여 믿음의 용사로 성장합니다.
-				</p>
+        <div class="grid md:grid-cols-2 gap-16 items-center">
+            <div class="reveal reveal-left">
+                <span class="text-sky-600 font-bold tracking-widest text-sm">KEY FEATURE 02</span>
+                <h2 class="text-4xl font-black text-slate-900 mt-2 mb-6">일일 미션 & 퀘스트</h2>
+                <p class="text-lg text-slate-600 mb-8">
+                    매일 성경 1장 읽기, 오늘의 말씀 암송하기...<br/>
+                    작은 실천들이 모여 믿음의 용사로 성장합니다.
+                </p>
 
-				<div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-100">
-					<h4 class="font-bold text-slate-800 mb-4 border-b pb-2">보상 프로세스 (Reward Process)</h4>
-					<div class="flex items-center justify-between text-center">
-						<div class="flex flex-col items-center gap-2">
-							<div class="w-12 h-12 rounded-full bg-sky-50 text-sky-600 flex items-center justify-center border border-sky-200 font-bold text-lg">1</div>
-							<span class="text-xs font-bold text-slate-600">미션 실천</span>
-						</div>
-						<div class="h-1 flex-1 bg-slate-100 mx-2 relative"><div class="absolute right-0 -top-1 text-slate-300">▶</div></div>
-						<div class="flex flex-col items-center gap-2">
-							<div class="w-12 h-12 rounded-full bg-sky-50 text-sky-600 flex items-center justify-center border border-sky-200 font-bold text-lg">2</div>
-							<span class="text-xs font-bold text-slate-600">인증 요청</span>
-						</div>
-						<div class="h-1 flex-1 bg-slate-100 mx-2 relative"><div class="absolute right-0 -top-1 text-slate-300">▶</div></div>
-						<div class="flex flex-col items-center gap-2">
-							<div class="w-12 h-12 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center border border-amber-300 font-bold text-lg animate-pulse"><i class="fas fa-gift"></i></div>
-							<span class="text-xs font-bold text-amber-600">보상 획득</span>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="relative">
-				<div class="space-y-4">
-					<div class="glass-card p-4 rounded-xl flex items-center justify-between border-l-4 border-l-emerald-500">
-						<div class="flex items-center gap-4">
-							<i class="fas fa-book-open text-emerald-500 text-xl"></i>
-							<div>
-								<h4 class="font-bold text-slate-800">성경 1장 읽기</h4>
-								<p class="text-xs text-slate-500">Daily Quest</p>
-							</div>
-						</div>
-						<span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold">+10 EXP</span>
-					</div>
-					<div class="glass-card p-4 rounded-xl flex items-center justify-between border-l-4 border-l-sky-500">
-						<div class="flex items-center gap-4">
-							<i class="fas fa-praying-hands text-sky-500 text-xl"></i>
-							<div>
-								<h4 class="font-bold text-slate-800">말씀 암송하기</h4>
-								<p class="text-xs text-slate-500">Challenge Quest</p>
-							</div>
-						</div>
-						<span class="bg-sky-100 text-sky-700 px-3 py-1 rounded-full text-xs font-bold">+20 EXP</span>
-					</div>
-					<div class="glass-card p-4 rounded-xl flex items-center justify-between opacity-50">
-						<div class="flex items-center gap-4">
-							<i class="fas fa-lock text-slate-400 text-xl"></i>
-							<div>
-								<h4 class="font-bold text-slate-600">주말 특별 미션</h4>
-								<p class="text-xs text-slate-400">Locked</p>
-							</div>
-						</div>
-						<span class="bg-slate-100 text-slate-500 px-3 py-1 rounded-full text-xs font-bold">??? EXP</span>
-					</div>
-				</div>
-			</div>
-		</div>
+                <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-100 reveal reveal-up delay-100">
+                    <h4 class="font-bold text-slate-800 mb-4 border-b pb-2">보상 프로세스 (Reward Process)</h4>
+                    <div class="flex items-center justify-between text-center">
+                        <div class="flex flex-col items-center gap-2">
+                            <div class="w-12 h-12 rounded-full bg-sky-50 text-sky-600 flex items-center justify-center border border-sky-200 font-bold text-lg">
+                                1
+                            </div>
+                            <span class="text-xs font-bold text-slate-600">미션 실천</span>
+                        </div>
+                        <div class="h-1 flex-1 bg-slate-100 mx-2 relative">
+                            <div class="absolute right-0 -top-1 text-slate-300">▶</div>
+                        </div>
+                        <div class="flex flex-col items-center gap-2">
+                            <div class="w-12 h-12 rounded-full bg-sky-50 text-sky-600 flex items-center justify-center border border-sky-200 font-bold text-lg">
+                                2
+                            </div>
+                            <span class="text-xs font-bold text-slate-600">인증 요청</span>
+                        </div>
+                        <div class="h-1 flex-1 bg-slate-100 mx-2 relative">
+                            <div class="absolute right-0 -top-1 text-slate-300">▶</div>
+                        </div>
+                        <div class="flex flex-col items-center gap-2">
+                            <div class="w-12 h-12 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center border border-amber-300 font-bold text-lg animate-pulse">
+                                <i class="fas fa-gift"></i></div>
+                            <span class="text-xs font-bold text-amber-600">보상 획득</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="relative flex justify-center reveal reveal-right">
+                <div class="mobile-mockup w-64 transform rotate-2 hover:rotate-0 transition duration-300">
+                    <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/tmp/7_1_quest.png"
+                         alt="Quest Screen" class="w-full h-auto">
+                </div>
+            </div>
+        </div>
 
-	</div>
+    </div>
 </section>
 
 <section id="guild" class="py-24 bg-gradient-to-b from-indigo-900 to-slate-900 text-white">
-	<div class="container mx-auto px-6 max-w-6xl">
-		<div class="text-center mb-16 fade-in-section">
-			<span class="text-indigo-400 font-bold tracking-widest uppercase">Community System</span>
-			<h2 class="text-4xl md:text-5xl font-black mt-2">함께 성장하는 <span class="text-indigo-400">길드</span></h2>
-			<p class="text-slate-300 mt-4">각 반을 하나의 '길드'로 묶어 소속감을 강화합니다.</p>
-		</div>
+    <div class="container mx-auto px-6 max-w-6xl">
+        <div class="text-center mb-16 reveal reveal-up">
+            <span class="text-indigo-400 font-bold tracking-widest uppercase">Community System</span>
+            <h2 class="text-4xl md:text-5xl font-black mt-2">함께 성장하는 <span class="text-indigo-400">길드</span></h2>
+            <p class="text-slate-300 mt-4">각 반을 하나의 '길드'로 묶어 소속감을 강화합니다.</p>
+        </div>
 
-		<div class="grid md:grid-cols-3 gap-8">
-			<div class="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/10 hover:bg-white/20 transition fade-in-section">
-				<i class="fas fa-users-rectangle text-4xl text-indigo-400 mb-6"></i>
-				<h3 class="text-xl font-bold mb-3">반별 공동체</h3>
-				<p class="text-slate-300 text-sm leading-relaxed">
-					선생님은 길드 마스터, 아이들은 길드원!<br/>
-					끈끈한 유대관계 속에서 신앙 생활을 격려합니다.
-				</p>
-			</div>
-			<div class="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/10 hover:bg-white/20 transition fade-in-section" style="transition-delay: 100ms">
-				<i class="fas fa-comments text-4xl text-indigo-400 mb-6"></i>
-				<h3 class="text-xl font-bold mb-3">길드 응원방</h3>
-				<p class="text-slate-300 text-sm leading-relaxed">
-					"오늘도 힘내!"<br/>
-					간단한 응원 메시지와 이모티콘으로 소통하는 전용 공간입니다.
-				</p>
-			</div>
-			<div class="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/10 hover:bg-white/20 transition fade-in-section" style="transition-delay: 200ms">
-				<i class="fas fa-handshake-angle text-4xl text-indigo-400 mb-6"></i>
-				<h3 class="text-xl font-bold mb-3">협동 퀘스트</h3>
-				<p class="text-slate-300 text-sm leading-relaxed">
-					혼자서는 힘든 미션도 함께라면 OK.<br/>
-					길드원들이 힘을 합쳐 목표를 달성하고 보상을 공유합니다.
-				</p>
-			</div>
-		</div>
-	</div>
+        <div class="grid md:grid-cols-3 gap-8 mb-16">
+            <div class="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/10 hover:bg-white/20 transition reveal reveal-up delay-100">
+                <i class="fas fa-users-rectangle text-4xl text-indigo-400 mb-6"></i>
+                <h3 class="text-xl font-bold mb-3">반별 공동체</h3>
+                <p class="text-slate-300 text-sm leading-relaxed">
+                    선생님은 길드 마스터, 아이들은 길드원!<br/>
+                    끈끈한 유대관계 속에서 신앙 생활을 격려합니다.
+                </p>
+            </div>
+            <div class="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/10 hover:bg-white/20 transition reveal reveal-up delay-200">
+                <i class="fas fa-comments text-4xl text-indigo-400 mb-6"></i>
+                <h3 class="text-xl font-bold mb-3">길드 응원방</h3>
+                <p class="text-slate-300 text-sm leading-relaxed">
+                    "오늘도 힘내!"<br/>
+                    간단한 응원 메시지와 이모티콘으로 소통하는 전용 공간입니다.
+                </p>
+            </div>
+            <div class="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/10 hover:bg-white/20 transition reveal reveal-up delay-300">
+                <i class="fas fa-handshake-angle text-4xl text-indigo-400 mb-6"></i>
+                <h3 class="text-xl font-bold mb-3">협동 퀘스트</h3>
+                <p class="text-slate-300 text-sm leading-relaxed">
+                    혼자서는 힘든 미션도 함께라면 OK.<br/>
+                    길드원들이 힘을 합쳐 목표를 달성하고 보상을 공유합니다.
+                </p>
+            </div>
+        </div>
+
+        <div class="flex justify-center reveal reveal-zoom delay-300">
+            <div class="mobile-mockup w-64 md:w-72 border-indigo-950 shadow-indigo-500/20">
+                <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/tmp/6_1_guild.png" alt="Guild Screen"
+                     class="w-full h-auto">
+            </div>
+        </div>
+    </div>
 </section>
 
 <section id="reward" class="py-24 bg-white relative">
-	<div class="absolute right-0 top-0 w-1/3 h-full bg-slate-50 skew-x-12 transform origin-top-right z-0"></div>
-	<div class="container mx-auto px-6 max-w-6xl relative z-10">
-		<div class="grid md:grid-cols-2 gap-12 items-center fade-in-section">
-			<div class="bg-slate-900 rounded-3xl p-8 text-white shadow-2xl relative overflow-hidden">
-				<div class="absolute -right-10 -bottom-10 text-9xl text-white opacity-5"><i class="fas fa-qrcode"></i></div>
-				<div class="text-center mb-8">
-					<div class="w-48 h-48 bg-white p-4 mx-auto rounded-xl mb-4">
-						<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=BongdongChurch" alt="QR Code Example" class="w-full h-full object-contain opacity-80">
-					</div>
-					<p class="font-mono text-sky-400 tracking-widest text-sm">ID: WARRIOR_01</p>
-				</div>
-				<div class="space-y-4">
-					<div class="flex items-center justify-between bg-white/10 p-4 rounded-xl">
-						<span><i class="fas fa-coins text-amber-400 mr-2"></i>보유 달란트</span>
-						<span class="font-bold text-xl">1,250 T</span>
-					</div>
-					<div class="flex items-center justify-between bg-white/10 p-4 rounded-xl">
-						<span><i class="fas fa-history text-sky-400 mr-2"></i>최근 적립</span>
-						<span class="text-sm text-slate-300">2023.10.22 (예배참석)</span>
-					</div>
-				</div>
-			</div>
-			<div>
-				<span class="text-sky-600 font-bold tracking-widest text-sm uppercase">Bridge System</span>
-				<h2 class="text-4xl font-black text-slate-900 mt-2 mb-6">온·오프라인 연동 <span class="text-sky-600">QR 시스템</span></h2>
-				<p class="text-lg text-slate-600 mb-8">
-					"달란트 시장에서도 스마트하게!"<br/>
-					마이페이지의 QR코드 하나로 모든 것이 연결됩니다.
-				</p>
-				<div class="space-y-6">
-					<div class="flex gap-4">
-						<div class="w-12 h-12 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 font-bold text-xl">1</div>
-						<div>
-							<h4 class="font-bold text-lg text-slate-800">간편한 본인 인증</h4>
-							<p class="text-slate-500">실물 카드 없이 스마트폰 QR로 오프라인 행사 참여</p>
-						</div>
-					</div>
-					<div class="flex gap-4">
-						<div class="w-12 h-12 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 font-bold text-xl">2</div>
-						<div>
-							<h4 class="font-bold text-lg text-slate-800">투명한 내역 관리</h4>
-							<p class="text-slate-500">언제, 어디서 달란트를 얻고 썼는지 디지털 장부로 확인</p>
-						</div>
-					</div>
-					<div class="flex gap-4">
-						<div class="w-12 h-12 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 font-bold text-xl">3</div>
-						<div>
-							<h4 class="font-bold text-lg text-slate-800">데이터 연동</h4>
-							<p class="text-slate-500">관리자 스캔 한 번으로 출석 및 포인트 자동 적립</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="absolute right-0 top-0 w-1/3 h-full bg-slate-50 skew-x-12 transform origin-top-right z-0"></div>
+    <div class="container mx-auto px-6 max-w-6xl relative z-10">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div class="relative flex justify-center reveal reveal-left">
+                <div class="mobile-mockup w-64 md:w-72 shadow-2xl">
+                    <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/tmp/8_2_1_mypage_myqrcode.png"
+                         alt="MyPage QR" class="w-full h-auto">
+                </div>
+            </div>
+            <div class="reveal reveal-right">
+                <span class="text-sky-600 font-bold tracking-widest text-sm uppercase">Bridge System</span>
+                <h2 class="text-4xl font-black text-slate-900 mt-2 mb-6">온·오프라인 연동 <span
+                        class="text-sky-600">QR 시스템</span></h2>
+                <p class="text-lg text-slate-600 mb-8">
+                    "달란트 시장에서도 스마트하게!"<br/>
+                    마이페이지의 QR코드 하나로 모든 것이 연결됩니다.
+                </p>
+                <div class="space-y-6">
+                    <div class="flex gap-4 reveal reveal-up delay-100">
+                        <div class="w-12 h-12 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 font-bold text-xl">
+                            1
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg text-slate-800">간편한 본인 인증</h4>
+                            <p class="text-slate-500">실물 카드 없이 스마트폰 QR로 오프라인 행사 참여</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 reveal reveal-up delay-200">
+                        <div class="w-12 h-12 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 font-bold text-xl">
+                            2
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg text-slate-800">투명한 내역 관리</h4>
+                            <p class="text-slate-500">언제, 어디서 달란트를 얻고 썼는지 디지털 장부로 확인</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 reveal reveal-up delay-300">
+                        <div class="w-12 h-12 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 font-bold text-xl">
+                            3
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg text-slate-800">데이터 연동</h4>
+                            <p class="text-slate-500">관리자 스캔 한 번으로 출석 및 포인트 자동 적립</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-20 bg-slate-50 border-t border-slate-200">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-12 reveal reveal-up">
+            <h2 class="text-3xl font-black text-slate-900">UI Preview</h2>
+            <p class="text-slate-500">모험의 시작부터 보상까지, 미리 살펴보세요.</p>
+        </div>
+
+        <div class="flex overflow-x-auto gap-6 pb-8 no-scrollbar snap-x snap-mandatory">
+            <div class="snap-center shrink-0 w-48 md:w-56 mobile-mockup border-[4px] border-slate-800 rounded-xl shadow-lg reveal reveal-up delay-100">
+                <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/tmp/1_intro.png" class="w-full h-auto">
+            </div>
+            <div class="snap-center shrink-0 w-48 md:w-56 mobile-mockup border-[4px] border-slate-800 rounded-xl shadow-lg reveal reveal-up delay-200">
+                <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/tmp/2_login.png" class="w-full h-auto">
+            </div>
+            <div class="snap-center shrink-0 w-48 md:w-56 mobile-mockup border-[4px] border-slate-800 rounded-xl shadow-lg reveal reveal-up delay-300">
+                <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/tmp/3_1_join.png" class="w-full h-auto">
+            </div>
+            <div class="snap-center shrink-0 w-48 md:w-56 mobile-mockup border-[4px] border-slate-800 rounded-xl shadow-lg reveal reveal-up delay-400">
+                <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/tmp/8_1_mypage.png"
+                     class="w-full h-auto">
+            </div>
+            <div class="snap-center shrink-0 w-48 md:w-56 mobile-mockup border-[4px] border-slate-800 rounded-xl shadow-lg reveal reveal-up delay-100">
+                <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/tmp/8_3_1_mypage_pointhistory.png"
+                     class="w-full h-auto">
+            </div>
+            <div class="snap-center shrink-0 w-48 md:w-56 mobile-mockup border-[4px] border-slate-800 rounded-xl shadow-lg reveal reveal-up delay-200">
+                <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/tmp/6_2_guild.png"
+                     class="w-full h-auto">
+            </div>
+        </div>
+    </div>
 </section>
 
 <footer class="bg-slate-900 text-white pt-24 pb-12 border-t border-slate-800">
-	<div class="container mx-auto px-6 max-w-4xl text-center fade-in-section">
-		<h2 class="text-3xl md:text-5xl font-black mb-8 leading-tight">
-			"다음 세대를 위한<br/>
-			<span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-emerald-400">즐거운 신앙의 놀이터</span>"
-		</h2>
-		<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16 text-left md:text-center">
-			<div class="p-6 rounded-2xl bg-white/5 border border-white/10">
-				<h4 class="font-bold text-sky-400 mb-2">데이터 기반 관리</h4>
-				<p class="text-xs text-slate-400">활동 데이터 수치화를 통한<br/>맞춤형 신앙 케어</p>
-			</div>
-			<div class="p-6 rounded-2xl bg-white/5 border border-white/10">
-				<h4 class="font-bold text-amber-400 mb-2">참여율 제고</h4>
-				<p class="text-xs text-slate-400">게이미피케이션 요소를 통한<br/>자발적 참여 유도</p>
-			</div>
-			<div class="p-6 rounded-2xl bg-white/5 border border-white/10">
-				<h4 class="font-bold text-emerald-400 mb-2">디지털 전환</h4>
-				<p class="text-xs text-slate-400">관리 효율성 극대화 및<br/>투명한 운영</p>
-			</div>
-		</div>
+    <div class="container mx-auto px-6 max-w-4xl text-center reveal reveal-zoom">
+        <h2 class="text-3xl md:text-5xl font-black mb-8 leading-tight">
+            "다음 세대를 위한<br/>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-emerald-400">즐거운 신앙의 놀이터</span>"
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16 text-left md:text-center">
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 reveal reveal-up delay-100">
+                <h4 class="font-bold text-sky-400 mb-2">데이터 기반 관리</h4>
+                <p class="text-xs text-slate-400">활동 데이터 수치화를 통한<br/>맞춤형 신앙 케어</p>
+            </div>
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 reveal reveal-up delay-200">
+                <h4 class="font-bold text-amber-400 mb-2">참여율 제고</h4>
+                <p class="text-xs text-slate-400">게이미피케이션 요소를 통한<br/>자발적 참여 유도</p>
+            </div>
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 reveal reveal-up delay-300">
+                <h4 class="font-bold text-emerald-400 mb-2">디지털 전환</h4>
+                <p class="text-xs text-slate-400">관리 효율성 극대화 및<br/>투명한 운영</p>
+            </div>
+        </div>
 
-		<div class="relative py-8">
-			<div class="absolute inset-x-0 top-1/2 h-px bg-slate-800"></div>
-			<span class="relative bg-slate-900 px-4 text-slate-500 text-sm tracking-widest uppercase">봉동중앙교회</span>
-		</div>
-		<p class="text-slate-600 text-sm">
-			&copy; 2024 Elementary Dept RPG Adventure Project. All rights reserved.
-		</p>
-	</div>
+        <div class="relative py-8">
+            <div class="absolute inset-x-0 top-1/2 h-px bg-slate-800"></div>
+            <span class="relative bg-slate-900 px-4 text-slate-500 text-sm tracking-widest uppercase">봉동중앙교회</span>
+        </div>
+        <p class="text-slate-600 text-sm">
+            &copy; 2024 Elementary Dept RPG Adventure Project. All rights reserved.
+        </p>
+    </div>
 </footer>
 
 <script>
-	document.addEventListener('DOMContentLoaded', () => {
-		const observerOptions = {
-			root: null,
-			rootMargin: '0px',
-			threshold: 0.15
-		};
+    document.addEventListener('DOMContentLoaded', () => {
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1 // 요소가 10%만 보여도 애니메이션 시작
+        };
 
-		const observer = new IntersectionObserver((entries, observer) => {
-			entries.forEach(entry => {
-				if (entry.isIntersecting) {
-					entry.target.classList.add('is-visible');
-					observer.unobserve(entry.target); // 한 번만 실행
-				}
-			});
-		}, observerOptions);
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active'); // active 클래스 추가하여 애니메이션 실행
+                    observer.unobserve(entry.target); // 한 번만 실행되도록 설정
+                }
+            });
+        }, observerOptions);
 
-		document.querySelectorAll('.fade-in-section').forEach(section => {
-			observer.observe(section);
-		});
-	});
+        // .reveal 클래스를 가진 모든 요소를 관찰
+        document.querySelectorAll('.reveal').forEach(section => {
+            observer.observe(section);
+        });
+    });
 </script>
 </body>
 </html>
