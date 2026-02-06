@@ -39,7 +39,7 @@ public class LoginServiceImpl implements LoginService {
         }
 
         // 2. pwd 검증
-        if (!passwordEncoder.matches(loginVO.getPwd(), sessionVO.getPwd())) {
+        if (!passwordEncoder.matches(loginVO.getPwd(), sessionVO.pwd())) {
             throw new RuntimeException("패스워드가 틀렸습니다.");
         }
 

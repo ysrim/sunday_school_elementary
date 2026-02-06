@@ -5,22 +5,49 @@ import app.psn.com.vo.TodayBibleVerseVO;
 
 public interface CacheService {
 
-	Integer sltPont(Integer mberSn); // 캐쉬생성 달란트
+	/**
+	 * 캐쉬생성 - 달란트
+	 */
+	Integer sltPont(Integer mberSn);
 
-	void evictPont(Integer mberSn); // 캐쉬갱신 달란트
+	/**
+	 * 캐쉬갱신 -  달란트
+	 */
+	void evictPont(Integer mberSn);
 
-	Integer sltLevel(Integer mberSn); // 캐쉬생성 레벨
+	/**
+	 * 캐쉬생성 - 레벨
+	 */
+	Integer sltLevel(Integer mberSn);
 
-	void evictLevel(Integer mberSn); // 캐쉬갱신 레벨
+	/**
+	 * 캐쉬갱신 - 레벨
+	 */
+	void evictLevel(Integer mberSn);
 
-	AvatarLevelVO sltExp(Integer mberSn); // 캐쉬생성 경험치
+	/**
+	 *캐쉬생성 - 경험치
+	 */
+	AvatarLevelVO sltExp(Integer mberSn);
 
-	void evictExp(Integer mberSn); // 캐쉬갱신 경험치
+	/**
+	 * 캐쉬갱신 - 경험치
+	 */
+	void evictExp(Integer mberSn);
 
-	TodayBibleVerseVO sltTodayBibleVerse(); // 오늘의 말씀
+	/**
+	 * 캐쉬생성 - 오늘의 말씀
+	 */
+	TodayBibleVerseVO sltTodayBibleVerse();
 
+	/**
+	 * 캐쉬생성 - 온라인 맴버 추가
+	 */
 	void addOnlineMber(String mberId);
 
+	/**
+	 * 캐쉬 갱신
+	 */
 	boolean checkKeyExists(String cacheName, String key);
 
 }

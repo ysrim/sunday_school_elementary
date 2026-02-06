@@ -43,7 +43,7 @@ public class AvatarServiceImpl implements AvatarService {
 		Integer targetLevel = avatarMapper.sltLevelRulesExp(avatar.exp());
 
 		// 3. 레벨 변동이 없으면 즉시 종료
-		if (targetLevel <= currentLevel) {
+		if (targetLevel == null || targetLevel <= currentLevel) {
 			return;
 		}
 

@@ -158,7 +158,7 @@ public class StringUtil {
 
         QuestPendingVO questPendingVO = new QuestPendingVO();
 
-        questPendingVO.setMberSn(SessionUtil.getMberInfo().getMberSn());
+        questPendingVO.setMberSn(SessionUtil.getMberInfo().mberSn());
 
         questPendingVO.setQuestSn(sn);
 

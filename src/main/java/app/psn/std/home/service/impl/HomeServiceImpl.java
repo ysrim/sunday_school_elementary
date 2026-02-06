@@ -37,7 +37,7 @@ public class HomeServiceImpl implements HomeService {
     @Override
     public List<HomeGuildListVO> sltGuildMberList() {
 
-        List<HomeGuildListVO> list = homeMapper.sltGuildMberList(SessionUtil.getMberInfo().getGuildSn());
+        List<HomeGuildListVO> list = homeMapper.sltGuildMberList(SessionUtil.getMberInfo().guildSn());
 
         if (list != null) {
             list.parallelStream().forEach(vo -> {
@@ -52,7 +52,7 @@ public class HomeServiceImpl implements HomeService {
     @Override
     public List<HomeGuildListVO> sltGuildMberAccessList() {
 
-        List<HomeGuildListVO> list = homeMapper.sltGuildMberList(SessionUtil.getMberInfo().getGuildSn());
+        List<HomeGuildListVO> list = homeMapper.sltGuildMberList(SessionUtil.getMberInfo().guildSn());
 
         return Optional.ofNullable(list).orElseGet(Collections::emptyList).stream() //
                 .filter(vo -> cacheService.checkKeyExists(CacheKeys.OnlineMbers.name(), vo.getMberId())) // 길드원이 온라인만 리스트업
@@ -62,7 +62,7 @@ public class HomeServiceImpl implements HomeService {
 
     @Override
     public HomeGuildInfoVO sltGuildInfo() {
-        return homeMapper.sltGuildInfo(SessionUtil.getMberInfo().getGuildSn());
+        return homeMapper.sltGuildInfo(SessionUtil.getMberInfo().guildSn());
     }
 
     @Override

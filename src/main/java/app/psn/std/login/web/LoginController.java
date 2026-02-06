@@ -1,6 +1,7 @@
 package app.psn.std.login.web;
 
 import com.base.enumm.com.ViewPathEnum;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,40 +23,40 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/std/idx")
 public class LoginController {
 
-    private final LoginService loginService;
+	private final LoginService loginService;
 
-    /**
-     * 로그인 페이지
-     */
-    @RequestMapping(path = "/login.pg")
-    public String loginPg() {
+	/**
+	 * 로그인 페이지
+	 */
+	@RequestMapping(path = "/login.pg")
+	public String loginPg() {
 
-        return ViewPathEnum.STD.to("/idx/login");
+		return ViewPathEnum.STD.to("/idx/login");
 
-    }
+	}
 
-    /**
-     * 로그인 요청
-     */
-    @RequestMapping(path = "/login.ax")
-    public ResponseEntity loginAx(@RequestBody @Valid LoginVO loginVO) {
+	/**
+	 * 로그인 요청
+	 */
+	@RequestMapping(path = "/login.ax")
+	public ResponseEntity loginAx(@RequestBody @Valid LoginVO loginVO) {
 
-        SessionVO sessionVO = loginService.loginAx(loginVO);
+		SessionVO sessionVO = loginService.loginAx(loginVO);
 
-        return ResUtil.resSucc(sessionVO.getNcnm() + "용사님 어서오세요.");
+		return ResUtil.resSucc(sessionVO.ncnm() + "용사님 어서오세요.");
 
-    }
+	}
 
-    /**
-     * 로그아웃
-     */
-    @RequestMapping(path = "/logOut.pg")
-    public String logOutAx(HttpSession session) {
+	/**
+	 * 로그아웃
+	 */
+	@RequestMapping(path = "/logOut.pg")
+	public String logOutAx(HttpSession session) {
 
-        session.invalidate();
+		session.invalidate();
 
-        return "redirect:/std/idx/intro.pg";
+		return "redirect:/std/idx/intro.pg";
 
-    }
+	}
 
 }

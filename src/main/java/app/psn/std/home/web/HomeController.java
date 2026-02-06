@@ -42,7 +42,7 @@ public class HomeController {
     @RequestMapping("/home.pg")
     public String homePg(Model model) {
 
-        Integer mberSn = SessionUtil.getMberInfo().getMberSn();
+        Integer mberSn = SessionUtil.getMberInfo().mberSn();
 
         // cache
         model.addAttribute("mberPoint", cacheService.sltPont(mberSn)); // 달란트

@@ -24,40 +24,40 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class QuestServiceImpl implements QuestService {
 
-    private final ApplicationEventPublisher publisher;
+	private final ApplicationEventPublisher publisher;
 
-    private final QuestMapper questMapper;
+	private final QuestMapper questMapper;
 
-    private final DomainService domainService;
+	private final DomainService domainService;
 
-    @Override
-    public List<QuestListVO> sltQuestList() {
+	@Override
+	public List<QuestListVO> sltQuestList() {
 
-        return questMapper.sltQuestList(SessionUtil.getMberInfo().getMberSn() + "");
+		return questMapper.sltQuestList(SessionUtil.getMberInfo().mberSn() + "");
 
-    }
+	}
 
-    public void questDo(QuestPendingVO questPendingVO) {
+	public void questDo(QuestPendingVO questPendingVO) {
 
-        QuestVO questVO = domainService.sltQuest(questPendingVO.getQuestSn());
+		QuestVO questVO = domainService.sltQuest(questPendingVO.getQuestSn());
 
-        if (questMapper.questDo(questPendingVO) < 1) { // 비즈니스 로직상 필수라면 예외 처리
-            throw new RuntimeException("퀘스트 수행 내역 저장 중 오류가 발생했습니다.");
-        }
+		if (questMapper.questDo(questPendingVO) < 1) { // 비즈니스 로직상 필수라면 예외 처리
+			throw new RuntimeException("퀘스트 수행 내역 저장 중 오류가 발생했습니다.");
+		}
 
-        log.warn("questVO => {}", questVO);
+		log.warn("questVO => {}", questVO);
 
-        if ("Y".equals(questVO.immediatePayYn())) { // 퀘스트가 즉시 보상이면 바로 보상
-            publisher.publishEvent(new QuestCompleteEvent(questPendingVO.getMberSn(), questPendingVO.getQuestSn(), questPendingVO.getLogSn()));
-        }
+		if ("Y".equals(questVO.immediatePayYn())) { // 퀘스트가 즉시 보상이면 바로 보상
+			publisher.publishEvent(new QuestCompleteEvent(questPendingVO.getMberSn(), questPendingVO.getQuestSn(), questPendingVO.getLogSn()));
+		}
 
-    }
+	}
 
-    @Override
-    public boolean questCompleteChk(QuestPendingVO questVO) {
+	@Override
+	public boolean questCompleteChk(QuestPendingVO questVO) {
 
-        return questMapper.questCompleteChk(questVO) > 0 ? true : false;
+		return questMapper.questCompleteChk(questVO) > 0 ? true : false;
 
-    }
+	}
 
 }

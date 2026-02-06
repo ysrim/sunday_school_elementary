@@ -26,63 +26,63 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class OptionServiceImpl implements OptionService {
 
-    private final LoginService loginService;
+	private final LoginService loginService;
 
-    private final PasswordEncoder passwordEncoder;
+	private final PasswordEncoder passwordEncoder;
 
-    private final OptionMapper optionMapper;
+	private final OptionMapper optionMapper;
 
-    private @Value("#{globalsProps['secretKey.key.qr']}") String secretKey;
+	private @Value("#{globalsProps['secretKey.key.qr']}") String secretKey;
 
-    @Override
-    public String QrCodeStr() {
+	@Override
+	public String QrCodeStr() {
 
-        try {
-            SessionVO sessionVo = SessionUtil.getMberInfo();
-            return StringUtil.encrypt(sessionVo.getMberSn() + "", secretKey);
-        } catch (Exception e) {
-            throw new RuntimeException("QR코드 생성중 에러가 발생했습니다.");
-        }
+		try {
+			SessionVO sessionVo = SessionUtil.getMberInfo();
+			return StringUtil.encrypt(sessionVo.mberSn() + "", secretKey);
+		} catch (Exception e) {
+			throw new RuntimeException("QR코드 생성중 에러가 발생했습니다.");
+		}
 
-    }
+	}
 
-    @Override
-    public boolean pwChg(String currentPw, String newPw) {
+	@Override
+	public boolean pwChg(String currentPw, String newPw) {
 
-        LoginVO loginVO = new LoginVO();
-        loginVO.setMberId(SessionUtil.getMberInfo().getMberId());
-        loginVO.setPwd(currentPw);
+		LoginVO loginVO = new LoginVO();
+		loginVO.setMberId(SessionUtil.getMberInfo().mberId());
+		loginVO.setPwd(currentPw);
 
-        // 1. id로 회원정보 찾기
-        SessionVO sessionVO = loginService.sltMber(loginVO);
-        if (sessionVO == null) {
-            throw new RuntimeException("일치하는 회원정보가 없습니다.");
-        }
+		// 1. id로 회원정보 찾기
+		SessionVO sessionVO = loginService.sltMber(loginVO);
+		if (sessionVO == null) {
+			throw new RuntimeException("일치하는 회원정보가 없습니다.");
+		}
 
-        // 2. pwd 검증
-        if (!passwordEncoder.matches(loginVO.getPwd(), sessionVO.getPwd())) {
-            throw new RuntimeException("기존 패스워드가 틀렸습니다.");
-        }
+		// 2. pwd 검증
+		if (!passwordEncoder.matches(loginVO.getPwd(), sessionVO.pwd())) {
+			throw new RuntimeException("기존 패스워드가 틀렸습니다.");
+		}
 
-        // 3. 패스워드 업데이트
-        optionMapper.pwChg(SessionUtil.getMberInfo().getMberSn(), passwordEncoder.encode(newPw));
+		// 3. 패스워드 업데이트
+		optionMapper.pwChg(SessionUtil.getMberInfo().mberSn(), passwordEncoder.encode(newPw));
 
-        return true;
+		return true;
 
-    }
+	}
 
-    @Override
-    public List<RewardHistoryVO> sltRewardHistory() {
+	@Override
+	public List<RewardHistoryVO> sltRewardHistory() {
 
-        return optionMapper.sltRewardHistory(SessionUtil.getMberInfo().getMberSn());
+		return optionMapper.sltRewardHistory(SessionUtil.getMberInfo().mberSn());
 
-    }
+	}
 
-    @Override
-    public HashMap<String, Integer> sltWeekStatics() {
+	@Override
+	public HashMap<String, Integer> sltWeekStatics() {
 
-        return optionMapper.sltWeekStatics(SessionUtil.getMberInfo().getMberSn());
+		return optionMapper.sltWeekStatics(SessionUtil.getMberInfo().mberSn());
 
-    }
+	}
 
 }

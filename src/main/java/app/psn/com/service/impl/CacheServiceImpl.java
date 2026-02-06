@@ -29,45 +29,57 @@ public class CacheServiceImpl implements CacheService {
 	@Cacheable(value = CacheKeys.MberPointEnum, key = "#p0")
 	@Override
 	public Integer sltPont(Integer mberSn) {
+
 		return cacheMapper.sltPont(mberSn);
+
 	}
 
 	@CacheEvict(value = CacheKeys.MberPointEnum, key = "#p0")
 	@Override
 	public void evictPont(Integer mberSn) {
+		// do-something
 	}
 
 	@Cacheable(value = CacheKeys.MberLvEnum, key = "#p0")
 	@Override
 	public Integer sltLevel(Integer mberSn) {
+
 		return cacheMapper.sltLevel(mberSn);
+
 	}
 
 	@CacheEvict(value = CacheKeys.MberLvEnum, key = "#p0")
 	@Override
 	public void evictLevel(Integer mberSn) {
+		// do-something
 	}
 
 	@Cacheable(value = CacheKeys.MberExpEnum, key = "#p0")
 	@Override
 	public AvatarLevelVO sltExp(Integer mberSn) {
+
 		return cacheMapper.sltExp(mberSn);
+
 	}
 
 	@CacheEvict(value = CacheKeys.MberExpEnum, key = "#p0")
 	@Override
 	public void evictExp(Integer mberSn) {
+		// do-something
 	}
 
 	@Cacheable(value = CacheKeys.TodayBibleVerseEnum)
 	@Override
 	public TodayBibleVerseVO sltTodayBibleVerse() {
+
 		return cacheMapper.sltTodayBibleVerse();
+
 	}
 
 	@Cacheable(value = CacheKeys.OnlineMbersEnum, key = "#p0")
 	@Override
 	public void addOnlineMber(String mberId) {
+		// do-something
 	}
 
 	public boolean checkKeyExists(String cacheName, String key) {

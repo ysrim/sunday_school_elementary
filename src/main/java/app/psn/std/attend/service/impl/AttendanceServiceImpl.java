@@ -21,24 +21,29 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true) // 2. 기본적으로 읽기 전용으로 설정 (성능 최적화)
 public class AttendanceServiceImpl implements AttendanceService {
 
-    private final AttendanceMapper attendanceMapper;
+	private final AttendanceMapper attendanceMapper;
 
-    private final QuestService questService;
+	private final QuestService questService;
 
-    @Override
-    public List<AttendanceVO> sltAttendanceList() {
-        return attendanceMapper.sltAttendanceList(SessionUtil.getMberInfo().getMberSn());
-    }
+	@Override
+	public List<AttendanceVO> sltAttendanceList() {
 
-    @Override
-    public Integer sltAttendanceContinueCount() {
-        return attendanceMapper.sltAttendanceContinueCount(SessionUtil.getMberInfo().getMberSn());
-    }
+		return attendanceMapper.sltAttendanceList(SessionUtil.getMberInfo().mberSn());
 
-    @Override
-    public void attendanceDo() {
-        // 출석이 퀘스트로 로직 이전
-        questService.questDo(StringUtil.setQuestPendingVO(2));
-    }
+	}
+
+	@Override
+	public Integer sltAttendanceContinueCount() {
+
+		return attendanceMapper.sltAttendanceContinueCount(SessionUtil.getMberInfo().mberSn());
+
+	}
+
+	@Override
+	public void attendanceDo() {
+
+		questService.questDo(StringUtil.setQuestPendingVO(2));
+
+	}
 
 }
