@@ -10,7 +10,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.base.enumm.RstCdEnum;
+import com.base.enumm.com.RstCdEnum;
 import com.base.utl.ResUtil;
 import com.base.utl.SessionUtil;
 

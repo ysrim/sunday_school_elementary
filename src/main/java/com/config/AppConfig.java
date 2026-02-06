@@ -12,13 +12,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 @Configuration
-@Import({
-        DataSourceConfig.class // db conn
+@Import({DataSourceConfig.class // db conn
         , SecurityConfig.class // password encode
         , CacheConfig.class // chache
         , SchedulerConfig.class // scheduler
 })
-@ComponentScan(basePackages = {"com", "net", "app"}//
+@ComponentScan(basePackages = {"com", "app"}//
         , useDefaultFilters = false //
         , includeFilters = { //
         @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Service.class) //

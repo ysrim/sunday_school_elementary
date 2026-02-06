@@ -39,7 +39,7 @@
 		  AND QUEST_SN = #{questSn}
 	</select>
 
-	<select id="sltQuestContinuity" parameterType="Integer" resultType="app.psn.com.vo.QuestContinuityRulesVO">
+	<select id="sltQuestContinuity" parameterType="Integer" resultType="app.psn.com.vo.QuestContinuityVO">
 		SELECT MBER_SN,
 			   QUEST_SN,
 			   CURRENT_STREAK,

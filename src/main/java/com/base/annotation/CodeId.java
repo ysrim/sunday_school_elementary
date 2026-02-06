@@ -10,8 +10,8 @@ import java.lang.annotation.Target;
 @Documented
 public @interface CodeId {
 
-	public abstract String[] value() default "";
+    public abstract String[] value() default "";
 
-	public abstract String type() default "";
+    public abstract String type() default "";
 
 }

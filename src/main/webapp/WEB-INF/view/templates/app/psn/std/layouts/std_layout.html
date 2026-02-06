@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>봉동중앙교회 초등부 RPG</title>
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="/files/css/sub_style.css">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.5/js.cookie.min.js"></script>
+	<script src="/files/script/js/std_commons.js"></script>
+</head>
+<body>
+<div id="toast-container"></div>
+<div class="app-container">
+	<div class="page-main">
+		<th:block th:replace="~{/app/psn/std/fragments/std_header :: headerFragment}"></th:block>
+		<th:block layout:fragment="content"></th:block>
+	</div>
+	<div th:replace="~{/app/psn/std/fragments/std_footer :: footerFragment}"></div>
+	<div id="custom-alert"
+		 style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center;">
+		<div class="card"
+			 style="max-width:320px; text-align:center; padding:30px; transform: scale(0.9); transition: transform 0.2s;">
+			<div id="alert-icon" style="font-size: 3rem; margin-bottom: 15px;">✨</div>
+			<h4 id="alert-title" style="margin-bottom: 10px; color: var(--secondary);">알림</h4>
+			<p id="alert-message"
+			   style="font-size: 0.95rem; color: #666; margin-bottom: 25px; line-height: 1.5; word-break: keep-all;"></p>
+			<button class="btn btn-main" onclick="_closeAlert();" style="margin-top:0;">확인</button>
+		</div>
+	</div>
+</div>
+</body>
+</html>

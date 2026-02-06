@@ -21,9 +21,7 @@ import javax.sql.DataSource;
 @EnableTransactionManagement
 // 1. 상위 패키지를 지정하면 하위 매퍼들을 알아서 찾습니다.
 // 명확성을 위해 특정 패키지들만 스캔하도록 콤마로 구분하되 문자열 배열 형식을 권장합니다.
-@MapperScan(basePackages = {
-        "app.**.mapper"
-})
+@MapperScan(basePackages = {"app.**.mapper"})
 public class DataSourceConfig {
 
     @Value("${jdbc.driver}")
@@ -44,7 +42,6 @@ public class DataSourceConfig {
         hikariConfig.setPassword(password);
 
         // 2. HikariCP 성능 최적화
-        // 가급적 Max와 Idle을 동일하게 맞추는 것이 커넥션 생성/삭제 비용을 줄여줍니다.
         hikariConfig.setMaximumPoolSize(10);
         hikariConfig.setMinimumIdle(10);
 
@@ -71,7 +68,6 @@ public class DataSourceConfig {
 
         // 4. DTO 패키지 별칭 (여러 패키지를 콤마로 나열 가능)
         // 실제 프로젝트 구조에 맞게 수정하세요. (app..vo 형태로 와일드카드 사용 가능)
-        //sessionFactory.setTypeAliasesPackage("app.idx.lgn.vo, app.psn.com.vo");
 
         // 5. MyBatis 상세 설정
         org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();

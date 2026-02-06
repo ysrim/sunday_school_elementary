@@ -1,6 +1,6 @@
 package com.base.vo;
 
-import com.base.enumm.RstCdEnum;
+import com.base.enumm.com.RstCdEnum;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;

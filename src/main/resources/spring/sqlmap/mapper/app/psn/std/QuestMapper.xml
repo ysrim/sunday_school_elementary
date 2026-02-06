@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?><!--Converted at: Wed May 11 15:49:38 KST 2016 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="app.psn.std.quest.mapper.QuestMapper">
+
+    <select id="sltQuestList" parameterType="string" resultType="app.psn.std.quest.vo.QuestListVO">
+        SELECT A.QUEST_SN
+             , B.MBER_SN
+             , A.TITLE
+             , A.DESCRIPTION
+             , A.REWARD_EXP
+             , A.REWARD_POINT
+             , A.QUEST_TYPE
+             , A.EMOJI
+             , B.STATUS
+             , FN_GET_CODE_NM('REQ_STATUS', B.STATUS) as STATUS_NM
+        FROM QUESTS A
+                 LEFT OUTER JOIN QUEST_LOGS B ON A.QUEST_SN = B.QUEST_SN
+            AND B.REQ_DATE = DATE_FORMAT(NOW(), '%Y%m%d')
+            AND B.MBER_SN = #{mberSn}
+        WHERE A.USE_AT = 'Y'
+          AND A.QUEST_SN NOT IN (2, 4)
+    </select>
+
+    <insert id="questDo" parameterType="app.psn.std.quest.vo.QuestPendingVO" useGeneratedKeys="true" keyProperty="logSn"
+            keyColumn="LOG_SN">
+        INSERT INTO QUEST_LOGS (REQ_DATE, MBER_SN, QUEST_SN, STATUS)
+        VALUES (DATE_FORMAT(NOW(), '%Y%m%d'), #{mberSn}, #{questSn},
+                (SELECT IF(IMMEDIATE_PAY_YN = 'N', 'PENDING', 'APPROVED') AS REWARD_TYPE
+                 FROM QUESTS
+                 WHERE QUEST_SN = #{questSn}));
+    </insert>
+
+    <select id="questCompleteChk" parameterType="app.psn.std.quest.vo.QuestPendingVO" resultType="integer">
+        SELECT COUNT(1) AS CNT
+        FROM QUESTS A
+                 LEFT OUTER JOIN QUEST_LOGS B ON
+            A.QUEST_SN = B.QUEST_SN
+                AND B.REQ_DATE = DATE_FORMAT(NOW(), '%Y%m%d')
+                AND B.MBER_SN = #{mberSn}
+        WHERE A.USE_AT = 'Y'
+          AND A.QUEST_SN = #{questSn}
+          AND B.STATUS = 'APPROVED'
+    </select>
+
+</mapper>

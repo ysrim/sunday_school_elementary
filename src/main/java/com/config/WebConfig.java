@@ -1,6 +1,6 @@
 package com.config;
 
-import com.base.interceptor.AuthInterceptor;
+import com.base.interceptor.StdAuthInterceptor;
 import com.config.web.ThymeleafConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.*;
@@ -17,7 +17,7 @@ import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 @EnableWebMvc
 @Import({
         ThymeleafConfig.class // view template
-        , AuthInterceptor.class // interceptor
+        , StdAuthInterceptor.class // interceptor
 })
 @ComponentScan(
         basePackages = {"com", "net", "app"} //
@@ -28,7 +28,7 @@ import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
-    private final AuthInterceptor loginInterceptor;
+    private final StdAuthInterceptor stdAuthInterceptor;
     private final ThymeleafViewResolver thymeleafViewResolver;
 
     // 0순위: 파일 다운로드 등
@@ -46,6 +46,9 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(loginInterceptor).addPathPatterns("/**").excludePathPatterns("/idx/**", "/error/**", "/files/**"); // 정적 리소스와 인덱스 페이지 제외 추가 권장
+        registry.addInterceptor(stdAuthInterceptor) // 학생용 로그인
+                .addPathPatterns("/std/**") // path 설정
+                .excludePathPatterns("/std/idx/**", "/error/**", "/files/**"); // 인덱스 페이지(intro.pg, login.pg, join.pg) 제외
+        //.excludePathPatterns("/std/idx/**", "/error/**", "/files/**"); // 정적 리소스와 인덱스 페이지 제외
     }
 }

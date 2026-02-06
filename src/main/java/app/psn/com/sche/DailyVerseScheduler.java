@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.base.enumm.CacheKeys;
+import com.base.enumm.std.CacheKeys;
 
 import app.psn.com.mapper.BibleVerseMapper;
 import lombok.RequiredArgsConstructor;

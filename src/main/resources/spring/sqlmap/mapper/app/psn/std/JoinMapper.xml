@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="app.psn.std.join.mapper.JoinMapper">
+
+	<select id="idDupleChk" parameterType="string" resultType="Integer">
+		SELECT COUNT(*) AS cnt
+		FROM MBER_INFO
+		WHERE MBER_ID = #{mberId}
+	</select>
+
+	<select id="sltMberSn" parameterType="string" resultType="string">
+		SELECT FN_GET_SEQ('SEQ_MBER_SN') as mberSn
+		FROM DUAL
+	</select>
+
+	<insert id="insMberInfo" parameterType="app.psn.std.join.vo.JoinMemberVO">
+		INSERT INTO MBER_INFO (MBER_SN, MBER_ID, MBER_NM, PWD, SEXDSTN)
+		VALUES (#{mberSn}, #{mberId}, #{mberNm}, #{pwd}, #{sexdstn})
+	</insert>
+
+	<insert id="insAvatarInfo" parameterType="app.psn.std.join.vo.JoinMemberVO">
+		INSERT INTO AVATAR_INFO (MBER_SN, NCNM, OCCP_CODE)
+		VALUES (#{mberSn}, #{ncnm}, #{occpCode})
+	</insert>
+
+	<insert id="insGuildMberList" parameterType="app.psn.std.join.vo.JoinMemberVO">
+		INSERT INTO GUILD_MBER_LIST (MBER_SN, GUILD_SN)
+		VALUES (#{mberSn}, #{guildSn})
+	</insert>
+
+	<select id="sltGuildInfo" parameterType="app.psn.std.join.vo.JoinMemberVO" resultType="string">
+		SELECT GUILD_SN
+		FROM GUILD_INFO
+		WHERE GRADE = #{grade}
+		  AND CLA = #{cls}
+	</select>
+
+</mapper>

@@ -4,7 +4,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.base.enumm.ToastTypeEnum;
+import com.base.enumm.com.ToastTypeEnum;
 import com.base.vo.ToastMsgEvent;
 
 import app.psn.com.mapper.AvatarMapper;

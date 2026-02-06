@@ -1,7 +1,7 @@
 package app.psn.com.vo;
 
-import com.base.enumm.RewardGetPathEnum;
-import com.base.enumm.RewardTypeEnum;
+import com.base.enumm.com.RewardGetPathEnum;
+import com.base.enumm.com.RewardTypeEnum;
 import com.base.vo.QuestCompleteEvent;
 
 public record RewardVO( //

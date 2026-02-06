@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{/app/psn/std/layouts/std_layout}" lang="ko">
+<th:block layout:fragment="content">
+	<script src="/files/script/libs/qrcode.min.js"></script>
+	<script th:inline="javascript">
+		// [추가] 비밀번호 보기/숨기기 토글 함수
+		function togglePwVisibility(inputId) {
+			const $input = $('#' + inputId);
+			const currentType = $input.attr('type');
+			if (currentType === 'password') {
+				$input.attr('type', 'text');
+			} else {
+				$input.attr('type', 'password');
+			}
+		}
+
+		// [수정] 비밀번호 변경 로직 (기능 강화)
+		function handlePasswordChange() {
+			const currentPw = $('#current-pw').val().trim();
+			const newPw = $('#new-pw').val().trim();
+			const newPwConfirm = $('#new-pw-confirm').val().trim();
+
+			// 1. 입력 확인
+			if (!currentPw) {
+				_showAlert('기존 비밀번호를 입력해 주세요!', '⚠️', '입력 확인');
+				$('#current-pw').focus();
+				return;
+			}
+			if (!newPw) {
+				_showAlert('새로운 비밀번호를 입력해 주세요!', '⚠️', '입력 확인');
+				$('#new-pw').focus();
+				return;
+			}
+
+			// 2. 유효성 검사 (길이)
+			if (newPw.length < 6) {
+				_showAlert('보안을 위해 비밀번호는<br><b>최소 4자리 이상</b>이어야 해요!', '🛡️', '보안 약함');
+				$('#new-pw').focus();
+				return;
+			}
+
+			// 3. 일치 여부 확인
+			if (newPw !== newPwConfirm) {
+				_showAlert('새 비밀번호가 서로 달라요.<br>다시 확인해 주세요!', '❌', '불일치');
+				$('#new-pw-confirm').val('').focus();
+				return;
+			}
+
+			// 4. 기존 비번과 동일한지 체크 (선택 사항)
+			if (currentPw === newPw) {
+				_showAlert('기존 비밀번호와 똑같아요.<br>새로운 비밀번호로 바꿔주세요!', '🔄', '변경 필요');
+				return;
+			}
+
+			if (!$('#pw-strength-bar').hasClass("strength-safe")) {
+				_showAlert('보안을 위해 비밀번호는<br><b>영문 숫자 특수문자포함 8자리 이상</b>이어야 해요!', '🛡️', '보안 약함');
+				return;
+			}
+
+			// 로딩 효과 (사용자 경험 향상)
+			$.ajax({
+				type: "POST",
+				url: "/std/opts/pwChg.ax",
+				data: {
+					currentPw: currentPw
+					, newPw: newPw
+				},
+				success: (data) => {
+					if (data.rtnCd === '001') {
+						setTimeout(() => {
+							_showAlert('비밀번호가 안전하게 변경되었습니다!<br>다시 로그인해 주세요.', '✨', '성공!');
+							$('#current-pw, #new-pw, #new-pw-confirm').val(''); // 입력창 초기화
+							setTimeout(() => {
+								location.href = "/std/idx/logOut.pg";
+							}, 1500);
+
+						}, 1000); // 1초 딜레이 시뮬레이션
+					} else {
+						_showAlert(data.rtnMsg || '오류가 발생했습니다.', '🔥', '오류');
+					}
+				},
+				error: (e) => {
+					_showAlert('서버와 통신이 원활하지 않아요.', '😥', '통신 장애');
+				}
+			});
+
+		}
+
+		// 비밀번호 강도 실시간 체크
+		$(function () {
+			$('#new-pw').on('input', function () {
+				const pw = $(this).val();
+				const $bar = $('#pw-strength-bar');
+				const $text = $('#pw-strength-text');
+
+				// 1. 초기화 (입력 없을 때)
+				if (pw.length === 0) {
+					$bar.css('width', '0%').removeClass('strength-weak strength-normal strength-safe');
+					$text.text('비밀번호를 입력해 주세요').css('color', '#999');
+					return;
+				}
+
+				// 2. 점수 계산 로직
+				let score = 0;
+
+				// 길이 체크
+				if (pw.length >= 4) score += 20;
+				if (pw.length >= 8) score += 30;
+
+				// 조합 체크 (정규식 활용)
+				const hasNumber = /[0-9]/.test(pw);       // 숫자 포함
+				const hasEng = /[a-zA-Z]/.test(pw);       // 영문 포함
+				const hasSpecial = /[!@#$%^&*]/.test(pw); // 특수문자 포함
+
+				if (hasNumber) score += 15;
+				if (hasEng) score += 15;
+				if (hasSpecial) score += 20;
+
+				// 3. 점수에 따른 상태 반영
+				$bar.removeClass('strength-weak strength-normal strength-safe');
+
+				if (pw.length < 4) {
+					// 너무 짧음 (사용 불가 수준)
+					$bar.css({'width': '20%', 'background-color': '#ff5252'});
+					$text.text('너무 짧아요 (4자 이상)').css('color', '#ff5252');
+				} else if (score < 50) {
+					// 약함
+					$bar.addClass('strength-weak').css('width', '40%');
+					$text.text('⚠️ 약함 (숫자나 기호를 섞어보세요)').css('color', '#ff5252');
+				} else if (score < 99) {
+					// 보통
+					$bar.addClass('strength-normal').css('width', '70%');
+					$text.text('🙂 적당함').css('color', '#ffb142');
+				} else if (score = 100) {
+					// 안전
+					$bar.addClass('strength-safe').css('width', '100%');
+					$text.text('🛡️ 아주 튼튼해요!').css('color', '#2cc990');
+				}
+			});
+		});
+	</script>
+	<div style="margin: 25px 25px 10px 25px; display: flex; align-items: center;">
+		<div style="width: 4px; height: 16px; background-color: #4A90E2; border-radius: 2px; margin-right: 10px;"></div>
+		<h3 style="margin: 0; font-size: 1.15rem; color: #333; font-weight: 800;">비밀번호 변경</h3>
+	</div>
+	<div class="card" style="margin-top: 20px;">
+		<div class="text-center mb-25">
+			<div style="font-size: 3rem; margin-bottom: 10px;">🔐</div>
+			<p class="text-sub">안전한 모험을 위해<br>비밀번호를 변경해 주세요!</p>
+		</div>
+
+		<div class="mb-15">
+			<label class="text-bold text-light mb-5" style="font-size:0.8rem; display:block; margin-left:5px;">기존 비밀번호</label>
+			<div class="pw-input-wrapper">
+				<input type="password" id="current-pw" placeholder="현재 비밀번호를 입력하세요">
+				<button class="btn-pw-toggle" onclick="togglePwVisibility('current-pw')">👁️</button>
+			</div>
+		</div>
+
+		<div class="mb-15">
+			<label class="text-bold text-light mb-5" style="font-size:0.8rem; display:block; margin-left:5px;">새 비밀번호</label>
+			<div class="pw-input-wrapper">
+				<input type="password" id="new-pw" placeholder="4자리 이상 입력하세요">
+				<button class="btn-pw-toggle" onclick="togglePwVisibility('new-pw')">👁️</button>
+			</div>
+			<div class="pw-strength-container">
+				<div class="strength-bar-bg">
+					<div id="pw-strength-bar" class="strength-bar-fill"></div>
+				</div>
+				<span id="pw-strength-text" class="strength-text">비밀번호를 입력해 주세요</span>
+			</div>
+		</div>
+
+		<div class="mb-25">
+			<label class="text-bold text-light mb-5" style="font-size:0.8rem; display:block; margin-left:5px;">새 비밀번호 확인</label>
+			<div class="pw-input-wrapper">
+				<input type="password" id="new-pw-confirm" placeholder="한 번 더 입력하세요">
+				<button class="btn-pw-toggle" onclick="togglePwVisibility('new-pw-confirm')">👁️</button>
+			</div>
+		</div>
+
+		<button class="btn btn-main" onclick="handlePasswordChange()">비밀번호 변경 완료</button>
+	</div>
+</th:block>
+</html>

@@ -4,8 +4,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.base.enumm.RewardTypeEnum;
-import com.base.enumm.ToastTypeEnum;
+import com.base.enumm.com.RewardTypeEnum;
+import com.base.enumm.com.ToastTypeEnum;
 import com.base.utl.StringUtil;
 import com.base.vo.AvatarLvlUdtEvent;
 import com.base.vo.QuestCompleteEvent;
