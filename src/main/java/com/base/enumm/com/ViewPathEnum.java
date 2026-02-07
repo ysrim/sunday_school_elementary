@@ -5,7 +5,7 @@ public enum ViewPathEnum {
     DEF("/app"),              // 기본 루트
     STD("/app/psn/std/page"), // 학생
     TCH("/app/psn/tch/page"), // 선생
-    ADM("/app/psn/adm/page")  // 관리자
+    MNG("/app/psn/mng/page")  // 관리자
     ;
 
     private final String path;

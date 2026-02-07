@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service("stdAttendanceService")
 @RequiredArgsConstructor
-@Transactional(readOnly = true) // 2. 기본적으로 읽기 전용으로 설정 (성능 최적화)
+@Transactional(readOnly = true)
 public class StdAttendanceServiceImpl implements StdAttendanceService {
 
 	private final StdAttendanceMapper stdAttendanceMapper;

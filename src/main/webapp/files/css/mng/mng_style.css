@@ -1,0 +1,61 @@
+/* tch_sidebar.css */
+
+/* 왼쪽 사이드바 버튼 베이스 클래스 */
+.btn-side {
+    width: 100%;
+    text-align: left;
+    padding: 0.875rem 1.25rem; /* px-5 py-3.5 */
+    border-radius: 0.75rem; /* rounded-xl */
+    font-size: 0.875rem; /* text-sm */
+    font-weight: 500; /* font-medium */
+    transition: all 0.3s ease; /* transition-all duration-300 */
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 0.25rem; /* mb-1 */
+    border: none;
+    cursor: pointer;
+}
+
+/* 비활성 상태 (OFF) */
+.btn-side-off {
+    color: #64748b; /* text-slate-500 */
+    background-color: transparent;
+}
+
+.btn-side-off:hover {
+    background-color: #f8fafc; /* hover:bg-slate-50 */
+    color: #0f172a; /* hover:text-slate-900 */
+}
+
+.btn-side-off i {
+    color: #94a3b8; /* text-slate-400 */
+    opacity: 0.7;
+}
+
+/* 활성 상태 (ON) */
+.btn-side-on {
+    background-color: #eef2ff; /* bg-indigo-50 */
+    color: #4338ca; /* text-indigo-700 */
+    font-weight: 700; /* font-bold */
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+}
+
+.btn-side-on i {
+    color: #4f46e5; /* text-indigo-600 */
+    transform: scale(1.1); /* scale-110 */
+}
+
+/* 활성 상태일 때 왼쪽 강조 라인 */
+.btn-side-on::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 25%;
+    bottom: 25%;
+    width: 4px;
+    background-color: #4f46e5; /* bg-indigo-600 */
+    border-top-right-radius: 9999px;
+    border-bottom-right-radius: 9999px;
+}

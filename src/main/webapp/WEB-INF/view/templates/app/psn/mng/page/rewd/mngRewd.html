@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http//www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/app/psn/mng/layouts/mng_layout}" lang="ko">
+<th:block layout:fragment="content">
+    <div id="page-adjustment" class="page-content hidden-page">
+        <header class="mb-8">
+            <h1 class="text-2xl font-bold text-slate-800">보상 수동 지급</h1>
+            <p class="text-sm text-slate-500 mt-1">경험치(EXP)나 포인트(Gold)를 직접 관리합니다.</p>
+        </header>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-1">
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <h2 class="text-base font-bold mb-5 text-slate-800 border-b border-slate-100 pb-2">지급 설정</h2>
+                    <form class="space-y-5">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">대상 학생</label>
+                            <div class="relative">
+                                <input type="text"
+                                       class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                                       placeholder="이름 검색">
+                                <button type="button"
+                                        class="absolute right-3 top-2.5 text-slate-400 hover:text-indigo-600"><i
+                                        class="fas fa-search"></i></button>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-2">지급 유형</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="type" class="peer sr-only" checked>
+                                    <div class="text-center py-2.5 text-sm border border-slate-200 rounded-lg peer-checked:border-indigo-500 peer-checked:bg-indigo-50 peer-checked:text-indigo-700 transition text-slate-600 hover:bg-slate-50">
+                                        <i class="fas fa-star mr-1"></i> 경험치
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="type" class="peer sr-only">
+                                    <div class="text-center py-2.5 text-sm border border-slate-200 rounded-lg peer-checked:border-amber-500 peer-checked:bg-amber-50 peer-checked:text-amber-700 transition text-slate-600 hover:bg-slate-50">
+                                        <i class="fas fa-coins mr-1"></i> 포인트
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-2">조정 방식</label>
+                            <div class="flex gap-4">
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="radio" name="action"
+                                           class="text-indigo-600 focus:ring-indigo-500 w-4 h-4" checked>
+                                    <span class="ml-2 text-sm text-slate-700">지급 (Add)</span>
+                                </label>
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="radio" name="action" class="text-red-600 focus:ring-red-500 w-4 h-4">
+                                    <span class="ml-2 text-sm text-slate-700">차감 (Remove)</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">수량</label>
+                            <input type="number"
+                                   class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                                   placeholder="0">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">사유</label>
+                            <input type="text"
+                                   class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                                   placeholder="예: 친구 전도 보너스">
+                        </div>
+                        <button type="button"
+                                class="w-full bg-indigo-600 text-white font-bold py-2.5 rounded-lg hover:bg-indigo-700 shadow-sm hover:shadow transition text-sm">
+                            적용하기
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="lg:col-span-2">
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm h-full flex flex-col">
+                    <div class="mb-4 flex justify-between items-center">
+                        <h2 class="text-base font-bold text-slate-800">최근 조정 내역</h2>
+                        <button class="text-xs text-indigo-600 hover:underline">엑셀 다운로드</button>
+                    </div>
+                    <div class="overflow-x-auto flex-1 mb-4">
+                        <table class="w-full text-left">
+                            <thead class="text-xs text-slate-500 uppercase bg-slate-50/50 border-b border-slate-100">
+                            <tr>
+                                <th class="px-4 py-3 font-semibold">시간</th>
+                                <th class="px-4 py-3 font-semibold">대상</th>
+                                <th class="px-4 py-3 font-semibold">내용</th>
+                                <th class="px-4 py-3 font-semibold">변동값</th>
+                                <th class="px-4 py-3 font-semibold">담당자</th>
+                            </tr>
+                            </thead>
+                            <tbody id="adjustmentTableBody" class="text-sm divide-y divide-slate-100"></tbody>
+                        </table>
+                    </div>
+                    <div class="border-t border-slate-100 pt-4 flex justify-center items-center space-x-1 text-sm"
+                         id="adjustmentPagination"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        flatpickr("#dateRangePicker", {
+            mode: "range",
+            dateFormat: "Y.m.d",
+            defaultDate: [new Date().fp_incr(-30), new Date()],
+            locale: "ko",
+            theme: "airbnb"
+        });
+
+        // 더미 데이터 및 페이징 로직 (jQuery 적용)
+        const adjustmentData = [
+            {time: '10:42 AM', name: '김철수', content: '특별 심부름 보상', change: '+50 EXP', type: 'exp-plus', admin: 'T.Lee'},
+            {
+                time: '09:15 AM',
+                name: '이영희',
+                content: '상점 아이템 구매',
+                change: '-200 Gold',
+                type: 'gold-minus',
+                admin: 'System'
+            },
+            // ... (데이터 생략, 필요 시 추가)
+        ];
+
+        let currentAdjPage = 1;
+        const itemsPerAdjPage = 5;
+
+        function renderAdjustmentTable(page) {
+            const $tableBody = $('#adjustmentTableBody');
+            const $pagination = $('#adjustmentPagination');
+
+            const start = (page - 1) * itemsPerAdjPage;
+            const end = start + itemsPerAdjPage;
+            const paginatedItems = adjustmentData.slice(start, end);
+            const totalPages = Math.ceil(adjustmentData.length / itemsPerAdjPage);
+
+            $tableBody.empty(); // jQuery로 내용 비우기
+
+            paginatedItems.forEach(item => {
+                let colorClass = "text-slate-600";
+                if (item.type.includes('plus')) colorClass = item.type.includes('exp') ? "text-green-600" : "text-amber-600";
+                if (item.type.includes('minus')) colorClass = "text-red-500";
+
+                const row = `
+					<tr class="hover:bg-slate-50 transition">
+						<td class="px-4 py-3 text-slate-500">${item.time}</td>
+						<td class="px-4 py-3 font-medium text-slate-800">${item.name}</td>
+						<td class="px-4 py-3 text-slate-600">${item.content}</td>
+						<td class="px-4 py-3 font-medium ${colorClass}">${item.change}</td>
+						<td class="px-4 py-3 text-slate-400">${item.admin}</td>
+					</tr>
+				`;
+                $tableBody.append(row);
+            });
+
+            let paginationHTML = `
+				<button onclick="changeAdjPage(${page - 1})" ${page === 1 ? 'disabled' : ''} class="px-2 py-1 text-slate-400 hover:text-indigo-600 disabled:opacity-30 disabled:hover:text-slate-400 transition">
+					<i class="fas fa-chevron-left"></i>
+				</button>
+			`;
+
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === page) {
+                    paginationHTML += `<button class="px-3 py-1 font-semibold text-indigo-600 bg-indigo-50 rounded transition">${i}</button>`;
+                } else {
+                    paginationHTML += `<button onclick="changeAdjPage(${i})" class="px-3 py-1 text-slate-500 hover:bg-slate-100 rounded transition">${i}</button>`;
+                }
+            }
+
+            paginationHTML += `
+				<button onclick="changeAdjPage(${page + 1})" ${page === totalPages ? 'disabled' : ''} class="px-2 py-1 text-slate-400 hover:text-indigo-600 disabled:opacity-30 disabled:hover:text-slate-400 transition">
+					<i class="fas fa-chevron-right"></i>
+				</button>
+			`;
+
+            $pagination.html(paginationHTML);
+        }
+
+        $(function () {
+            renderAdjustmentTable(1);
+        });
+    </script>
+</th:block>
+</html>

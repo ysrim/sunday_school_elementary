@@ -37,7 +37,7 @@ public class CustomRestExceptionHandler {
 
 		// 2. 일반 페이지 요청인 경우 View 경로 반환
 		model.addAttribute("rtnCd", rstCd.getCode()); // 코드도 같이 넘겨주면 뷰에서 활용 가능
-		model.addAttribute("exception", message);
+		model.addAttribute("rtnMsg", message);
 		return ERROR_VIEW_PATH;
 	}
 

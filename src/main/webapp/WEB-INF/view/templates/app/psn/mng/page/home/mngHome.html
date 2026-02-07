@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html xmlns:th="http//www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/app/psn/mng/layouts/mng_layout}" lang="ko">
+<th:block layout:fragment="content">
+    <div id="page-dashboard" class="page-content">
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-800">왕국 통계 현황</h1>
+                <p class="text-sm text-slate-500 mt-1">아이들의 활동 데이터를 한눈에 확인하세요.</p>
+            </div>
+            <div class="flex flex-wrap gap-3">
+                <div class="relative">
+                    <select class="appearance-none bg-white border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 block w-32 pl-3 pr-8 py-2 shadow-sm transition outline-none cursor-pointer">
+                        <option value="all">전체 학년</option>
+                        <option value="4">4학년</option>
+                        <option value="5">5학년</option>
+                        <option value="6">6학년</option>
+                    </select>
+                    <i class="fas fa-chevron-down absolute right-3 top-3 text-slate-400 pointer-events-none text-xs"></i>
+                </div>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <i class="far fa-calendar-alt text-slate-400"></i>
+                    </div>
+                    <input type="text" id="dateRangePicker"
+                           class="bg-white border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 block w-60 pl-10 p-2 shadow-sm transition outline-none"
+                           placeholder="기간 선택">
+                </div>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="p-2 bg-indigo-50 rounded-lg text-indigo-600"><i class="fas fa-chart-line text-lg"></i>
+                    </div>
+                    <span class="text-xs font-medium px-2 py-1 bg-green-50 text-green-600 rounded-full flex items-center"><i
+                            class="fas fa-arrow-up mr-1 text-[10px]"></i> 3.2%</span>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-800">92.4%</h3>
+                <p class="text-sm text-slate-400 mt-1">금주 출석률</p>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="p-2 bg-emerald-50 rounded-lg text-emerald-600"><i
+                            class="fas fa-check-circle text-lg"></i>
+                    </div>
+                    <span class="text-xs font-medium px-2 py-1 bg-green-50 text-green-600 rounded-full flex items-center"><i
+                            class="fas fa-arrow-up mr-1 text-[10px]"></i> 12%</span>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-800">128건</h3>
+                <p class="text-sm text-slate-400 mt-1">퀘스트 완료</p>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="p-2 bg-orange-50 rounded-lg text-orange-600"><i class="fas fa-user-plus text-lg"></i>
+                    </div>
+                    <span class="text-xs font-medium px-2 py-1 bg-red-50 text-red-500 rounded-full flex items-center"><i
+                            class="fas fa-arrow-down mr-1 text-[10px]"></i> 1명</span>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-800">5명</h3>
+                <p class="text-sm text-slate-400 mt-1">신규 등록 용사</p>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="p-2 bg-purple-50 rounded-lg text-purple-600"><i class="fas fa-coins text-lg"></i></div>
+                    <span class="text-xs font-medium text-slate-400">이번 달 누적</span>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-800">45,000 G</h3>
+                <p class="text-sm text-slate-400 mt-1">지급된 보상</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8 items-stretch">
+            <div class="lg:col-span-2 bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-base font-bold text-slate-800">📅 주간 출석 추이 (최근 5주)</h2>
+                </div>
+                <div id="attendanceChart" class="w-full flex-1 min-h-[300px]"></div>
+            </div>
+            <div class="lg:col-span-1 bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-base font-bold text-slate-800">🏫 반별 평균 출석률</h2>
+                    <span class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded">6개 반</span>
+                </div>
+                <div id="classRateChart" class="w-full flex-1 min-h-[300px]"></div>
+            </div>
+            <div class="lg:col-span-1 bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-base font-bold text-red-600 flex items-center">
+                        <i class="fas fa-exclamation-triangle mr-1"></i> 반별 장결자
+                    </h2>
+                    <span class="text-[10px] font-bold text-red-500 bg-red-50 px-2 py-1 rounded">누적</span>
+                </div>
+                <div id="longAbsentChart" class="w-full flex-1 min-h-[300px]"></div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                <h2 class="text-base font-bold text-slate-800 mb-4">📜 요일별 퀘스트 수행</h2>
+                <div id="questChart" class="w-full h-64"></div>
+            </div>
+            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-base font-bold text-slate-800 flex items-center"><i
+                            class="fas fa-crown text-amber-400 mr-2"></i> 금주의 MVP</h2>
+                    <span class="text-xs font-medium bg-slate-100 text-slate-600 px-2 py-1 rounded">EXP 랭킹 기준</span>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between p-3 rounded-lg border border-indigo-100 bg-indigo-50/50">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-amber-400 text-white font-bold flex items-center justify-center shadow-sm text-sm">
+                                1
+                            </div>
+                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"
+                                 class="w-10 h-10 rounded-full bg-white border border-slate-200">
+                            <div>
+                                <div class="font-bold text-sm text-slate-800">김철수 (전사)</div>
+                                <div class="text-xs text-slate-500">1,200 EXP</div>
+                            </div>
+                        </div>
+                        <i class="fas fa-medal text-amber-400 text-lg"></i>
+                    </div>
+                    <div class="flex items-center justify-between p-3 rounded-lg border border-slate-100 hover:bg-slate-50 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-500 font-bold flex items-center justify-center text-sm">
+                                2
+                            </div>
+                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka"
+                                 class="w-10 h-10 rounded-full bg-white border border-slate-200">
+                            <div>
+                                <div class="font-bold text-sm text-slate-800">이영희 (마법사)</div>
+                                <div class="text-xs text-slate-500">980 EXP</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between p-3 rounded-lg border border-slate-100 hover:bg-slate-50 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-amber-700/20 text-amber-800 font-bold flex items-center justify-center text-sm">
+                                3
+                            </div>
+                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Bob"
+                                 class="w-10 h-10 rounded-full bg-white border border-slate-200">
+                            <div>
+                                <div class="font-bold text-sm text-slate-800">박민수 (궁수)</div>
+                                <div class="text-xs text-slate-500">850 EXP</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+
+        Apex.chart = {fontFamily: "Pretendard, sans-serif"};
+
+        // 1. 주간 출석 추이
+        var chart1 = new ApexCharts(document.querySelector("#attendanceChart"), {
+            series: [{name: '출석 용사', data: [22, 24, 24, 23, 25]}],
+            chart: {
+                height: 320,
+                type: 'area',
+                toolbar: {show: false},
+                sparkline: {enabled: false},
+                padding: {left: 10, right: 10, top: 0, bottom: 0}
+            },
+            colors: ['#6366f1'],
+            stroke: {curve: 'smooth', width: 3},
+            fill: {type: 'gradient', gradient: {shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0.05}},
+            xaxis: {
+                categories: ['01/05', '01/12', '01/19', '01/26', '02/02'],
+                axisBorder: {show: false},
+                labels: {offsetY: -5, style: {colors: '#94a3b8'}}
+            },
+            yaxis: {show: true, labels: {style: {colors: '#94a3b8'}}},
+            grid: {borderColor: '#f1f5f9', strokeDashArray: 4, padding: {top: 0, bottom: 0}}
+        });
+        chart1.render();
+
+        // 2. 반별 출석률 (가로 막대)
+        var chart2 = new ApexCharts(document.querySelector("#classRateChart"), {
+            series: [{name: '출석률', data: [95, 88, 82, 79, 75, 70]}],
+            chart: {type: 'bar', height: 320, toolbar: {show: false}, padding: {left: 0, right: 20, top: 0, bottom: 0}},
+            plotOptions: {
+                bar: {
+                    borderRadius: 4,
+                    horizontal: true,
+                    barHeight: '60%',
+                    distributed: true,
+                    dataLabels: {position: 'top'}
+                }
+            },
+            colors: ['#6366f1', '#818cf8', '#a5b4fc', '#c7d2fe', '#e0e7ff', '#f1f5f9'],
+            dataLabels: {
+                enabled: true,
+                formatter: (val) => val + "%",
+                style: {fontSize: '10px', fontWeight: 'bold', colors: ['#475569']},
+                offsetX: 35
+            },
+            xaxis: {categories: ['1반', '2반', '3반', '4반', '5반', '6반'], labels: {show: false}, axisBorder: {show: false}},
+            grid: {show: false, padding: {top: -10, bottom: -10}}
+        });
+        chart2.render();
+
+        // 3. 반별 장결자 (세로 막대)
+        var chart4 = new ApexCharts(document.querySelector("#longAbsentChart"), {
+            series: [{name: '장결자', data: [1, 3, 0, 2, 4, 1]}],
+            chart: {type: 'bar', height: 320, toolbar: {show: false}, padding: {left: 0, right: 0, top: 0, bottom: 0}},
+            plotOptions: {bar: {columnWidth: '50%', borderRadius: 5, distributed: true, dataLabels: {position: 'top'}}},
+            colors: ['#FDA4AF', '#FB7185', '#F43F5E', '#E11D48', '#BE123C', '#9F1239'],
+            dataLabels: {
+                enabled: true,
+                formatter: (val) => val + "명",
+                offsetY: -25,
+                style: {fontSize: '11px', fontWeight: 'bold', colors: ["#64748b"]}
+            },
+            xaxis: {categories: ['1', '2', '3', '4', '5', '6'], axisBorder: {show: false}, axisTicks: {show: false}},
+            yaxis: {show: false},
+            grid: {show: false, padding: {top: 10, bottom: 0}}
+        });
+        chart4.render();
+
+        // 4. 퀘스트 수행 (요일별)
+        var chart3 = new ApexCharts(document.querySelector("#questChart"), {
+            series: [{name: '완료', data: [5, 12, 18, 10, 8, 24, 30]}],
+            chart: {type: 'bar', height: 250, toolbar: {show: false}},
+            plotOptions: {bar: {borderRadius: 4, columnWidth: '40%', distributed: true}},
+            colors: ['#cbd5e1', '#cbd5e1', '#cbd5e1', '#cbd5e1', '#cbd5e1', '#6366f1', '#6366f1'],
+            legend: {show: false},
+            dataLabels: {enabled: false},
+            xaxis: {
+                categories: ['월', '화', '수', '목', '금', '토', '일'],
+                axisBorder: {show: false},
+                axisTicks: {show: false}
+            },
+            grid: {show: false}
+        });
+        chart3.render();
+
+        flatpickr("#dateRangePicker", {
+            mode: "range",
+            dateFormat: "Y.m.d",
+            defaultDate: [new Date().fp_incr(-30), new Date()],
+            locale: "ko",
+            theme: "airbnb"
+        });
+        $(function () {
+        });
+    </script>
+</th:block>
+</html>

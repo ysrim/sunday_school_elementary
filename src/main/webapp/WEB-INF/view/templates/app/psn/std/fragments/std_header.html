@@ -1,6 +1,6 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="headerFragment">
-	<th:block th:if="${_menuInfo == 'STD_HOME'}">
+	<th:block th:if="${_stdMenuInfo == 'STD_HOME'}">
 		<header>
 			<div class="header-top">
 				<div class="header-branding">
@@ -23,7 +23,7 @@
 			</div>
 		</header>
 	</th:block>
-	<th:block th:if="${_menuInfo != 'STD_HOME'}">
+	<th:block th:if="${_stdMenuInfo != 'STD_HOME'}">
 		<div class="sub-header">
 			<div class="flex-row gap-15">
 				<button class="icon-btn" th:onclick="|location.href='@{/std/home.pg}'|">

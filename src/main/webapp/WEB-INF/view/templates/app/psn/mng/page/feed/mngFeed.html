@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http//www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/app/psn/mng/layouts/mng_layout}" lang="ko">
+<th:block layout:fragment="content">
+    <div id="page-notice" class="page-content hidden-page">
+        <header class="flex justify-between items-center mb-8">
+            <h1 class="text-2xl font-bold text-slate-800">게시판 관리</h1>
+            <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition shadow-sm hover:shadow"
+                    onclick="showPage('notice-write')">
+                <i class="fas fa-pen mr-2"></i> 공지 작성
+            </button>
+        </header>
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                <div class="flex space-x-2">
+                    <select class="border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-600 bg-white">
+                        <option>전체보기</option>
+                        <option>공지사항</option>
+                        <option>이벤트</option>
+                    </select>
+                </div>
+                <div class="relative">
+                    <input type="text" placeholder="제목 검색..."
+                           class="pl-9 pr-4 py-1.5 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-64">
+                    <i class="fas fa-search absolute left-3 top-2.5 text-slate-400 text-xs"></i>
+                </div>
+            </div>
+            <table class="w-full text-left">
+                <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold">
+                <tr>
+                    <th class="py-3 px-4 w-16 text-center">번호</th>
+                    <th class="py-3 px-4 w-24 text-center">분류</th>
+                    <th class="py-3 px-4">제목</th>
+                    <th class="py-3 px-4 w-32 text-center">작성일</th>
+                    <th class="py-3 px-4 w-20 text-center">조회</th>
+                    <th class="py-3 px-4 w-24 text-center">관리</th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-sm text-slate-700">
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="py-3 px-4 text-center text-slate-400">3</td>
+                    <td class="py-3 px-4 text-center"><span
+                            class="bg-red-50 text-red-600 border border-red-100 px-2 py-0.5 rounded text-xs font-medium">긴급</span>
+                    </td>
+                    <td class="py-3 px-4 font-medium text-slate-800 cursor-pointer hover:text-indigo-600">이번 주 주일예배 시간
+                        변경 안내
+                    </td>
+                    <td class="py-3 px-4 text-center text-slate-500">2026-01-25</td>
+                    <td class="py-3 px-4 text-center text-slate-500">124</td>
+                    <td class="py-3 px-4 text-center">
+                        <button class="text-slate-400 hover:text-indigo-600 p-1"><i class="fas fa-edit"></i></button>
+                    </td>
+                </tr>
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="py-3 px-4 text-center text-slate-400">2</td>
+                    <td class="py-3 px-4 text-center"><span
+                            class="bg-blue-50 text-blue-600 border border-blue-100 px-2 py-0.5 rounded text-xs font-medium">이벤트</span>
+                    </td>
+                    <td class="py-3 px-4 font-medium text-slate-800 cursor-pointer hover:text-indigo-600">달란트 시장 개최 안내
+                        (2/14)
+                    </td>
+                    <td class="py-3 px-4 text-center text-slate-500">2026-01-20</td>
+                    <td class="py-3 px-4 text-center text-slate-500">89</td>
+                    <td class="py-3 px-4 text-center">
+                        <button class="text-slate-400 hover:text-indigo-600 p-1"><i class="fas fa-edit"></i></button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="p-3 border-t border-slate-100 flex justify-center items-center space-x-1 text-sm">
+                <button class="px-2 py-1 text-slate-400 hover:text-indigo-600 disabled:opacity-50"><i
+                        class="fas fa-chevron-left"></i></button>
+                <button class="px-3 py-1 font-semibold text-indigo-600 bg-indigo-50 rounded">1</button>
+                <button class="px-3 py-1 text-slate-500 hover:bg-slate-100 rounded">2</button>
+                <button class="px-2 py-1 text-slate-400 hover:text-indigo-600"><i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        $(function () {
+        });
+    </script>
+</th:block>
+</html>

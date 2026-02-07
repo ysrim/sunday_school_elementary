@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http//www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/app/psn/mng/layouts/mng_layout}" lang="ko">
+<th:block layout:fragment="content">
+    <div id="page-members" class="page-content">
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-800">용사 관리</h1>
+                <p class="text-sm text-slate-500 mt-1">학생 정보 조회 및 수정</p>
+            </div>
+            <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 shadow-sm transition flex items-center">
+                <i class="fas fa-user-plus mr-2"></i> 신규 등록
+            </button>
+        </header>
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-6 flex flex-wrap gap-4 justify-between items-center">
+            <div class="flex gap-2">
+                <select class="border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white text-slate-600">
+                    <option value="">학년 전체</option>
+                    <option value="1">1학년</option>
+                    <option value="2">2학년</option>
+                    <option value="3">3학년</option>
+                </select>
+                <select class="border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white text-slate-600">
+                    <option value="">반 전체</option>
+                    <option value="믿음">믿음반</option>
+                    <option value="소망">소망반</option>
+                    <option value="사랑">사랑반</option>
+                </select>
+            </div>
+            <div class="relative w-full md:w-64">
+                <input type="text" placeholder="이름/ID 검색"
+                       class="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                <i class="fas fa-search absolute left-3 top-2.5 text-slate-400 text-xs"></i>
+            </div>
+        </div>
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <table class="w-full text-left">
+                <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold">
+                <tr>
+                    <th class="p-4">용사 정보</th>
+                    <th class="p-4">소속</th>
+                    <th class="p-4">성장 (LV / EXP)</th>
+                    <th class="p-4">자산</th>
+                    <th class="p-4">연락처</th>
+                    <th class="p-4 text-center">관리</th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-sm text-slate-700">
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="p-4 flex items-center gap-3">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"
+                             class="w-9 h-9 rounded-full bg-slate-100 border border-slate-200">
+                        <div>
+                            <div class="font-bold text-slate-800">김철수 <span class="text-xs text-slate-400 font-normal">(@cs_kim)</span>
+                            </div>
+                            <span class="inline-flex items-center text-xs font-medium text-slate-500"><i
+                                    class="fas fa-sword mr-1 text-slate-400"></i> 전사</span>
+                        </div>
+                    </td>
+                    <td class="p-4">
+                        <div class="font-medium">3학년</div>
+                        <div class="text-slate-400 text-xs">믿음반</div>
+                    </td>
+                    <td class="p-4">
+                        <div class="flex items-center gap-2 mb-1"><span
+                                class="font-bold text-indigo-600 text-xs">LV.12</span><span
+                                class="text-[10px] text-slate-400">1,250/2,000</span></div>
+                        <div class="w-24 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                            <div class="bg-indigo-500 h-full" style="width: 65%"></div>
+                        </div>
+                    </td>
+                    <td class="p-4">
+                        <div class="text-amber-600 font-semibold"><i class="fas fa-coins mr-1 text-amber-400"></i> 5,400
+                        </div>
+                    </td>
+                    <td class="p-4 text-slate-500 font-mono text-xs">010-1234-5678</td>
+                    <td class="p-4 text-center">
+                        <button class="text-slate-400 hover:text-indigo-600 p-1.5 rounded transition"><i
+                                class="fas fa-edit"></i></button>
+                        <button class="text-slate-400 hover:text-red-500 p-1.5 rounded transition"><i
+                                class="fas fa-trash-alt"></i></button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        $(function () {
+        });
+    </script>
+</th:block>
+</html>

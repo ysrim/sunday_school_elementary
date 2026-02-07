@@ -1,0 +1,19 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="headerFragment">
+    <header class="fixed top-0 left-0 right-0 z-40 pt-safe-top transition-all duration-300">
+        <div class="px-6 py-4 flex justify-between items-center glass-panel mx-4 mt-2 card-rounded !rounded-[20px]">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shadow-sm">
+                    <i class="fas fa-shield-alt text-sm"></i>
+                </div>
+                <h1 class="text-base font-bold text-slate-800 tracking-tight">Teacher Mode</h1>
+            </div>
+            <button th:onclick="|location.href='@{/tch/idx/logOut.pg}'|"
+                class="active-scale w-9 h-9 rounded-full bg-red-50 text-red-500 flex items-center justify-center
+                hover:bg-red-100 transition shadow-sm border border-red-100">
+                <i class="fas fa-sign-out-alt text-sm"></i>
+            </button>
+        </div>
+    </header>
+</th:block>
+</html>

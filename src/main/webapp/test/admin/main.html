@@ -4,25 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RPG 성소 - 통합 관리자</title>
-    
-    <link rel="stylesheet" href="style.css">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/airbnb.css">
-    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
+    <style>
+        /* 1. 폰트 불러오기 (Pretendard) */
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+        /* 2. 기본 설정 */
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* 3. 유틸리티 클래스 */
+        /* 화면 전환 시 페이지를 숨기는 클래스 */
+        .hidden-page {
+            display: none !important;
+        }
+
+        /* 4. 커스텀 스크롤바 디자인 */
+        /* 스크롤바 전체 폭 */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        /* 스크롤바 배경 (투명) */
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        /* 스크롤바 막대 (회색) */
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        /* 스크롤바 막대 호버 효과 (진한 회색) */
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Firefox 전용 스크롤바 설정 */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e1 transparent;
+        }
+    </style>
 </head>
 <body class="bg-slate-50 text-slate-600">
-	<div id="loading-container" class="fixed top-0 left-0 w-full h-1 z-50 hidden">
-        <div id="loading-bar" class="h-full bg-indigo-600 transition-all duration-500 ease-out" style="width: 0%"></div>
-    </div>
+<div id="loading-container" class="fixed top-0 left-0 w-full h-1 z-50 hidden">
+    <div id="loading-bar" class="h-full bg-indigo-600 transition-all duration-500 ease-out" style="width: 0%"></div>
+</div>
 
 <div class="flex h-screen overflow-hidden">
-    
+
     <aside class="w-64 bg-white border-r border-slate-200 flex flex-col z-10">
         <div class="h-16 flex items-center px-6 border-b border-slate-100">
             <div class="text-xl font-bold text-slate-800 flex items-center">
@@ -31,16 +73,20 @@
         </div>
 
         <nav class="flex-1 p-4 space-y-1">
-            <button onclick="showPage('dashboard', this)" class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors bg-slate-100 text-indigo-700">
+            <button onclick="showPage('dashboard', this)"
+                    class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors bg-slate-100 text-indigo-700">
                 <i class="fas fa-home mr-3 w-5 text-center"></i> 대시보드
             </button>
-            <button onclick="showPage('members', this)" class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+            <button onclick="showPage('members', this)"
+                    class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
                 <i class="fas fa-users mr-3 w-5 text-center"></i> 용사(회원) 관리
             </button>
-            <button onclick="showPage('notice', this)" class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+            <button onclick="showPage('notice', this)"
+                    class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
                 <i class="fas fa-bullhorn mr-3 w-5 text-center"></i> 공지사항 관리
             </button>
-            <button onclick="showPage('adjustment', this)" class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+            <button onclick="showPage('adjustment', this)"
+                    class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
                 <i class="fas fa-magic mr-3 w-5 text-center"></i> 포인트/보상 관리
             </button>
         </nav>
@@ -128,7 +174,9 @@
                     <div class="lg:col-span-2 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                         <div class="flex justify-between items-center mb-6">
                             <h2 class="text-base font-bold text-slate-800">📅 주간 출석 추이</h2>
-                            <button class="text-xs text-indigo-600 font-semibold hover:bg-indigo-50 px-2 py-1 rounded transition">상세보기</button>
+                            <button class="text-xs text-indigo-600 font-semibold hover:bg-indigo-50 px-2 py-1 rounded transition">
+                                상세보기
+                            </button>
                         </div>
                         <div id="attendanceChart" class="w-full h-80"></div>
                     </div>
@@ -136,18 +184,24 @@
                     <div class="lg:col-span-1 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                         <h2 class="text-base font-bold text-slate-800 mb-6">🏫 반별 출석 점유율</h2>
                         <div id="classChart" class="w-full flex justify-center mb-4"></div>
-                        
+
                         <div class="space-y-3 pt-4 border-t border-slate-100">
                             <div class="flex justify-between items-center text-sm">
-                                <div class="flex items-center text-slate-600"><span class="w-2.5 h-2.5 rounded-full bg-indigo-500 mr-2"></span> 믿음반</div>
+                                <div class="flex items-center text-slate-600"><span
+                                        class="w-2.5 h-2.5 rounded-full bg-indigo-500 mr-2"></span> 믿음반
+                                </div>
                                 <span class="font-semibold text-slate-800">45% (12명)</span>
                             </div>
                             <div class="flex justify-between items-center text-sm">
-                                <div class="flex items-center text-slate-600"><span class="w-2.5 h-2.5 rounded-full bg-teal-400 mr-2"></span> 소망반</div>
+                                <div class="flex items-center text-slate-600"><span
+                                        class="w-2.5 h-2.5 rounded-full bg-teal-400 mr-2"></span> 소망반
+                                </div>
                                 <span class="font-semibold text-slate-800">35% (9명)</span>
                             </div>
                             <div class="flex justify-between items-center text-sm">
-                                <div class="flex items-center text-slate-600"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 mr-2"></span> 사랑반</div>
+                                <div class="flex items-center text-slate-600"><span
+                                        class="w-2.5 h-2.5 rounded-full bg-amber-400 mr-2"></span> 사랑반
+                                </div>
                                 <span class="font-semibold text-slate-800">20% (5명)</span>
                             </div>
                         </div>
@@ -171,8 +225,11 @@
                         <div class="space-y-3">
                             <div class="flex items-center justify-between p-3 rounded-lg border border-indigo-100 bg-indigo-50/50">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-full bg-amber-400 text-white font-bold flex items-center justify-center shadow-sm text-sm">1</div>
-                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" class="w-10 h-10 rounded-full bg-white border border-slate-200">
+                                    <div class="w-8 h-8 rounded-full bg-amber-400 text-white font-bold flex items-center justify-center shadow-sm text-sm">
+                                        1
+                                    </div>
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"
+                                         class="w-10 h-10 rounded-full bg-white border border-slate-200">
                                     <div>
                                         <div class="font-bold text-sm text-slate-800">김철수 (전사)</div>
                                         <div class="text-xs text-slate-500">1,200 EXP</div>
@@ -183,8 +240,11 @@
 
                             <div class="flex items-center justify-between p-3 rounded-lg border border-slate-100 hover:bg-slate-50 transition">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-500 font-bold flex items-center justify-center text-sm">2</div>
-                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka" class="w-10 h-10 rounded-full bg-white border border-slate-200">
+                                    <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-500 font-bold flex items-center justify-center text-sm">
+                                        2
+                                    </div>
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka"
+                                         class="w-10 h-10 rounded-full bg-white border border-slate-200">
                                     <div>
                                         <div class="font-bold text-sm text-slate-800">이영희 (마법사)</div>
                                         <div class="text-xs text-slate-500">980 EXP</div>
@@ -194,8 +254,11 @@
 
                             <div class="flex items-center justify-between p-3 rounded-lg border border-slate-100 hover:bg-slate-50 transition">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-full bg-amber-700/20 text-amber-800 font-bold flex items-center justify-center text-sm">3</div>
-                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Bob" class="w-10 h-10 rounded-full bg-white border border-slate-200">
+                                    <div class="w-8 h-8 rounded-full bg-amber-700/20 text-amber-800 font-bold flex items-center justify-center text-sm">
+                                        3
+                                    </div>
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Bob"
+                                         class="w-10 h-10 rounded-full bg-white border border-slate-200">
                                     <div>
                                         <div class="font-bold text-sm text-slate-800">박민수 (궁수)</div>
                                         <div class="text-xs text-slate-500">850 EXP</div>
@@ -210,7 +273,8 @@
             <div id="page-notice" class="page-content hidden-page">
                 <header class="flex justify-between items-center mb-8">
                     <h1 class="text-2xl font-bold text-slate-800">게시판 관리</h1>
-                    <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition shadow-sm hover:shadow" onclick="showPage('notice-write')">
+                    <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition shadow-sm hover:shadow"
+                            onclick="showPage('notice-write')">
                         <i class="fas fa-pen mr-2"></i> 공지 작성
                     </button>
                 </header>
@@ -225,7 +289,8 @@
                             </select>
                         </div>
                         <div class="relative">
-                            <input type="text" placeholder="제목 검색..." class="pl-9 pr-4 py-1.5 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-64">
+                            <input type="text" placeholder="제목 검색..."
+                                   class="pl-9 pr-4 py-1.5 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-64">
                             <i class="fas fa-search absolute left-3 top-2.5 text-slate-400 text-xs"></i>
                         </div>
                     </div>
@@ -243,31 +308,43 @@
                         <tbody class="divide-y divide-slate-100 text-sm text-slate-700">
                         <tr class="hover:bg-slate-50 transition">
                             <td class="py-3 px-4 text-center text-slate-400">3</td>
-                            <td class="py-3 px-4 text-center"><span class="bg-red-50 text-red-600 border border-red-100 px-2 py-0.5 rounded text-xs font-medium">긴급</span></td>
-                            <td class="py-3 px-4 font-medium text-slate-800 cursor-pointer hover:text-indigo-600">이번 주 주일예배 시간 변경 안내</td>
+                            <td class="py-3 px-4 text-center"><span
+                                    class="bg-red-50 text-red-600 border border-red-100 px-2 py-0.5 rounded text-xs font-medium">긴급</span>
+                            </td>
+                            <td class="py-3 px-4 font-medium text-slate-800 cursor-pointer hover:text-indigo-600">이번 주
+                                주일예배 시간 변경 안내
+                            </td>
                             <td class="py-3 px-4 text-center text-slate-500">2026-01-25</td>
                             <td class="py-3 px-4 text-center text-slate-500">124</td>
                             <td class="py-3 px-4 text-center">
-                                <button class="text-slate-400 hover:text-indigo-600 p-1"><i class="fas fa-edit"></i></button>
+                                <button class="text-slate-400 hover:text-indigo-600 p-1"><i class="fas fa-edit"></i>
+                                </button>
                             </td>
                         </tr>
                         <tr class="hover:bg-slate-50 transition">
                             <td class="py-3 px-4 text-center text-slate-400">2</td>
-                            <td class="py-3 px-4 text-center"><span class="bg-blue-50 text-blue-600 border border-blue-100 px-2 py-0.5 rounded text-xs font-medium">이벤트</span></td>
-                            <td class="py-3 px-4 font-medium text-slate-800 cursor-pointer hover:text-indigo-600">달란트 시장 개최 안내 (2/14)</td>
+                            <td class="py-3 px-4 text-center"><span
+                                    class="bg-blue-50 text-blue-600 border border-blue-100 px-2 py-0.5 rounded text-xs font-medium">이벤트</span>
+                            </td>
+                            <td class="py-3 px-4 font-medium text-slate-800 cursor-pointer hover:text-indigo-600">달란트 시장
+                                개최 안내 (2/14)
+                            </td>
                             <td class="py-3 px-4 text-center text-slate-500">2026-01-20</td>
                             <td class="py-3 px-4 text-center text-slate-500">89</td>
                             <td class="py-3 px-4 text-center">
-                                <button class="text-slate-400 hover:text-indigo-600 p-1"><i class="fas fa-edit"></i></button>
+                                <button class="text-slate-400 hover:text-indigo-600 p-1"><i class="fas fa-edit"></i>
+                                </button>
                             </td>
                         </tr>
                         </tbody>
                     </table>
                     <div class="p-3 border-t border-slate-100 flex justify-center items-center space-x-1 text-sm">
-                        <button class="px-2 py-1 text-slate-400 hover:text-indigo-600 disabled:opacity-50"><i class="fas fa-chevron-left"></i></button>
+                        <button class="px-2 py-1 text-slate-400 hover:text-indigo-600 disabled:opacity-50"><i
+                                class="fas fa-chevron-left"></i></button>
                         <button class="px-3 py-1 font-semibold text-indigo-600 bg-indigo-50 rounded">1</button>
                         <button class="px-3 py-1 text-slate-500 hover:bg-slate-100 rounded">2</button>
-                        <button class="px-2 py-1 text-slate-400 hover:text-indigo-600"><i class="fas fa-chevron-right"></i></button>
+                        <button class="px-2 py-1 text-slate-400 hover:text-indigo-600"><i
+                                class="fas fa-chevron-right"></i></button>
                     </div>
                 </div>
             </div>
@@ -281,13 +358,18 @@
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div class="lg:col-span-1">
                         <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                            <h2 class="text-base font-bold mb-5 text-slate-800 border-b border-slate-100 pb-2">지급 설정</h2>
+                            <h2 class="text-base font-bold mb-5 text-slate-800 border-b border-slate-100 pb-2">지급
+                                설정</h2>
                             <form class="space-y-5">
                                 <div>
                                     <label class="block text-xs font-bold text-slate-500 uppercase mb-1">대상 학생</label>
                                     <div class="relative">
-                                        <input type="text" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="이름 검색">
-                                        <button type="button" class="absolute right-3 top-2.5 text-slate-400 hover:text-indigo-600"><i class="fas fa-search"></i></button>
+                                        <input type="text"
+                                               class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                                               placeholder="이름 검색">
+                                        <button type="button"
+                                                class="absolute right-3 top-2.5 text-slate-400 hover:text-indigo-600"><i
+                                                class="fas fa-search"></i></button>
                                     </div>
                                 </div>
 
@@ -313,11 +395,13 @@
                                     <label class="block text-xs font-bold text-slate-500 uppercase mb-2">조정 방식</label>
                                     <div class="flex gap-4">
                                         <label class="flex items-center cursor-pointer">
-                                            <input type="radio" name="action" class="text-indigo-600 focus:ring-indigo-500 w-4 h-4" checked>
+                                            <input type="radio" name="action"
+                                                   class="text-indigo-600 focus:ring-indigo-500 w-4 h-4" checked>
                                             <span class="ml-2 text-sm text-slate-700">지급 (Add)</span>
                                         </label>
                                         <label class="flex items-center cursor-pointer">
-                                            <input type="radio" name="action" class="text-red-600 focus:ring-red-500 w-4 h-4">
+                                            <input type="radio" name="action"
+                                                   class="text-red-600 focus:ring-red-500 w-4 h-4">
                                             <span class="ml-2 text-sm text-slate-700">차감 (Remove)</span>
                                         </label>
                                     </div>
@@ -325,15 +409,20 @@
 
                                 <div>
                                     <label class="block text-xs font-bold text-slate-500 uppercase mb-1">수량</label>
-                                    <input type="number" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="0">
+                                    <input type="number"
+                                           class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                                           placeholder="0">
                                 </div>
 
                                 <div>
                                     <label class="block text-xs font-bold text-slate-500 uppercase mb-1">사유</label>
-                                    <input type="text" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="예: 친구 전도 보너스">
+                                    <input type="text"
+                                           class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                                           placeholder="예: 친구 전도 보너스">
                                 </div>
 
-                                <button type="button" class="w-full bg-indigo-600 text-white font-bold py-2.5 rounded-lg hover:bg-indigo-700 shadow-sm hover:shadow transition text-sm">
+                                <button type="button"
+                                        class="w-full bg-indigo-600 text-white font-bold py-2.5 rounded-lg hover:bg-indigo-700 shadow-sm hover:shadow transition text-sm">
                                     적용하기
                                 </button>
                             </form>
@@ -341,32 +430,33 @@
                     </div>
 
                     <div class="lg:col-span-2">
-						<div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm h-full flex flex-col">
-							<div class="mb-4 flex justify-between items-center">
-								<h2 class="text-base font-bold text-slate-800">최근 조정 내역</h2>
-								<button class="text-xs text-indigo-600 hover:underline">엑셀 다운로드</button>
-							</div>
-							
-							<div class="overflow-x-auto flex-1 mb-4">
-								<table class="w-full text-left">
-									<thead class="text-xs text-slate-500 uppercase bg-slate-50/50 border-b border-slate-100">
-									<tr>
-										<th class="px-4 py-3 font-semibold">시간</th>
-										<th class="px-4 py-3 font-semibold">대상</th>
-										<th class="px-4 py-3 font-semibold">내용</th>
-										<th class="px-4 py-3 font-semibold">변동값</th>
-										<th class="px-4 py-3 font-semibold">담당자</th>
-									</tr>
-									</thead>
-									<tbody id="adjustmentTableBody" class="text-sm divide-y divide-slate-100">
-										</tbody>
-								</table>
-							</div>
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm h-full flex flex-col">
+                            <div class="mb-4 flex justify-between items-center">
+                                <h2 class="text-base font-bold text-slate-800">최근 조정 내역</h2>
+                                <button class="text-xs text-indigo-600 hover:underline">엑셀 다운로드</button>
+                            </div>
 
-							<div class="border-t border-slate-100 pt-4 flex justify-center items-center space-x-1 text-sm" id="adjustmentPagination">
-								</div>
-						</div>
-					</div>
+                            <div class="overflow-x-auto flex-1 mb-4">
+                                <table class="w-full text-left">
+                                    <thead class="text-xs text-slate-500 uppercase bg-slate-50/50 border-b border-slate-100">
+                                    <tr>
+                                        <th class="px-4 py-3 font-semibold">시간</th>
+                                        <th class="px-4 py-3 font-semibold">대상</th>
+                                        <th class="px-4 py-3 font-semibold">내용</th>
+                                        <th class="px-4 py-3 font-semibold">변동값</th>
+                                        <th class="px-4 py-3 font-semibold">담당자</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="adjustmentTableBody" class="text-sm divide-y divide-slate-100">
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="border-t border-slate-100 pt-4 flex justify-center items-center space-x-1 text-sm"
+                                 id="adjustmentPagination">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -397,7 +487,8 @@
                         </select>
                     </div>
                     <div class="relative w-full md:w-64">
-                        <input type="text" placeholder="이름/ID 검색" class="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                        <input type="text" placeholder="이름/ID 검색"
+                               class="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
                         <i class="fas fa-search absolute left-3 top-2.5 text-slate-400 text-xs"></i>
                     </div>
                 </div>
@@ -417,9 +508,11 @@
                         <tbody class="divide-y divide-slate-100 text-sm text-slate-700">
                         <tr class="hover:bg-slate-50 transition">
                             <td class="p-4 flex items-center gap-3">
-                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" class="w-9 h-9 rounded-full bg-slate-100 border border-slate-200">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"
+                                     class="w-9 h-9 rounded-full bg-slate-100 border border-slate-200">
                                 <div>
-                                    <div class="font-bold text-slate-800">김철수 <span class="text-xs text-slate-400 font-normal">(@cs_kim)</span></div>
+                                    <div class="font-bold text-slate-800">김철수 <span
+                                            class="text-xs text-slate-400 font-normal">(@cs_kim)</span></div>
                                     <span class="inline-flex items-center text-xs font-medium text-slate-500">
                                         <i class="fas fa-sword mr-1 text-slate-400"></i> 전사
                                     </span>
@@ -439,14 +532,18 @@
                                 </div>
                             </td>
                             <td class="p-4">
-                                <div class="text-amber-600 font-semibold"><i class="fas fa-coins mr-1 text-amber-400"></i> 5,400</div>
+                                <div class="text-amber-600 font-semibold"><i
+                                        class="fas fa-coins mr-1 text-amber-400"></i> 5,400
+                                </div>
                             </td>
                             <td class="p-4 text-slate-500 font-mono text-xs">
                                 010-1234-5678
                             </td>
                             <td class="p-4 text-center">
-                                <button class="text-slate-400 hover:text-indigo-600 p-1.5 rounded transition"><i class="fas fa-edit"></i></button>
-                                <button class="text-slate-400 hover:text-red-500 p-1.5 rounded transition"><i class="fas fa-trash-alt"></i></button>
+                                <button class="text-slate-400 hover:text-indigo-600 p-1.5 rounded transition"><i
+                                        class="fas fa-edit"></i></button>
+                                <button class="text-slate-400 hover:text-red-500 p-1.5 rounded transition"><i
+                                        class="fas fa-trash-alt"></i></button>
                             </td>
                         </tr>
                         </tbody>
@@ -457,13 +554,15 @@
             <div id="page-notice-write" class="page-content hidden-page">
                 <header class="flex justify-between items-center mb-6">
                     <div class="flex items-center">
-                        <button onclick="showPage('notice')" class="mr-3 p-2 rounded-full hover:bg-slate-200 text-slate-500 transition">
+                        <button onclick="showPage('notice')"
+                                class="mr-3 p-2 rounded-full hover:bg-slate-200 text-slate-500 transition">
                             <i class="fas fa-arrow-left"></i>
                         </button>
                         <h1 class="text-2xl font-bold text-slate-800">새 공지 작성</h1>
                     </div>
                     <div class="flex gap-2">
-                        <button onclick="showPage('notice')" class="px-4 py-2 border border-slate-300 rounded-lg text-slate-600 hover:bg-slate-50 text-sm font-medium transition">
+                        <button onclick="showPage('notice')"
+                                class="px-4 py-2 border border-slate-300 rounded-lg text-slate-600 hover:bg-slate-50 text-sm font-medium transition">
                             취소
                         </button>
                         <button class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium shadow-sm transition flex items-center">
@@ -493,11 +592,16 @@
                             <label class="block text-sm font-bold text-slate-700 mb-2">내용</label>
                             <div class="border border-slate-300 rounded-lg overflow-hidden">
                                 <div class="bg-slate-50 border-b border-slate-200 p-2 flex gap-1">
-                                    <button type="button" class="p-1.5 rounded hover:bg-slate-200 text-slate-500 text-sm"><i class="fas fa-bold"></i></button>
-                                    <button type="button" class="p-1.5 rounded hover:bg-slate-200 text-slate-500 text-sm"><i class="fas fa-list-ul"></i></button>
+                                    <button type="button"
+                                            class="p-1.5 rounded hover:bg-slate-200 text-slate-500 text-sm"><i
+                                            class="fas fa-bold"></i></button>
+                                    <button type="button"
+                                            class="p-1.5 rounded hover:bg-slate-200 text-slate-500 text-sm"><i
+                                            class="fas fa-list-ul"></i></button>
                                 </div>
-                                <textarea class="w-full h-64 p-4 outline-none resize-none text-slate-700 leading-relaxed text-sm"
-                                          placeholder="내용을 입력하세요."></textarea>
+                                <textarea
+                                        class="w-full h-64 p-4 outline-none resize-none text-slate-700 leading-relaxed text-sm"
+                                        placeholder="내용을 입력하세요."></textarea>
                             </div>
                         </div>
                     </form>
@@ -509,13 +613,13 @@
 </div>
 
 <script>
-function showPage(pageId, btnElement) {
+    function showPage(pageId, btnElement) {
         const loadingContainer = document.getElementById('loading-container');
         const loadingBar = document.getElementById('loading-bar');
-        
+
         // 1. 로딩바 시작
         loadingContainer.classList.remove('hidden');
-        
+
         // 약간의 지연을 주어 transition 효과 적용 (0% -> 70%)
         requestAnimationFrame(() => {
             loadingBar.style.width = '70%';
@@ -552,43 +656,55 @@ function showPage(pageId, btnElement) {
         }, 300); // 0.3초 딜레이 (사용자가 로딩감을 느낄 수 있는 최소 시간)
     }
 
-    Apex.chart = { fontFamily: "Pretendard, sans-serif" };
+    Apex.chart = {fontFamily: "Pretendard, sans-serif"};
 
     var chart1 = new ApexCharts(document.querySelector("#attendanceChart"), {
-        series: [{ name: '출석', data: [18, 20, 19, 22, 24, 24, 23] }],
-        chart: { height: 320, type: 'area', toolbar: {show: false}, zoom: {enabled: false} },
+        series: [{name: '출석', data: [18, 20, 19, 22, 24, 24, 23]}],
+        chart: {height: 320, type: 'area', toolbar: {show: false}, zoom: {enabled: false}},
         colors: ['#6366f1'],
         dataLabels: {enabled: false},
         stroke: {curve: 'smooth', width: 2},
-        fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0.05, stops: [0, 100] } },
-        xaxis: { categories: ['12/15', '12/22', '12/29', '01/05', '01/12', '01/19', '01/26'], axisBorder: {show:false}, axisTicks:{show:false}, labels: {style:{colors:'#94a3b8'}} },
-        yaxis: { show: false },
-        grid: { borderColor: '#f1f5f9', strokeDashArray: 4 }
+        fill: {type: 'gradient', gradient: {shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0.05, stops: [0, 100]}},
+        xaxis: {
+            categories: ['12/15', '12/22', '12/29', '01/05', '01/12', '01/19', '01/26'],
+            axisBorder: {show: false},
+            axisTicks: {show: false},
+            labels: {style: {colors: '#94a3b8'}}
+        },
+        yaxis: {show: false},
+        grid: {borderColor: '#f1f5f9', strokeDashArray: 4}
     });
     chart1.render();
 
     var chart2 = new ApexCharts(document.querySelector("#classChart"), {
         series: [12, 9, 5],
         labels: ['믿음반', '소망반', '사랑반'],
-        chart: { type: 'donut', height: 260 },
+        chart: {type: 'donut', height: 260},
         colors: ['#6366f1', '#2dd4bf', '#fbbf24'],
-        plotOptions: { pie: { donut: { size: '75%', labels: { show: true, total: { show: true, label: '총원', color: '#64748b' } } } } },
-        legend: { show: false },
-        dataLabels: { enabled: false },
-        stroke: { show: false }
+        plotOptions: {
+            pie: {
+                donut: {
+                    size: '75%',
+                    labels: {show: true, total: {show: true, label: '총원', color: '#64748b'}}
+                }
+            }
+        },
+        legend: {show: false},
+        dataLabels: {enabled: false},
+        stroke: {show: false}
     });
     chart2.render();
 
     var chart3 = new ApexCharts(document.querySelector("#questChart"), {
-        series: [{ name: '완료', data: [5, 12, 18, 10, 8, 24, 30] }],
-        chart: { type: 'bar', height: 250, toolbar: {show: false} },
+        series: [{name: '완료', data: [5, 12, 18, 10, 8, 24, 30]}],
+        chart: {type: 'bar', height: 250, toolbar: {show: false}},
         colors: ['#cbd5e1'],
-        plotOptions: { bar: { borderRadius: 4, columnWidth: '40%', distributed: true } },
+        plotOptions: {bar: {borderRadius: 4, columnWidth: '40%', distributed: true}},
         colors: ['#cbd5e1', '#cbd5e1', '#cbd5e1', '#cbd5e1', '#cbd5e1', '#6366f1', '#6366f1'],
-        legend: { show: false },
-        dataLabels: { enabled: false },
-        xaxis: { categories: ['월', '화', '수', '목', '금', '토', '일'], axisBorder: {show:false}, axisTicks:{show:false} },
-        grid: { show: false }
+        legend: {show: false},
+        dataLabels: {enabled: false},
+        xaxis: {categories: ['월', '화', '수', '목', '금', '토', '일'], axisBorder: {show: false}, axisTicks: {show: false}},
+        grid: {show: false}
     });
     chart3.render();
 
@@ -599,27 +715,27 @@ function showPage(pageId, btnElement) {
         locale: "ko",
         theme: "airbnb"
     });
-	// ==========================================
+    // ==========================================
     // [추가] 최근 조정 내역 페이징 처리 로직
     // ==========================================
-    
+
     // 1. 더미 데이터 생성 (테스트용 15개)
     const adjustmentData = [
-        { time: '10:42 AM', name: '김철수', content: '특별 심부름 보상', change: '+50 EXP', type: 'exp-plus', admin: 'T.Lee' },
-        { time: '09:15 AM', name: '이영희', content: '상점 아이템 구매', change: '-200 Gold', type: 'gold-minus', admin: 'System' },
-        { time: '08:30 AM', name: '박민수', content: '아침 큐티 참석', change: '+10 EXP', type: 'exp-plus', admin: 'T.Kim' },
-        { time: '어제', name: '최유리', content: '친구 전도', change: '+100 EXP', type: 'exp-plus', admin: 'T.Lee' },
-        { time: '어제', name: '강호동', content: '지각 페널티', change: '-10 EXP', type: 'exp-minus', admin: 'T.Park' },
-        { time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal' },
-        { time: '2일 전', name: '김철수', content: '준비물 미지참', change: '-50 Gold', type: 'gold-minus', admin: 'T.Lee' },
-        { time: '2일 전', name: '이영희', content: '성경 암송 완료', change: '+30 EXP', type: 'exp-plus', admin: 'T.Kim' },
-        { time: '3일 전', name: '박민수', content: '청소 당번 우수', change: '+100 Gold', type: 'gold-plus', admin: 'T.Park' },
-        { time: '3일 전', name: '홍길동', content: '예배 태도 불량', change: '-20 EXP', type: 'exp-minus', admin: 'T.Choi' },
-        { time: '4일 전', name: '김영희', content: '주보 접기 봉사', change: '+50 EXP', type: 'exp-plus', admin: 'T.Lee' },
-        { time: '4일 전', name: '이철수', content: '간식 구매', change: '-500 Gold', type: 'gold-minus', admin: 'System' },
-        { time: '5일 전', name: '박지성', content: '축구 대회 우승', change: '+300 EXP', type: 'exp-plus', admin: 'Coach' },
-        { time: '5일 전', name: '손흥민', content: '축구 대회 우승', change: '+300 EXP', type: 'exp-plus', admin: 'Coach' },
-        { time: '6일 전', name: '김연아', content: '특별 공연', change: '+1000 Gold', type: 'gold-plus', admin: 'Principal' },
+        {time: '10:42 AM', name: '김철수', content: '특별 심부름 보상', change: '+50 EXP', type: 'exp-plus', admin: 'T.Lee'},
+        {time: '09:15 AM', name: '이영희', content: '상점 아이템 구매', change: '-200 Gold', type: 'gold-minus', admin: 'System'},
+        {time: '08:30 AM', name: '박민수', content: '아침 큐티 참석', change: '+10 EXP', type: 'exp-plus', admin: 'T.Kim'},
+        {time: '어제', name: '최유리', content: '친구 전도', change: '+100 EXP', type: 'exp-plus', admin: 'T.Lee'},
+        {time: '어제', name: '강호동', content: '지각 페널티', change: '-10 EXP', type: 'exp-minus', admin: 'T.Park'},
+        {time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
+        {time: '2일 전', name: '김철수', content: '준비물 미지참', change: '-50 Gold', type: 'gold-minus', admin: 'T.Lee'},
+        {time: '2일 전', name: '이영희', content: '성경 암송 완료', change: '+30 EXP', type: 'exp-plus', admin: 'T.Kim'},
+        {time: '3일 전', name: '박민수', content: '청소 당번 우수', change: '+100 Gold', type: 'gold-plus', admin: 'T.Park'},
+        {time: '3일 전', name: '홍길동', content: '예배 태도 불량', change: '-20 EXP', type: 'exp-minus', admin: 'T.Choi'},
+        {time: '4일 전', name: '김영희', content: '주보 접기 봉사', change: '+50 EXP', type: 'exp-plus', admin: 'T.Lee'},
+        {time: '4일 전', name: '이철수', content: '간식 구매', change: '-500 Gold', type: 'gold-minus', admin: 'System'},
+        {time: '5일 전', name: '박지성', content: '축구 대회 우승', change: '+300 EXP', type: 'exp-plus', admin: 'Coach'},
+        {time: '5일 전', name: '손흥민', content: '축구 대회 우승', change: '+300 EXP', type: 'exp-plus', admin: 'Coach'},
+        {time: '6일 전', name: '김연아', content: '특별 공연', change: '+1000 Gold', type: 'gold-plus', admin: 'Principal'},
     ];
 
     let currentAdjPage = 1;
@@ -628,7 +744,7 @@ function showPage(pageId, btnElement) {
     function renderAdjustmentTable(page) {
         const tableBody = document.getElementById('adjustmentTableBody');
         const paginationContainer = document.getElementById('adjustmentPagination');
-        
+
         // 1. 현재 페이지 데이터 슬라이싱
         const start = (page - 1) * itemsPerAdjPage;
         const end = start + itemsPerAdjPage;
@@ -637,12 +753,12 @@ function showPage(pageId, btnElement) {
 
         // 2. 테이블 비우기 및 다시 그리기
         tableBody.innerHTML = "";
-        
+
         paginatedItems.forEach(item => {
             // 변동값 색상 결정
             let colorClass = "text-slate-600";
-            if(item.type.includes('plus')) colorClass = item.type.includes('exp') ? "text-green-600" : "text-amber-600";
-            if(item.type.includes('minus')) colorClass = "text-red-500";
+            if (item.type.includes('plus')) colorClass = item.type.includes('exp') ? "text-green-600" : "text-amber-600";
+            if (item.type.includes('minus')) colorClass = "text-red-500";
 
             const row = `
                 <tr class="hover:bg-slate-50 transition">
@@ -683,12 +799,12 @@ function showPage(pageId, btnElement) {
     }
 
     // 페이지 변경 함수
-function changeAdjPage(newPage) {
+    function changeAdjPage(newPage) {
         const totalPages = Math.ceil(adjustmentData.length / itemsPerAdjPage);
-        
+
         // 유효성 검사 (범위를 벗어나면 실행 안 함)
         if (newPage < 1 || newPage > totalPages) return;
-        
+
         // 현재 페이지와 같으면 실행 안 함 (선택사항)
         if (newPage === currentAdjPage) return;
 
@@ -698,7 +814,7 @@ function changeAdjPage(newPage) {
 
         // 2. 로딩 시작 (시각적 효과)
         loadingContainer.classList.remove('hidden');
-        
+
         // 약간의 지연을 주어 애니메이션 시작
         requestAnimationFrame(() => {
             loadingBar.style.width = '60%'; // 페이징은 가벼운 작업이라 느낌을 주기 위해 60%까지 빠르게 이동
@@ -723,7 +839,7 @@ function changeAdjPage(newPage) {
     }
 
     // 초기 로드
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         renderAdjustmentTable(1);
     });
 </script>

@@ -15,18 +15,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Service("loginService")
+@Service("tchLoginService")
 @RequiredArgsConstructor
-@Transactional(readOnly = true) // 2. 기본적으로 읽기 전용으로 설정 (성능 최적화)
+@Transactional(readOnly = true)
 public class TchLoginServiceImpl implements TchLoginService {
 
-    private final TchLoginMapper loginMapper;
+    private final TchLoginMapper tchLoginMapper;
 
     private final PasswordEncoder passwordEncoder;
 
     @Override
     public TchSessionVO sltMber(TchLoginVO loginVO) {
-        return loginMapper.sltMber(loginVO);
+        return tchLoginMapper.sltMber(loginVO);
     }
 
     @Override

@@ -2,75 +2,140 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>관리자 로그인 - RPG 성소</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>관리자 로그인 - 티처 모드 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body class="bg-pattern h-screen flex flex-col items-center justify-center p-6 font-sans text-slate-600">
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 
-<div class="text-center mb-10 relative">
-    <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-40 h-40 bg-sky-200/20 rounded-full blur-3xl"></div>
-    
-    <div class="relative w-24 h-24 bg-gradient-to-br from-sky-400 to-blue-500 rounded-[2.5rem] mx-auto flex items-center justify-center shadow-xl shadow-sky-200 mb-6 transform -rotate-6">
-        <i class="fas fa-chess-rook text-4xl text-white"></i>
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: #f1f5f9; /* 선생님 페이지와 동일한 배경색 */
+            overflow: hidden;
+        }
+
+        /* 선생님 페이지 스타일 계승 */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .active-scale:active {
+            transform: scale(0.98);
+            transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* 흔들림 애니메이션 */
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-8px);
+            }
+            50% {
+                transform: translateX(8px);
+            }
+            75% {
+                transform: translateX(-8px);
+            }
+        }
+
+        .shake {
+            animation: shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
+        }
+
+        /* 토스트 알림 스타일 */
+        #toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: rgba(15, 23, 42, 0.9);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 14px;
+            z-index: 100;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        #toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col items-center justify-center p-6 text-slate-600">
+<div id="toast">인증에 성공했습니다. 잠시만 기다려주세요! 🛡️</div>
+<div class="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-100/50 rounded-full blur-[100px] -z-10"></div>
+<div class="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-100/50 rounded-full blur-[100px] -z-10"></div>
+
+<div class="text-center mb-10 relative animate-enter" style="animation: slideUp 0.6s ease-out;">
+    <div class="relative w-20 h-20 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-[2rem] mx-auto flex items-center justify-center shadow-xl shadow-blue-200 mb-6 transform -rotate-3">
+        <i class="fas fa-shield-alt text-3xl text-white"></i>
     </div>
-    <h1 class="text-3xl font-extrabold text-slate-800">RPG 성소</h1>
-    <p class="text-sky-500 font-bold mt-1 text-sm tracking-wide uppercase">Teacher Mode</p>
+    <h1 class="text-3xl font-black text-slate-800 tracking-tight">Teacher Mode</h1>
+    <p class="text-blue-600 font-bold mt-1 text-sm tracking-widest uppercase">Admin Sanctuary</p>
 </div>
 
-<div class="tile-card w-full max-w-sm p-8 shadow-2xl shadow-sky-100/50">
-    <form action="main.html" method="POST" class="space-y-6">
+<div class="glass-card w-full max-w-sm p-8 rounded-[2.5rem] shadow-2xl shadow-blue-500/10 animate-enter"
+     style="animation: slideUp 0.8s ease-out;">
+    <form action="main.html" id="loginForm" method="POST" class="space-y-6">
 
         <div class="space-y-4">
             <div>
-                <label for="username" class="sr-only">아이디</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
-                        <i class="fas fa-user text-sky-300"></i>
+                        <i class="fas fa-user text-blue-400/50 text-sm"></i>
                     </div>
-                    <input type="text" id="username" name="username" required value="test"
-                           class="block w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-sky-400 focus:bg-white transition outline-none text-sm font-medium text-slate-700 placeholder-slate-400"
-                           placeholder="아이디를 입력하세요">
+                    <input type="text" id="username" name="username" required value="admin"
+                           class="block w-full pl-12 pr-4 py-4 bg-slate-50/50 border border-slate-200/60 rounded-2xl focus:ring-2 focus:ring-blue-400 focus:bg-white transition-all outline-none text-sm font-semibold text-slate-700 placeholder-slate-400"
+                           placeholder="관리자 아이디">
                 </div>
             </div>
 
             <div>
-                <label for="password" class="sr-only">비밀번호</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
-                        <i class="fas fa-lock text-sky-300"></i>
+                        <i class="fas fa-lock text-blue-400/50 text-sm"></i>
                     </div>
-                    <input type="password" id="password" name="password" required value="test"
-                           class="block w-full pl-12 pr-12 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-sky-400 focus:bg-white transition outline-none text-sm font-medium text-slate-700 placeholder-slate-400"
-                           placeholder="비밀번호를 입력하세요">
+                    <input type="password" id="password" name="password" required value="1234"
+                           class="block w-full pl-12 pr-12 py-4 bg-slate-50/50 border border-slate-200/60 rounded-2xl focus:ring-2 focus:ring-blue-400 focus:bg-white transition-all outline-none text-sm font-semibold text-slate-700 placeholder-slate-400"
+                           placeholder="비밀번호">
 
-                    <div class="absolute inset-y-0 right-0 pr-5 flex items-center cursor-pointer" onclick="togglePassword()">
-                        <i class="fas fa-eye text-slate-300 hover:text-sky-500 transition" id="eye-icon"></i>
+                    <div class="absolute inset-y-0 right-0 pr-5 flex items-center cursor-pointer"
+                         onclick="togglePassword()">
+                        <i class="fas fa-eye text-slate-300 hover:text-blue-500 transition" id="eye-icon"></i>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="flex items-center justify-between text-xs font-medium px-1">
+        <div class="flex items-center justify-between text-[13px] font-bold px-1">
             <label class="flex items-center cursor-pointer group">
-                <input type="checkbox" name="remember-me" class="w-4 h-4 text-sky-500 border-slate-300 rounded focus:ring-sky-400 cursor-pointer">
-                <span class="ml-2 text-slate-500 group-hover:text-slate-700 transition">자동 로그인</span>
+                <input type="checkbox" name="remember-me" id="remember-me"
+                       class="w-4 h-4 text-blue-600 border-slate-300 rounded-lg focus:ring-blue-500 cursor-pointer">
+                <span class="ml-2 text-slate-400 group-hover:text-slate-600 transition">자동 로그인</span>
             </label>
-            <a href="#" class="text-sky-500 hover:text-sky-600 transition">정보 찾기</a>
         </div>
 
         <button type="submit"
-                class="w-full flex justify-center py-4 px-4 border border-transparent rounded-2xl shadow-lg shadow-sky-200 text-sm font-bold text-white bg-sky-500 hover:bg-sky-600 transform active:scale-[0.98] transition-all duration-200">
-            로그인하기
+                class="w-full flex justify-center py-4 px-4 rounded-2xl shadow-xl shadow-blue-500/20 text-sm font-black text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active-scale transition-all duration-200 uppercase tracking-widest">
+            Login to Admin
         </button>
 
     </form>
 </div>
 
-<div class="mt-10 text-center">
-    <p class="text-xs text-slate-400">Copyright © 2026 RPG Project.</p>
+<div class="mt-12 text-center">
+    <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest">Copyright © 2026 Teacher Mode Project.</p>
 </div>
 
 <script>
@@ -82,14 +147,77 @@
             passwordInput.type = 'text';
             eyeIcon.classList.remove('fa-eye');
             eyeIcon.classList.add('fa-eye-slash');
-            eyeIcon.classList.add('text-sky-500');
+            eyeIcon.classList.add('text-blue-600');
         } else {
             passwordInput.type = 'password';
             eyeIcon.classList.remove('fa-eye-slash');
-            eyeIcon.classList.remove('text-sky-500');
+            eyeIcon.classList.remove('text-blue-600');
             eyeIcon.classList.add('fa-eye');
         }
     }
+
+    // 간단한 페이드업 애니메이션 추가
+    document.addEventListener('DOMContentLoaded', () => {
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideUp {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        `;
+        document.head.appendChild(style);
+    });
+    // 폼 제출 이벤트 가로채기
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+        e.preventDefault(); // 실제 제출 방지 (테스트용)
+
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const loginBtn = e.target.querySelector('button');
+        const glassCard = document.querySelector('.glass-card');
+
+        // 1. 간단한 유효성 검사 (실패 상황 가정)
+        if (usernameInput.value === "" || passwordInput.value === "") {
+            glassCard.classList.add('shake');
+            setTimeout(() => glassCard.classList.remove('shake'), 400);
+            return;
+        }
+
+        // 2. 버튼 로딩 상태 표시
+        const originalText = loginBtn.innerHTML;
+        loginBtn.disabled = true;
+        loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
+
+        // 3. 아이디 저장 로직 (기존 기능 유지)
+        const isRemember = document.getElementById('remember-me').checked;
+        if (isRemember) {
+            localStorage.setItem('savedUsername', usernameInput.value);
+        } else {
+            localStorage.removeItem('savedUsername');
+        }
+
+        // 4. 로그인 성공 시뮬레이션 (1.5초 후 이동)
+        setTimeout(() => {
+            showToast("반갑습니다, 관리자님! 환영합니다. ✨");
+
+            setTimeout(() => {
+                // 실제 페이지 이동
+                //window.location.href = "main.html";
+            }, 1000);
+        }, 1500);
+    });
+
+    // 토스트 메시지 함수
+    function showToast(message) {
+        const toast = document.getElementById('toast');
+        toast.innerText = message;
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+
+    // 기존 비밀번호 토글 및 초기 로드 로직은 유지됩니다.
 </script>
 </body>
 </html>

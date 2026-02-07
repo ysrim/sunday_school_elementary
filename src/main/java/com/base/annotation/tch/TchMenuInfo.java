@@ -12,7 +12,7 @@ import com.base.enumm.tch.TchNaviEnum;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface ThdMenuInfo {
+public @interface TchMenuInfo {
 
 	MberGrdEnum role();
 

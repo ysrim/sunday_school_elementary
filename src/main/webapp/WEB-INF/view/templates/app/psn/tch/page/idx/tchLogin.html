@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Sunday School RPG Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.5/js.cookie.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="/files/script/tch/js/tch_commons.js"></script>
+    <link rel="stylesheet" th:href="@{/files/css/tch/tch_login_style.css}">
+
+    <script th:inline="javascript">
+        // 비밀번호 토글 기능
+        function togglePassword() {
+            const $passwordInput = $('#pwd');
+            const $eyeIcon = $('#eye-icon');
+            if ($passwordInput.attr('type') === 'password') {
+                $passwordInput.attr('type', 'text');
+                $eyeIcon.removeClass('fa-eye').addClass('fa-eye-slash text-blue-600');
+            } else {
+                $passwordInput.attr('type', 'password');
+                $eyeIcon.removeClass('fa-eye-slash text-blue-600').addClass('fa-eye');
+            }
+        }
+
+        $(function () {
+            // 애니메이션 스타일 주입
+            $('<style>').text(`@keyframes slideUp {from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); }}`).appendTo('head');
+
+            // [수정 1] 쿠키에서 저장된 아이디 불러오기
+            // 'savedMberId'라는 이름의 쿠키를 찾습니다.
+            const savedId = Cookies.get('savedMberId');
+            if (savedId) {
+                $('#mberId').val(savedId); // HTML ID에 맞춰 #mberId로 수정
+                $('#remember-me').prop('checked', true);
+            }
+
+            // 로그인 버튼 클릭 이벤트
+            $('#login_do').on('click', function (e) {
+                // 기본 submit 방지 (버튼이 form 안에 있을 경우 대비)
+                e.preventDefault();
+
+                const $usernameInput = $('#mberId');
+                const $passwordInput = $('#pwd');
+                const $loginBtn = $(this); // [수정 2] 버튼 자체를 선택하도록 수정
+                const $glassCard = $('.glass-card');
+
+                // 유효성 검사 및 흔들림 효과
+                if ($usernameInput.val() === "" || $passwordInput.val() === "") {
+                    $glassCard.addClass('shake');
+                    setTimeout(() => $glassCard.removeClass('shake'), 400);
+                    return;
+                }
+
+                // 로딩 상태 표시
+                const originalBtnText = $loginBtn.html(); // 원래 텍스트 백업 (필요시 복구용)
+                $loginBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-2"></i> Processing...');
+
+                // [수정 3] 아이디 저장 로직 (쿠키 사용)
+                if ($('#remember-me').is(':checked')) {
+                    // 7일 동안 유효한 쿠키 생성, 경로는 루트('/')로 설정
+                    Cookies.set('savedMberId', $usernameInput.val(), {expires: 7, path: '/'});
+                } else {
+                    // 쿠키 삭제
+                    Cookies.remove('savedMberId', {path: '/'});
+                }
+
+                // 로그인 요청
+                $.ajax({
+                    type: "POST",
+                    url: /*[[@{/tch/idx/login.ax}]]*/ "/tch/idx/login.ax",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({mberId: $usernameInput.val(), pwd: $passwordInput.val()}),
+                    success: (data) => {
+                        if (data.rtnCd === '001') {
+                            setTimeout(() => {
+                                if (typeof _showToast === 'function') {
+                                    _showToast("반갑습니다, 관리자님! 환영합니다. ✨");
+                                }
+                                setTimeout(() => {
+                                    location.href = /*[[@{/tch/home.pg}]]*/ "/tch/home.pg";
+                                }, 500);
+                            }, 500);
+                        } else {
+                            // 실패 시 버튼 복구
+                            $loginBtn.prop('disabled', false).html(originalBtnText);
+                            if (typeof _showToast === 'function') {
+                                _showToast(data.rtnMsg + " 인증에 실패했습니다. 🔥");
+                            } else {
+                                alert(data.rtnMsg);
+                            }
+                        }
+                    },
+                    error: (e) => {
+                        // 에러 시 버튼 복구
+                        $loginBtn.prop('disabled', false).html(originalBtnText);
+                        if (typeof _showToast === 'function') {
+                            _showToast("인증에 오류가 발생했습니다. 🔥");
+                        } else {
+                            alert("시스템 오류가 발생했습니다.");
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body class="h-screen flex flex-col items-center justify-center p-6 text-slate-600">
+
+<div id="toast">인증에 성공했습니다. 잠시만 기다려주세요! 🛡️</div>
+
+<div class="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-100/50 rounded-full blur-[100px] -z-10"></div>
+<div class="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-100/50 rounded-full blur-[100px] -z-10"></div>
+
+<div class="text-center mb-10 relative animate-enter" style="animation: slideUp 0.6s ease-out;">
+    <div class="relative w-20 h-20 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-[2rem] mx-auto flex items-center justify-center shadow-xl shadow-blue-200 mb-6 transform -rotate-3">
+        <i class="fas fa-shield-alt text-3xl text-white"></i>
+    </div>
+    <h1 class="text-3xl font-black text-slate-800 tracking-tight">Teacher Mode</h1>
+    <p class="text-blue-600 font-bold mt-1 text-sm tracking-widest uppercase">Sunday School RPG Manager</p>
+</div>
+
+<div class="glass-card w-full max-w-sm p-8 rounded-[2.5rem] shadow-2xl shadow-blue-500/10 animate-enter"
+     style="animation: slideUp 0.8s ease-out;">
+    <div class="space-y-6">
+        <div class="space-y-4">
+            <div>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+                        <i class="fas fa-user text-blue-400/50 text-sm"></i>
+                    </div>
+                    <input type="text" id="mberId" name="mberId" required
+                           class="block w-full pl-12 pr-4 py-4 bg-slate-50/50 border border-slate-200/60 rounded-2xl focus:ring-2 focus:ring-blue-400 focus:bg-white transition-all outline-none text-sm font-semibold text-slate-700 placeholder-slate-400"
+                           placeholder="관리자 아이디">
+                </div>
+            </div>
+            <div>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+                        <i class="fas fa-lock text-blue-400/50 text-sm"></i>
+                    </div>
+                    <input type="password" id="pwd" name="pwd" required
+                           class="block w-full pl-12 pr-12 py-4 bg-slate-50/50 border border-slate-200/60 rounded-2xl focus:ring-2 focus:ring-blue-400 focus:bg-white transition-all outline-none text-sm font-semibold text-slate-700 placeholder-slate-400"
+                           placeholder="비밀번호">
+                    <div class="absolute inset-y-0 right-0 pr-5 flex items-center cursor-pointer"
+                         onclick="togglePassword()">
+                        <i class="fas fa-eye text-slate-300 hover:text-blue-500 transition" id="eye-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-between text-[13px] font-bold px-1">
+            <label class="flex items-center cursor-pointer group">
+                <input type="checkbox" name="remember-me" id="remember-me"
+                       class="w-4 h-4 text-blue-600 border-slate-300 rounded-lg focus:ring-blue-500 cursor-pointer">
+                <span class="ml-2 text-slate-400 group-hover:text-slate-600 transition">Save ID</span>
+            </label>
+        </div>
+
+        <button type="submit" id="login_do"
+                class="w-full flex justify-center py-4 px-4 rounded-2xl shadow-xl shadow-blue-500/20 text-sm font-black text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active-scale transition-all duration-200 uppercase tracking-widest">
+            Login to Manager
+        </button>
+    </div>
+</div>
+
+<div class="mt-12 text-center">
+    <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest">copyright ⓒ 봉동중앙교회 All rights
+        reserved.<br>Provided By 하나님의사람</p>
+</div>
+</body>
+</html>

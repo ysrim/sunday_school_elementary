@@ -23,6 +23,7 @@
                  INNER JOIN GUILD_MBER_LIST C ON A.MBER_SN = C.MBER_SN
                  INNER JOIN GUILD_INFO D ON C.GUILD_SN = D.GUILD_SN
         WHERE A.MBER_ID = #{mberId}
+          AND A.GRADE_CODE in ('200', '100')
           AND A.USE_AT = 'Y'
     </select>
 

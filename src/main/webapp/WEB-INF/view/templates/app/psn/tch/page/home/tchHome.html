@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http//www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/app/psn/tch/layouts/tch_layout}" lang="ko">
+<th:block layout:fragment="content">
+    <section id="tab-home" class="section-content animate-enter">
+        <div class="mb-8 px-1 animate-enter">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3">
+                        믿음반 모험 브리핑
+                        <span class="text-[12px] font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-xl border border-blue-100 uppercase tracking-wider">1월 4주</span>
+                    </h2>
+                    <p class="text-sm text-slate-400 mt-2 font-medium">오늘의 왕국 활동 현황을 확인하세요.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+            <div class="col-span-2 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-[2.25rem] p-7 text-white shadow-2xl shadow-blue-500/20 relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+
+                <div class="relative z-10 flex justify-between items-center">
+                    <div>
+                        <div class="text-blue-100 text-xs font-bold uppercase tracking-widest mb-2 opacity-90">
+                            출석현황(02.01)
+                        </div>
+                        <div class="text-4xl font-black tracking-tighter">18<span
+                                class="text-base opacity-70 font-medium ml-1">/ 21명</span></div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-blue-100 text-xs font-bold uppercase tracking-widest mb-2 opacity-90">누적 달란트
+                        </div>
+                        <div class="text-2xl font-black tracking-tighter">1,800,000 <span
+                                class="text-xs opacity-70">G</span></div>
+                    </div>
+                </div>
+
+                <div class="mt-7 pt-6 border-t border-white/15 grid grid-cols-4 gap-2">
+                    <div class="text-center">
+                        <div class="text-[11px] text-blue-100 font-bold opacity-80 uppercase mb-1">대기</div>
+                        <div class="text-base font-black text-yellow-300">3</div>
+                    </div>
+                    <div class="text-center border-l border-white/15">
+                        <div class="text-[11px] text-blue-100 font-bold opacity-80 uppercase mb-1">출석률</div>
+                        <div class="text-base font-black">85%</div>
+                    </div>
+                    <div class="text-center border-l border-white/15">
+                        <div class="text-[11px] text-blue-100 font-bold opacity-80 uppercase mb-1">누적</div>
+                        <div class="text-base font-black">92%</div>
+                    </div>
+                    <div class="text-center border-l border-white/15">
+                        <div class="text-[11px] text-blue-100 font-bold opacity-80 uppercase mb-1">장결</div>
+                        <div class="text-base font-black text-red-300">1</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-6 animate-enter" style="animation-delay: 0.1s;">
+            <h3 class="font-bold text-slate-800 text-lg mb-3 px-2 flex items-center">
+                <i class="fas fa-bullhorn text-blue-500 mr-2"></i> 오늘의 메시지 설정
+            </h3>
+            <div class="bg-white card-rounded p-5 shadow-sm border border-slate-100">
+                <p class="text-[10px] font-bold text-slate-400 uppercase mb-3 tracking-widest">Student App Banner
+                    Preview</p>
+
+                <div id="banner-preview"
+                     class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-4 mb-4 text-white shadow-lg shadow-blue-200 relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 w-16 h-16 bg-white opacity-10 rounded-full"></div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-md">
+                            <i class="fas fa-comment-dots text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p id="preview-text" class="text-sm font-bold leading-snug">오늘은 성경 읽기 퀘스트가 두 배! 모두 화이팅하세요!
+                                ⚔️</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 items-stretch">
+    <textarea id="message-input" rows="2"
+              oninput="updatePreview(this)"
+              placeholder="학생들에게 보낼 메시지 입력..."
+              class="flex-1 bg-slate-50 border border-slate-200 rounded-2xl p-3 text-sm focus:bg-white focus:ring-2 focus:ring-blue-100 focus:border-blue-400 transition-all outline-none resize-none leading-tight"></textarea>
+
+                    <button onclick="saveTodayMessage()"
+                            class="w-14 bg-blue-600 text-white rounded-2xl shadow-lg shadow-blue-500/20 active-scale transition-all flex flex-col items-center justify-center gap-1 shrink-0">
+                        <i class="fas fa-paper-plane text-sm"></i>
+                        <span class="text-[9px] font-bold">게시</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="mt-8 animate-enter" style="animation-delay: 0.2s;">
+            <h3 class="font-bold text-slate-800 text-lg mb-4 px-2 flex items-center justify-between">
+                <div class="flex items-center">
+                    <i class="fas fa-comment-alt text-blue-500 mr-2"></i> 길드 라운지
+                </div>
+                <span class="text-[10px] text-slate-400 font-medium">최근 게시글</span>
+            </h3>
+
+            <div class="bg-white card-rounded shadow-sm border border-slate-100 overflow-hidden">
+                <div id="comment-list" class="divide-y divide-slate-50 max-h-[400px] overflow-y-auto no-scrollbar">
+
+                    <div class="p-4 flex gap-3 hover:bg-slate-50/50 transition-colors comment-item">
+                        <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix"
+                             class="w-10 h-10 rounded-2xl bg-slate-100 shrink-0 border border-slate-100">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span class="text-sm font-bold text-slate-800">김용사</span>
+                                    <span class="text-[10px] text-slate-400 ml-2">10:42 AM</span>
+                                </div>
+                                <button onclick="deleteComment(this)"
+                                        class="text-red-500 hover:text-red-700 hover:bg-red-50 transition-all p-1.5 rounded-lg -mr-1">
+                                    <i class="fas fa-times text-sm"></i>
+                                </button>
+                            </div>
+                            <p class="text-sm text-slate-600 mt-1 leading-relaxed">선생님 오늘 간식 뭐예요? 빨리 가고 싶어요! 🍖</p>
+                        </div>
+                    </div>
+
+                    <div class="p-4 flex gap-3 bg-blue-50/30 hover:bg-blue-50/50 transition-colors comment-item">
+                        <div class="w-10 h-10 rounded-2xl bg-blue-600 flex items-center justify-center text-white shrink-0 shadow-sm">
+                            <i class="fas fa-user-tie text-sm"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span class="text-sm font-bold text-blue-700">김선생님</span>
+                                    <span class="bg-blue-100 text-blue-600 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold uppercase">Admin</span>
+                                    <span class="text-[10px] text-slate-400 ml-2">10:45 AM</span>
+                                </div>
+                                <button onclick="deleteComment(this)"
+                                        class="text-red-500 hover:text-red-700 hover:bg-red-50 transition-all p-1.5 rounded-lg -mr-1">
+                                    <i class="fas fa-times text-sm"></i>
+                                </button>
+                            </div>
+                            <p class="text-sm text-slate-700 mt-1 leading-relaxed font-medium">오늘 간식은 떡볶이와 튀김이야! 늦지 않게
+                                와~ 😊</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="p-3 bg-slate-50 border-t border-slate-100">
+                    <form onsubmit="event.preventDefault(); postComment();" class="relative flex gap-2">
+                        <input id="comment-input" type="text" placeholder="한마디 남기기..."
+                               class="flex-1 bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-100 transition-all outline-none">
+                        <button type="submit"
+                                class="w-12 h-12 bg-slate-900 text-white rounded-xl flex items-center justify-center active-scale transition shadow-lg shrink-0">
+                            <i class="fas fa-paper-plane text-xs"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script th:inline="javascript">
+        $(function () {
+        });
+    </script>
+</th:block>
+</html>
