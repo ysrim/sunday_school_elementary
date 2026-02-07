@@ -22,23 +22,23 @@ public class StdJoinMemberVO {
 	private String mberSn = ""; // 회원_일련번호
 
 	@NotEmpty(message = "아이디를 입력해주세요!")
-	@Size(min = 5, message = "아이디는 5자 이상이어야 합니다.")
+	@Size(min = 5, max = 10, message = "아이디는 5자 이상, 10자리 미만 이어야 합니다.")
 	@XssCheck
 	private String mberId = ""; // 회원_아이디
 
 	@NotEmpty(message = "이름을 입력해주세요!")
-	@Size(min = 2, message = "이름은 2자 이상이어야 합니다.")
+	@Size(min = 2, max = 5, message = "이름은 2자 이상, 5자 미만 이어야 합니다.")
 	private String mberNm = ""; // 회원_이름
 
 	@NotEmpty(message = "패스워드를 입력해주세요!")
-	@Size(min = 4, message = "패스워드는 4자 이상이어야 합니다.")
+	@Size(min = 8, max = 50, message = "패스워드는 8자 이상이어야 합니다.")
 	private String pwd = ""; // 패스워드
 
 	@NotEmpty(message = "성별을 선택해주세요!")
 	private String sexdstn = "";
 
 	@NotEmpty(message = "닉네임을 입력해주세요!")
-	@Size(min = 3, message = "닉네임은 3자 이상이어야 합니다.")
+	@Size(min = 3, max = 8, message = "닉네임은 3자 이상, 8미만 이어야 합니다.")
 	private String ncnm = ""; // 닉네임
 
 	@NotEmpty(message = "캐릭터를 선택해주세요!")
