@@ -3,16 +3,18 @@ package app.psn.tch.attend.service.impl;
 import app.psn.std.quest.service.StdQuestService;
 import app.psn.tch.attend.mapper.TchAttendanceMapper;
 import app.psn.tch.attend.service.TchAttendanceService;
-import app.psn.tch.attend.vo.StdAttendanceVO;
+
 import com.base.utl.SessionUtil;
 import com.base.utl.StringUtil;
+
+import app.psn.tch.attend.vo.ReqAttendanceVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Service("tchAttendanceService")
@@ -20,32 +22,29 @@ import java.util.Map;
 @Transactional(readOnly = true)
 public class TchAttendanceServiceImpl implements TchAttendanceService {
 
-    private final TchAttendanceMapper tchAttendanceMapper;
+	private final TchAttendanceMapper tchAttendanceMapper;
 
-    private final StdQuestService stdQuestService;
+	private final StdQuestService stdQuestService;
 
-    @Override
-    public List<String> sltMonthList() {
-        return tchAttendanceMapper.sltMonthList();
-    }
+	@Override
+	public List<ReqAttendanceVO> sltReqAtndList(String reqDate) {
 
-    @Override
-    public List<String> sltWeekList(String month) {
-        return tchAttendanceMapper.sltWeekList(month);
-    }
+		return tchAttendanceMapper.sltReqAtndList(SessionUtil.getTchMberInfo().guildSn(), reqDate);
 
-    @Override
-    public Integer sltAttendanceContinueCount() {
+	}
 
-        return null;
+	@Override
+	public Integer sltAttendanceContinueCount() {
 
-    }
+		return null;
 
-    @Override
-    public void attendanceDo() {
+	}
 
-        stdQuestService.questDo(StringUtil.setQuestPendingVO(2));
+	@Override
+	public void attendanceDo() {
 
-    }
+		stdQuestService.questDo(StringUtil.setQuestPendingVO(2));
+
+	}
 
 }

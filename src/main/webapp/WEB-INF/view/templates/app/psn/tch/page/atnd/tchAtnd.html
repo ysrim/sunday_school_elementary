@@ -1,82 +1,205 @@
 <!DOCTYPE html>
 <html xmlns:th="http//www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/app/psn/tch/layouts/tch_layout}" lang="ko">
+	  layout:decorate="~{/app/psn/tch/layouts/tch_layout}" lang="ko">
 <th:block layout:fragment="content">
-    <section id="tab-attendance" class="section-content animate-enter">
-        <h2 class="text-2xl font-bold text-slate-800 mb-5 px-1 tracking-tight">출석 관리</h2>
+	<section id="tab-attendance" class="section-content active">
+		<h2 class="text-2xl font-bold text-slate-800 mb-5 px-1">출석 관리</h2>
+		<div class="flex gap-2 mb-6 overflow-x-auto no-scrollbar pb-1" id="month-group">
+		</div>
+		<div class="card-box p-1.5 grid grid-cols-4 gap-1 mb-6" id="week-group">
+		</div>
+		<div class="flex gap-4 mb-4 items-center border-b border-slate-200" id="att-sub-tabs">
+			<button data-type="pending" class="sub-tab active">
+				승인 대기 <span class="text-blue-600 text-sm align-top">2</span>
+			</button>
+			<button data-type="complete" class="sub-tab">완료됨</button>
+		</div>
+		<div id="list-att-pending" class="space-y-3 att-list">
+		</div>
+		<div id="list-att-complete" class="space-y-3 att-list hidden">
+		</div>
+	</section>
+	<script th:inline="javascript">
 
-        <div class="flex gap-2 mb-6 overflow-x-auto no-scrollbar px-1 py-1">
-            <button onclick="selectMonth(this)"
-                    class="chip active px-4 py-2 rounded-full text-sm font-semibold shrink-0">1월
-            </button>
-            <button onclick="selectMonth(this)" class="chip px-4 py-2 rounded-full text-sm font-semibold shrink-0">2월
-            </button>
-            <button onclick="selectMonth(this)" class="chip px-4 py-2 rounded-full text-sm font-semibold shrink-0">3월
-            </button>
-            <button onclick="selectMonth(this)" class="chip px-4 py-2 rounded-full text-sm font-semibold shrink-0">4월
-            </button>
-        </div>
+		function handleAction(btn, type) {
+			const card = $(btn).closest('.card-box, .quest-item');
+			//alert($(btn).data('id'))
+			if (type === 'approve') {
+				$(btn).html('<i class="fas fa-spinner fa-spin"></i>');
+				setTimeout(() => {
+					card.css({transform: 'scale(0.9)', opacity: '0', transition: '0.3s'});
+					setTimeout(() => card.slideUp(300, function () {
+						$(this).remove()
+					}), 300);
+					_showToast('처리가 완료되었습니다! ✅');
+				}, 500);
+			} else if (confirm('반려하시겠습니까?')) {
+				card.css('opacity', '0.5');
+			}
+		}
 
-        <div class="bg-white p-1.5 rounded-2xl shadow-sm border border-slate-100 grid grid-cols-4 gap-1 mb-6">
-            <button class="py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:bg-slate-50 transition">1주
-            </button>
-            <button class="py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:bg-slate-50 transition">2주
-            </button>
-            <button class="py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:bg-slate-50 transition">3주
-            </button>
-            <button class="py-2.5 rounded-xl text-xs font-bold text-slate-800 bg-slate-100 shadow-sm transition">4주
-            </button>
-        </div>
+		$(function () {
+			const year = new Date().getFullYear();
+			const $monthGroup = $('#month-group');
+			const $weekGroup = $('#week-group');
+			const currentMonth = new Date().getMonth() + 1;
 
-        <div class="flex gap-4 mb-4 items-center">
-            <button onclick="switchAttList('pending')" id="btn-att-pending"
-                    class="text-lg font-bold text-slate-800 border-b-2 border-slate-800 pb-1 transition-all">승인 대기 <span
-                    class="text-blue-500 text-sm align-top">2</span></button>
-            <button onclick="switchAttList('complete')" id="btn-att-complete"
-                    class="text-lg font-bold text-slate-300 pb-1 hover:text-slate-500 transition-all">완료됨
-            </button>
-        </div>
+			// 로딩바 HTML 템플릿
+			const loadingHtml = `
+				<div class="flex flex-col items-center justify-center p-12 w-full text-slate-400">
+					<i class="fas fa-circle-notch fa-spin text-3xl mb-3 text-blue-500"></i>
+					<p class="text-sm font-medium">데이터를 불러오는 중입니다...</p>
+				</div>
+			`;
 
-        <div id="list-att-pending" class="space-y-3">
-            <div class="bg-white p-5 card-rounded shadow-sm border border-slate-100 flex items-center justify-between row-item">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 font-black text-lg">
-                        김
-                    </div>
-                    <div>
-                        <div class="font-bold text-slate-800">김철수</div>
-                        <div class="text-xs text-slate-400 mt-0.5 font-medium">09:40 QR 스캔</div>
-                    </div>
-                </div>
-                <div class="flex gap-2">
-                    <button onclick="handleAction(this, 'reject')"
-                            class="w-10 h-10 rounded-full bg-red-50 text-red-500 flex items-center justify-center active-scale transition">
-                        <i class="fas fa-times"></i></button>
-                    <button onclick="handleAction(this, 'approve')"
-                            class="w-10 h-10 rounded-full bg-blue-600 text-white shadow-lg shadow-blue-500/30 flex items-center justify-center active-scale transition">
-                        <i class="fas fa-check"></i></button>
-                </div>
-            </div>
-        </div>
+			// 1. 공통 유틸리티: 날짜 객체를 yyyyMMdd 문자열로 변환
+			const formatDate = (date) => {
+				const yyyy = date.getFullYear();
+				const mm = String(date.getMonth() + 1).padStart(2, '0');
+				const dd = String(date.getDate()).padStart(2, '0');
+				return `${yyyy}${mm}${dd}`;
+			};
 
-        <div id="list-att-complete" class="hidden space-y-3">
-            <div class="bg-white/60 p-5 card-rounded border border-slate-100 flex items-center justify-between">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-400 font-bold">
-                        박
-                    </div>
-                    <div>
-                        <div class="font-bold text-slate-400">박성실</div>
-                        <div class="text-xs text-green-600 font-bold mt-0.5">09:10 완료</div>
-                    </div>
-                </div>
-                <i class="fas fa-check-circle text-green-500 text-xl"></i>
-            </div>
-        </div>
-    </section>
-    <script th:inline="javascript">
-        $(function () {
-        });
-    </script>
+			// 2. 오늘이 속한 주의 일요일 계산
+			function getThisSunday() {
+				const today = new Date();
+				const sunday = new Date(today);
+				sunday.setDate(today.getDate() - today.getDay());
+				return formatDate(sunday);
+			}
+
+			// 3. 월 버튼 생성
+			for (let m = 1; m <= 12; m++) {
+				$('<button>', {
+					class: `chip ${m === currentMonth ? 'active' : ''}`,
+					'data-value': m,
+					text: `${m}월`
+				}).appendTo($monthGroup);
+			}
+
+			// 4. 주차 생성 함수
+			function renderWeeks(year, month) {
+				$weekGroup.empty();
+				const targetSunday = getThisSunday();
+				let date = new Date(year, month - 1, 1);
+				let weekCount = 1;
+
+				while (date.getMonth() === month - 1) {
+					if (date.getDay() === 0) {
+						const dateStr = formatDate(date);
+						const isActive = (dateStr === targetSunday) ? 'active' : '';
+
+						$('<button>', {
+							class: `week-btn ${isActive}`,
+							'data-value': dateStr,
+							text: `${weekCount}주`
+						}).appendTo($weekGroup);
+						weekCount++;
+					}
+					date.setDate(date.getDate() + 1);
+				}
+
+				// 이번 달에 오늘 주차가 없으면 마지막 주 활성화
+				if (!$weekGroup.find('.week-btn.active').length) {
+					$weekGroup.find('.week-btn').last().addClass('active');
+				}
+
+				// 리스트 즉시 로드
+				$weekGroup.find('.week-btn.active').trigger('click');
+			}
+
+			// 5. 주차 버튼 클릭 (AJAX)
+			$weekGroup.on('click', '.week-btn', function () {
+				const $btn = $(this);
+				const selectedDate = $btn.data('value');
+				$btn.addClass('active').siblings().removeClass('active');
+				$('.att-list').html(loadingHtml);
+				$.ajax({
+					url: /*[[@{/tch/atnd/reqAtnd.ax}]]*/ '/tch/atnd/reqAtnd.ax',
+					type: 'POST',
+					data: {reqDate: selectedDate},
+					success: function (data) {
+						// 성공 시 약간의 딜레이를 주어 깜빡임 현상 방지 (선택 사항)
+						setTimeout(() => {
+							if (data.rtnCd === '001') {
+								const list = data.rtnData || [];
+								renderList(list.filter(i => i.status === 'PENDING'), '#list-att-pending', 'pending');
+								renderList(list.filter(i => i.status === 'APPROVED' || i.status === 'REJECTED'), '#list-att-complete', 'complete');
+							} else {
+								$('.att-list').html('<div class="text-center p-10 text-red-400">데이터를 가져오지 못했습니다.</div>');
+								_showToast('데이터 조회 실패 ❌');
+							}
+						}, 300);
+					},
+					error: function () {
+						$('.att-list').html('<div class="text-center p-10 text-red-400">서버 통신 오류가 발생했습니다.</div>');
+					}
+				});
+			});
+
+			// 6. 통합 리스트 렌더링 함수
+			function renderList(list, containerId, type) {
+				const $container = $(containerId).empty();
+
+				if (type === 'pending') {
+					$('#att-sub-tabs button[data-type="pending"] span').text(list.length);
+				}
+
+				if (!list.length) {
+					$container.html('<div class="text-center p-10 text-slate-400">내역이 없습니다.</div>');
+					return;
+				}
+
+				list.forEach(item => {
+					const isPending = type === 'pending';
+					// 완료됨 탭일 때 승인(APPROVED)인지 반려(REJECTED)인지 판단
+					const isRejected = item.status === 'REJECTED';
+
+					const html = `
+						<div class="card-box p-5 flex items-center justify-between ${!isPending ? '!border-slate-200 bg-white/60' : ''}">
+							<div class="flex items-center gap-4">
+								<div class="w-12 h-12 ${isPending ? 'bg-blue-50 text-blue-600' : 'bg-slate-100 text-slate-400'} rounded-2xl flex items-center justify-center font-black text-lg">
+									${item.mberNm.charAt(0)}
+								</div>
+								<div>
+									<div class="font-bold ${isPending ? 'text-slate-800' : 'text-slate-400'}">${item.mberNm}</div>
+									<div class="text-xs ${isPending ? 'text-slate-400' : (isRejected ? 'text-red-500' : 'text-green-600')} mt-0.5 font-bold">
+										${isPending ? '요청시간: ' + item.creatDate :
+						(isRejected ? '반려됨: ' + item.processedDe : '승인완료: ' + item.processedDe)}
+									</div>
+								</div>
+							</div>
+							${isPending ? `
+								<div class="flex gap-2">
+									<button onclick="handleAction(this, 'reject')" data-id="${item.logSn}" class="w-10 h-10 rounded-full bg-red-50 text-red-500 flex items-center justify-center active-scale-95 transition">
+										<i class="fas fa-times"></i>
+									</button>
+									<button onclick="handleAction(this, 'approve')" data-id="${item.logSn}" class="w-10 h-10 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center active-scale-95 transition">
+										<i class="fas fa-check"></i>
+									</button>
+								</div>` :
+						`<i class="fas ${isRejected ? 'fa-times-circle text-red-400' : 'fa-check-circle text-green-500'} text-xl"></i>`}
+						</div>
+					`;
+					$container.append(html);
+				});
+			}
+
+			// 초기화 및 이벤트 바인딩
+			$monthGroup.on('click', '.chip', function () {
+				$(this).addClass('active').siblings().removeClass('active');
+				renderWeeks(year, $(this).data('value'));
+			});
+
+			$('#att-sub-tabs .sub-tab').on('click', function () {
+				const type = $(this).data('type');
+				$(this).addClass('active').siblings().removeClass('active');
+				$('.att-list').addClass('hidden');
+				$(`#list-att-${type}`).removeClass('hidden').hide().fadeIn(200);
+			});
+
+			renderWeeks(year, currentMonth); // 최초 실행
+		});
+	</script>
 </th:block>
 </html>

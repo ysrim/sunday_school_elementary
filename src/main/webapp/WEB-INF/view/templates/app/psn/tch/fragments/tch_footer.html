@@ -1,34 +1,28 @@
 <html lagn="ko" xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="footerFragment">
-    <nav class="nav-dock">
-        <button class="nav-item" th:classappend="${_tchMenuInfo == 'TCH_HOME'} ? 'active'"
-                onclick="_naviPage('TCH_HOME')">
-            <div class="nav-active-bg"></div>
-            <i class="fas fa-home text-xl"></i>
-            <span class="nav-label">홈</span>
-        </button>
-
-        <button class="nav-item" th:classappend="${_tchMenuInfo == 'TCH_ATND'} ? ' active'"
-                onclick="_naviPage('TCH_ATND')">
-            <div class="nav-active-bg"></div>
-            <i class="far fa-id-card text-xl"></i>
-            <span class="nav-label">출석부</span>
-        </button>
-
-        <button class="nav-item" th:classappend="${_tchMenuInfo == 'TCH_QEST'} ? ' active'"
-                onclick="_naviPage('TCH_QEST')">
-            <div class="nav-active-bg"></div>
-            <i class="far fa-check-circle text-xl"></i>
-            <span class="nav-badge">2</span>
-            <span class="nav-label">퀘스트</span>
-        </button>
-
-        <button class="nav-item" th:classappend="${_tchMenuInfo == 'TCH_GILD'} ? ' active'"
-                onclick="_naviPage('TCH_GILD')">
-            <div class="nav-active-bg"></div>
-            <i class="far fa-user-circle text-xl"></i>
-            <span class="nav-label">길드원</span>
-        </button>
-    </nav>
+	<nav class="nav-dock">
+		<button class="nav-item" th:classappend="${_tchMenuInfo == 'TCH_HOME'} ? ' active'"
+				onclick="_naviPage('TCH_HOME')">
+			<div class="nav-active-bg"></div>
+			<i class="fas fa-home text-xl"></i><span class="text-[10px] font-bold mt-1">홈</span>
+		</button>
+		<button class="nav-item" th:classappend="${_tchMenuInfo == 'TCH_ATND'} ? ' active'"
+				onclick="_naviPage('TCH_ATND')">
+			<div class="nav-active-bg"></div>
+			<i class="far fa-id-card text-xl"></i><span class="text-[10px] font-bold mt-1">출석부</span>
+		</button>
+		<button class="nav-item" th:classappend="${_tchMenuInfo == 'TCH_QEST'} ? ' active'"
+				onclick="_naviPage('TCH_QEST')">
+			<div class="nav-active-bg"></div>
+			<i class="far fa-check-circle text-xl"></i>
+			<span class="absolute top-3 right-[28%] w-4 h-4 bg-red-500 text-white text-[9px] rounded-full flex items-center justify-center font-bold border-2 border-white">2</span>
+			<span class="text-[10px] font-bold mt-1">퀘스트</span>
+		</button>
+		<button class="nav-item" th:classappend="${_tchMenuInfo == 'TCH_GILD'} ? ' active'"
+				onclick="_naviPage('TCH_GILD')">
+			<div class="nav-active-bg"></div>
+			<i class="far fa-user-circle text-xl"></i><span class="text-[10px] font-bold mt-1">길드원</span>
+		</button>
+	</nav>
 </div>
 </html>

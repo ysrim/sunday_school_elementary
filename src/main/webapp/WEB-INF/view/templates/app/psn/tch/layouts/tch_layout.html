@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="|봉동중앙교회 초등부 RPG - ${_tchMenuNm}|">봉동중앙교회 초등부 RPG</title>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net">
-    <link rel="stylesheet" as="style" crossorigin
-          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" th:href="@{/files/css/tch/tch_sub_style.css}">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.5/js.cookie.min.js"></script>
-    <script src="/files/script/tch/js/tch_commons.js"></script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+	<title th:text="|봉동중앙교회 초등부 RPG - ${_tchMenuNm}|">봉동중앙교회 초등부 RPG</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link rel="stylesheet" th:href="@{/files/css/tch/tch_sub_style.css}">
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.5/js.cookie.min.js"></script>
+	<script src="/files/script/tch/js/tch_commons.js"></script>
 </head>
-<body class="h-screen flex flex-col overflow-hidden bg-slate-50">
+<body class="h-screen flex flex-col">
 <div id="toast"></div>
 <th:block th:replace="~{/app/psn/tch/fragments/tch_header :: headerFragment}"></th:block>
-<main id="main-content" class="flex-1 overflow-y-auto px-4 pt-24 pb-32 space-y-6 no-scrollbar w-full max-w-lg mx-auto">
-    <th:block layout:fragment="content"></th:block>
+<main id="main-content" class="flex-1 overflow-y-auto px-4 pt-24 pb-32 w-full max-w-lg mx-auto no-scrollbar">
+	<th:block layout:fragment="content"></th:block>
 </main>
 <div th:replace="~{/app/psn/tch/fragments/tch_footer :: footerFragment}"></div>
 </body>

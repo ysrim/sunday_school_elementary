@@ -1,28 +1,21 @@
 package app.psn.tch.attend.service;
 
-import app.psn.tch.attend.vo.StdAttendanceVO;
-
 import java.util.List;
-import java.util.Map;
+
+import app.psn.tch.attend.vo.ReqAttendanceVO;
 
 public interface TchAttendanceService {
 
-    /**
-     * 월 리스트
-     */
-    List<String> sltMonthList();
+	/**
+	 * 출석 요청 목록
+	 */
+	List<ReqAttendanceVO> sltReqAtndList(String reqDate);
 
-    /**
-     * 월에 속한 리스트
-     */
-    List<String> sltWeekList(String month);
+	Integer sltAttendanceContinueCount();
 
-
-    Integer sltAttendanceContinueCount();
-
-    /**
-     * 출석요청
-     */
-    void attendanceDo();
+	/**
+	 * 출석요청
+	 */
+	void attendanceDo();
 
 }

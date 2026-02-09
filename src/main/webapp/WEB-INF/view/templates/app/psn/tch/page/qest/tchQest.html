@@ -1,262 +1,57 @@
 <!DOCTYPE html>
 <html xmlns:th="http//www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/app/psn/tch/layouts/tch_layout}" lang="ko">
+	  layout:decorate="~{/app/psn/tch/layouts/tch_layout}" lang="ko">
 <th:block layout:fragment="content">
-    <section id="tab-quest" class="section-content animate-enter">
-        <h2 class="text-2xl font-bold text-slate-800 mb-5 px-1 tracking-tight">퀘스트 요청</h2>
+	<section id="tab-quest" class="section-content active">
+		<h2 class="text-2xl font-bold text-slate-800 mb-5 px-1">퀘스트 요청</h2>
+		<div class="flex gap-2 mb-6 overflow-x-auto no-scrollbar pb-2" id="quest-filter">
+			<button class="chip active" data-filter="all">전체</button>
+			<button class="chip" data-filter="daily">일일</button>
+			<button class="chip" data-filter="sunday">주일</button>
+			<button class="chip" data-filter="special">특별</button>
+		</div>
 
-        <div class="flex gap-2 mb-6 overflow-x-auto no-scrollbar pb-2">
-            <button onclick="filterQuest('all')" id="btn-all"
-                    class="chip active px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap">전체
-            </button>
-            <button onclick="filterQuest('daily')" id="btn-daily"
-                    class="chip px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap">일일
-            </button>
-            <button onclick="filterQuest('sunday')" id="btn-sunday"
-                    class="chip px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap">주일
-            </button>
-            <button onclick="filterQuest('special')" id="btn-special"
-                    class="chip px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap">특별
-            </button>
-        </div>
+		<div id="quest-list" class="space-y-4">
+			<div class="card-box p-5 quest-item" data-type="daily">
+				<div class="flex justify-between items-start mb-4">
+					<div>
+						<span class="bg-blue-50 text-blue-600 text-[10px] font-bold px-2 py-1 rounded uppercase">Daily Mission</span>
+						<h3 class="font-bold text-slate-800 text-lg mt-2 leading-tight">오늘의 성경 한 장 읽기 📖</h3>
+						<p class="text-xs text-slate-400 mt-1">요청자: 김용사 학생</p>
+					</div>
+					<div class="font-extrabold text-amber-500 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-100 text-sm">500 G</div>
+				</div>
+				<div class="flex gap-3">
+					<button onclick="handleAction(this, 'reject')" class="flex-1 py-3 bg-slate-50 text-slate-500 rounded-xl text-xs font-bold active:scale-95 transition">반려</button>
+					<button onclick="handleAction(this, 'approve')" class="flex-1 py-3 bg-blue-600 text-white rounded-xl text-xs font-bold shadow-lg active:scale-95 transition">승인 및 지급</button>
+				</div>
+			</div>
 
-        <div id="quest-list" class="space-y-4">
-            <div class="quest-item bg-white p-5 card-rounded shadow-sm border border-slate-100 flex flex-col animate-enter"
-                 data-type="daily">
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <span class="inline-block px-2 py-0.5 rounded-md bg-blue-50 text-blue-600 text-[10px] font-bold mb-2 uppercase tracking-wider">Daily Mission</span>
-                        <h3 class="font-bold text-slate-800 text-lg leading-tight">오늘의 성경 한 장 읽기 📖</h3>
-                        <div class="flex items-center gap-2 mt-1">
-                            <span class="text-xs text-slate-400 font-medium">요청자: 김용사 학생</span>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-sm font-extrabold text-amber-500 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-100">
-                            500 G
-                        </div>
-                    </div>
+			<div class="card-box p-5 bg-indigo-50/50 border-indigo-100 quest-item" data-type="special">
+				<div class="flex justify-between items-start mb-4">
+					<div>
+						<span class="bg-indigo-600 text-white text-[10px] font-bold px-2 py-1 rounded uppercase shadow-sm">Legendary</span>
+						<h3 class="font-bold text-slate-900 text-lg mt-2 leading-tight">새 친구 초청 (보스 레이드) ⚔️</h3>
+					</div>
+					<div class="font-extrabold text-indigo-700 bg-white px-3 py-1.5 rounded-lg border border-indigo-200 text-sm shadow-sm">3,000 G</div>
+				</div>
+				<p class="text-xs text-slate-500 mb-4 bg-white/60 p-3 rounded-xl border border-indigo-50">"새로운 용사를 왕국으로 데려왔습니다!"</p>
+				<div class="flex gap-3">
+					<button onclick="handleAction(this, 'reject')" class="flex-1 py-3 bg-white text-slate-500 border border-slate-200 rounded-xl text-xs font-bold active:scale-95 transition">검토
+					</button>
+					<button onclick="handleAction(this, 'approve')" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl text-xs font-bold shadow-lg active:scale-95 transition">보상 일괄 지급</button>
+				</div>
+			</div>
+		</div>
 
-                </div>
-                <div class="flex gap-3">
-                    <button onclick="handleAction(this, 'reject')"
-                            class="flex-1 py-3.5 rounded-xl bg-slate-50 text-slate-500 text-xs font-bold active-scale transition-colors">
-                        반려
-                    </button>
-                    <button onclick="handleAction(this, 'approve')"
-                            class="flex-1 py-3.5 rounded-xl bg-blue-600 text-white text-xs font-bold shadow-lg shadow-blue-500/20 active-scale transition-colors">
-                        승인 및 지급
-                    </button>
-                </div>
-            </div>
-
-            <div class="quest-item bg-white p-5 card-rounded shadow-sm border border-slate-100 flex flex-col animate-enter"
-                 data-type="daily" style="animation-delay: 0.1s;">
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <span class="inline-block px-2 py-0.5 rounded-md bg-blue-50 text-blue-600 text-[10px] font-bold mb-2 uppercase tracking-wider">Daily Mission</span>
-                        <h3 class="font-bold text-slate-800 text-lg leading-tight">부모님 심부름 1회 완료 🛡️</h3>
-                        <div class="flex items-center gap-2 mt-1">
-                            <span class="text-xs text-slate-400 font-medium">요청자: 이마법 학생</span>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-sm font-extrabold text-amber-500 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-100">
-                            300 G
-                        </div>
-                    </div>
-                </div>
-                <div class="flex gap-3">
-                    <button onclick="handleAction(this, 'reject')"
-                            class="flex-1 py-3.5 rounded-xl bg-slate-50 text-slate-500 text-xs font-bold active-scale">
-                        반려
-                    </button>
-                    <button onclick="handleAction(this, 'approve')"
-                            class="flex-1 py-3.5 rounded-xl bg-blue-600 text-white text-xs font-bold shadow-lg shadow-blue-500/20 active-scale">
-                        승인 및 지급
-                    </button>
-                </div>
-            </div>
-
-            <div class="quest-item bg-white p-5 card-rounded shadow-sm border border-slate-100 flex flex-col animate-enter"
-                 data-type="daily" style="animation-delay: 0.15s;">
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <span class="inline-block px-2 py-0.5 rounded-md bg-blue-50 text-blue-600 text-[10px] font-bold mb-2 uppercase tracking-wider">Daily Mission</span>
-                        <h3 class="font-bold text-slate-800 text-lg leading-tight">새벽 큐티 출석 인증 ☀️</h3>
-                        <div class="flex items-center gap-2 mt-1">
-                            <span class="text-xs text-slate-400 font-medium">요청자: 박궁수 학생</span>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-sm font-extrabold text-amber-500 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-100">
-                            400 G
-                        </div>
-                    </div>
-                </div>
-                <div class="flex gap-3">
-                    <button onclick="handleAction(this, 'reject')"
-                            class="flex-1 py-3.5 rounded-xl bg-slate-50 text-slate-500 text-xs font-bold active-scale">
-                        반려
-                    </button>
-                    <button onclick="handleAction(this, 'approve')"
-                            class="flex-1 py-3.5 rounded-xl bg-blue-600 text-white text-xs font-bold shadow-lg shadow-blue-500/20 active-scale">
-                        승인 및 지급
-                    </button>
-                </div>
-            </div>
-
-            <div class="quest-item bg-white p-5 card-rounded shadow-sm border border-slate-100 flex flex-col animate-enter"
-                 data-type="daily" style="animation-delay: 0.2s;">
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <span class="inline-block px-2 py-0.5 rounded-md bg-blue-50 text-blue-600 text-[10px] font-bold mb-2 uppercase tracking-wider">Daily Mission</span>
-                        <h3 class="font-bold text-slate-800 text-lg leading-tight">친구에게 칭찬 한마디 📣</h3>
-                        <div class="flex items-center gap-2 mt-1">
-                            <span class="text-xs text-slate-400 font-medium">요청자: 최도적 학생</span>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-sm font-extrabold text-amber-500 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-100">
-                            200 G
-                        </div>
-                    </div>
-                </div>
-                <div class="flex gap-3">
-                    <button onclick="handleAction(this, 'reject')"
-                            class="flex-1 py-3.5 rounded-xl bg-slate-50 text-slate-500 text-xs font-bold active-scale">
-                        반려
-                    </button>
-                    <button onclick="handleAction(this, 'approve')"
-                            class="flex-1 py-3.5 rounded-xl bg-blue-600 text-white text-xs font-bold shadow-lg shadow-blue-500/20 active-scale">
-                        승인 및 지급
-                    </button>
-                </div>
-            </div>
-
-            <div class="quest-item bg-white p-5 card-rounded shadow-sm border border-slate-100 flex flex-col animate-enter"
-                 data-type="daily" style="animation-delay: 0.25s;">
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <span class="inline-block px-2 py-0.5 rounded-md bg-blue-50 text-blue-600 text-[10px] font-bold mb-2 uppercase tracking-wider">Daily Mission</span>
-                        <h3 class="font-bold text-slate-800 text-lg leading-tight">간식 안 남기고 다 먹기 🍎</h3>
-                        <div class="flex items-center gap-2 mt-1">
-                            <span class="text-xs text-slate-400 font-medium">요청자: 정전사 학생</span>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-sm font-extrabold text-amber-500 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-100">
-                            300 G
-                        </div>
-                    </div>
-                </div>
-                <div class="flex gap-3">
-                    <button onclick="handleAction(this, 'reject')"
-                            class="flex-1 py-3.5 rounded-xl bg-slate-50 text-slate-500 text-xs font-bold active-scale">
-                        반려
-                    </button>
-                    <button onclick="handleAction(this, 'approve')"
-                            class="flex-1 py-3.5 rounded-xl bg-blue-600 text-white text-xs font-bold shadow-lg shadow-blue-500/20 active-scale">
-                        승인 및 지급
-                    </button>
-                </div>
-            </div>
-
-            <div class="quest-item bg-white p-5 card-rounded shadow-sm border border-slate-100 flex flex-col animate-enter"
-                 data-type="daily" style="animation-delay: 0.3s;">
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <span class="inline-block px-2 py-0.5 rounded-md bg-blue-50 text-blue-600 text-[10px] font-bold mb-2 uppercase tracking-wider">Daily Mission</span>
-                        <h3 class="font-bold text-slate-800 text-lg leading-tight">오늘의 감사 일기 작성 ✍️</h3>
-                        <div class="flex items-center gap-2 mt-1">
-                            <span class="text-xs text-slate-400 font-medium">요청자: 한용사 학생</span>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-sm font-extrabold text-amber-500 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-100">
-                            400 G
-                        </div>
-                    </div>
-                </div>
-                <div class="flex gap-3">
-                    <button onclick="handleAction(this, 'reject')"
-                            class="flex-1 py-3.5 rounded-xl bg-slate-50 text-slate-500 text-xs font-bold active-scale">
-                        반려
-                    </button>
-                    <button onclick="handleAction(this, 'approve')"
-                            class="flex-1 py-3.5 rounded-xl bg-blue-600 text-white text-xs font-bold shadow-lg shadow-blue-500/20 active-scale">
-                        승인 및 지급
-                    </button>
-                </div>
-            </div>
-
-            <div class="quest-item bg-indigo-50/50 p-5 card-rounded shadow-sm border border-indigo-100 flex flex-col animate-enter"
-                 data-type="special" style="animation-delay: 0.35s;">
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <span class="inline-block px-2 py-0.5 rounded-md bg-indigo-600 text-white text-[10px] font-bold mb-2 uppercase tracking-widest shadow-sm">LEGENDARY QUEST</span>
-                        <h3 class="font-bold text-slate-900 text-lg leading-tight">새 친구 초청 (보스 레이드) ⚔️</h3>
-                        <div class="flex items-center gap-2 mt-1">
-                            <span class="text-xs text-indigo-600 font-bold">전설 등급 미션 달성</span>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-sm font-black text-indigo-700 bg-white px-3 py-1.5 rounded-lg border border-indigo-200 shadow-sm">
-                            3,000 G
-                        </div>
-                    </div>
-                </div>
-                <p class="text-xs text-slate-500 mb-4 bg-white/50 p-3 rounded-xl border border-indigo-50">"새로운 용사를 왕국으로
-                    데려왔습니다! 파티원 추가 보상 승인을 요청합니다."</p>
-                <div class="flex gap-3">
-                    <button onclick="handleAction(this, 'reject')"
-                            class="flex-1 py-3.5 rounded-xl bg-white text-slate-500 text-xs font-bold border border-slate-200 active-scale">
-                        검토 필요
-                    </button>
-                    <button onclick="handleAction(this, 'approve')"
-                            class="flex-1 py-3.5 rounded-xl bg-indigo-600 text-white text-xs font-bold shadow-xl shadow-indigo-200 active-scale">
-                        보상 일괄 지급
-                    </button>
-                </div>
-            </div>
-
-            <div class="quest-item bg-purple-50/50 p-5 card-rounded shadow-sm border border-purple-100 flex flex-col animate-enter"
-                 data-type="special" style="animation-delay: 0.4s;">
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <span class="inline-block px-2 py-0.5 rounded-md bg-purple-600 text-white text-[10px] font-bold mb-2 uppercase tracking-widest shadow-sm">SPECIAL EVENT</span>
-                        <h3 class="font-bold text-slate-900 text-lg leading-tight">성경 암송왕 골든벨 우승 🏆</h3>
-                        <div class="flex items-center gap-2 mt-1">
-                            <span class="text-xs text-purple-600 font-bold">겨울 수련회 특별 미션</span>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-sm font-black text-purple-700 bg-white px-3 py-1.5 rounded-lg border border-purple-200 shadow-sm">
-                            5,000 G
-                        </div>
-                    </div>
-                </div>
-                <div class="flex gap-3 mt-2">
-                    <button onclick="handleAction(this, 'reject')"
-                            class="flex-1 py-3.5 rounded-xl bg-white text-slate-500 text-xs font-bold border border-slate-200 active-scale">
-                        반려
-                    </button>
-                    <button onclick="handleAction(this, 'approve')"
-                            class="flex-1 py-3.5 rounded-xl bg-purple-600 text-white text-xs font-bold shadow-xl shadow-purple-200 active-scale">
-                        전설 보상 수여
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div id="quest-empty" class="hidden flex flex-col items-center justify-center py-20 opacity-50">
-            <i class="fas fa-inbox text-4xl text-slate-300 mb-3"></i>
-            <p class="text-slate-400 font-medium text-sm">대기 중인 퀘스트가 없습니다.</p>
-        </div>
-    </section>
-    <script th:inline="javascript">
-        $(function () {
-        });
-    </script>
+		<div id="quest-empty" class="hidden flex flex-col items-center justify-center py-20 opacity-50">
+			<i class="fas fa-inbox text-4xl text-slate-300 mb-3"></i>
+			<p class="text-slate-400 font-medium text-sm">대기 중인 퀘스트가 없습니다.</p>
+		</div>
+	</section>
+	<script th:inline="javascript">
+		$(function () {
+		});
+	</script>
 </th:block>
 </html>
