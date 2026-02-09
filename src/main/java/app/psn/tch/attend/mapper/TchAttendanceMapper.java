@@ -4,18 +4,19 @@ import app.psn.tch.attend.vo.StdAttendanceVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface TchAttendanceMapper {
 
-	/**
-	 * 당월 주일 출석 목록
-	 */
-	List<StdAttendanceVO> sltAttendanceList(Integer mberSn); // 출석 목록
+    /**
+     * 월 리스트
+     */
+    List<String> sltMonthList();
 
-	/**
-	 * 연속출석일 수
-	 */
-	Integer sltAttendanceContinueCount(Integer mberSn);
+    /**
+     * 월에 속한 리스트
+     */
+    List<String> sltWeekList(String month);
 
 }

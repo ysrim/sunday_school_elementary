@@ -3,17 +3,21 @@ package app.psn.tch.attend.service;
 import app.psn.tch.attend.vo.StdAttendanceVO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface TchAttendanceService {
 
     /**
-     * 당월 주일 출석 목록
+     * 월 리스트
      */
-    List<StdAttendanceVO> sltAttendanceList();
+    List<String> sltMonthList();
 
     /**
-     * 연속출석일 수
+     * 월에 속한 리스트
      */
+    List<String> sltWeekList(String month);
+
+
     Integer sltAttendanceContinueCount();
 
     /**

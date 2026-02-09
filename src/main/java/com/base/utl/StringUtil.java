@@ -154,6 +154,11 @@ public class StringUtil {
 
     }
 
+    // 년 월 가져오기
+    public static String getCurrentYearMonth() {
+        return LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+    }
+
     public static StdQuestPendingVO setQuestPendingVO(Integer sn) {
 
         StdQuestPendingVO stdQuestPendingVO = new StdQuestPendingVO();

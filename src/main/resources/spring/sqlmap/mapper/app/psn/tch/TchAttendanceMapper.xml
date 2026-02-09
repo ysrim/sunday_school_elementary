@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="app.psn.tch.attend.mapper.TchAttendanceMapper">
+
+	<select id="sltMonthList" parameterType="Integer" resultType="string">
+		SELECT DATE_FORMAT(CURDATE() - INTERVAL (seq.n) MONTH, '%Y-%m') AS month
+		FROM (SELECT 0 AS n
+			  UNION ALL
+			  SELECT 1
+			  UNION ALL
+			  SELECT 2
+			  UNION ALL
+			  SELECT 3
+			  UNION ALL
+			  SELECT 4
+			  UNION ALL
+			  SELECT 5
+			  UNION ALL
+			  SELECT 6
+			  UNION ALL
+			  SELECT 7
+			  UNION ALL
+			  SELECT 8
+			  UNION ALL
+			  SELECT 9
+			  UNION ALL
+			  SELECT 10
+			  UNION ALL
+			  SELECT 11) AS seq
+		WHERE YEAR(CURDATE() - INTERVAL (seq.n) MONTH) = YEAR(CURDATE())
+		ORDER BY month ASC
+	</select>
+
+	<select id="sltWeekList" parameterType="string" resultType="string">
+		SELECT selected_date AS sunday_list
+		FROM (SELECT DATE_ADD(STR_TO_DATE(CONCAT(#{month}, '-01'), '%Y-%m-%d')
+						 , INTERVAL (t2.n * 10 + t1.n) DAY) AS selected_date
+			  FROM (SELECT 0 AS n
+					UNION ALL
+					SELECT 1
+					UNION ALL
+					SELECT 2
+					UNION ALL
+					SELECT 3
+					UNION ALL
+					SELECT 4
+					UNION ALL
+					SELECT 5
+					UNION ALL
+					SELECT 6
+					UNION ALL
+					SELECT 7
+					UNION ALL
+					SELECT 8
+					UNION ALL
+					SELECT 9) AS t1,
+				   (SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) AS t2) AS days
+		WHERE DATE_FORMAT(selected_date, '%Y-%m') = #{month}
+		  AND DAYOFWEEK(selected_date) = 1
+		ORDER BY selected_date
+	</select>
+
+</mapper>

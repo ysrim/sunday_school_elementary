@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service("tchAttendanceService")
@@ -24,16 +25,19 @@ public class TchAttendanceServiceImpl implements TchAttendanceService {
     private final StdQuestService stdQuestService;
 
     @Override
-    public List<StdAttendanceVO> sltAttendanceList() {
+    public List<String> sltMonthList() {
+        return tchAttendanceMapper.sltMonthList();
+    }
 
-        return tchAttendanceMapper.sltAttendanceList(SessionUtil.getStdMberInfo().mberSn());
-
+    @Override
+    public List<String> sltWeekList(String month) {
+        return tchAttendanceMapper.sltWeekList(month);
     }
 
     @Override
     public Integer sltAttendanceContinueCount() {
 
-        return tchAttendanceMapper.sltAttendanceContinueCount(SessionUtil.getStdMberInfo().mberSn());
+        return null;
 
     }
 
