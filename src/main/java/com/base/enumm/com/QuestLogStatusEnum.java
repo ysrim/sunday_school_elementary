@@ -7,17 +7,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum QuestLogStatusEnum {
 
-    PENDING(1, "승인요청"),  //
-    APPROVED(2, "승인완료"), //
-    REJECTED(3, "반려")      //
-    ;
+	PENDING(1, "승인요청"),  //
+	APPROVED(2, "승인완료"), //
+	REJECTED(3, "반려");      //
+	
+	private final Integer seq;
 
-    private final Integer seq;
+	private final String description;
 
-    private final String description;
-
-    public boolean isSameStatus(String statusName) {
-        return this.name().equals(statusName);
-    }
+	public boolean isSameStatus(String statusName) {
+		return this.name().equals(statusName);
+	}
 
 }

@@ -218,3 +218,139 @@ body {
     vertical-align: top;
     margin-left: 2px;
 }
+
+/* 1. 월 버튼 스타일 (quest-month-btn) */
+.quest-month-btn {
+    flex: 0 0 auto;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #64748b;
+    background-color: #f1f5f9;
+    transition: all 0.2s;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.quest-month-btn:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.quest-month-btn.active {
+    background-color: #2563eb;
+    color: white;
+    box-shadow: none;
+}
+
+/* 2. 카테고리 버튼 스타일 (quest-category-btn) */
+.quest-category-btn {
+    flex: 1;
+    padding: 0.5rem 0;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #64748b;
+    text-align: center;
+    background-color: transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.quest-category-btn:focus {
+    outline: none;
+    border: none;
+    box-shadow: none;
+}
+
+.quest-category-btn.active {
+    background-color: #eff6ff;
+    color: #2563eb;
+    font-weight: 800;
+    box-shadow: none;
+}
+
+/* 월 버튼 스타일 */
+.month-chip {
+    flex: 0 0 auto;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #64748b;
+    background-color: #f1f5f9;
+    transition: all 0.2s;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.month-chip:focus {
+    outline: none;
+}
+
+.month-chip.active {
+    background-color: #2563eb;
+    color: white;
+    box-shadow: none;
+}
+
+/* 주차 버튼 스타일 */
+.week-btn {
+    flex: 1;
+    padding: 0.5rem 0;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #64748b;
+    text-align: center;
+    white-space: nowrap;
+    transition: all 0.2s;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.week-btn:focus {
+    outline: none;
+}
+
+.week-btn.active {
+    background-color: #eff6ff;
+    color: #2563eb;
+    font-weight: 800;
+    box-shadow: none;
+}
+
+/* 공통 버튼 스타일 (중복 제거) */
+.btn-chip-base {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #64748b;
+    background-color: #f1f5f9;
+    transition: all 0.2s;
+    border: none;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}

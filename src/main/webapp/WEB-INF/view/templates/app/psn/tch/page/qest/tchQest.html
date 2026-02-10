@@ -3,54 +3,326 @@
 	  layout:decorate="~{/app/psn/tch/layouts/tch_layout}" lang="ko">
 <th:block layout:fragment="content">
 	<section id="tab-quest" class="section-content active">
-		<h2 class="text-2xl font-bold text-slate-800 mb-5 px-1">퀘스트 요청</h2>
-		<div class="flex gap-2 mb-6 overflow-x-auto no-scrollbar pb-2" id="quest-filter">
-			<button class="chip active" data-filter="all">전체</button>
-			<button class="chip" data-filter="daily">일일</button>
-			<button class="chip" data-filter="sunday">주일</button>
-			<button class="chip" data-filter="special">특별</button>
+		<div class="flex items-center justify-between mb-5 px-1">
+			<h2 class="text-2xl font-bold text-slate-800">퀘스트 요청</h2>
+			<span id="year-badge" class="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-lg"></span>
 		</div>
 
-		<div id="quest-list" class="space-y-4">
-			<div class="card-box p-5 quest-item" data-type="daily">
-				<div class="flex justify-between items-start mb-4">
-					<div>
-						<span class="bg-blue-50 text-blue-600 text-[10px] font-bold px-2 py-1 rounded uppercase">Daily Mission</span>
-						<h3 class="font-bold text-slate-800 text-lg mt-2 leading-tight">오늘의 성경 한 장 읽기 📖</h3>
-						<p class="text-xs text-slate-400 mt-1">요청자: 김용사 학생</p>
-					</div>
-					<div class="font-extrabold text-amber-500 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-100 text-sm">500 G</div>
-				</div>
-				<div class="flex gap-3">
-					<button onclick="handleAction(this, 'reject')" class="flex-1 py-3 bg-slate-50 text-slate-500 rounded-xl text-xs font-bold active:scale-95 transition">반려</button>
-					<button onclick="handleAction(this, 'approve')" class="flex-1 py-3 bg-blue-600 text-white rounded-xl text-xs font-bold shadow-lg active:scale-95 transition">승인 및 지급</button>
-				</div>
-			</div>
-
-			<div class="card-box p-5 bg-indigo-50/50 border-indigo-100 quest-item" data-type="special">
-				<div class="flex justify-between items-start mb-4">
-					<div>
-						<span class="bg-indigo-600 text-white text-[10px] font-bold px-2 py-1 rounded uppercase shadow-sm">Legendary</span>
-						<h3 class="font-bold text-slate-900 text-lg mt-2 leading-tight">새 친구 초청 (보스 레이드) ⚔️</h3>
-					</div>
-					<div class="font-extrabold text-indigo-700 bg-white px-3 py-1.5 rounded-lg border border-indigo-200 text-sm shadow-sm">3,000 G</div>
-				</div>
-				<p class="text-xs text-slate-500 mb-4 bg-white/60 p-3 rounded-xl border border-indigo-50">"새로운 용사를 왕국으로 데려왔습니다!"</p>
-				<div class="flex gap-3">
-					<button onclick="handleAction(this, 'reject')" class="flex-1 py-3 bg-white text-slate-500 border border-slate-200 rounded-xl text-xs font-bold active:scale-95 transition">검토
-					</button>
-					<button onclick="handleAction(this, 'approve')" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl text-xs font-bold shadow-lg active:scale-95 transition">보상 일괄 지급</button>
-				</div>
-			</div>
+		<div class="flex gap-2 mb-6 overflow-x-auto no-scrollbar pb-1" id="month-list">
+			<th:block th:each="num : ${#numbers.sequence(1,12)}">
+				<button class="quest-month-btn btn-chip-base" th:data-month="${num}" th:text="|${num}월|"></button>
+			</th:block>
 		</div>
+
+		<div class="card-box p-1.5 flex gap-1 mb-6" id="quest-filter">
+			<button class="quest-category-btn btn-chip-base active" data-filter="ALL">전체</button>
+			<button class="quest-category-btn btn-chip-base" data-filter="DAILY">일일</button>
+			<button class="quest-category-btn btn-chip-base" data-filter="WEEKLY">주일</button>
+			<button class="quest-category-btn btn-chip-base" data-filter="EVENT">특별</button>
+		</div>
+
+		<div class="flex border-b border-slate-200 mb-6">
+			<button class="flex-1 py-3 text-sm font-bold border-b-2 status-tab active" data-status="PENDING" style="border-color: #2563eb; color: #2563eb;">
+				승인대기 <span id="cnt-pending" class="ml-1 text-xs bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded-full align-middle">0</span>
+			</button>
+			<button class="flex-1 py-3 text-sm font-bold border-b-2 status-tab text-slate-400" data-status="APPROVED,REJECTED" style="border-color: transparent;">
+				완료됨 <span id="cnt-completed" class="ml-1 text-xs bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded-full align-middle">0</span>
+			</button>
+		</div>
+
+		<div id="quest-loading" class="hidden flex flex-col items-center justify-center py-12 w-full text-slate-400">
+			<i class="fas fa-circle-notch fa-spin text-3xl mb-3 text-blue-500"></i>
+			<p class="text-sm font-medium">데이터를 불러오는 중입니다...</p>
+		</div>
+
+		<div id="quest-list" class="space-y-4"></div>
 
 		<div id="quest-empty" class="hidden flex flex-col items-center justify-center py-20 opacity-50">
 			<i class="fas fa-inbox text-4xl text-slate-300 mb-3"></i>
-			<p class="text-slate-400 font-medium text-sm">대기 중인 퀘스트가 없습니다.</p>
+			<p class="text-slate-400 font-medium text-sm">요청된 퀘스트가 없습니다.</p>
 		</div>
 	</section>
+
+	<style>
+        /* 공통 버튼 스타일 (중복 제거) */
+        .btn-chip-base {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: #64748b;
+            background-color: #f1f5f9;
+            transition: all 0.2s;
+            border: none;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 월 버튼 */
+        .quest-month-btn {
+            flex: 0 0 auto;
+            width: 3rem;
+            height: 3rem;
+        }
+
+        .quest-month-btn.active {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        /* 카테고리 버튼 */
+        .quest-category-btn {
+            flex: 1;
+            padding: 0.5rem 0;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            background-color: transparent;
+        }
+
+        .quest-category-btn.active {
+            background-color: #eff6ff;
+            color: #2563eb;
+            font-weight: 800;
+        }
+	</style>
+
 	<script th:inline="javascript">
 		$(function () {
+			// ==========================================
+			// 1. 상수 및 상태 관리
+			// ==========================================
+			const CONFIG = {
+				API: {
+					LIST: /*[[@{/tch/qest/reqQestList.ax}]]*/ '/tch/qest/reqQestList.ax',
+					ACTION: /*[[@{/tch/qest/chkQest.ax}]]*/ '/tch/qest/chkQest.ax'
+				},
+				BADGES: {
+					'DAILY': {cls: 'bg-blue-50 text-blue-600', txt: 'Daily Mission'},
+					'WEEKLY': {cls: 'bg-green-50 text-green-600', txt: 'Sunday Mission'},
+					'EVENT': {cls: 'bg-indigo-50 text-indigo-600', txt: 'Special Quest'}
+				}
+			};
+
+			const STATE = {
+				year: new Date().getFullYear(),
+				month: new Date().getMonth() + 1,
+				data: [] // 전체 데이터 캐싱
+			};
+
+			const $dom = {
+				yearBadge: $('#year-badge'),
+				monthBtns: $('.quest-month-btn'),
+				monthList: $('#month-list'),
+				categoryBtns: $('.quest-category-btn'),
+				statusTabs: $('.status-tab'),
+				list: $('#quest-list'),
+				loading: $('#quest-loading'),
+				empty: $('#quest-empty'),
+				cntPending: $('#cnt-pending'),
+				cntCompleted: $('#cnt-completed')
+			};
+
+			// ==========================================
+			// 2. 유틸리티 함수
+			// ==========================================
+			const Utils = {
+				toast: (msg) => _showToast(msg), // 실제 토스트 라이브러리로 대체 가능
+				formatDate: (dateStr) => {
+					const d = new Date(dateStr);
+					return `${d.getMonth() + 1}월 ${d.getDate()}일`;
+				},
+				setActive: ($group, $target) => {
+					$group.removeClass('active');
+					$target.addClass('active');
+				}
+			};
+
+			// ==========================================
+			// 3. 초기화 및 데이터 로드
+			// ==========================================
+			function init() {
+				$dom.yearBadge.text(`${STATE.year}년`);
+
+				// 현재 월 활성화 및 스크롤
+				const $targetMonth = $dom.monthBtns.filter(`[data-month="${STATE.month}"]`);
+				Utils.setActive($dom.monthBtns, $targetMonth);
+
+				if ($targetMonth.length) {
+					const scrollLeft = $targetMonth.offset().left + $dom.monthList.scrollLeft()
+						- ($dom.monthList.width() / 2) - ($targetMonth.width() / 2);
+					$dom.monthList.animate({scrollLeft: scrollLeft}, 300);
+				}
+
+				fetchData();
+			}
+
+			function fetchData() {
+				// UI 리셋
+				$dom.list.empty().addClass('hidden');
+				$dom.empty.addClass('hidden');
+				$dom.loading.removeClass('hidden');
+
+				$.ajax({
+					url: CONFIG.API.LIST,
+					type: 'POST',
+					data: {reqMonth: $dom.monthBtns.filter('.active').data('month')},
+					success: (res) => {
+						if (res.rtnCd === '001') {
+							setTimeout(() => { // UX용 딜레이
+								STATE.data = res.rtnData || [];
+								renderList(); // HTML 생성
+								updateUI();   // 필터링 및 카운트 갱신
+								$dom.loading.addClass('hidden');
+							}, 300);
+						} else {
+							Utils.toast(`처리 실패: ${res.rtnMsg} ❌`);
+							$dom.loading.addClass('hidden');
+						}
+					},
+					error: () => {
+						Utils.toast('통신 오류 ❌');
+						$dom.loading.addClass('hidden');
+					}
+				});
+			}
+
+			// ==========================================
+			// 4. 렌더링 및 UI 업데이트
+			// ==========================================
+			function renderList() {
+				if (STATE.data.length === 0) return;
+
+				const html = STATE.data.map(item => {
+					const badge = CONFIG.BADGES[item.questType] || CONFIG.BADGES['DAILY'];
+					const isCompleted = ['APPROVED', 'REJECTED'].includes(item.status);
+					const titleStyle = isCompleted ? 'line-through text-slate-400' : 'text-slate-800';
+
+					// 보상 뱃지
+					const expBadge = item.rewardExp ? `<div class="font-extrabold text-blue-600 bg-blue-50 px-2 py-1.5 rounded-lg border border-blue-100 text-xs text-center min-w-[60px]">${item.rewardExp} EXP</div>` : '';
+					const pointBadge = `<div class="font-extrabold text-amber-500 bg-amber-50 px-2 py-1.5 rounded-lg border border-amber-100 text-xs text-center min-w-[60px]">${item.rewardPoint} P</div>`;
+
+					// 하단 액션 버튼
+					const actionArea = isCompleted
+						? `<div class="text-xs text-slate-400 font-bold bg-slate-50 p-2 rounded text-center">${item.status === 'APPROVED' ? '지급 완료됨' : '반려됨'}</div>`
+						: `<div class="flex gap-3 action-buttons">
+                                <button type="button" class="btn-action flex-1 py-3 bg-slate-50 text-slate-500 rounded-xl text-xs font-bold active:scale-95 transition" data-type="REJECTED" data-sn="${item.logSn}">반려</button>
+                                <button type="button" class="btn-action flex-1 py-3 bg-blue-600 text-white rounded-xl text-xs font-bold shadow-lg active:scale-95 transition" data-type="APPROVED" data-sn="${item.logSn}">승인 및 지급</button>
+                           </div>`;
+
+					return `
+                        <div class="card-box p-5 quest-item" data-type="${item.questType}" data-status="${item.status}">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="flex-1 pr-2">
+                                    <span class="${badge.cls} text-[10px] font-bold px-2 py-1 rounded uppercase">${badge.txt}</span>
+                                    <h3 class="font-bold ${titleStyle} text-lg mt-2 leading-tight">
+										${item.emoji || ''} ${item.title}
+										<span class="block text-sm text-slate-500 font-normal mt-0.5">
+										(${item.description})
+										</span>
+                                    </h3>
+                                    <p class="text-xs text-slate-400 mt-1">요청자: ${item.mberNm} (${Utils.formatDate(item.creatDate)})</p>
+                                </div>
+                                <div class="flex flex-col gap-1 items-end shrink-0">
+                                    ${expBadge}
+                                    ${pointBadge}
+                                </div>
+                            </div>
+                            ${actionArea}
+                        </div>`;
+				}).join('');
+
+				$dom.list.html(html);
+			}
+
+			// 필터링 및 카운트 업데이트 통합 함수
+			function updateUI() {
+				const activeStatus = $dom.statusTabs.filter('.active').data('status'); // "PENDING" or "APPROVED,REJECTED"
+				const activeCategory = $dom.categoryBtns.filter('.active').data('filter');
+
+				// 1. 카운트 업데이트 (현재 카테고리 기준)
+				const filteredByCategory = STATE.data.filter(item => activeCategory === 'ALL' || item.questType === activeCategory);
+				$dom.cntPending.text(filteredByCategory.filter(i => i.status === 'PENDING').length);
+				$dom.cntCompleted.text(filteredByCategory.filter(i => ['APPROVED', 'REJECTED'].includes(i.status)).length);
+
+				// 2. 리스트 필터링 (DOM 표시/숨김)
+				let visibleCount = 0;
+				$dom.list.children('.quest-item').each(function () {
+					const $el = $(this);
+					const isStatusMatch = activeStatus.includes($el.data('status'));
+					const isCategoryMatch = (activeCategory === 'ALL' || $el.data('type') === activeCategory);
+
+					if (isStatusMatch && isCategoryMatch) {
+						$el.removeClass('hidden');
+						visibleCount++;
+					} else {
+						$el.addClass('hidden');
+					}
+				});
+
+				// 3. 빈 화면 처리
+				if (visibleCount === 0) {
+					$dom.list.addClass('hidden');
+					$dom.empty.removeClass('hidden');
+				} else {
+					$dom.list.removeClass('hidden');
+					$dom.empty.addClass('hidden');
+				}
+			}
+
+			// ==========================================
+			// 5. 이벤트 핸들러
+			// ==========================================
+
+			// 월 변경 -> 데이터 재요청
+			$dom.monthBtns.on('click', function () {
+				Utils.setActive($dom.monthBtns, $(this));
+				fetchData();
+			});
+
+			// 카테고리 변경 -> UI만 갱신
+			$dom.categoryBtns.on('click', function () {
+				Utils.setActive($dom.categoryBtns, $(this));
+				updateUI();
+			});
+
+			// 상태 탭 변경 -> UI만 갱신
+			$dom.statusTabs.on('click', function () {
+				const $this = $(this);
+				$dom.statusTabs.removeClass('active').addClass('text-slate-400').css({'border-color': 'transparent', 'color': '#94a3b8'});
+				$this.addClass('active').removeClass('text-slate-400').css({'border-color': '#2563eb', 'color': '#2563eb'});
+				updateUI();
+			});
+
+			// 승인/반려 액션
+			$(document).on('click', '.btn-action', function () {
+				const type = $(this).data('type');
+				const sn = $(this).data('sn');
+				const $card = $(this).closest('.quest-item');
+
+				if (type === 'REJECTED' && !confirm('정말 반려하시겠습니까?')) return;
+				if (type === 'APPROVED') $(this).html('<i class="fas fa-spinner fa-spin"></i>');
+
+				$.ajax({
+					url: CONFIG.API.ACTION,
+					type: 'POST',
+					data: {logSn: sn, status: type},
+					success: (res) => {
+						if (res.rtnCd === '001') {
+							$card.css({transform: 'scale(0.9)', opacity: '0', transition: '0.3s'});
+							setTimeout(() => {
+								Utils.toast(res.rtnMsg);
+								fetchData(); // 데이터 갱신을 위해 재로드 (안전성 확보)
+							}, 300);
+						} else {
+							Utils.toast(`처리 실패: ${res.rtnMsg} ❌`);
+						}
+					},
+					error: () => Utils.toast('통신 오류 ❌')
+				});
+			});
+			init();
 		});
 	</script>
 </th:block>

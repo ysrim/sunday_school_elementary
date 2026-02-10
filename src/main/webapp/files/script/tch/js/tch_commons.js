@@ -43,7 +43,7 @@ function _showToast(message) {
     $toast.text(message).addClass('show');
     setTimeout(() => {
         $toast.removeClass('show');
-    }, 3000);
+    }, 4000);
 }
 
 
@@ -61,23 +61,6 @@ $('#quest-filter .chip').on('click', function () {
     });
     $('#quest-empty').toggleClass('hidden', count > 0);
 });
-
-// 5. 공통 액션 (승인/반려 애니메이션)
-function handleAction(btn, type) {
-    const card = $(btn).closest('.card-box, .quest-item');
-    if (type === 'approve') {
-        $(btn).html('<i class="fas fa-spinner fa-spin"></i>');
-        setTimeout(() => {
-            card.css({transform: 'scale(0.9)', opacity: '0', transition: '0.3s'});
-            setTimeout(() => card.slideUp(300, function () {
-                $(this).remove()
-            }), 300);
-            showToast('처리가 완료되었습니다! ✅');
-        }, 500);
-    } else if (confirm('반려하시겠습니까?')) {
-        card.css('opacity', '0.5');
-    }
-}
 
 function updatePreview(el) {
     $('#preview-text').text($(el).val() || "미리보기가 표시됩니다.");
