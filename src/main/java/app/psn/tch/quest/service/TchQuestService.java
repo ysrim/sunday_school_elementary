@@ -1,11 +1,9 @@
 package app.psn.tch.quest.service;
 
-import app.psn.tch.quest.vo.ReqQuestProcVO;
-import app.psn.tch.quest.vo.StdQuestListVO;
-import app.psn.tch.quest.vo.StdQuestPendingVO;
-import app.psn.tch.quest.vo.TchReqQestVO;
-
 import java.util.List;
+
+import app.psn.tch.quest.vo.ReqQuestProcVO;
+import app.psn.tch.quest.vo.TchReqQestVO;
 
 public interface TchQuestService {
 

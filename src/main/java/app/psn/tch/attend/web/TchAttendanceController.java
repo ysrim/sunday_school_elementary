@@ -1,7 +1,9 @@
 package app.psn.tch.attend.web;
 
-import app.psn.tch.attend.service.TchAttendanceService;
-import app.psn.tch.quest.vo.ReqQuestProcVO;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.base.annotation.tch.TchMenuInfo;
 import com.base.enumm.com.MberGrdEnum;
@@ -10,15 +12,11 @@ import com.base.enumm.tch.TchNaviEnum;
 import com.base.utl.ResUtil;
 import com.base.vo.BodyResVO;
 
+import app.psn.tch.attend.service.TchAttendanceService;
+import app.psn.tch.quest.vo.ReqQuestProcVO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
 @Controller
@@ -33,7 +31,7 @@ public class TchAttendanceController {
 	 */
 	@TchMenuInfo(navi = TchNaviEnum.TCH_ATND, role = MberGrdEnum.TCH)
 	@RequestMapping("/atnd.pg")
-	public String attendancePg(Model model) {
+	public String attendancePg() {
 
 		return ViewPathEnum.TCH.to("/atnd/tchAtnd");
 
