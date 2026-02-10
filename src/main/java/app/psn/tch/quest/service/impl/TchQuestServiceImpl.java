@@ -1,11 +1,14 @@
 package app.psn.tch.quest.service.impl;
 
 import app.psn.com.service.DomainService;
+import app.psn.com.vo.QuestLogsVO;
 import app.psn.com.vo.QuestVO;
 import app.psn.tch.quest.mapper.TchQuestMapper;
 import app.psn.tch.quest.service.TchQuestService;
+import app.psn.tch.quest.vo.ReqQuestProcVO;
 import app.psn.tch.quest.vo.StdQuestListVO;
 import app.psn.tch.quest.vo.StdQuestPendingVO;
+import com.base.enumm.com.QuestLogStatusEnum;
 import com.base.utl.SessionUtil;
 import com.base.vo.QuestCompleteEvent;
 import lombok.RequiredArgsConstructor;
@@ -35,18 +38,15 @@ public class TchQuestServiceImpl implements TchQuestService {
 
     }
 
-    public void questDo(StdQuestPendingVO stdQuestPendingVO) {
+    public void questProc(ReqQuestProcVO reqQuestProcVO) {
 
-        QuestVO questVO = domainService.sltQuest(stdQuestPendingVO.getQuestSn());
+        // 1. 퀘스트 승인 처리
+        tchQuestMapper.questProc(reqQuestProcVO);
 
-        if (tchQuestMapper.questDo(stdQuestPendingVO) < 1) { // 비즈니스 로직상 필수라면 예외 처리
-            throw new RuntimeException("퀘스트 수행 내역 저장 중 오류가 발생했습니다.");
-        }
-
-        log.warn("questVO => {}", questVO);
-
-        if ("Y".equals(questVO.immediatePayYn())) { // 퀘스트가 즉시 보상이면 바로 보상
-            publisher.publishEvent(new QuestCompleteEvent(stdQuestPendingVO.getMberSn(), stdQuestPendingVO.getQuestSn(), stdQuestPendingVO.getLogSn()));
+        // 2. 승인인 경우에는 보상지급
+        if (QuestLogStatusEnum.APPROVED.isSameStatus(reqQuestProcVO.getStatus())) {
+            QuestLogsVO questLogsVO = domainService.sltQuestLogs(reqQuestProcVO.getLogSn());
+            publisher.publishEvent(new QuestCompleteEvent(questLogsVO.mberSn(), questLogsVO.questSn(), questLogsVO.logSn()));
         }
 
     }

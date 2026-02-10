@@ -1,25 +1,22 @@
 package app.psn.com.mapper;
 
+import app.psn.com.vo.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-
-import app.psn.com.vo.AvatarLevelRulesVO;
-import app.psn.com.vo.AvatarVO;
-import app.psn.com.vo.QuestContinuityRulesVO;
-import app.psn.com.vo.QuestContinuityVO;
-import app.psn.com.vo.QuestVO;
 
 @Mapper
 public interface DomainMapper {
 
-	QuestVO sltQuest(Integer questSn);
+    QuestVO sltQuest(Integer questSn);
 
-	AvatarVO sltAvatar(Integer mberSn);
+    AvatarVO sltAvatar(Integer mberSn);
 
-	AvatarLevelRulesVO sltAvatarLevelRules(Integer level);
+    AvatarLevelRulesVO sltAvatarLevelRules(Integer level);
 
-	QuestContinuityRulesVO sltQuestContinuityRules(Integer questSn);
+    QuestContinuityRulesVO sltQuestContinuityRules(Integer questSn);
 
-	QuestContinuityVO sltQuestContinuity(@Param("mberSn") Integer mberSn, @Param("questSn") Integer questSn);
+    QuestContinuityVO sltQuestContinuity(@Param("mberSn") Integer mberSn, @Param("questSn") Integer questSn);
+
+    QuestLogsVO sltQuestLogs(Integer logSn);
 
 }

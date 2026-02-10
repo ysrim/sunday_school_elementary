@@ -5,14 +5,14 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import app.psn.tch.attend.vo.ReqAttendanceVO;
+import app.psn.tch.attend.vo.AtndApprovalVO;
 
 @Mapper
 public interface TchAttendanceMapper {
 
-	/**
-	 * 출석 요청 목록
-	 */
-	List<ReqAttendanceVO> sltReqAtndList(@Param("guildSn") Integer guildSn, @Param("reqDate") String reqDate);
+    /**
+     * 출석 승인 요청 목록
+     */
+    List<AtndApprovalVO> sltReqAtndList(@Param("guildSn") Integer guildSn, @Param("reqDate") String reqDate);
 
 }

@@ -16,4 +16,8 @@ public enum QuestLogStatusEnum {
 
     private final String description;
 
+    public boolean isSameStatus(String statusName) {
+        return this.name().equals(statusName);
+    }
+
 }

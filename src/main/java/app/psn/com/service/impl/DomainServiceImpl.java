@@ -1,15 +1,11 @@
 package app.psn.com.service.impl;
 
+import app.psn.com.vo.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import app.psn.com.mapper.DomainMapper;
 import app.psn.com.service.DomainService;
-import app.psn.com.vo.AvatarLevelRulesVO;
-import app.psn.com.vo.AvatarVO;
-import app.psn.com.vo.QuestContinuityRulesVO;
-import app.psn.com.vo.QuestContinuityVO;
-import app.psn.com.vo.QuestVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,6 +49,13 @@ public class DomainServiceImpl implements DomainService {
 	public QuestContinuityVO sltQuestContinuity(Integer mberSn, Integer questSn) {
 
 		return domainMapper.sltQuestContinuity(mberSn, questSn);
+
+	}
+
+	@Override
+	public QuestLogsVO sltQuestLogs(Integer logSn) {
+
+		return domainMapper.sltQuestLogs(logSn);
 
 	}
 
