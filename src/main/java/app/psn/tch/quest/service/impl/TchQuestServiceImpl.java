@@ -2,7 +2,6 @@ package app.psn.tch.quest.service.impl;
 
 import app.psn.com.service.DomainService;
 import app.psn.com.vo.QuestLogsVO;
-import app.psn.com.vo.QuestVO;
 import app.psn.tch.quest.mapper.TchQuestMapper;
 import app.psn.tch.quest.service.TchQuestService;
 import app.psn.tch.quest.vo.ReqQuestProcVO;
@@ -48,13 +47,6 @@ public class TchQuestServiceImpl implements TchQuestService {
             QuestLogsVO questLogsVO = domainService.sltQuestLogs(reqQuestProcVO.getLogSn());
             publisher.publishEvent(new QuestCompleteEvent(questLogsVO.mberSn(), questLogsVO.questSn(), questLogsVO.logSn()));
         }
-
-    }
-
-    @Override
-    public boolean questCompleteChk(StdQuestPendingVO questVO) {
-
-        return tchQuestMapper.questCompleteChk(questVO) > 0;
 
     }
 

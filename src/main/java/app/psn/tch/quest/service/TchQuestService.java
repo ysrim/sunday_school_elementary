@@ -18,9 +18,4 @@ public interface TchQuestService {
      */
     void questProc(ReqQuestProcVO reqQuestProcVO);
 
-    /**
-     * 퀘스트 완료 체크
-     */
-    boolean questCompleteChk(StdQuestPendingVO questVO);
-
 }

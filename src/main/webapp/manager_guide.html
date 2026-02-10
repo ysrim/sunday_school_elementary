@@ -1,43 +1,53 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" class="scroll-smooth">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta name="description" content="BJCC RPG 운영자 가이드 - PC 관리자 및 모바일 선생님 시스템 매뉴얼">
     <link rel="icon" type="image/png" sizes="16x16" href="/files/favicon-16x16.png">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="theme-color" content="#ffffff">
     <title>BJCC RPG - 운영자 가이드북</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'sans-serif'],
+                    },
+                    colors: {
+                        slate: { 850: '#1e293b' } // 목업용 컬러
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+        /* 기본 설정 */
+        html { scroll-padding-top: 80px; }
+        body { -webkit-font-smoothing: antialiased; }
 
-        html {
-            scroll-behavior: smooth;
-            scroll-padding-top: 80px;
-        }
-
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background-color: #f8fafc;
-            overflow-x: hidden;
-        }
-
-        /* [PC 전용] 브라우저 목업 규격 (와이드) */
-        .pc-browser-mockup {
+        /* 2. 목업 스타일 최적화 */
+        /* [PC 목업] */
+        .mockup-pc {
+            position: relative;
             width: 100%;
             max-width: 900px;
-            aspect-ratio: 16 / 9;
-            border-top: 30px solid #e2e8f0;
+            aspect-ratio: 16 / 9; /* 레이아웃 떨림 방지 */
+            background: #fff;
             border-radius: 0.75rem;
+            box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.15);
+            border-top: 30px solid #e2e8f0;
             overflow: hidden;
-            box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
-            position: relative;
             margin: 0 auto;
         }
-
-        .pc-browser-mockup::before {
+        .mockup-pc::before {
             content: '';
             position: absolute;
             top: -20px;
@@ -47,23 +57,23 @@
             background: #ff5f56;
             border-radius: 50%;
             box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27c93f;
+            z-index: 10;
         }
 
-        /* [모바일 전용] 핸드폰 목업 규격 (세로) */
-        .mobile-phone-mockup {
+        /* [모바일 목업] */
+        .mockup-mobile {
+            position: relative;
             width: 280px;
             height: 580px;
+            background: #fff;
             border: 10px solid #1e293b;
             border-radius: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
             overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
-            background-color: #fff;
-            position: relative;
             flex-shrink: 0;
             margin: 0 auto;
         }
-
-        .mobile-phone-mockup::after {
+        .mockup-mobile::after {
             content: '';
             position: absolute;
             top: 0;
@@ -74,205 +84,234 @@
             background: #1e293b;
             border-bottom-left-radius: 1rem;
             border-bottom-right-radius: 1rem;
+            z-index: 10;
         }
 
-        /* 이미지 공통 설정 */
+        /* 이미지 공통 */
         .mockup-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             object-position: top;
+            display: block;
         }
 
-        /* 애니메이션 */
+        /* 3. 애니메이션 성능 최적화 (will-change 사용 고려 가능하나 CSS 단순화) */
         .reveal {
             opacity: 0;
-            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
         }
-
-        .reveal-up {
-            transform: translateY(40px);
-        }
-
         .reveal.active {
             opacity: 1;
-            transform: translate(0);
-        }
-
-        .bg-indigo-gradient {
-            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            transform: translateY(0);
         }
     </style>
 </head>
-<body class="text-slate-700">
+<body class="bg-slate-50 text-slate-700">
 
-<nav class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 py-3 px-6 flex justify-between items-center">
-    <div class="font-black text-slate-900 tracking-tighter text-xl flex items-center">
-        <i class="fas fa-chess-rook mr-2 text-indigo-600"></i>봉동중앙교회 초등부 RPG<span
-            class="ml-2 text-sm font-medium text-slate-400">| Manager Guide</span>
+<nav class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 py-3 px-6 flex justify-between items-center transition-all duration-300">
+    <div class="font-black text-slate-900 tracking-tighter text-xl flex items-center cursor-pointer" onclick="window.scrollTo(0,0)">
+        <i class="fas fa-chess-rook mr-2 text-indigo-600"></i>
+        <span>BJCC RPG</span>
+        <span class="ml-2 text-sm font-medium text-slate-400 border-l pl-2 border-slate-300">Manager Guide</span>
     </div>
-    <div class="hidden md:flex gap-8 text-sm font-bold">
-        <a href="#total-admin" class="hover:text-indigo-600 transition">PC Admin</a>
-        <a href="#teacher-mobile" class="hover:text-indigo-600 transition">Mobile Teacher</a>
+    <div class="hidden md:flex gap-8 text-sm font-bold text-slate-500">
+        <a href="#total-admin" class="hover:text-indigo-600 transition-colors">PC Admin</a>
+        <a href="#teacher-mobile" class="hover:text-indigo-600 transition-colors">Mobile Teacher</a>
     </div>
-    <a href="student_guide.html"
-       class="bg-slate-100 text-slate-600 px-4 py-2 rounded-full font-bold text-sm hover:bg-slate-200 transition">학생용
-        가이드</a>
+    <a href="student_guide.html" class="bg-slate-100 text-slate-600 px-4 py-2 rounded-full font-bold text-sm hover:bg-indigo-50 hover:text-indigo-600 transition-colors">
+        학생용 가이드
+    </a>
 </nav>
 
-<header class="pt-32 pb-16 bg-white border-b border-slate-100">
-    <div class="container mx-auto px-6 text-center reveal reveal-up active">
-        <h1 class="text-4xl md:text-5xl font-black leading-tight text-slate-900 mb-4">
+<header class="pt-36 pb-20 bg-white border-b border-slate-200">
+    <div class="container mx-auto px-6 text-center reveal active">
+        <span class="inline-block py-1 px-3 rounded-full bg-indigo-50 text-indigo-600 text-xs font-bold mb-4 tracking-wider uppercase">System Manual</span>
+        <h1 class="text-4xl md:text-5xl font-black leading-tight text-slate-900 mb-4 break-keep">
             시스템 운영 가이드
         </h1>
-        <p class="text-slate-500 font-medium italic">PC 환경의 전체 관리자와 모바일 환경의 선생님 페이지 안내</p>
+        <p class="text-slate-500 font-medium text-lg">
+            PC 환경의 <span class="text-indigo-600 font-bold">전체 관리자</span>와 모바일 <span class="text-indigo-600 font-bold">선생님 페이지</span> 안내
+        </p>
     </div>
 </header>
 
 <section id="total-admin" class="py-24 bg-slate-50">
     <div class="container mx-auto px-6 max-w-5xl">
-        <div class="text-center mb-20 reveal reveal-up">
-            <span class="text-indigo-600 font-bold tracking-widest uppercase text-xs">Environment: Desktop PC</span>
-            <h2 class="text-4xl font-black text-slate-900 mt-2">전체 관리자 시스템</h2>
-            <div class="h-1 w-20 bg-indigo-600 mx-auto mt-4 rounded-full"></div>
+        <div class="text-center mb-24 reveal">
+            <span class="text-indigo-600 font-bold tracking-widest uppercase text-xs">Desktop Environment</span>
+            <h2 class="text-3xl md:text-4xl font-black text-slate-900 mt-2">전체 관리자 시스템</h2>
+            <div class="h-1.5 w-16 bg-indigo-600 mx-auto mt-5 rounded-full"></div>
         </div>
 
         <div class="space-y-32">
-            <div class="space-y-8 reveal reveal-up">
-                <div class="text-center md:text-left">
-                    <h3 class="text-2xl font-black mb-4">01. 운영 스탭 전용 로그인</h3>
-                    <p class="text-slate-600">부서 운영을 총괄하는 스탭을 별도로 지정하여 보안 및 운영 권한을 관리합니다.</p>
+            <div class="space-y-6 reveal">
+                <div class="text-center md:text-left border-l-4 border-indigo-600 pl-4">
+                    <h3 class="text-2xl font-black text-slate-800">01. 운영 스탭 전용 로그인</h3>
+                    <p class="text-slate-600 mt-2">부서 운영을 총괄하는 스탭을 별도로 지정하여 보안 및 운영 권한을 관리합니다.</p>
                 </div>
-                <div class="pc-browser-mockup">
+                <div class="mockup-pc">
                     <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/manual/manager/1_login.PNG"
-                         class="mockup-img">
+                         loading="lazy" alt="관리자 로그인 화면" class="mockup-img">
                 </div>
             </div>
 
-            <div class="space-y-8 reveal reveal-up">
-                <div class="text-center md:text-left">
-                    <h3 class="text-2xl font-black mb-4">02. 통합 통계 대시보드</h3>
-                    <p class="text-slate-600">출석률 및 장결자 현황 등 앱에서 수집되는 모든 데이터를 차트 형식으로 직관적으로 조회합니다.</p>
+            <div class="space-y-6 reveal">
+                <div class="text-center md:text-left border-l-4 border-indigo-600 pl-4">
+                    <h3 class="text-2xl font-black text-slate-800">02. 통합 통계 대시보드</h3>
+                    <p class="text-slate-600 mt-2">출석률 및 장결자 현황 등 앱에서 수집되는 모든 데이터를 차트로 직관적으로 조회합니다.</p>
                 </div>
-                <div class="pc-browser-mockup">
+                <div class="mockup-pc">
                     <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/manual/manager/2_home.PNG"
-                         class="mockup-img">
+                         loading="lazy" alt="통계 대시보드 화면" class="mockup-img">
                 </div>
             </div>
 
-            <div class="space-y-8 reveal reveal-up">
-                <div class="text-center md:text-left">
-                    <h3 class="text-2xl font-black mb-4">03. 용사(회원) 통합 관리</h3>
-                    <p class="text-slate-600">모든 학생의 정보를 통합 관리하며, 학년/반 이동 및 상세 정보를 수정할 수 있습니다.</p>
+            <div class="space-y-6 reveal">
+                <div class="text-center md:text-left border-l-4 border-indigo-600 pl-4">
+                    <h3 class="text-2xl font-black text-slate-800">03. 용사(회원) 통합 관리</h3>
+                    <p class="text-slate-600 mt-2">모든 학생의 정보를 통합 관리하며, 학년/반 이동 및 상세 정보를 수정할 수 있습니다.</p>
                 </div>
-                <div class="pc-browser-mockup">
+                <div class="mockup-pc">
                     <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/manual/manager/3_member.PNG"
-                         class="mockup-img">
+                         loading="lazy" alt="회원 관리 화면" class="mockup-img">
                 </div>
             </div>
 
-            <div class="space-y-8 reveal reveal-up">
-                <div class="text-center md:text-left">
-                    <h3 class="text-2xl font-black mb-4">04. 학생용 앱 공지사항 관리</h3>
-                    <p class="text-slate-600">학생들이 사용하는 앱 메인화면의 공지사항 및 피드 내용을 실시간으로 관리합니다.</p>
+            <div class="space-y-6 reveal">
+                <div class="text-center md:text-left border-l-4 border-indigo-600 pl-4">
+                    <h3 class="text-2xl font-black text-slate-800">04. 앱 공지사항 관리</h3>
+                    <p class="text-slate-600 mt-2">학생 앱 메인화면에 노출될 공지사항 및 피드 내용을 실시간으로 관리합니다.</p>
                 </div>
-                <div class="pc-browser-mockup">
+                <div class="mockup-pc">
                     <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/manual/manager/4_feed.PNG"
-                         class="mockup-img">
+                         loading="lazy" alt="공지사항 관리 화면" class="mockup-img">
                 </div>
             </div>
 
-            <div class="space-y-8 reveal reveal-up">
-                <div class="text-center md:text-left">
-                    <h3 class="text-2xl font-black mb-4">05. 달란트 리워드 통합 제어</h3>
-                    <p class="text-slate-600">달란트의 수동 지급 및 회수 내역을 관리하여 투명한 리워드 시스템을 운영합니다.</p>
+            <div class="space-y-6 reveal">
+                <div class="text-center md:text-left border-l-4 border-indigo-600 pl-4">
+                    <h3 class="text-2xl font-black text-slate-800">05. 달란트 리워드 제어</h3>
+                    <p class="text-slate-600 mt-2">달란트의 수동 지급 및 회수 내역을 관리하여 투명한 리워드 시스템을 운영합니다.</p>
                 </div>
-                <div class="pc-browser-mockup">
+                <div class="mockup-pc">
                     <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/manual/manager/5_reward.PNG"
-                         class="mockup-img">
+                         loading="lazy" alt="리워드 관리 화면" class="mockup-img">
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<section id="teacher-mobile" class="py-24 bg-white">
+<section id="teacher-mobile" class="py-24 bg-white relative">
+    <div class="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
+
     <div class="container mx-auto px-6 max-w-6xl">
-        <div class="text-center mb-20 reveal reveal-up">
-            <span class="text-indigo-600 font-bold tracking-widest uppercase text-xs">Environment: 100% Mobile App</span>
-            <h2 class="text-4xl font-black text-slate-900 mt-2">길드 마스터(선생님) 페이지</h2>
-            <div class="h-1 w-20 bg-indigo-600 mx-auto mt-4 rounded-full"></div>
+        <div class="text-center mb-24 reveal">
+            <span class="text-indigo-600 font-bold tracking-widest uppercase text-xs">Mobile App Environment</span>
+            <h2 class="text-3xl md:text-4xl font-black text-slate-900 mt-2">길드 마스터(선생님) 페이지</h2>
+            <div class="h-1.5 w-16 bg-indigo-600 mx-auto mt-5 rounded-full"></div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-24 gap-x-12">
-            <div class="flex flex-col items-center gap-6 reveal reveal-up">
-                <h3 class="text-xl font-bold text-slate-800">01. 반 선생님 로그인</h3>
-                <div class="mobile-phone-mockup">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-20 gap-x-8 justify-items-center">
+            <div class="flex flex-col items-center gap-6 reveal group">
+                <div class="text-center space-y-2">
+                    <span class="text-indigo-600 font-bold text-lg">01</span>
+                    <h3 class="text-xl font-bold text-slate-800">반 선생님 로그인</h3>
+                </div>
+                <div class="mockup-mobile transition-transform duration-500 group-hover:-translate-y-2">
                     <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/manual/teacher/1_login.PNG"
-                         class="mockup-img">
+                         loading="lazy" alt="선생님 로그인" class="mockup-img">
                 </div>
-                <p class="text-sm text-slate-500 text-center px-4 leading-relaxed">각 반 선생님 전용 계정으로 접속하여 담당 학생들만 집중
-                    관리합니다.</p>
+                <p class="text-sm text-slate-500 text-center px-4 leading-relaxed max-w-xs break-keep">
+                    각 반 선생님 전용 계정으로 접속하여 담당 학생들만 집중 관리합니다.
+                </p>
             </div>
 
-            <div class="flex flex-col items-center gap-6 reveal reveal-up delay-100">
-                <h3 class="text-xl font-bold text-slate-800">02. 반 통계 및 라운지</h3>
-                <div class="mobile-phone-mockup">
+            <div class="flex flex-col items-center gap-6 reveal delay-100 group">
+                <div class="text-center space-y-2">
+                    <span class="text-indigo-600 font-bold text-lg">02</span>
+                    <h3 class="text-xl font-bold text-slate-800">반 통계 및 라운지</h3>
+                </div>
+                <div class="mockup-mobile transition-transform duration-500 group-hover:-translate-y-2">
                     <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/manual/teacher/2_home.PNG"
-                         class="mockup-img">
+                         loading="lazy" alt="반 통계 화면" class="mockup-img">
                 </div>
-                <p class="text-sm text-slate-500 text-center px-4 leading-relaxed">반별 통계 확인 및 **길드 라운지** 댓글을 통해 아이들과
-                    소통합니다.</p>
+                <p class="text-sm text-slate-500 text-center px-4 leading-relaxed max-w-xs break-keep">
+                    반별 통계 확인 및 <b>길드 라운지</b> 댓글을 통해 아이들과 소통합니다.
+                </p>
             </div>
 
-            <div class="flex flex-col items-center gap-6 reveal reveal-up delay-200">
-                <h3 class="text-xl font-bold text-slate-800">03. 실시간 출석 승인</h3>
-                <div class="mobile-phone-mockup">
+            <div class="flex flex-col items-center gap-6 reveal delay-200 group">
+                <div class="text-center space-y-2">
+                    <span class="text-indigo-600 font-bold text-lg">03</span>
+                    <h3 class="text-xl font-bold text-slate-800">실시간 출석 승인</h3>
+                </div>
+                <div class="mockup-mobile transition-transform duration-500 group-hover:-translate-y-2">
                     <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/manual/teacher/3_attendance.PNG"
-                         class="mockup-img">
+                         loading="lazy" alt="출석 승인 화면" class="mockup-img">
                 </div>
-                <p class="text-sm text-slate-500 text-center px-4 leading-relaxed">학생들이 요청한 출석 체크를 현장에서 즉시 확인하고
-                    승인합니다.</p>
+                <p class="text-sm text-slate-500 text-center px-4 leading-relaxed max-w-xs break-keep">
+                    학생들이 요청한 출석 체크를 현장에서 즉시 확인하고 승인합니다.
+                </p>
             </div>
 
-            <div class="flex flex-col items-center gap-6 reveal reveal-up">
-                <h3 class="text-xl font-bold text-slate-800">04. 퀘스트 승인 관리</h3>
-                <div class="mobile-phone-mockup">
+            <div class="flex flex-col items-center gap-6 reveal group">
+                <div class="text-center space-y-2">
+                    <span class="text-indigo-600 font-bold text-lg">04</span>
+                    <h3 class="text-xl font-bold text-slate-800">퀘스트 승인 관리</h3>
+                </div>
+                <div class="mockup-mobile transition-transform duration-500 group-hover:-translate-y-2">
                     <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/manual/teacher/4_quest.PNG"
-                         class="mockup-img">
+                         loading="lazy" alt="퀘스트 승인 화면" class="mockup-img">
                 </div>
-                <p class="text-sm text-slate-500 text-center px-4 leading-relaxed">성경 읽기, 미션 수행 등 인증 내용을 검토하고 보상을
-                    확정합니다.</p>
+                <p class="text-sm text-slate-500 text-center px-4 leading-relaxed max-w-xs break-keep">
+                    성경 읽기, 미션 수행 등 인증 내용을 검토하고 보상을 확정합니다.
+                </p>
             </div>
 
-            <div class="flex flex-col items-center gap-6 reveal reveal-up delay-100">
-                <h3 class="text-xl font-bold text-slate-800">05. 길드원(학생) 관리</h3>
-                <div class="mobile-phone-mockup">
-                    <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/manual/teacher/5_guild.PNG"
-                         class="mockup-img">
+            <div class="flex flex-col items-center gap-6 reveal delay-100 group">
+                <div class="text-center space-y-2">
+                    <span class="text-indigo-600 font-bold text-lg">05</span>
+                    <h3 class="text-xl font-bold text-slate-800">길드원(학생) 관리</h3>
                 </div>
-                <p class="text-sm text-slate-500 text-center px-4 leading-relaxed">반 아이들의 현재 레벨과 누적 포인트를 한눈에
-                    모니터링합니다.</p>
+                <div class="mockup-mobile transition-transform duration-500 group-hover:-translate-y-2">
+                    <img src="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/manual/teacher/5_guild.PNG"
+                         loading="lazy" alt="길드원 관리 화면" class="mockup-img">
+                </div>
+                <p class="text-sm text-slate-500 text-center px-4 leading-relaxed max-w-xs break-keep">
+                    반 아이들의 현재 레벨과 누적 포인트를 한눈에 모니터링합니다.
+                </p>
             </div>
         </div>
     </div>
 </section>
 
-<footer class="py-16 bg-slate-900 text-white text-center">
-    <p class="text-slate-500 text-sm mb-2">© 2026 Elementary Dept RPG Project. All rights reserved.</p>
-    <p class="text-slate-600 text-xs uppercase tracking-widest">Provided By 하나님의사람</p>
+<footer class="py-12 bg-slate-900 text-white text-center border-t border-slate-800">
+    <div class="container mx-auto px-6">
+        <p class="text-slate-400 text-sm mb-3">© 2026 Elementary Dept RPG Project. All rights reserved.</p>
+        <p class="text-slate-600 text-xs uppercase tracking-widest font-bold">Provided By 하나님의사람</p>
+    </div>
 </footer>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const observerOptions = {root: null, rootMargin: '0px', threshold: 0.1};
-        const observer = new IntersectionObserver((entries) => {
+        // Intersection Observer 최적화
+        const observer = new IntersectionObserver((entries, obs) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('active');
+                    // 한번 애니메이션 후 관찰 중지 (성능 향상)
+                    obs.unobserve(entry.target);
                 }
             });
-        }, observerOptions);
+        }, {
+            root: null,
+            rootMargin: '0px 0px -10% 0px', // 화면 하단 10% 지점에서 트리거
+            threshold: 0.1
+        });
+
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     });
 </script>

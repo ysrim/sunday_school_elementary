@@ -3,7 +3,6 @@ package app.psn.tch.quest.mapper;
 import app.psn.tch.quest.vo.ReqQuestProcVO;
 import app.psn.tch.quest.vo.StdQuestListVO;
 import app.psn.tch.quest.vo.StdQuestPendingVO;
-import com.base.enumm.com.QuestLogStatusEnum;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -11,19 +10,14 @@ import java.util.List;
 @Mapper
 public interface TchQuestMapper {
 
-	/**
-	 * 퀘스트 목록
-	 */
-	List<StdQuestListVO> sltQuestList(String guildSn);
+    /**
+     * 퀘스트 목록
+     */
+    List<StdQuestListVO> sltQuestList(String guildSn);
 
-	/**
-	 * 퀘스트 승인
-	 */
-	void questProc(ReqQuestProcVO reqQuestProcVO);
-
-	/**
-	 * 퀘스트 완료 체크
-	 */
-	Integer questCompleteChk(StdQuestPendingVO questVO);
+    /**
+     * 퀘스트 승인
+     */
+    void questProc(ReqQuestProcVO reqQuestProcVO);
 
 }
