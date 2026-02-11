@@ -22,3 +22,11 @@ Data Transfer Object: DTO(ex. AddressDTO) 계층간 데이터 이동 ctl -> srv�
         페이지
         - 홈: 공지사항 (당분간 하드코드)
         - 설정: 캐릭터명변경 (추후 개발)
+
+==> 축약어 정리해서 모든 이름 rename 처리 (기준 5자리이상은 3~4자리로)
+guild -> gild
+attendance -> atnd
+login -> lgn
+option -> opt
+quest -> qest
+member -> mbr
