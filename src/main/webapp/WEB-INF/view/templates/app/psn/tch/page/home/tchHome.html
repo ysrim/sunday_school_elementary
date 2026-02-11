@@ -1,61 +1,71 @@
 <!DOCTYPE html>
 <html xmlns:th="http//www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{/app/psn/tch/layouts/tch_layout}" lang="ko">
+      layout:decorate="~{/app/psn/tch/layouts/tch_layout}" lang="ko">
 <th:block layout:fragment="content">
 	<section id="tab-home" class="section-content active">
 		<div class="mb-6 px-1">
 			<h2 class="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
-				믿음반 모험 브리핑
-				<span class="text-[11px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-lg border border-blue-100">1월 4주</span>
+				[[${session.mberInfo.guildNm}]]길드 모험 브리핑
+				<span class="text-[11px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-lg border border-blue-100"
+				      th:text="${new java.lang.String(dashboard.weekName, 'UTF-8')}">1월 4주</span>
 			</h2>
 			<p class="text-sm text-slate-400 mt-1">오늘의 왕국 활동 현황을 확인하세요.</p>
 		</div>
-
 		<div class="card-box p-7 bg-gradient-to-br from-blue-600 to-indigo-600 text-white border-0 shadow-lg relative">
 			<div class="flex justify-between items-center mb-6 relative z-10">
 				<div>
-					<div class="text-blue-100 text-xs font-bold mb-1 opacity-80">출석현황(02.01)</div>
-					<div class="text-4xl font-black">18<span class="text-lg opacity-70 font-medium">/ 21명</span></div>
+					<div class="text-blue-100 text-xs font-bold mb-1 opacity-80"
+					     th:text="|출석현황 ${new java.lang.String(dashboard.monthName, 'UTF-8')}|">출석현황(02.01)
+					</div>
+					<div class="text-4xl font-black">[[${dashboard.atndCnt}]] <span
+							class="text-lg opacity-70 font-medium" th:text="|/ ${dashboard.gildCnt}명|">/ 21명</span>
+					</div>
 				</div>
 				<div class="text-right">
 					<div class="text-blue-100 text-xs font-bold mb-1 opacity-80">누적 달란트</div>
-					<div class="text-2xl font-black">1.8M <span class="text-sm opacity-70">G</span></div>
+					<div class="text-2xl font-black">[[${#numbers.formatInteger(dashboard.sumPoint, 1, 'COMMA')}]] <span
+							class="text-sm opacity-70">P</span></div>
 				</div>
 			</div>
 			<div class="grid grid-cols-4 gap-2 text-center border-t border-white/20 pt-6 relative z-10">
 				<div>
 					<div class="text-[10px] opacity-80 mb-1">대기</div>
-					<div class="font-bold text-yellow-300">3</div>
+					<div class="font-bold text-yellow-300" th:text="|${dashboard.pendingCnt}건|">3</div>
 				</div>
 				<div class="border-l border-white/20">
 					<div class="text-[10px] opacity-80 mb-1">출석률</div>
-					<div class="font-bold">85%</div>
+					<div class="font-bold" th:text="|${dashboard.atndPct}%|">85%</div>
 				</div>
 				<div class="border-l border-white/20">
 					<div class="text-[10px] opacity-80 mb-1">누적</div>
-					<div class="font-bold">92%</div>
+					<div class="font-bold" th:text="|${dashboard.totalAtndPct}%|">85%</div>
 				</div>
 				<div class="border-l border-white/20">
 					<div class="text-[10px] opacity-80 mb-1">장결</div>
-					<div class="font-bold text-red-300">1</div>
+					<div class="font-bold text-red-300" th:text="|${dashboard.longAbsenceCnt}명|">85%</div>
 				</div>
 			</div>
 			<div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
 		</div>
 
 		<div class="mt-6">
-			<h3 class="font-bold text-slate-800 mb-3 px-1 flex items-center"><i class="fas fa-bullhorn text-blue-500 mr-2"></i>오늘의 메시지</h3>
+			<h3 class="font-bold text-slate-800 mb-3 px-1 flex items-center"><i
+					class="fas fa-bullhorn text-blue-500 mr-2"></i>오늘의 메시지</h3>
 			<div class="card-box p-5">
-				<div id="banner-preview" class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-4 mb-4 text-white shadow-md relative overflow-hidden">
+				<div id="banner-preview"
+				     class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-4 mb-4 text-white shadow-md relative overflow-hidden">
 					<div class="flex items-center gap-3 relative z-10">
-						<div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center"><i class="fas fa-comment-dots"></i></div>
-						<p id="preview-text" class="flex-1 text-sm font-bold leading-snug">오늘은 성경 읽기 퀘스트가 두 배! 모두 화이팅하세요! ⚔️</p>
+						<div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center"><i
+								class="fas fa-comment-dots"></i></div>
+						<p id="preview-text" class="flex-1 text-sm font-bold leading-snug">오늘은 성경 읽기 퀘스트가 두 배! 모두
+							화이팅하세요! ⚔️</p>
 					</div>
 				</div>
 				<div class="flex gap-2">
 					<textarea id="message-input" rows="2" placeholder="메시지 입력..."
-							  class="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 resize-none"></textarea>
-					<button onclick="saveTodayMessage()" class="w-14 bg-blue-600 text-white rounded-xl flex flex-col items-center justify-center shadow-md active:scale-95 transition">
+					          class="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 resize-none"></textarea>
+					<button onclick="saveTodayMessage()"
+					        class="w-14 bg-blue-600 text-white rounded-xl flex flex-col items-center justify-center shadow-md active:scale-95 transition">
 						<i class="fas fa-paper-plane text-sm"></i><span class="text-[10px] font-bold">게시</span>
 					</button>
 				</div>
@@ -70,11 +80,14 @@
 			<div class="card-box">
 				<div id="comment-list" class="divide-y divide-slate-50 max-h-[300px] overflow-y-auto">
 					<div class="p-4 flex gap-3 hover:bg-slate-50/50 transition">
-						<img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix" class="w-10 h-10 rounded-xl bg-slate-100 border border-slate-100">
+						<img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix"
+						     class="w-10 h-10 rounded-xl bg-slate-100 border border-slate-100">
 						<div class="flex-1">
 							<div class="flex justify-between items-start">
-								<span class="text-sm font-bold text-slate-800">김용사 <span class="text-[10px] text-slate-400 ml-1 font-normal">10:42 AM</span></span>
-								<button onclick="deleteComment(this)" class="text-red-400 p-1"><i class="fas fa-times text-xs"></i></button>
+								<span class="text-sm font-bold text-slate-800">김용사 <span
+										class="text-[10px] text-slate-400 ml-1 font-normal">10:42 AM</span></span>
+								<button onclick="deleteComment(this)" class="text-red-400 p-1"><i
+										class="fas fa-times text-xs"></i></button>
 							</div>
 							<p class="text-sm text-slate-600 mt-1">선생님 오늘 간식 뭐예요? 빨리 가고 싶어요! 🍖</p>
 						</div>
@@ -82,16 +95,18 @@
 				</div>
 				<div class="p-3 bg-slate-50 border-t border-slate-100 flex gap-2">
 					<input id="comment-input" type="text" placeholder="한마디 남기기..."
-						   class="flex-1 bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100">
-					<button onclick="postComment()" class="w-11 h-11 bg-slate-900 text-white rounded-xl flex items-center justify-center active:scale-95 transition shadow-md"><i
-							class="fas fa-paper-plane text-xs"></i></button>
+					       class="flex-1 bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100">
+					<button onclick="postComment()"
+					        class="w-11 h-11 bg-slate-900 text-white rounded-xl flex items-center justify-center active:scale-95 transition shadow-md">
+						<i
+								class="fas fa-paper-plane text-xs"></i></button>
 				</div>
 			</div>
 		</div>
 	</section>
 	<script th:inline="javascript">
-		$(function () {
-		});
+        $(function () {
+        });
 	</script>
 </th:block>
 </html>

@@ -9,15 +9,31 @@
              , M.SEXDSTN
              , A.NCNM
              , A.OCCP_CODE
-             , FN_GET_CODE_NM('OCCP', A.OCCP_CODE) as OCCP_NM
+             , FN_GET_CODE_NM('OCCP', A.OCCP_CODE)    AS OCCP_NM
              , A.LEVEL
              , A.POINT
+             , STR_TO_DATE(C.LAST_SUN_DATE, '%Y%m%d') AS LAST_SUN_DATE
+             , CASE
+                   WHEN C.ABSENT_WEEKS <![CDATA[ < ]]> 4 THEN 'N'
+                   ELSE 'Y' END                          LONG_ABSENCE_AT
         FROM MBER_INFO M
                  INNER JOIN AVATAR_INFO A ON
             M.MBER_SN = A.MBER_SN
+                 LEFT OUTER JOIN (SELECT m.MBER_SN,
+                                         MAX(q.REQ_DATE) AS LAST_SUN_DATE,
+                                         FLOOR(DATEDIFF(
+                                                       DATE_SUB(CURDATE(), INTERVAL (WEEKDAY(CURDATE()) + 1) % 7 DAY),
+                                                       STR_TO_DATE(MAX(q.REQ_DATE), '%Y%m%d')
+                                               ) / 7)    AS ABSENT_WEEKS
+                                  FROM GUILD_MBER_LIST m
+                                           LEFT JOIN ysrimkr.QUEST_LOGS q ON m.MBER_SN = q.MBER_SN
+                                      AND q.STATUS = 'APPROVED'
+                                      AND q.QUEST_SN = 2
+                                  WHERE m.GUILD_SN = #{guildSn}
+                                  GROUP BY m.MBER_SN) C ON A.MBER_SN = C.MBER_SN
         WHERE M.MBER_SN IN (SELECT MBER_SN
                             FROM GUILD_MBER_LIST
-                            WHERE GUILD_SN = #{guildSn})
+                            WHERE GUILD_SN = #{guildSn});
     </select>
 
 </mapper>

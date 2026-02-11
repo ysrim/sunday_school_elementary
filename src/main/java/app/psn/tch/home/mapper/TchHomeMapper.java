@@ -1,22 +1,16 @@
 package app.psn.tch.home.mapper;
 
-import app.psn.tch.home.vo.StdHomeGuildInfoVO;
-import app.psn.tch.home.vo.StdHomeGuildListVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface TchHomeMapper {
 
 	/**
-	 * 길드원 목록
+	 * 대쉬보드
 	 */
-	List<StdHomeGuildListVO> sltGuildMberList(Integer guildSn);
-
-	/**
-	 * 길드 정보
-	 */
-	StdHomeGuildInfoVO sltGuildInfo(Integer guildSn);
+	Map<String, String> dashboard(@Param("guildSn") Integer guildSn);
 
 }

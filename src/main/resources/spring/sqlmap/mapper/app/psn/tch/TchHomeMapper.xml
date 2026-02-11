@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="app.psn.tch.home.mapper.TchHomeMapper">
+
+    <select id="dashboard" resultType="hashmap">
+	    SELECT A.ATND_CNT         AS atndCnt          <!-- 전주 출석 -->
+		     , A.GILD_CNT         AS gildCnt          <!-- 길드원 숫자 -->
+		     , A.ATND_PCT         AS atndPct          <!-- 전주 출석률 -->
+		     , C.TOTAL_ATND_PCT   AS totalAtndPct     <!-- 누적 출석률 -->
+		     , B.SUM_POINT        AS sumPoint         <!-- 길드원 누적 달란트 -->
+		     , D.LONG_ABSENCE_CNT AS longAbsenceCnt   <!-- 4주 이상 장결자 -->
+		     , E.WEEK_NAME        AS weekName         <!-- 주차이름 -->
+		     , E.MONTH_NAME       AS monthName        <!-- 월이름 -->
+	         , F.PENDING_CNT      AS pendingCnt       <!-- 퀘스트 승인 -->
+	    FROM (SELECT COUNT(*)                                                  AS ATND_CNT
+	               , (SELECT COUNT(*) FROM GUILD_MBER_LIST WHERE GUILD_SN = #{guildSn}) AS GILD_CNT
+	               , IFNULL(
+				    ROUND((COUNT(*) / (SELECT COUNT(*) FROM GUILD_MBER_LIST WHERE GUILD_SN = #{guildSn}) * 100)),
+				    0)                                                         AS ATND_PCT
+	          FROM QUEST_LOGS
+	          WHERE STATUS = 'APPROVED'
+		        AND QUEST_SN = 2
+		        AND MBER_SN IN (SELECT MBER_SN FROM GUILD_MBER_LIST WHERE GUILD_SN = #{guildSn})
+		        AND REQ_DATE =
+		            DATE_FORMAT((SELECT DATE_ADD(CURDATE(), INTERVAL (-1 - WEEKDAY(CURDATE())) DAY)), '%Y%m%d')) A,
+	         (SELECT IFNULL(SUM(POINT), 0) SUM_POINT
+	          FROM AVATAR_INFO
+	          WHERE MBER_SN IN (SELECT MBER_SN FROM GUILD_MBER_LIST WHERE GUILD_SN = #{guildSn})) B,
+	         (SELECT COUNT(*)     AS TOTAL_ATND_CNT,
+	                 SUM(
+			                 (SELECT COUNT(*)
+			                  FROM GUILD_MBER_LIST G
+			                  WHERE G.GUILD_SN = #{guildSn}
+				                AND G.JOIN_DATE <![CDATA[ <= ]]> Q.REQ_DATE
+				                AND (G.EXIT_DATE IS NULL OR G.EXIT_DATE >= Q.REQ_DATE))
+	                 )            AS TOTAL_POSSIBLE_CNT,
+	                <!-- 최종 출석률 -->
+	                 IFNULL(ROUND(
+			                        (COUNT(*) / SUM(
+					                        (SELECT COUNT(*)
+					                         FROM GUILD_MBER_LIST G
+					                         WHERE G.GUILD_SN = #{guildSn}
+						                       AND G.JOIN_DATE <![CDATA[ <= ]]> Q.REQ_DATE
+						                       AND (G.EXIT_DATE IS NULL OR G.EXIT_DATE >= Q.REQ_DATE))
+			                                    ) * 100)
+	                        ), 0) AS TOTAL_ATND_PCT
+	          FROM QUEST_LOGS Q
+	          WHERE Q.STATUS = 'APPROVED'
+		        AND Q.QUEST_SN = 2
+		        AND Q.MBER_SN IN (SELECT MBER_SN FROM GUILD_MBER_LIST WHERE GUILD_SN = #{guildSn})) C,
+	         (SELECT COUNT(X.MBER_SN) AS LONG_ABSENCE_CNT
+	          FROM (SELECT M.MBER_SN,
+	                       MAX(Q.REQ_DATE) AS LAST_SUN_DATE,
+	                       FLOOR(DATEDIFF(
+			                             DATE_SUB(CURDATE(), INTERVAL (WEEKDAY(CURDATE()) + 1) % 7 DAY),
+			                             STR_TO_DATE(MAX(Q.REQ_DATE), '%Y%m%d')
+	                             ) / 7)    AS ABSENT_WEEKS
+	                FROM GUILD_MBER_LIST M
+		                     LEFT JOIN QUEST_LOGS Q ON M.MBER_SN = Q.MBER_SN
+		                AND Q.STATUS = 'APPROVED'
+		                AND Q.QUEST_SN = 2
+	                WHERE M.GUILD_SN = #{guildSn}
+	                GROUP BY M.MBER_SN
+	                HAVING ABSENT_WEEKS >= 4
+		                OR LAST_SUN_DATE IS NULL) X) D,
+	         (SELECT CONCAT(DATE_FORMAT(TARGET_DATE, '%c월 '), FLOOR((DAYOFMONTH(TARGET_DATE) - 1) / 7) + 1,'주') AS WEEK_NAME,
+	                 DATE_FORMAT(TARGET_DATE, '%m.%d') AS MONTH_NAME
+	          FROM (SELECT DATE_ADD(CURDATE(), INTERVAL (-1 - WEEKDAY(CURDATE())) DAY) AS TARGET_DATE) A) E,
+	        (SELECT COUNT(*) AS PENDING_CNT FROM QUEST_LOGS WHERE MBER_SN IN (SELECT MBER_SN FROM GUILD_MBER_LIST WHERE GUILD_SN = #{guildSn}) AND STATUS = 'PENDING') F
+    </select>
+
+</mapper>
