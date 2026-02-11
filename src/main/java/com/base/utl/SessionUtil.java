@@ -82,15 +82,6 @@ public class SessionUtil {
 	}
 
 	/**
-	 * 특정 세션 속성을 삭제합니다.
-	 */
-	public static void removeAttribute(String name) {
-
-		getSession().ifPresent(session -> session.removeAttribute(name));
-
-	}
-
-	/**
 	 * AJAX 요청 여부를 판별합니다.
 	 */
 	public static boolean isAjaxRequest(HttpServletRequest request) {
