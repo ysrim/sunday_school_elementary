@@ -49,24 +49,36 @@
 		</div>
 
 		<div class="mt-6">
-			<h3 class="font-bold text-slate-800 mb-3 px-1 flex items-center"><i
-					class="fas fa-bullhorn text-blue-500 mr-2"></i>오늘의 메시지</h3>
+			<h3 class="font-bold text-slate-800 mb-3 px-1 flex items-center">
+				<i class="fas fa-bullhorn text-blue-500 mr-2"></i>오늘의 메시지
+			</h3>
 			<div class="card-box p-5">
 				<div id="banner-preview"
-				     class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-4 mb-4 text-white shadow-md relative overflow-hidden">
+				     class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-4 mb-4 text-white shadow-md relative overflow-hidden transition-all duration-300">
 					<div class="flex items-center gap-3 relative z-10">
-						<div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center"><i
-								class="fas fa-comment-dots"></i></div>
-						<p id="preview-text" class="flex-1 text-sm font-bold leading-snug">오늘은 성경 읽기 퀘스트가 두 배! 모두
-							화이팅하세요! ⚔️</p>
+						<div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+							<i class="fas fa-comment-dots"></i>
+						</div>
+						<p id="preview-text" class="flex-1 text-sm font-bold leading-snug" th:text="|${gildMsg}|">
+							오늘의 공지사항이 여기에 표시됩니다.
+						</p>
 					</div>
 				</div>
-				<div class="flex gap-2">
-					<textarea id="message-input" rows="2" placeholder="메시지 입력..."
-					          class="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 resize-none"></textarea>
-					<button onclick="saveTodayMessage()"
-					        class="w-14 bg-blue-600 text-white rounded-xl flex flex-col items-center justify-center shadow-md active:scale-95 transition">
-						<i class="fas fa-paper-plane text-sm"></i><span class="text-[10px] font-bold">게시</span>
+
+				<div class="flex gap-2 items-start">
+					<div class="flex-1 relative">
+                <textarea id="message-input" rows="2" placeholder="메시지 입력... (최대 400byte)"
+                          onkeyup="checkByteLimit(this, 400)"
+                          class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 resize-none transition-colors"></textarea>
+						<div class="text-right px-1 mt-1">
+							<span id="text-byte" class="text-[10px] text-blue-600 font-bold">0</span>
+							<span class="text-[10px] text-slate-400">/ 400 byte</span>
+						</div>
+					</div>
+					<button id="btn-save-msg" onclick="saveTodayMessage()"
+					        class="w-14 h-[54px] bg-blue-600 text-white rounded-xl flex flex-col items-center justify-center shadow-md active:scale-95 transition hover:bg-blue-700 disabled:bg-slate-300 disabled:cursor-not-allowed">
+						<i class="fas fa-paper-plane text-sm mb-0.5"></i>
+						<span class="text-[10px] font-bold">게시</span>
 					</button>
 				</div>
 			</div>
@@ -78,35 +90,166 @@
 				<span class="text-xs text-slate-400 font-normal mt-1">최근 게시글</span>
 			</h3>
 			<div class="card-box">
-				<div id="comment-list" class="divide-y divide-slate-50 max-h-[300px] overflow-y-auto">
-					<div class="p-4 flex gap-3 hover:bg-slate-50/50 transition">
-						<img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix"
-						     class="w-10 h-10 rounded-xl bg-slate-100 border border-slate-100">
-						<div class="flex-1">
-							<div class="flex justify-between items-start">
-								<span class="text-sm font-bold text-slate-800">김용사 <span
-										class="text-[10px] text-slate-400 ml-1 font-normal">10:42 AM</span></span>
-								<button onclick="deleteComment(this)" class="text-red-400 p-1"><i
-										class="fas fa-times text-xs"></i></button>
+				<div id="comment-list" class="flex flex-col gap-4 p-4 max-h-[400px] overflow-y-auto custom-scrollbar">
+
+					<div class="flex gap-3 group" th:each="vo : ${gildPost}">
+						<div class="flex-shrink-0">
+							<img th:src="|https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/${vo.occpCode}_${#strings.toLowerCase(vo.sexdstn)}.png|"
+							     class="w-10 h-10 rounded-2xl bg-slate-100 border border-slate-200 shadow-sm object-cover">
+						</div>
+
+						<div class="flex-1 max-w-[90%]">
+							<div class="flex justify-between items-end mb-1 pl-1">
+								<span class="text-sm font-bold text-slate-900" th:text="${vo.mberNm}">김용사</span>
+								<span class="text-[10px] text-slate-400 font-normal" th:text="${vo.creatDe}">10:42 AM</span>
 							</div>
-							<p class="text-sm text-slate-600 mt-1">선생님 오늘 간식 뭐예요? 빨리 가고 싶어요! 🍖</p>
+
+							<div class="relative bg-slate-50 border border-slate-100 rounded-2xl rounded-tl-none px-4 py-3 text-sm text-slate-700 leading-relaxed shadow-sm hover:bg-slate-100 transition-colors">
+								<p th:text="${vo.content}" class="whitespace-pre-wrap break-words">선생님 오늘 간식 뭐예요?</p>
+
+								<button th:onclick="|deleteComment(this, '${vo.postSn}')|"
+								        class="absolute -top-2 -right-2 bg-white text-red-400 border border-red-100 w-6 h-6 rounded-full shadow-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-red-50 hover:scale-110 cursor-pointer">
+									<i class="fas fa-times text-[10px]"></i>
+								</button>
+							</div>
 						</div>
 					</div>
+
 				</div>
-				<div class="p-3 bg-slate-50 border-t border-slate-100 flex gap-2">
-					<input id="comment-input" type="text" placeholder="한마디 남기기..."
-					       class="flex-1 bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100">
+
+				<div class="p-3 bg-white border-t border-slate-100 flex gap-2 rounded-b-2xl">
+					<input id="comment-input" type="text" placeholder="함께 이야기를 나눠보세요..."
+					       onkeyup="if(window.event.keyCode==13){postComment()}"
+					       class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:bg-white transition-colors">
 					<button onclick="postComment()"
-					        class="w-11 h-11 bg-slate-900 text-white rounded-xl flex items-center justify-center active:scale-95 transition shadow-md">
-						<i
-								class="fas fa-paper-plane text-xs"></i></button>
+					        class="w-12 h-11 bg-slate-900 text-white rounded-xl flex items-center justify-center active:scale-95 transition shadow-md hover:bg-slate-800">
+						<i class="fas fa-paper-plane text-xs"></i>
+					</button>
 				</div>
 			</div>
 		</div>
 	</section>
 	<script th:inline="javascript">
-        $(function () {
-        });
+
+		function saveTodayMessage() {
+			const $input = $('#message-input');
+			const $preview = $('#preview-text');
+			const $btn = $('#btn-save-msg');
+			const $btnIcon = $btn.find('i');
+			const $btnText = $btn.find('span');
+			const message = $input.val().trim();
+			// 1. 유효성 검사
+			if (!message) {
+				_showToast("메시지 내용을 입력해주세요. ❌");
+				$input.focus();
+				return;
+			}
+			// 2. 로딩 UI 시작
+			const originalIconClass = "fas fa-paper-plane text-sm mb-0.5"; // 원래 아이콘 클래스
+			$btn.prop('disabled', true);        // 버튼 비활성화
+			$btnText.text('저장중');            // 텍스트 변경
+			$btnIcon.attr('class', 'fas fa-circle-notch fa-spin text-lg mb-0.5'); // 스피너 아이콘으로 변경
+			// 3. 서버 전송 (AJAX)
+			$.ajax({
+				url: '/tch/home/saveGildMsg.ax',
+				type: 'POST',
+				data: {slogan: message},
+				success: function (response) {
+					$preview.fadeOut(200, function () { // 성공 시 미리보기 텍스트 갱신 (깜빡임 효과)
+						$(this).text(message).fadeIn(200);
+					});
+					$input.val(''); // 입력창 초기화
+					$('#text-byte').text('0'); // 카운터 초기화
+					_showToast('길드 메시지를 갱신했습니다. ✅');
+				},
+				error: function (xhr, status, error) {
+					console.error("저장 실패:", error);
+					_showToast("메시지 저장에 실패했습니다. 잠시 후 다시 시도해주세요. ❌");
+				},
+				complete: function () {
+					setTimeout(function () { // 4. 로딩 UI 종료 (0.5초 딜레이로 자연스럽게)
+						$btn.prop('disabled', false);
+						$btnText.text('게시');
+						$btnIcon.attr('class', originalIconClass);
+					}, 500);
+				}
+			});
+		}
+
+		function checkByteLimit(obj, maxByte) {
+			const str = obj.value;
+			let totalByte = 0;
+			let len = 0;
+			for (let i = 0; i < str.length; i++) {
+				const c = str.charCodeAt(i);
+				if (c > 128) {
+					totalByte += 2; // 한글 등은 2byte 처리 (UTF-8 3byte를 원하면 3으로 수정)
+				} else {
+					totalByte++;    // 영문 등은 1byte
+				}
+				if (totalByte <= maxByte) {
+					len = i + 1;
+				}
+			}
+			// Byte 표시 업데이트
+			$('#text-byte').text(totalByte);
+			// 제한 초과 시 자르기
+			if (totalByte > maxByte) {
+				alert("최대 " + maxByte + "Byte까지만 입력 가능합니다.");
+				obj.value = str.substr(0, len);
+				$('#text-byte').text(maxByte); // 강제로 max로 표기
+			}
+		}
+
+		function postComment() {
+			const $input = $('#comment-input');
+			const val = $input.val().trim();
+
+			if (!val) {
+				_showToast('내용을 입력해주세요.'); // 토스트 메시지 함수가 있다면 사용
+				$input.focus();
+				return;
+			}
+
+			// 현재 시간 구하기 (단순 표기용)
+			const now = new Date();
+			const timeString = now.toLocaleTimeString('ko-KR', {hour: '2-digit', minute: '2-digit'});
+
+			// 디자인이 적용된 HTML 구조
+			const html = `
+            <div class="flex gap-3 group animate-fade-in-up">
+               <div class="flex-shrink-0">
+                   <div class="w-10 h-10 rounded-2xl bg-indigo-100 border border-indigo-200 shadow-sm flex items-center justify-center text-indigo-600">
+                        <i class="fas fa-user-tie text-lg"></i>
+                   </div>
+               </div>
+               <div class="flex-1 max-w-[90%]">
+                  <div class="flex justify-between items-end mb-1 pl-1">
+                     <span class="text-sm font-bold text-slate-900">관리자(나)</span>
+                     <span class="text-[10px] text-slate-400 font-normal">${timeString}</span>
+                  </div>
+                  <div class="relative bg-indigo-50 border border-indigo-100 rounded-2xl rounded-tl-none px-4 py-3 text-sm text-slate-800 leading-relaxed shadow-sm">
+                     <p class="whitespace-pre-wrap break-words">${val}</p>
+                     <button onclick="deleteComment(this)"
+                             class="absolute -top-2 -right-2 bg-white text-red-400 border border-red-100 w-6 h-6 rounded-full shadow-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-red-50 hover:scale-110 cursor-pointer">
+                         <i class="fas fa-times text-[10px]"></i>
+                     </button>
+                  </div>
+               </div>
+            </div>`;
+
+			$('#comment-list').prepend(html); // 상단에 추가
+			$input.val(''); // 입력창 비우기
+		}
+
+		function deleteComment(btn, sn) {
+			if (confirm('정말 삭제하시겠습니까?')) {
+				$(btn).closest('.group').remove(); // 부모 요소(group) 제거
+			}
+		}
+
+		$(function () {
+		});
 	</script>
 </th:block>
 </html>

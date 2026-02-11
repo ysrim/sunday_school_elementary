@@ -69,4 +69,29 @@
 	        (SELECT COUNT(*) AS PENDING_CNT FROM QUEST_LOGS WHERE MBER_SN IN (SELECT MBER_SN FROM GUILD_MBER_LIST WHERE GUILD_SN = #{guildSn}) AND STATUS = 'PENDING') F
     </select>
 
+	<select id="gildMsg" resultType="string">
+		SELECT SLOGAN FROM GUILD_INFO WHERE GUILD_SN = #{guildSn}
+	</select>
+
+	<insert id="saveGildMsgAx">
+		UPDATE GUILD_INFO SET SLOGAN = #{slogan} WHERE GUILD_SN = #{guildSn}
+	</insert>
+
+	<select id="getTchGildPost" resultType="app.psn.tch.home.vo.TchGildPostVO">
+		SELECT A.POST_SN
+			 , A.GUILD_SN
+			 , A.MBER_SN
+			 , B.MBER_NM
+			 , A.CONTENT
+			 , A.NTC_YN
+			 , C.OCCP_CODE
+			 , B.SEXDSTN
+			 , DATE_FORMAT(A.CREAT_DE, '%m-%d %H:%I') AS CREAT_DE
+		FROM GUILD_POST A
+				 INNER JOIN MBER_INFO B ON A.MBER_SN = B.MBER_SN
+				 INNER JOIN AVATAR_INFO C ON A.MBER_SN = C.MBER_SN
+		WHERE A.GUILD_SN = #{guildSn}
+		  AND DEL_YN = 'N'
+	</select>
+
 </mapper>

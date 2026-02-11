@@ -61,7 +61,7 @@ public class TchQuestController {
 
 		tchQuestService.questProc(reqQuestProcVO);
 
-		return ResUtil.resSucc("APPROVED".equals(reqQuestProcVO.getStatus()) ? "처리가 완료되었습니다! ✅" : "반려 처리되었습니다. ⚠\uFE0F");
+		return ResUtil.resSucc("APPROVED".equals(reqQuestProcVO.getStatus()) ? "처리가 완료되었습니다! ✅" : "반려 처리되었습니다. ❌");
 
 	}
 

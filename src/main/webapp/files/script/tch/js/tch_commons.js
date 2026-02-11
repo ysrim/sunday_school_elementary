@@ -1,19 +1,19 @@
 $(function () {
-    // 페이지 로드 후 0.2초 뒤 알림 체크
-    setTimeout(_setAlertMsg, 200);
+	// 페이지 로드 후 0.2초 뒤 알림 체크
+	setTimeout(_setAlertMsg, 200);
 });
 
 /**
  * 쿠키에 저장된 알림 메시지 세팅 및 표시
  */
 function _setAlertMsg() {
-    const alertMsg = Cookies.get('_alertMsg');
-    if (alertMsg) {
-        // '+' 기호를 공백으로 치환하여 표시
-        _showToast(alertMsg.replace(/\+/g, ' '));
-        // 확인 후 쿠키 삭제
-        Cookies.remove('_alertMsg', {path: '/'});
-    }
+	const alertMsg = Cookies.get('_alertMsg');
+	if (alertMsg) {
+		// '+' 기호를 공백으로 치환하여 표시
+		_showToast(alertMsg.replace(/\+/g, ' '));
+		// 확인 후 쿠키 삭제
+		Cookies.remove('_alertMsg', {path: '/'});
+	}
 }
 
 /**
@@ -21,96 +21,27 @@ function _setAlertMsg() {
  * @param {string} menu - 이동할 메뉴 코드 (예: STD_HOME)
  */
 function _naviPage(menu) {
-    const menuUrls = {
-        'TCH_HOME': '/tch/home.pg',
-        'TCH_ATND': '/tch/atnd.pg',
-        'TCH_GILD': '/tch/gild.pg',
-        'TCH_QEST': '/tch/qest.pg'
-    };
-    const targetUrl = menuUrls[menu];
-    if (targetUrl) {
-        location.href = targetUrl;
-    } else {
-        console.warn(`[Navigation] 정의되지 않은 메뉴 코드입니다: ${menu}`);
-    }
+	const menuUrls = {
+		'TCH_HOME': '/tch/home.pg',
+		'TCH_ATND': '/tch/atnd.pg',
+		'TCH_GILD': '/tch/gild.pg',
+		'TCH_QEST': '/tch/qest.pg'
+	};
+	const targetUrl = menuUrls[menu];
+	if (targetUrl) {
+		location.href = targetUrl;
+	} else {
+		console.warn(`[Navigation] 정의되지 않은 메뉴 코드입니다: ${menu}`);
+	}
 }
 
 /**
  * 토스트 알림 표시
  */
 function _showToast(message) {
-    const $toast = $('#toast');
-    $toast.text(message).addClass('show');
-    setTimeout(() => {
-        $toast.removeClass('show');
-    }, 4000);
-}
-
-
-// 4. 퀘스트 필터링
-$('#quest-filter .chip').on('click', function () {
-    const filter = $(this).data('filter');
-    let count = 0;
-    $('.quest-item').each(function () {
-        if (filter === 'all' || $(this).data('type') === filter) {
-            $(this).show();
-            count++;
-        } else {
-            $(this).hide();
-        }
-    });
-    $('#quest-empty').toggleClass('hidden', count > 0);
-});
-
-function updatePreview(el) {
-    $('#preview-text').text($(el).val() || "미리보기가 표시됩니다.");
-}
-
-function postComment() {
-    const val = $('#comment-input').val();
-    if (!val) return;
-    const html = `<div class="p-4 flex gap-3"><div class="w-10 h-10 rounded-2xl bg-blue-600 flex items-center justify-center text-white"><i class="fas fa-user-tie"></i></div><div class="flex-1"><span class="text-sm font-bold text-blue-600">관리자</span><p class="text-sm text-slate-700 mt-1">${val}</p></div></div>`;
-    $('#comment-list').prepend(html);
-    $('#comment-input').val('');
-}
-
-function deleteComment(btn) {
-    if (confirm("삭제하시겠습니까?")) $(btn).closest('.p-4').remove();
-}
-
-// 1. 모든 버튼 공통 ON/OFF 제어 (칩, 주차, 서브탭 통합)
-$(document).on('click', '.chip, .week-btn, .sub-tab', function () {
-    $(this).addClass('active').siblings().removeClass('active');
-});
-
-// 커스텀 컨펌 함수 정의
-function _customConfirm(message, callback) {
-    const $modal = $('#custom-confirm');
-    const $content = $('#confirm-content');
-
-    $('#confirm-message').text(message);
-    $modal.removeClass('hidden');
-
-    // 애니메이션 효과
-    setTimeout(() => {
-        $content.removeClass('scale-95 opacity-0').addClass('scale-100 opacity-100');
-    }, 10);
-
-    // 이벤트 바인딩 (한 번만 실행되도록 .one 사용)
-    $('#confirm-ok').one('click', function () {
-        closeModal();
-        callback(true);
-    });
-
-    $('#confirm-cancel').one('click', function () {
-        closeModal();
-        callback(false);
-    });
-
-    function closeModal() {
-        $content.addClass('scale-95 opacity-0').removeClass('scale-100 opacity-100');
-        setTimeout(() => $modal.addClass('hidden'), 200);
-        // 등록된 이벤트 해제
-        $('#confirm-ok, #confirm-cancel').off('click');
-    }
+	const $toast = $('#toast');
+	$toast.text(message).addClass('show');
+	setTimeout(() => {
+		$toast.removeClass('show');
+	}, 4000);
 }

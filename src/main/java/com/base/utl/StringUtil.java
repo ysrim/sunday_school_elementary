@@ -17,6 +17,9 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
+
 import app.psn.std.quest.vo.StdQuestPendingVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -176,6 +179,16 @@ public class StringUtil {
 
 		return stdQuestPendingVO;
 
+	}
+
+	public static String xssSanitize(String value) {
+		if (value == null) {
+			return null;
+		}
+		// Safelist.basic() : 기본 텍스트 서식 태그(b, i, u 등)만 허용하고 스크립트 제거
+		// Safelist.none() : 모든 HTML 태그 제거
+		// Safelist.relaxed() : 이미지, 링크 등 다양한 태그 허용 (보안 주의)
+		return Jsoup.clean(value, Safelist.none());
 	}
 
 }

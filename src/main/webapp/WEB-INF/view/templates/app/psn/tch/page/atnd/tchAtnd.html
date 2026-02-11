@@ -2,138 +2,144 @@
 <html xmlns:th="http//www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/app/psn/tch/layouts/tch_layout}" lang="ko">
 <th:block layout:fragment="content">
-    <section id="tab-attendance" class="section-content active">
-        <div class="flex items-center justify-between mb-5 px-1">
-            <h2 class="text-2xl font-bold text-slate-800">출석 관리</h2>
-            <span class="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-lg" th:text="${#dates.format(#dates.createNow(), 'yyyy년')}">2024년</span>
-        </div>
+	<section id="tab-attendance" class="section-content active">
+		<div class="flex items-center justify-between mb-5 px-1">
+			<h2 class="text-2xl font-bold text-slate-800">출석 관리</h2>
+			<span class="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-lg" th:text="${#dates.format(#dates.createNow(), 'yyyy년')}">2024년</span>
+		</div>
 
-        <div class="flex gap-2 mb-6 overflow-x-auto no-scrollbar pb-1" id="month-group"></div>
+		<div class="flex gap-2 mb-6 overflow-x-auto no-scrollbar pb-1" id="month-group"></div>
 
-        <div class="card-box p-1.5 flex gap-1 mb-6 overflow-x-auto" id="week-group"></div>
+		<div class="card-box p-1.5 flex gap-1 mb-6 overflow-x-auto" id="week-group"></div>
 
-        <div class="flex border-b border-slate-200 mb-6" id="att-sub-tabs">
-            <button data-type="pending" class="flex-1 py-3 text-sm font-bold border-b-2 sub-tab active" style="border-color: #2563eb; color: #2563eb;">
-                승인 대기 <span class="text-xs align-top font-bold ml-1" id="cnt-pending">0</span>
-            </button>
-            <button data-type="complete" class="flex-1 py-3 text-sm font-bold border-b-2 sub-tab text-slate-400" style="border-color: transparent;">
-                완료됨 <span class="text-xs align-top font-bold ml-1" id="cnt-complete">0</span>
-            </button>
-        </div>
+		<div class="flex border-b border-slate-200 mb-6" id="att-sub-tabs">
+			<button data-type="pending" class="flex-1 py-3 text-sm font-bold border-b-2 sub-tab active" style="border-color: #2563eb; color: #2563eb;">
+				승인 대기 <span class="text-xs align-top font-bold ml-1" id="cnt-pending">0</span>
+			</button>
+			<button data-type="complete" class="flex-1 py-3 text-sm font-bold border-b-2 sub-tab text-slate-400" style="border-color: transparent;">
+				완료됨 <span class="text-xs align-top font-bold ml-1" id="cnt-complete">0</span>
+			</button>
+		</div>
 
-        <div id="list-att-pending" class="space-y-3 att-list"></div>
-        <div id="list-att-complete" class="space-y-3 att-list hidden"></div>
-    </section>
-    <script th:inline="javascript">
-        $(function () {
-            // ... (기존 설정 로직 동일) ...
-            const CONFIG = {
-                API: {
-                    LIST: /*[[@{/tch/atnd/reqAtnd.ax}]]*/ '/tch/atnd/reqAtnd.ax',
-                    UPDATE: /*[[@{/tch/atnd/atndChk.ax}]]*/ '/tch/atnd/atndChk.ax'
-                },
-                ANIMATION_DURATION: 300
-            };
+		<div id="list-att-pending" class="space-y-3 att-list"></div>
+		<div id="list-att-complete" class="space-y-3 att-list hidden"></div>
+	</section>
+	<script th:inline="javascript">
+		$(function () {
 
-            const STATE = { year: new Date().getFullYear(), month: new Date().getMonth() + 1 };
+			const CONFIG = {
+				API: {
+					LIST: /*[[@{/tch/atnd/reqAtnd.ax}]]*/ '/tch/atnd/reqAtnd.ax',
+					UPDATE: /*[[@{/tch/atnd/atndChk.ax}]]*/ '/tch/atnd/atndChk.ax'
+				},
+				ANIMATION_DURATION: 300
+			};
 
-            const $dom = {
-                monthGroup: $('#month-group'),
-                weekGroup: $('#week-group'),
-                pendingCnt: $('#cnt-pending'),
-                completeCnt: $('#cnt-complete'),
-                pendingList: $('#list-att-pending'),
-                completeList: $('#list-att-complete'),
-                tabs: $('#att-sub-tabs .sub-tab'),
-                loading: `<div class="flex flex-col items-center justify-center p-12 w-full text-slate-400"><i class="fas fa-circle-notch fa-spin text-3xl mb-3 text-blue-500"></i><p class="text-sm font-medium">데이터를 불러오는 중입니다...</p></div>`,
-                empty: `<div class="text-center p-10 text-slate-400">내역이 없습니다.</div>`,
-                error: `<div class="text-center p-10 text-red-400">데이터를 가져오지 못했습니다.</div>`
-            };
+			const STATE = {year: new Date().getFullYear(), month: new Date().getMonth() + 1};
 
-            // ... (DateUtils, initMonths, renderWeeks 동일) ...
-            const DateUtils = {
-                format: (date) => {
-                    const yyyy = date.getFullYear();
-                    const mm = String(date.getMonth() + 1).padStart(2, '0');
-                    const dd = String(date.getDate()).padStart(2, '0');
-                    return `${yyyy}${mm}${dd}`;
-                },
-                getThisSunday: () => {
-                    const today = new Date();
-                    const sunday = new Date(today);
-                    sunday.setDate(today.getDate() - today.getDay());
-                    return DateUtils.format(sunday);
-                }
-            };
+			const $dom = {
+				monthGroup: $('#month-group'),
+				weekGroup: $('#week-group'),
+				pendingCnt: $('#cnt-pending'),
+				completeCnt: $('#cnt-complete'),
+				pendingList: $('#list-att-pending'),
+				completeList: $('#list-att-complete'),
+				tabs: $('#att-sub-tabs .sub-tab'),
+				loading: `<div class="flex flex-col items-center justify-center p-12 w-full text-slate-400"><i class="fas fa-circle-notch fa-spin text-3xl mb-3 text-blue-500"></i><p class="text-sm font-medium">데이터를 불러오는 중입니다...</p></div>`,
+				empty: `<div class="text-center p-10 text-slate-400">내역이 없습니다.</div>`,
+				error: `<div class="text-center p-10 text-red-400">데이터를 가져오지 못했습니다.</div>`
+			};
 
-            function initMonths() {
-                let html = '';
-                for (let m = 1; m <= 12; m++) {
-                    const activeClass = m === STATE.month ? 'active' : '';
-                    html += `<button class="month-chip ${activeClass}" data-value="${m}">${m}월</button>`;
-                }
-                $dom.monthGroup.html(html);
-                setTimeout(() => {
-                    const $active = $dom.monthGroup.find('.active');
-                    if ($active.length) {
-                        const scrollLeft = $active.offset().left + $dom.monthGroup.scrollLeft() - ($dom.monthGroup.width() / 2) - ($active.width() / 2);
-                        $dom.monthGroup.animate({scrollLeft: scrollLeft}, 300);
-                    }
-                }, 100);
-            }
+			// ... (DateUtils, initMonths, renderWeeks 동일) ...
+			const DateUtils = {
+				format: (date) => {
+					const yyyy = date.getFullYear();
+					const mm = String(date.getMonth() + 1).padStart(2, '0');
+					const dd = String(date.getDate()).padStart(2, '0');
+					return `${yyyy}${mm}${dd}`;
+				},
+				getThisSunday: () => {
+					const today = new Date();
+					const sunday = new Date(today);
+					sunday.setDate(today.getDate() - today.getDay());
+					return DateUtils.format(sunday);
+				}
+			};
 
-            function renderWeeks(year, month) {
-                const targetSunday = DateUtils.getThisSunday();
-                let date = new Date(year, month - 1, 1);
-                let weekCount = 1;
-                let html = '';
-                let hasActive = false;
+			function initMonths() {
+				let html = '';
+				for (let m = 1; m <= 12; m++) {
+					const activeClass = m === STATE.month ? 'active' : '';
+					html += `<button class="month-chip ${activeClass}" data-value="${m}">${m}월</button>`;
+				}
+				$dom.monthGroup.html(html);
+				setTimeout(() => {
+					const $active = $dom.monthGroup.find('.active');
+					if ($active.length) {
+						const scrollLeft = $active.offset().left + $dom.monthGroup.scrollLeft() - ($dom.monthGroup.width() / 2) - ($active.width() / 2);
+						$dom.monthGroup.animate({scrollLeft: scrollLeft}, 300);
+					}
+				}, 100);
+			}
 
-                while (date.getMonth() === month - 1) {
-                    if (date.getDay() === 0) {
-                        const dateStr = DateUtils.format(date);
-                        let isActive = false;
-                        if(month === (new Date().getMonth() + 1)) {
-                            isActive = (dateStr === targetSunday);
-                        }
-                        if (isActive) hasActive = true;
-                        html += `<button class="week-btn ${isActive ? 'active' : ''}" data-value="${dateStr}">${weekCount}주</button>`;
-                        weekCount++;
-                    }
-                    date.setDate(date.getDate() + 1);
-                }
-                $dom.weekGroup.html(html);
-                if (!hasActive) $dom.weekGroup.find('.week-btn').first().addClass('active');
-                const $activeBtn = $dom.weekGroup.find('.week-btn.active');
-                if($activeBtn.length > 0) $activeBtn.trigger('click');
-                else { $dom.pendingList.html($dom.empty); $dom.completeList.html($dom.empty); }
-            }
+			function renderWeeks(year, month) {
+				const targetSunday = DateUtils.getThisSunday();
+				let date = new Date(year, month - 1, 1);
+				let weekCount = 1;
+				let html = '';
+				let hasActive = false;
 
-            function renderList(list, type) {
-                const isPending = type === 'pending';
-                const $container = isPending ? $dom.pendingList : $dom.completeList;
-                const $counter = isPending ? $dom.pendingCnt : $dom.completeCnt;
+				while (date.getMonth() === month - 1) {
+					if (date.getDay() === 0) {
+						const dateStr = DateUtils.format(date);
+						let isActive = false;
+						if (month === (new Date().getMonth() + 1)) {
+							isActive = (dateStr === targetSunday);
+						}
+						if (isActive) hasActive = true;
+						html += `<button class="week-btn ${isActive ? 'active' : ''}" data-value="${dateStr}">${weekCount}주</button>`;
+						weekCount++;
+					}
+					date.setDate(date.getDate() + 1);
+				}
+				$dom.weekGroup.html(html);
+				if (!hasActive) $dom.weekGroup.find('.week-btn').first().addClass('active');
+				const $activeBtn = $dom.weekGroup.find('.week-btn.active');
+				if ($activeBtn.length > 0) $activeBtn.trigger('click');
+				else {
+					$dom.pendingList.html($dom.empty);
+					$dom.completeList.html($dom.empty);
+				}
+			}
 
-                $counter.text(list.length);
-                $container.empty();
-                if (!list.length) { $container.html($dom.empty); return; }
+			function renderList(list, type) {
+				const isPending = type === 'pending';
+				const $container = isPending ? $dom.pendingList : $dom.completeList;
+				const $counter = isPending ? $dom.pendingCnt : $dom.completeCnt;
 
-                const html = list.map(item => {
-                    const isRejected = item.status === 'REJECTED';
-                    const avatarClass = isPending ? 'bg-blue-50 text-blue-600' : 'bg-slate-100 text-slate-400';
-                    const nameClass = isPending ? 'text-slate-800' : 'text-slate-400';
-                    let statusInfo = '';
-                    if (isPending) statusInfo = `<div class="text-xs text-slate-400 mt-0.5 font-bold">요청시간: ${item.creatDate || '-'}</div>`;
-                    else if (isRejected) statusInfo = `<div class="text-xs text-red-500 mt-0.5 font-bold">반려됨: ${item.processedDe || '-'}</div>`;
-                    else statusInfo = `<div class="text-xs text-green-600 mt-0.5 font-bold">승인완료: ${item.processedDe || '-'}</div>`;
+				$counter.text(list.length);
+				$container.empty();
+				if (!list.length) {
+					$container.html($dom.empty);
+					return;
+				}
 
-                    const actionHtml = isPending ? `
+				const html = list.map(item => {
+					const isRejected = item.status === 'REJECTED';
+					const avatarClass = isPending ? 'bg-blue-50 text-blue-600' : 'bg-slate-100 text-slate-400';
+					const nameClass = isPending ? 'text-slate-800' : 'text-slate-400';
+					let statusInfo = '';
+					if (isPending) statusInfo = `<div class="text-xs text-slate-400 mt-0.5 font-bold">요청시간: ${item.creatDate || '-'}</div>`;
+					else if (isRejected) statusInfo = `<div class="text-xs text-red-500 mt-0.5 font-bold">반려됨: ${item.processedDe || '-'}</div>`;
+					else statusInfo = `<div class="text-xs text-green-600 mt-0.5 font-bold">승인완료: ${item.processedDe || '-'}</div>`;
+
+					const actionHtml = isPending ? `
                         <div class="flex gap-2">
                              <button type="button" class="btn-action w-10 h-10 rounded-full bg-red-50 text-red-500 flex items-center justify-center active:scale-95 transition" data-status="REJECTED" data-id="${item.logSn}"><i class="fas fa-times"></i></button>
                              <button type="button" class="btn-action w-10 h-10 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center active:scale-95 transition" data-status="APPROVED" data-id="${item.logSn}"><i class="fas fa-check"></i></button>
                         </div>` : `<i class="fas ${isRejected ? 'fa-times-circle text-red-400' : 'fa-check-circle text-green-500'} text-xl"></i>`;
 
-                    return `
+					return `
                        <div class="card-box p-5 flex items-center justify-between ${!isPending ? '!border-slate-200 bg-white/60' : ''}">
                           <div class="flex items-center gap-4">
                              <div class="w-12 h-12 ${avatarClass} rounded-2xl flex items-center justify-center font-black text-lg">${(item.mberNm || '?').charAt(0)}</div>
@@ -141,95 +147,101 @@
                           </div>
                           ${actionHtml}
                        </div>`;
-                }).join('');
-                $container.html(html);
-            }
+				}).join('');
+				$container.html(html);
+			}
 
-            function updateStatus(logSn, status, $btn) {
-                const $card = $btn.closest('.card-box');
-                const isApprove = status === 'APPROVED';
-                const executeAjax = () => {
-                    if (isApprove) $btn.html('<i class="fas fa-spinner fa-spin"></i>');
-                    $.ajax({
-                        url: CONFIG.API.UPDATE, type: 'POST', data: {logSn, status},
-                        success: (data) => {
-                            if (data.rtnCd === '001') {
-                                _showToast(data.rtnMsg || '처리 완료 ✅');
-                                if (isApprove) {
-                                    $card.css({transform: 'scale(0.9)', opacity: '0', transition: '0.3s'});
-                                    setTimeout(() => $card.slideUp(300, reloadList), 300);
-                                } else {
-                                    $card.css({'opacity': '0.5', 'filter': 'grayscale(1)', 'pointer-events': 'none'});
-                                    setTimeout(reloadList, 500);
-                                }
-                            } else {
-                                _showToast(`처리 실패: ${data.rtnMsg} ❌`);
-                                $btn.html(isApprove ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>');
-                            }
-                        },
-                        error: () => { _showToast('통신 오류 ❌'); $btn.html(isApprove ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>'); }
-                    });
-                };
-                if (status === 'REJECTED') { if (confirm('반려하시겠습니까?')) executeAjax(); } else { executeAjax(); }
-            }
+			function updateStatus(logSn, status, $btn) {
+				const $card = $btn.closest('.card-box');
+				const isApprove = status === 'APPROVED';
+				const executeAjax = () => {
+					if (isApprove) $btn.html('<i class="fas fa-spinner fa-spin"></i>');
+					$.ajax({
+						url: CONFIG.API.UPDATE, type: 'POST', data: {logSn, status},
+						success: (data) => {
+							if (data.rtnCd === '001') {
+								_showToast(data.rtnMsg || '처리 완료 ✅');
+								if (isApprove) {
+									$card.css({transform: 'scale(0.9)', opacity: '0', transition: '0.3s'});
+									setTimeout(() => $card.slideUp(300, reloadList), 300);
+								} else {
+									$card.css({'opacity': '0.5', 'filter': 'grayscale(1)', 'pointer-events': 'none'});
+									setTimeout(reloadList, 500);
+								}
+							} else {
+								_showToast(`처리 실패: ${data.rtnMsg} ❌`);
+								$btn.html(isApprove ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>');
+							}
+						},
+						error: () => {
+							_showToast('통신 오류 ❌');
+							$btn.html(isApprove ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>');
+						}
+					});
+				};
+				if (status === 'REJECTED') {
+					if (confirm('반려하시겠습니까?')) executeAjax();
+				} else {
+					executeAjax();
+				}
+			}
 
-            function fetchList(selectedDate) {
-                if(!selectedDate) return;
-                $('.att-list').html($dom.loading);
-                $.ajax({
-                    url: CONFIG.API.LIST, type: 'POST', data: {reqDate: selectedDate},
-                    success: (data) => {
-                        setTimeout(() => {
-                            if (data.rtnCd === '001') {
-                                const list = data.rtnData || [];
-                                renderList(list.filter(i => i.status === 'PENDING'), 'pending');
-                                renderList(list.filter(i => i.status !== 'PENDING'), 'complete');
-                            } else { $('.att-list').html($dom.error); }
-                        }, 200);
-                    },
-                    error: () => $('.att-list').html('<div class="text-center p-10 text-red-400">오류 발생</div>')
-                });
-            }
+			function fetchList(selectedDate) {
+				if (!selectedDate) return;
+				$('.att-list').html($dom.loading);
+				$.ajax({
+					url: CONFIG.API.LIST, type: 'POST', data: {reqDate: selectedDate},
+					success: (data) => {
+						setTimeout(() => {
+							if (data.rtnCd === '001') {
+								const list = data.rtnData || [];
+								renderList(list.filter(i => i.status === 'PENDING'), 'pending');
+								renderList(list.filter(i => i.status !== 'PENDING'), 'complete');
+							} else {
+								$('.att-list').html($dom.error);
+							}
+						}, 200);
+					},
+					error: () => $('.att-list').html('<div class="text-center p-10 text-red-400">오류 발생</div>')
+				});
+			}
 
-            function reloadList() { $dom.weekGroup.find('.week-btn.active').trigger('click'); }
+			function reloadList() {
+				$dom.weekGroup.find('.week-btn.active').trigger('click');
+			}
 
-            $dom.monthGroup.on('click', '.month-chip', function () {
-                $(this).addClass('active').siblings().removeClass('active');
-                STATE.month = $(this).data('value');
-                renderWeeks(STATE.year, STATE.month);
-            });
+			$dom.monthGroup.on('click', '.month-chip', function () {
+				$(this).addClass('active').siblings().removeClass('active');
+				STATE.month = $(this).data('value');
+				renderWeeks(STATE.year, STATE.month);
+			});
 
-            $dom.weekGroup.on('click', '.week-btn', function () {
-                $(this).addClass('active').siblings().removeClass('active');
-                fetchList($(this).data('value'));
-            });
+			$dom.weekGroup.on('click', '.week-btn', function () {
+				$(this).addClass('active').siblings().removeClass('active');
+				fetchList($(this).data('value'));
+			});
 
-            // [수정됨] 탭 클릭 로직 (밑줄 및 색상 CSS 직접 제어)
-            $dom.tabs.on('click', function () {
-                const type = $(this).data('type');
+			// [수정됨] 탭 클릭 로직 (밑줄 및 색상 CSS 직접 제어)
+			$dom.tabs.on('click', function () {
+				const type = $(this).data('type');
+				// 전체 탭 스타일 리셋 (회색, 투명 테두리)
+				$dom.tabs.removeClass('active').addClass('text-slate-400').css({'border-color': 'transparent', 'color': '#94a3b8'});
+				// 선택 탭 스타일 적용 (파란색, 파란 테두리)
+				$(this).addClass('active').removeClass('text-slate-400').css({'border-color': '#2563eb', 'color': '#2563eb'});
+				$('.att-list').addClass('hidden');
+				$(`#list-att-${type}`).removeClass('hidden').hide().fadeIn(200);
+			});
 
-                // 전체 탭 스타일 리셋 (회색, 투명 테두리)
-                $dom.tabs.removeClass('active').addClass('text-slate-400')
-                        .css({'border-color': 'transparent', 'color': '#94a3b8'});
+			$(document).on('click', '.btn-action', function (e) {
+				e.preventDefault();
+				const $btn = $(this);
+				if ($btn.prop('disabled')) return;
+				updateStatus($btn.data('id'), $btn.data('status'), $btn);
+			});
 
-                // 선택 탭 스타일 적용 (파란색, 파란 테두리)
-                $(this).addClass('active').removeClass('text-slate-400')
-                        .css({'border-color': '#2563eb', 'color': '#2563eb'});
-
-                $('.att-list').addClass('hidden');
-                $(`#list-att-${type}`).removeClass('hidden').hide().fadeIn(200);
-            });
-
-            $(document).on('click', '.btn-action', function (e) {
-                e.preventDefault();
-                const $btn = $(this);
-                if ($btn.prop('disabled')) return;
-                updateStatus($btn.data('id'), $btn.data('status'), $btn);
-            });
-
-            initMonths();
-            renderWeeks(STATE.year, STATE.month);
-        });
-    </script>
+			initMonths();
+			renderWeeks(STATE.year, STATE.month);
+		});
+	</script>
 </th:block>
 </html>
