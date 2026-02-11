@@ -1,61 +1,71 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/app/psn/tch/layouts/tch_layout}" lang="ko">
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{/app/psn/tch/layouts/tch_layout}" lang="ko">
 <th:block layout:fragment="content">
-    <section id="tab-guild" class="section-content active max-w-2xl mx-auto p-4">
-        <div class="flex justify-between items-end mb-6 px-1">
-            <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">길드 멤버</h2>
-            <span class="text-sm text-slate-500 font-medium"
-                  th:text="|총 ${#lists.size(tchGildMemberList)}명|">총 0명</span>
-        </div>
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-            <div class="bg-slate-50/80 px-5 py-3 border-b border-slate-100 flex justify-between">
-                <span class="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Member Profile</span>
-            </div>
-            <div class="divide-y divide-slate-100">
-                <div th:each="vo : ${tchGildMemberList}"
-                     class="group p-4 flex items-center justify-between hover:bg-slate-50 transition-all duration-200 cursor-pointer">
-                    <div class="flex items-center gap-4">
-                        <div class="relative">
-                            <img th:src="|https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/${vo.occpCode}_${#strings.toLowerCase(vo.sexdstn)}.png|"
-                                 alt="avatar"
-                                 class="w-12 h-12 rounded-2xl bg-slate-100 border border-slate-200 shadow-sm transition-transform group-hover:scale-105">
-                        </div>
-                        <div>
-                            <div class="flex items-center gap-2">
-                                <span class="font-bold text-slate-900 text-base" th:text="${vo.mberNm}">김용사</span>
-                                <span class="text-xs text-slate-400 font-medium" th:text="|(${vo.ncnm})|">닉네임</span>
-                                <span th:if="${vo.longAbsenceAt == 'Y'}"
-                                      class="ml-1 text-[10px] text-red-600 font-bold bg-red-50 px-1.5 py-0.5 rounded border border-red-100">
+	<section id="tab-guild" class="section-content active max-w-5xl mx-auto">
+		<div class="flex justify-between items-end mb-6 px-1">
+			<h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">길드 멤버</h2>
+			<span class="text-sm text-slate-500 font-medium"
+				  th:text="|총 ${#lists.size(tchGildMemberList)}명|">총 0명</span>
+		</div>
+
+		<div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+			<div class="bg-slate-50/80 px-4 py-3 border-b border-slate-100 flex justify-between">
+				<span class="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Member Profile</span>
+			</div>
+
+			<div class="divide-y divide-slate-100">
+				<div th:each="vo : ${tchGildMemberList}"
+					 class="group p-4 flex items-center justify-between hover:bg-slate-50 transition-all duration-200 cursor-pointer">
+
+					<div class="flex items-center flex-1 min-w-0">
+						<div class="relative flex-shrink-0 mr-4">
+							<img th:src="|https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/${vo.occpCode}_${#strings.toLowerCase(vo.sexdstn)}.png|"
+								 alt="avatar"
+								 class="w-14 h-14 rounded-2xl bg-slate-100 border border-slate-200 shadow-sm transition-transform group-hover:scale-105">
+						</div>
+
+						<div class="min-w-0 flex flex-col justify-center gap-1">
+							<div class="flex items-center gap-1.5 flex-wrap">
+                                <span class="font-bold text-slate-900 text-lg truncate"
+									  th:text="${vo.mberNm}">김용사</span>
+								<span class="text-sm text-slate-400 font-medium truncate"
+									  th:text="|(${vo.ncnm})|">(닉네임)</span>
+							</div>
+
+							<div class="flex items-center gap-1.5">
+                                <span class="text-[11px] text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded border border-blue-100 flex-shrink-0"
+									  th:text="${vo.occpNm}">Warrior</span>
+								<span class="text-[11px] text-slate-500 font-bold bg-slate-100 px-2 py-0.5 rounded flex-shrink-0"
+									  th:text="|Lv.${vo.level}|">Lv.10</span>
+								<span th:if="${vo.longAbsenceAt == 'Y'}"
+									  class="text-[10px] text-red-600 font-bold bg-red-50 px-1.5 py-0.5 rounded border border-red-100 flex-shrink-0">
                                     장기결석
                                 </span>
-                            </div>
-                            <div class="flex items-center gap-1.5 mt-1">
-                                <span class="text-[10px] text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded-md border border-blue-100"
-                                      th:text="${vo.occpNm}">Warrior</span>
-                                <span class="text-[10px] text-slate-500 font-bold bg-slate-100 px-2 py-0.5 rounded-md"
-                                      th:text="|Lv.${vo.level}|">Lv.10</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <div class="font-black text-slate-900 text-base tracking-tight"
-                             th:text="|${#numbers.formatInteger(vo.point, 1, 'COMMA')} P|">1,200 P
-                        </div>
-                        <div class="mt-1 flex items-center justify-end gap-1">
-                            <span class="text-[10px] text-slate-500 font-bold"
-                                  th:text="|${vo.lastAtndDate == null ? '출석 이력 없음' : '최근 출석일: '  + vo.lastAtndDate}|">
+							</div>
+						</div>
+					</div>
+
+					<div class="text-right pl-4 flex-shrink-0 flex flex-col justify-center gap-1">
+						<div class="font-black text-slate-900 text-lg tracking-tight whitespace-nowrap"
+							 th:text="|${#numbers.formatInteger(vo.point, 1, 'COMMA')} P|">1,200 P
+						</div>
+						<div class="flex items-center justify-end">
+                            <span class="text-[11px] text-slate-400 font-medium whitespace-nowrap"
+								  th:text="|${vo.lastAtndDate == null ? '출석 없음' : vo.lastAtndDate}|">
                                 2026-02-11
                             </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div th:if="${#lists.isEmpty(tchGildMemberList)}" class="p-10 text-center">
-                <p class="text-slate-400 text-sm">등록된 길드 멤버가 없습니다.</p>
-            </div>
-        </div>
-    </section>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<div th:if="${#lists.isEmpty(tchGildMemberList)}" class="p-10 text-center">
+				<p class="text-slate-400 text-sm">등록된 길드 멤버가 없습니다.</p>
+			</div>
+		</div>
+	</section>
 </th:block>
 </html>
