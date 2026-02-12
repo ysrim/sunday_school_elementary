@@ -1,28 +1,22 @@
 package com.base.interceptor;
 
-import app.psn.com.service.CacheService;
-import app.psn.std.login.vo.StdSessionVO;
+import org.springframework.core.annotation.AnnotatedElementUtils;
+import org.springframework.lang.NonNull;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.base.annotation.com.PassAuth;
 import com.base.annotation.std.StdMenuInfo;
 import com.base.enumm.std.StdNaviEnum;
 import com.base.utl.SessionUtil;
 import com.base.utl.StringUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
+import app.psn.com.service.CacheService;
+import app.psn.std.login.vo.StdSessionVO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.core.annotation.AnnotatedElementUtils;
-import org.springframework.lang.NonNull;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.HandlerInterceptor;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
