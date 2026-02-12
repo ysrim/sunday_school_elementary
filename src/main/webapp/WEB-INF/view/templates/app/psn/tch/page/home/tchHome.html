@@ -85,171 +85,262 @@
 		</div>
 
 		<div class="mt-8">
-			<h3 class="font-bold text-slate-800 mb-3 px-1 flex justify-between">
-				<span><i class="fas fa-comment-alt text-blue-500 mr-2"></i>길드 라운지</span>
-				<span class="text-xs text-slate-400 font-normal mt-1">최근 게시글</span>
-			</h3>
-			<div class="card-box">
-				<div id="comment-list" class="flex flex-col gap-4 p-4 max-h-[400px] overflow-y-auto custom-scrollbar">
+			<div class="flex justify-between items-end mb-4 px-1">
+				<div>
+					<h3 class="font-black text-slate-800 text-lg flex items-center">
+                <span class="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mr-2 text-sm">
+                    <i class="fas fa-comment-dots"></i>
+                </span>
+						길드 라운지
+					</h3>
+				</div>
+				<span class="text-[11px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-md uppercase tracking-wider">Live Briefing</span>
+			</div>
 
-					<div class="flex gap-3 group" th:each="vo : ${gildPost}">
-						<div class="flex-shrink-0">
-							<img th:src="|https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/${vo.occpCode}_${#strings.toLowerCase(vo.sexdstn)}.png|"
-							     class="w-10 h-10 rounded-2xl bg-slate-100 border border-slate-200 shadow-sm object-cover">
-						</div>
-
-						<div class="flex-1 max-w-[90%]">
-							<div class="flex justify-between items-end mb-1 pl-1">
-								<span class="text-sm font-bold text-slate-900" th:text="${vo.mberNm}">김용사</span>
-								<span class="text-[10px] text-slate-400 font-normal" th:text="${vo.creatDe}">10:42 AM</span>
-							</div>
-
-							<div class="relative bg-slate-50 border border-slate-100 rounded-2xl rounded-tl-none px-4 py-3 text-sm text-slate-700 leading-relaxed shadow-sm hover:bg-slate-100 transition-colors">
-								<p th:text="${vo.content}" class="whitespace-pre-wrap break-words">선생님 오늘 간식 뭐예요?</p>
-
-								<button th:onclick="|deleteComment(this, '${vo.postSn}')|"
-								        class="absolute -top-2 -right-2 bg-white text-red-400 border border-red-100 w-6 h-6 rounded-full shadow-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-red-50 hover:scale-110 cursor-pointer">
-									<i class="fas fa-times text-[10px]"></i>
-								</button>
-							</div>
-						</div>
-					</div>
-
+			<div class="card-box overflow-hidden border-0 shadow-xl rounded-3xl bg-white">
+				<div id="comment-list" class="db-lounge-list custom-scrollbar">
 				</div>
 
-				<div class="p-3 bg-white border-t border-slate-100 flex gap-2 rounded-b-2xl">
-					<input id="comment-input" type="text" placeholder="함께 이야기를 나눠보세요..."
-					       onkeyup="if(window.event.keyCode==13){postComment()}"
-					       class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:bg-white transition-colors">
-					<button onclick="postComment()"
-					        class="w-12 h-11 bg-slate-900 text-white rounded-xl flex items-center justify-center active:scale-95 transition shadow-md hover:bg-slate-800">
-						<i class="fas fa-paper-plane text-xs"></i>
-					</button>
+				<div class="p-4 bg-white border-t border-slate-50">
+					<div class="bg-slate-50 rounded-2xl p-2 focus-within:ring-2 focus-within:ring-blue-100 transition-all">
+                <textarea id="comment-input" rows="2"
+                          placeholder="길드원들과 따뜻한 이야기를 나눠보세요..."
+                          onkeyup="checkByteLimit(this, 400, 'comment-byte')"
+                          class="w-full bg-transparent border-0 p-2 text-sm focus:outline-none resize-none placeholder:text-slate-400"></textarea>
+
+						<div class="flex justify-between items-center mt-1 px-1">
+							<div class="dbl-byte-wrapper">
+								<span id="comment-byte" class="dbl-byte-text">0</span>
+								<span class="dbl-byte-max">/ 400 byte</span>
+							</div>
+
+							<button id="btn-reg-post" onclick="postComment()"
+							        class="group bg-slate-900 hover:bg-indigo-600 text-white px-5 py-2 rounded-xl flex items-center gap-2 transition-all active:scale-95 shadow-lg shadow-slate-200">
+								<span class="text-xs font-bold">게시하기</span>
+								<i class="fas fa-paper-plane text-[10px] group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+							</button>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</section>
 	<script th:inline="javascript">
 
-		function saveTodayMessage() {
-			const $input = $('#message-input');
-			const $preview = $('#preview-text');
-			const $btn = $('#btn-save-msg');
-			const $btnIcon = $btn.find('i');
-			const $btnText = $btn.find('span');
-			const message = $input.val().trim();
-			// 1. 유효성 검사
-			if (!message) {
-				_showToast("메시지 내용을 입력해주세요. ❌");
-				$input.focus();
-				return;
-			}
-			// 2. 로딩 UI 시작
-			const originalIconClass = "fas fa-paper-plane text-sm mb-0.5"; // 원래 아이콘 클래스
-			$btn.prop('disabled', true);        // 버튼 비활성화
-			$btnText.text('저장중');            // 텍스트 변경
-			$btnIcon.attr('class', 'fas fa-circle-notch fa-spin text-lg mb-0.5'); // 스피너 아이콘으로 변경
-			// 3. 서버 전송 (AJAX)
-			$.ajax({
-				url: '/tch/home/saveGildMsg.ax',
-				type: 'POST',
-				data: {slogan: message},
-				success: function (response) {
-					$preview.fadeOut(200, function () { // 성공 시 미리보기 텍스트 갱신 (깜빡임 효과)
-						$(this).text(message).fadeIn(200);
-					});
-					$input.val(''); // 입력창 초기화
-					$('#text-byte').text('0'); // 카운터 초기화
-					_showToast('길드 메시지를 갱신했습니다. ✅');
-				},
-				error: function (xhr, status, error) {
-					console.error("저장 실패:", error);
-					_showToast("메시지 저장에 실패했습니다. 잠시 후 다시 시도해주세요. ❌");
-				},
-				complete: function () {
-					setTimeout(function () { // 4. 로딩 UI 종료 (0.5초 딜레이로 자연스럽게)
-						$btn.prop('disabled', false);
-						$btnText.text('게시');
-						$btnIcon.attr('class', originalIconClass);
-					}, 500);
-				}
-			});
-		}
+        function saveTodayMessage() {
+            const $input = $('#message-input');
+            const $preview = $('#preview-text');
+            const $btn = $('#btn-save-msg');
+            const $btnIcon = $btn.find('i');
+            const $btnText = $btn.find('span');
+            const message = $input.val().trim();
+            // 1. 유효성 검사
+            if (!message) {
+                _showToast("메시지 내용을 입력해주세요. ❌");
+                $input.focus();
+                return;
+            }
+            // 2. 로딩 UI 시작
+            const originalIconClass = "fas fa-paper-plane text-sm mb-0.5"; // 원래 아이콘 클래스
+            $btn.prop('disabled', true);        // 버튼 비활성화
+            $btnText.text('저장중');            // 텍스트 변경
+            $btnIcon.attr('class', 'fas fa-circle-notch fa-spin text-lg mb-0.5'); // 스피너 아이콘으로 변경
+            // 3. 서버 전송 (AJAX)
+            $.ajax({
+                url: '/tch/home/saveGildMsg.ax',
+                type: 'POST',
+                data: {slogan: message},
+                success: function (response) {
+                    $preview.fadeOut(200, function () { // 성공 시 미리보기 텍스트 갱신 (깜빡임 효과)
+                        $(this).text(message).fadeIn(200);
+                    });
+                    $input.val(''); // 입력창 초기화
+                    $('#text-byte').text('0'); // 카운터 초기화
+                    _showToast('길드 메시지를 갱신했습니다. ✅');
+                },
+                error: function (xhr, status, error) {
+                    console.error("저장 실패:", error);
+                    _showToast("메시지 저장에 실패했습니다. 잠시 후 다시 시도해주세요. ❌");
+                },
+                complete: function () {
+                    setTimeout(function () { // 4. 로딩 UI 종료 (0.5초 딜레이로 자연스럽게)
+                        $btn.prop('disabled', false);
+                        $btnText.text('게시');
+                        $btnIcon.attr('class', originalIconClass);
+                    }, 500);
+                }
+            });
+        }
 
-		function checkByteLimit(obj, maxByte) {
-			const str = obj.value;
-			let totalByte = 0;
-			let len = 0;
-			for (let i = 0; i < str.length; i++) {
-				const c = str.charCodeAt(i);
-				if (c > 128) {
-					totalByte += 2; // 한글 등은 2byte 처리 (UTF-8 3byte를 원하면 3으로 수정)
-				} else {
-					totalByte++;    // 영문 등은 1byte
-				}
-				if (totalByte <= maxByte) {
-					len = i + 1;
-				}
-			}
-			// Byte 표시 업데이트
-			$('#text-byte').text(totalByte);
-			// 제한 초과 시 자르기
-			if (totalByte > maxByte) {
-				alert("최대 " + maxByte + "Byte까지만 입력 가능합니다.");
-				obj.value = str.substr(0, len);
-				$('#text-byte').text(maxByte); // 강제로 max로 표기
-			}
-		}
+        /**
+         * 공통 Byte 체크 함수 (ID 인자를 추가하여 재사용 가능하게 수정)
+         */
+        function checkByteLimit(obj, maxByte, targetId) {
+            const str = obj.value;
+            let totalByte = 0;
+            let len = 0;
+            for (let i = 0; i < str.length; i++) {
+                const c = str.charCodeAt(i);
+                if (c > 128) totalByte += 2;
+                else totalByte++;
 
-		function postComment() {
-			const $input = $('#comment-input');
-			const val = $input.val().trim();
+                if (totalByte <= maxByte) len = i + 1;
+            }
 
-			if (!val) {
-				_showToast('내용을 입력해주세요.'); // 토스트 메시지 함수가 있다면 사용
-				$input.focus();
-				return;
-			}
+            $(`#${targetId}`).text(totalByte);
 
-			// 현재 시간 구하기 (단순 표기용)
-			const now = new Date();
-			const timeString = now.toLocaleTimeString('ko-KR', {hour: '2-digit', minute: '2-digit'});
+            if (totalByte > maxByte) {
+                _showToast(`최대 ${maxByte}Byte까지만 입력 가능합니다.`);
+                obj.value = str.substr(0, len);
+                $(`#${targetId}`).text(maxByte);
+            }
+        }
 
-			// 디자인이 적용된 HTML 구조
-			const html = `
-            <div class="flex gap-3 group animate-fade-in-up">
-               <div class="flex-shrink-0">
-                   <div class="w-10 h-10 rounded-2xl bg-indigo-100 border border-indigo-200 shadow-sm flex items-center justify-center text-indigo-600">
-                        <i class="fas fa-user-tie text-lg"></i>
-                   </div>
-               </div>
-               <div class="flex-1 max-w-[90%]">
-                  <div class="flex justify-between items-end mb-1 pl-1">
-                     <span class="text-sm font-bold text-slate-900">관리자(나)</span>
-                     <span class="text-[10px] text-slate-400 font-normal">${timeString}</span>
-                  </div>
-                  <div class="relative bg-indigo-50 border border-indigo-100 rounded-2xl rounded-tl-none px-4 py-3 text-sm text-slate-800 leading-relaxed shadow-sm">
-                     <p class="whitespace-pre-wrap break-words">${val}</p>
-                     <button onclick="deleteComment(this)"
-                             class="absolute -top-2 -right-2 bg-white text-red-400 border border-red-100 w-6 h-6 rounded-full shadow-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-red-50 hover:scale-110 cursor-pointer">
-                         <i class="fas fa-times text-[10px]"></i>
-                     </button>
-                  </div>
-               </div>
+        function deleteComment(btn) {
+            if (!confirm('정말 삭제하시겠습니까?')) return;
+
+            const $target = $(btn).closest('.db-lounge-item');
+            const postSn = $(btn).data('val');
+
+            $.ajax({
+                url: '/tch/home/delGildPost.ax',
+                type: 'POST',
+                data: {postSn: postSn},
+                success: function () {
+                    // 삭제 효과 적용
+                    $target.addClass('db-lounge-fade-out');
+                    setTimeout(() => {
+                        $target.remove();
+                        checkEmptyLounge();
+                        _showToast('메시지를 삭제했습니다. ✅');
+                    }, 500); // 애니메이션 시간과 맞춤
+                },
+                error: function () {
+                    _showToast("삭제에 실패했습니다. ❌");
+                }
+            });
+        }
+
+        // 1. 목록 불러오기 (Read)
+        function loadLoungeList() {
+            const $list = $('#comment-list');
+
+            $list.html(`
+       <div class="dbl-loader">
+           <div class="dbl-spinner"></div>
+           <p class="text-xs text-slate-400 font-medium">라운지 소식을 가져오는 중...</p>
+       </div>
+    `);
+
+            $.ajax({
+                url: '/tch/home/getGildPost.ax',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    setTimeout(function () {
+                        $list.empty();
+                        if (!data.rtnData || data.rtnData.length === 0) {
+                            renderEmpty();
+                            return;
+                        }
+
+                        // 최신글이 아래로 가도록 순서대로 append
+                        data.rtnData.forEach(vo => {
+                            $list.append(createCommentHtml(vo));
+                        });
+
+                        // [수정] 목록 로드 완료 후 가장 아래쪽(마지막 글)으로 스크롤 고정
+                        $list.scrollTop($list.prop('scrollHeight'));
+                    }, 500);
+                },
+                error: function () {
+                    $list.html('<p class="text-center py-10 text-xs text-red-400">목록을 불러오지 못했습니다.</p>');
+                }
+            });
+        }
+
+        function createCommentHtml(vo) {
+            const isMine = (vo.isMine === 'Y');
+            // 클래스 결정: animate-fade-in-up 같은 Tailwind 클래스 대신 CSS 애니메이션 사용
+            const itemClass = isMine ? 'db-lounge-item is-mine' : 'db-lounge-item others';
+            // 아바타 이미지 주소 (에러 대비 기본 이미지 처리 추가 권장)
+            const avatarUrl = `https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/${vo.occpCode}_${vo.sexdstn.toLowerCase()}.png`;
+
+            // HTML 구조 재정립: 불필요한 공백 제거 및 구조 명확화
+            return `
+            <div class="${itemClass}" data-sn="${vo.postSn}">
+                <img src="${avatarUrl}" alt="profile" onerror="this.src='/images/default_avatar.png'">
+
+                <div class="db-lounge-content-wrapper">
+                    <div class="db-lounge-info">
+                        <span class="db-lounge-name">${vo.mberNm}</span>
+                    </div>
+
+                    <div class="db-lounge-bubble">
+                        <span class="whitespace-pre-wrap">${vo.content}</span>
+                        <button onclick="deleteComment(this)" class="db-lounge-del-btn" data-val="${vo.postSn}" title="삭제"><i class="fas fa-times"></i></button>
+                    </div>
+
+                    <span class="db-lounge-time">${vo.creatDe}</span>
+                </div>
             </div>`;
+        }
 
-			$('#comment-list').prepend(html); // 상단에 추가
-			$input.val(''); // 입력창 비우기
-		}
+        // 등록 버튼 로딩 처리 (아이콘 변경 방식 최적화)
+        function postComment() {
+            const $input = $('#comment-input');
+            const content = $input.val().trim();
+            const $btn = $('#btn-reg-post');
 
-		function deleteComment(btn, sn) {
-			if (confirm('정말 삭제하시겠습니까?')) {
-				$(btn).closest('.group').remove(); // 부모 요소(group) 제거
-			}
-		}
+            if (!content) {
+                _showToast('메시지를 입력해주세요! 😊');
+                return;
+            }
 
-		$(function () {
-		});
+            // 버튼 로딩 상태
+            $btn.prop('disabled', true).addClass('opacity-70');
+            const originalContent = $btn.html();
+            $btn.html('<i class="fas fa-circle-notch fa-spin text-xs"></i><span class="text-xs font-bold">등록 중</span>');
+
+            $.ajax({
+                url: '/tch/home/regGildPost.ax',
+                type: 'POST',
+                data: {content: content},
+                success: function (res) {
+                    $input.val('');
+                    $('#comment-byte').text('0');
+                    loadLoungeList(); // 전체 재로드 후 스크롤 바닥으로
+                    _showToast(res.rtnMsg || '성공적으로 게시되었습니다.');
+                },
+                complete: function () {
+                    setTimeout(() => {
+                        $btn.prop('disabled', false).removeClass('opacity-70').html(originalContent);
+                    }, 500);
+                }
+            });
+        }
+
+        // 4. 빈 목록 처리
+        function renderEmpty() {
+            $('#comment-list').html(`
+		        <div id="empty-comment" class="db-lounge-empty">
+		            <i class="fas fa-comments text-3xl mb-2 opacity-20"></i>
+		            <p class="text-sm">아직 게시글이 없습니다.<br>첫 번째 이야기를 나눠보세요!</p>
+		        </div>
+		    `);
+        }
+
+        function scrollToBottom() {
+            const $list = $('#comment-list');
+            // scrollHeight: 전체 내용의 높이, scrollTop을 이 값으로 설정하면 맨 아래로 이동합니다.
+            $list.stop().animate({
+                scrollTop: $list.prop('scrollHeight')
+            }, 500);
+        }
+
+        $(function () {
+            loadLoungeList(); // 페이지 로드 시 목록 불러오기
+        });
 	</script>
 </th:block>
 </html>

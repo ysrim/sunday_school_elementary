@@ -2,6 +2,9 @@
 :root {
     --primary: #3b82f6;
     --bg-color: #f8fafc;
+    --dbl-primary: #6366f1;
+    --dbl-primary-dark: #4f46e5;
+    --dbl-bg: #f8fafc;
 }
 
 body {
@@ -354,3 +357,132 @@ body {
     outline: none;
     -webkit-tap-highlight-color: transparent;
 }
+
+/* 대시보드 길드 라운지 전용 스타일 */
+/* --- 대시보드 길드 라운지 전용 스타일 (개선판) --- */
+/* --- 대시보드 길드 라운지 전용 스타일 (Fix Ver.) --- */
+
+/* 1. 리스트 컨테이너 */
+/* 1. 리스트 컨테이너 */
+.db-lounge-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+    height: 450px;
+    background-color: var(--dbl-bg);
+    overflow-y: auto;
+    scroll-behavior: smooth;
+}
+
+/* 2. 공통 아이템 구조 (애니메이션 포함) */
+.db-lounge-item {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 4px;
+    opacity: 0;
+    animation: fadeInUp 0.3s ease-out forwards;
+}
+
+/* [중요] 내 글일 때 좌우 반전 (오른쪽 정렬) */
+.db-lounge-item.is-mine {
+    flex-direction: row-reverse;
+}
+
+/* 아바타 이미지 */
+.db-lounge-item img {
+    width: 40px;
+    height: 40px;
+    border-radius: 14px;
+    object-fit: cover;
+    flex-shrink: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* 3. 콘텐츠 래퍼 (이름/말풍선/시간 정렬) */
+.db-lounge-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    max-width: 70%;
+    position: relative;
+}
+
+.db-lounge-item.others .db-lounge-content-wrapper { align-items: flex-start; }
+.db-lounge-item.is-mine .db-lounge-content-wrapper { align-items: flex-end; }
+
+/* 4. 말풍선 기본 디자인 */
+.db-lounge-bubble {
+    padding: 10px 14px;
+    position: relative;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* (A) 상대방 말풍선: 흰색, 왼쪽 위 뾰족 */
+.db-lounge-item.others .db-lounge-bubble {
+    background: white;
+    border: 1px solid #e2e8f0;
+    color: #1e293b;
+    border-radius: 4px 18px 18px 18px;
+}
+
+/* (B) 내 말풍선: 연한 파란색, 오른쪽 위 뾰족 */
+.db-lounge-item.is-mine .db-lounge-bubble {
+    background-color: #eff6ff;   /* 배경: 아주 연한 파란색 */
+    color: #1e293b;              /* 글자: 진한 남색 */
+    border: 1px solid #dbeafe;   /* 테두리: 연한 파란색 */
+    border-radius: 18px 4px 18px 18px;
+}
+
+/* 5. 정보 텍스트 (이름, 시간) */
+.db-lounge-info { margin-bottom: 4px; padding-left: 2px; }
+.db-lounge-name { font-size: 12px; font-weight: 700; color: #64748b; }
+.db-lounge-time { font-size: 10px; color: #94a3b8; margin-top: 4px; padding: 0 2px; }
+
+/* 6. 삭제 버튼 (Hover 시 표시) */
+.db-lounge-del-btn {
+    position: absolute;
+    top: -6px;
+    width: 18px;
+    height: 18px;
+    background: #ef4444;
+    color: white;
+    border-radius: 50%;
+    border: 2px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    opacity: 0;
+    transition: all 0.2s;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.db-lounge-content-wrapper:hover .db-lounge-del-btn {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.db-lounge-item.others .db-lounge-del-btn { right: -6px; }
+.db-lounge-item.is-mine .db-lounge-del-btn { left: -6px; }
+
+/* 7. 로딩 및 애니메이션 */
+.dbl-loader {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 0;
+}
+.dbl-spinner {
+    width: 30px; height: 30px; border: 3px solid #e2e8f0; border-top-color: var(--dbl-primary);
+    border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 1rem;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeOut { to { opacity: 0; height: 0; margin: 0; padding: 0; transform: scale(0.9); } }
+.db-lounge-fade-out { animation: fadeOut 0.5s forwards; }

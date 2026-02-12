@@ -73,7 +73,7 @@
 		SELECT SLOGAN FROM GUILD_INFO WHERE GUILD_SN = #{guildSn}
 	</select>
 
-	<insert id="saveGildMsgAx">
+	<insert id="regGildMsg">
 		UPDATE GUILD_INFO SET SLOGAN = #{slogan} WHERE GUILD_SN = #{guildSn}
 	</insert>
 
@@ -87,11 +87,22 @@
 			 , C.OCCP_CODE
 			 , B.SEXDSTN
 			 , DATE_FORMAT(A.CREAT_DE, '%m-%d %H:%I') AS CREAT_DE
+			 , IF(A.MBER_SN = #{mberSn}, 'Y', 'N') AS IS_MINE
 		FROM GUILD_POST A
-				 INNER JOIN MBER_INFO B ON A.MBER_SN = B.MBER_SN
-				 INNER JOIN AVATAR_INFO C ON A.MBER_SN = C.MBER_SN
+			     INNER JOIN MBER_INFO B ON A.MBER_SN = B.MBER_SN
+			     INNER JOIN AVATAR_INFO C ON A.MBER_SN = C.MBER_SN
 		WHERE A.GUILD_SN = #{guildSn}
-		  AND DEL_YN = 'N'
+		  AND A.DEL_YN = 'N'
+		ORDER BY A.CREAT_DE ASC
+		LIMIT 50
 	</select>
+
+	<delete id="delGildPost">
+		UPDATE GUILD_POST SET DEL_YN = 'Y' WHERE GUILD_SN = #{guildSn} AND POST_SN = #{postSn}
+	</delete>
+
+	<insert id="regGildPost">
+		INSERT INTO GUILD_POST (GUILD_SN, MBER_SN, CONTENT) VALUES (#{guildSn}, #{mberSn}, #{content})
+	</insert>
 
 </mapper>
