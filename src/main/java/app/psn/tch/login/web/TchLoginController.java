@@ -24,40 +24,40 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/tch/idx")
 public class TchLoginController {
 
-    private final TchLoginService loginService;
+	private final TchLoginService loginService;
 
-    /**
-     * 로그인 페이지
-     */
-    @RequestMapping(path = "/login.pg")
-    public String loginPg() {
+	/**
+	 * 로그인 페이지
+	 */
+	@RequestMapping(path = "/login.pg")
+	public String loginPg() {
 
-        return ViewPathEnum.TCH.to("/idx/tchLogin");
+		return ViewPathEnum.TCH.to("/idx/tchLogin");
 
-    }
+	}
 
-    /**
-     * 로그인 요청
-     */
-    @PostMapping(path = "/login.ax")
-    public ResponseEntity<BodyResVO<Object>> loginAx(@RequestBody @Valid TchLoginVO loginVO) {
+	/**
+	 * 로그인 요청
+	 */
+	@PostMapping(path = "/login.ax")
+	public ResponseEntity<BodyResVO<Object>> loginAx(@RequestBody @Valid TchLoginVO loginVO) {
 
-        TchSessionVO sessionVO = loginService.loginAx(loginVO);
+		TchSessionVO sessionVO = loginService.loginAx(loginVO);
 
-        return ResUtil.resSucc(sessionVO.ncnm() + "용사님 어서오세요.");
+		return ResUtil.resSucc(sessionVO.ncnm() + "용사님 어서오세요! ✅");
 
-    }
+	}
 
-    /**
-     * 로그아웃
-     */
-    @RequestMapping(path = "/logOut.pg")
-    public String logOutAx(HttpSession session) {
+	/**
+	 * 로그아웃
+	 */
+	@RequestMapping(path = "/logOut.pg")
+	public String logOutAx(HttpSession session) {
 
-        session.invalidate();
+		session.invalidate();
 
-        return "redirect:/tch/idx/login.pg";
+		return "redirect:/tch/idx/login.pg";
 
-    }
+	}
 
 }

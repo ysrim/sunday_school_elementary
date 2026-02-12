@@ -67,7 +67,7 @@ public class TchAuthInterceptor implements HandlerInterceptor {
 			return true;
 
 		// 권한 체크
-		if (!isAuthorized(tchSessionVO, menuInfo)) {
+		if (!isAuthorized(tchSessionVO)) {
 			return false;
 		}
 
@@ -91,12 +91,8 @@ public class TchAuthInterceptor implements HandlerInterceptor {
 
 	}
 
-	private boolean isAuthorized(TchSessionVO session, TchMenuInfo menuInfo) {
-
-		//return session.gradeCode().equals(menuInfo.role().getCode());
-		// 선생님 등급코드만 접근 가능하다.
+	private boolean isAuthorized(TchSessionVO session) {
 		return "200".equals(session.gradeCode());
-
 	}
 
 	private void handleAuthFail(HttpServletRequest request, HttpServletResponse response, String msg, String code) throws IOException {

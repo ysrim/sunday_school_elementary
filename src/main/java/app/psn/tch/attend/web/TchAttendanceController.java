@@ -44,10 +44,10 @@ public class TchAttendanceController {
 	public ResponseEntity<BodyResVO<Object>> reqAtndAx(@RequestParam(value = "reqDate", defaultValue = "") String reqDate) {
 
 		if ("".equals(reqDate)) {
-			ResUtil.resFail("날짜를 입력해주세요.");
+			ResUtil.resFail("날짜를 입력해주세요! ❌");
 		}
 
-		return ResUtil.resSucc("성공", tchAttendanceService.sltReqAtndList(reqDate));
+		return ResUtil.resSucc("성공! ✅", tchAttendanceService.sltReqAtndList(reqDate));
 
 	}
 
@@ -59,7 +59,7 @@ public class TchAttendanceController {
 
 		tchAttendanceService.atndChk(reqQuestProcVO);
 
-		return ResUtil.resSucc("APPROVED".equals(reqQuestProcVO.getStatus()) ? "처리가 완료되었습니다! ✅" : "반려 처리되었습니다. ⚠\uFE0F");
+		return ResUtil.resSucc("APPROVED".equals(reqQuestProcVO.getStatus()) ? "처리가 완료되었습니다! ✅" : "반려 처리되었습니다! ❌");
 
 	}
 

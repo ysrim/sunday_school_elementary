@@ -44,10 +44,10 @@ public class TchQuestController {
 	public ResponseEntity<BodyResVO<Object>> reqAtndAx(@RequestParam(value = "reqMonth", defaultValue = "") String reqMonth) {
 
 		if ("".equals(reqMonth)) {
-			ResUtil.resFail("월을 입력해주세요.");
+			ResUtil.resFail("월을 입력해주세요! ❌");
 		}
 
-		return ResUtil.resSucc("성공", tchQuestService.sltReqQestList(reqMonth));
+		return ResUtil.resSucc("성공! ✅", tchQuestService.sltReqQestList(reqMonth));
 
 	}
 

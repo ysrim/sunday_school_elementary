@@ -2,16 +2,19 @@ package com.base.interceptor;
 
 import app.psn.com.service.CacheService;
 import app.psn.std.login.vo.StdSessionVO;
+
 import com.base.annotation.com.PassAuth;
 import com.base.annotation.std.StdMenuInfo;
 import com.base.enumm.std.StdNaviEnum;
 import com.base.utl.SessionUtil;
 import com.base.utl.StringUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.web.method.HandlerMethod;
@@ -26,15 +29,21 @@ import java.util.Map;
 public class StdAuthInterceptor implements HandlerInterceptor {
 
 	private final CacheService cacheService;
+	private final ObjectMapper objectMapper; // [개선1] Bean으로 주입받아 재사용
 
 	private static final String LOGIN_PAGE_URL = "/std/idx/login.pg";
 	private static final String ADMIN_GRADE_CODE = "300";
 
+	private static final String ATTR_MENU_KEY = "_stdMenuInfo";
+	private static final String ATTR_MENU_NM = "_stdMenuNm";
+	private static final String ATTR_MBER_POINT = "_mberPoint";
+	private static final String ATTR_MBER_LEVEL = "_mberLevel";
+	private static final String ATTR_MBER_EXP = "_mberExp";
+
 	@Override
 	public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws Exception {
 
-		// 1. HandlerMethod(Controller 메서드)가 아니면 통과 (정적 리소스 등)
-		// [Java 17] instanceof 패턴 매칭 사용
+		// 1. HandlerMethod 체크
 		if (!(handler instanceof HandlerMethod handlerMethod)) {
 			return true;
 		}
@@ -47,13 +56,13 @@ public class StdAuthInterceptor implements HandlerInterceptor {
 		// 3. 세션 인증 체크
 		StdSessionVO stdSessionVO = SessionUtil.getStdMberInfo();
 		if (stdSessionVO == null) {
-			handleAuthFail(request, response, "Login Required", "401");
+			handleAuthFail(request, response, "Login Required", HttpServletResponse.SC_UNAUTHORIZED); // 401
 			return false;
 		}
 
 		// 4. 권한(인가) 체크 및 메뉴 정보 설정
 		if (!processMenuAuthorization(request, handlerMethod, stdSessionVO)) {
-			handleAuthFail(request, response, "Access Denied", "403");
+			handleAuthFail(request, response, "Access Denied", HttpServletResponse.SC_FORBIDDEN); // 403
 			return false;
 		}
 
@@ -64,39 +73,32 @@ public class StdAuthInterceptor implements HandlerInterceptor {
 	}
 
 	/**
-	 * 메뉴 권한을 체크하고, 권한이 있다면 메뉴 정보를 request에 설정합니다.
+	 * 메뉴 권한 체크 및 정보 설정
 	 */
 	private boolean processMenuAuthorization(HttpServletRequest request, HandlerMethod handlerMethod, StdSessionVO stdSessionVO) {
 
-		// [로직 수정] 우선순위: 메서드 설정(@StdMenuInfo) -> 클래스 설정(@StdMenuInfo)
-		// 구체적인 메서드 설정이 우선되어야 합니다.
 		StdMenuInfo menuInfo = AnnotatedElementUtils.findMergedAnnotation(handlerMethod.getMethod(), StdMenuInfo.class);
-
 		if (menuInfo == null) {
 			menuInfo = AnnotatedElementUtils.findMergedAnnotation(handlerMethod.getBeanType(), StdMenuInfo.class);
 		}
 
-		// 메뉴 정보가 없으면 권한 체크 없이 통과 (정책에 따라 false로 변경 가능)
+		// 메뉴 정보가 없으면 통과
 		if (menuInfo == null) {
 			return true;
 		}
 
-		// 권한 체크 (관리자 등급 체크 등)
+		// 권한 체크 (관리자는 학생 페이지 접근 불가 등)
 		if (!isAuthorized(stdSessionVO)) {
 			log.warn("Unauthorized access attempt. User: {}, Grade: {}", stdSessionVO.mberId(), stdSessionVO.gradeCode());
 			return false;
 		}
 
-		// 메뉴 정보 설정 (View 렌더링용)
 		try {
-			String naviKey = menuInfo.navi().toString();
-			StdNaviEnum navi = StdNaviEnum.valueOf(naviKey);
-
-			request.setAttribute("_stdMenuInfo", naviKey);
-			request.setAttribute("_stdMenuNm", navi.getNaviNm());
-		} catch (IllegalArgumentException | NullPointerException e) {
-			log.error("Invalid StdNaviEnum value in annotation: {}", menuInfo.navi());
-			// 치명적이지 않다면 로직 계속 진행
+			StdNaviEnum navi = menuInfo.navi(); // Enum 자체를 바로 사용
+			request.setAttribute(ATTR_MENU_KEY, navi.name());
+			request.setAttribute(ATTR_MENU_NM, navi.getNaviNm());
+		} catch (Exception e) {
+			log.error("Failed to set menu info: {}", e.getMessage());
 		}
 
 		return true;
@@ -104,44 +106,40 @@ public class StdAuthInterceptor implements HandlerInterceptor {
 
 	private void setupUserContext(HttpServletRequest request, StdSessionVO stdSessionVO) {
 		try {
-			String mberId = stdSessionVO.mberId();
+			// 캐시 서비스 호출 비용이 크다면, 필요할 때만 호출하도록 최적화 고려 필요
 			Integer mberSn = stdSessionVO.mberSn();
 
-			// 온라인 상태 업데이트
-			cacheService.addOnlineMber(mberId);
+			cacheService.addOnlineMber(stdSessionVO.mberId());
 
-			// 사용자 포인트/레벨 정보 설정
-			request.setAttribute("_mberPoint", StringUtil.comma(cacheService.sltPont(mberSn)));
-			request.setAttribute("_mberLevel", cacheService.sltLevel(mberSn));
-			request.setAttribute("_mberExp", cacheService.sltExp(mberSn));
+			request.setAttribute(ATTR_MBER_POINT, StringUtil.comma(cacheService.sltPont(mberSn)));
+			request.setAttribute(ATTR_MBER_LEVEL, cacheService.sltLevel(mberSn));
+			request.setAttribute(ATTR_MBER_EXP, cacheService.sltExp(mberSn));
 		} catch (Exception e) {
-			// 캐시 서버(Redis 등) 장애 시에도 로그인은 유지되도록 예외 처리
 			log.warn("Failed to setup user context (Cache Error): {}", e.getMessage());
 		}
 	}
 
 	private boolean hasPassAuth(HandlerMethod handler) {
 		return AnnotatedElementUtils.hasAnnotation(handler.getMethod(), PassAuth.class)
-				|| AnnotatedElementUtils.hasAnnotation(handler.getBeanType(), PassAuth.class);
+			|| AnnotatedElementUtils.hasAnnotation(handler.getBeanType(), PassAuth.class);
 	}
 
 	private boolean isAuthorized(StdSessionVO session) {
-		// 관리자 권한(300)은 학생 웹페이지 접속 불가
+		// 관리자(300) 등급은 학생 페이지 접근 불가 로직으로 보임
 		return !ADMIN_GRADE_CODE.equals(session.gradeCode());
 	}
 
-	private void handleAuthFail(HttpServletRequest request, HttpServletResponse response, String msg, String code) throws IOException {
+	private void handleAuthFail(HttpServletRequest request, HttpServletResponse response, String msg, int status) throws IOException {
 
 		if (SessionUtil.isAjaxRequest(request)) {
-			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401
+			response.setStatus(status);
 			response.setContentType("application/json;charset=UTF-8");
 
-			// Jackson ObjectMapper를 사용하여 안전하게 JSON 생성
-			Map<String, String> responseMap = new HashMap<>();
-			responseMap.put("rtnCd", code);
+			Map<String, Object> responseMap = new HashMap<>();
+			responseMap.put("rtnCd", String.valueOf(status)); // 코드를 문자열로 변환
 			responseMap.put("rtnMsg", msg);
 
-			response.getWriter().write(new ObjectMapper().writeValueAsString(responseMap));
+			response.getWriter().write(objectMapper.writeValueAsString(responseMap));
 		} else {
 			response.sendRedirect(request.getContextPath() + LOGIN_PAGE_URL);
 		}
