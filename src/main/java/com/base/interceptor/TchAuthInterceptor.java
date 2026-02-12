@@ -3,6 +3,7 @@ package com.base.interceptor;
 import java.io.IOException;
 
 import com.base.annotation.tch.TchMenuInfo;
+
 import org.jspecify.annotations.NonNull;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.web.method.HandlerMethod;
@@ -22,88 +23,92 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class TchAuthInterceptor implements HandlerInterceptor {
 
-    private static final String LOGIN_PAGE_URL = "/tch/idx/login.pg";
+	private static final String LOGIN_PAGE_URL = "/tch/idx/login.pg";
 
-    @Override
-    public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws IOException {
+	@Override
+	public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws IOException {
 
-        // 1. HandlerMethod 체크
-        if (!(handler instanceof HandlerMethod handlerMethod)) {
-            return true;
-        }
+		// 1. HandlerMethod 체크
+		if (!(handler instanceof HandlerMethod handlerMethod)) {
+			return true;
+		}
 
-        // 2. 인증 제외 대상 체크
-        if (hasPassAuth(handlerMethod)) {
-            return true;
-        }
+		// 2. 인증 제외 대상 체크
+		if (hasPassAuth(handlerMethod)) {
+			return true;
+		}
 
-        // 3. 세션 인증 체크
-        TchSessionVO tchSessionVO = SessionUtil.getTchMberInfo();
-        if (tchSessionVO == null) {
-            handleAuthFail(request, response, "Login Required", "401");
-            return false;
-        }
+		// 3. 세션 인증 체크
+		TchSessionVO tchSessionVO = SessionUtil.getTchMberInfo();
+		if (tchSessionVO == null) {
+			handleAuthFail(request, response, "Login Required", "401");
+			return false;
+		}
 
-        // 4. 권한(인가) 체크
-        if (!checkMenuAuthorization(request, handlerMethod, tchSessionVO)) {
-            handleAuthFail(request, response, "Access Denied", "403");
-            return false;
-        }
+		// 4. 권한(인가) 체크
+		if (!checkMenuAuthorization(request, handlerMethod, tchSessionVO)) {
+			handleAuthFail(request, response, "Access Denied", "403");
+			return false;
+		}
 
-        return true;
+		return true;
 
-    }
+	}
 
-    private boolean checkMenuAuthorization(HttpServletRequest request, HandlerMethod handlerMethod, TchSessionVO tchSessionVO) {
+	private boolean checkMenuAuthorization(HttpServletRequest request, HandlerMethod handlerMethod, TchSessionVO tchSessionVO) {
 
-        TchMenuInfo menuInfo = AnnotatedElementUtils.findMergedAnnotation(handlerMethod.getMethod(), TchMenuInfo.class);
+		TchMenuInfo menuInfo = AnnotatedElementUtils.findMergedAnnotation(handlerMethod.getMethod(), TchMenuInfo.class);
 
-        if (menuInfo == null)
-            return true;
+		if (menuInfo == null) {
+			menuInfo = AnnotatedElementUtils.findMergedAnnotation(handlerMethod.getBeanType(), TchMenuInfo.class);
+		}
 
-        // 권한 체크
-        if (!isAuthorized(tchSessionVO, menuInfo)) {
-            return false;
-        }
+		if (menuInfo == null)
+			return true;
 
-        // 메뉴 정보 설정
-        try {
-            String naviKey = menuInfo.navi().toString();
-            TchNaviEnum navi = TchNaviEnum.valueOf(naviKey);
-            request.setAttribute("_tchMenuInfo", naviKey);
-            request.setAttribute("_tchMenuNm", navi.getNaviNm());
-        } catch (IllegalArgumentException e) {
-            log.error("Invalid NaviEnum value in @MenuInfo: {}", menuInfo.navi());
-        }
+		// 권한 체크
+		if (!isAuthorized(tchSessionVO, menuInfo)) {
+			return false;
+		}
 
-        return true;
+		// 메뉴 정보 설정
+		try {
+			String naviKey = menuInfo.navi().toString();
+			TchNaviEnum navi = TchNaviEnum.valueOf(naviKey);
+			request.setAttribute("_tchMenuInfo", naviKey);
+			request.setAttribute("_tchMenuNm", navi.getNaviNm());
+		} catch (IllegalArgumentException e) {
+			log.error("Invalid NaviEnum value in @MenuInfo: {}", menuInfo.navi());
+		}
 
-    }
+		return true;
 
-    private boolean hasPassAuth(HandlerMethod handler) {
+	}
 
-        return AnnotatedElementUtils.hasAnnotation(handler.getMethod(), PassAuth.class) || AnnotatedElementUtils.hasAnnotation(handler.getBeanType(), PassAuth.class);
+	private boolean hasPassAuth(HandlerMethod handler) {
 
-    }
+		return AnnotatedElementUtils.hasAnnotation(handler.getMethod(), PassAuth.class) || AnnotatedElementUtils.hasAnnotation(handler.getBeanType(), PassAuth.class);
 
-    private boolean isAuthorized(TchSessionVO session, TchMenuInfo menuInfo) {
+	}
 
-        //return session.gradeCode().equals(menuInfo.role().getCode());
-        // 선생님 등급코드만 접근 가능하다.
-        return "200".equals(session.gradeCode());
+	private boolean isAuthorized(TchSessionVO session, TchMenuInfo menuInfo) {
 
-    }
+		//return session.gradeCode().equals(menuInfo.role().getCode());
+		// 선생님 등급코드만 접근 가능하다.
+		return "200".equals(session.gradeCode());
 
-    private void handleAuthFail(HttpServletRequest request, HttpServletResponse response, String msg, String code) throws IOException {
+	}
 
-        if (SessionUtil.isAjaxRequest(request)) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setContentType("application/json;charset=UTF-8");
-            response.getWriter().write(String.format("{\"rtnCd\":\"%s\", \"rtnMsg\":\"%s\"}", code, msg));
-        } else {
-            response.sendRedirect(request.getContextPath() + LOGIN_PAGE_URL);
-        }
+	private void handleAuthFail(HttpServletRequest request, HttpServletResponse response, String msg, String code) throws IOException {
 
-    }
+		if (SessionUtil.isAjaxRequest(request)) {
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			response.setContentType("application/json;charset=UTF-8");
+			response.getWriter().write(String.format("{\"rtnCd\":\"%s\", \"rtnMsg\":\"%s\"}", code, msg));
+		} else {
+			response.sendRedirect(request.getContextPath() + LOGIN_PAGE_URL);
+		}
+
+	}
 
 }

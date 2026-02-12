@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/tch")
+@TchMenuInfo(navi = TchNaviEnum.TCH_ATND, role = MberGrdEnum.TCH)
 public class TchAttendanceController {
 
 	private final TchAttendanceService tchAttendanceService;
@@ -29,7 +30,6 @@ public class TchAttendanceController {
 	/**
 	 * 주일 출석페이지
 	 */
-	@TchMenuInfo(navi = TchNaviEnum.TCH_ATND, role = MberGrdEnum.TCH)
 	@RequestMapping("/atnd.pg")
 	public String attendancePg() {
 
@@ -40,7 +40,6 @@ public class TchAttendanceController {
 	/**
 	 * 출석 요청 리스트
 	 */
-	@TchMenuInfo(navi = TchNaviEnum.TCH_ATND, role = MberGrdEnum.TCH)
 	@RequestMapping("/atnd/reqAtnd.ax")
 	public ResponseEntity<BodyResVO<Object>> reqAtndAx(@RequestParam(value = "reqDate", defaultValue = "") String reqDate) {
 
@@ -55,7 +54,6 @@ public class TchAttendanceController {
 	/**
 	 * 출석 승인/반려
 	 */
-	@TchMenuInfo(navi = TchNaviEnum.TCH_ATND, role = MberGrdEnum.TCH)
 	@RequestMapping("/atnd/atndChk.ax")
 	public ResponseEntity<BodyResVO<Object>> atndChkAx(@Valid ReqQuestProcVO reqQuestProcVO) {
 

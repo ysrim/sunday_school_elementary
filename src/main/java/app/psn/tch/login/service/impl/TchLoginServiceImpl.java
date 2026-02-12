@@ -20,33 +20,33 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class TchLoginServiceImpl implements TchLoginService {
 
-    private final TchLoginMapper tchLoginMapper;
+	private final TchLoginMapper tchLoginMapper;
 
-    private final PasswordEncoder passwordEncoder;
+	private final PasswordEncoder passwordEncoder;
 
-    @Override
-    public TchSessionVO sltMber(TchLoginVO loginVO) {
-        return tchLoginMapper.sltMber(loginVO);
-    }
+	@Override
+	public TchSessionVO sltMber(TchLoginVO loginVO) {
+		return tchLoginMapper.sltMber(loginVO);
+	}
 
-    @Override
-    public TchSessionVO loginAx(TchLoginVO loginVO) {
+	@Override
+	public TchSessionVO loginAx(TchLoginVO loginVO) {
 
-        // 1. id로 회원정보 찾기
-        TchSessionVO sessionVO = this.sltMber(loginVO);
-        if (sessionVO == null) {
-            throw new RuntimeException("일치하는 회원정보가 없습니다.");
-        }
+		// 1. id로 회원정보 찾기
+		TchSessionVO sessionVO = this.sltMber(loginVO);
+		if (sessionVO == null) {
+			throw new RuntimeException("일치하는 회원정보가 없습니다.");
+		}
 
-        // 2. pwd 검증
-        if (!passwordEncoder.matches(loginVO.getPwd(), sessionVO.pwd())) {
-            throw new RuntimeException("패스워드가 틀렸습니다.");
-        }
+		// 2. pwd 검증
+		if (!passwordEncoder.matches(loginVO.getPwd(), sessionVO.pwd())) {
+			throw new RuntimeException("패스워드가 틀렸습니다.");
+		}
 
-        // 3. session set
-        SessionUtil.setAttribute(SessionKeyEnum.STD_MBER_INFO.getKey(), sessionVO);
+		// 3. session set
+		SessionUtil.setAttribute(SessionKeyEnum.TCH_MBER_INFO.getKey(), sessionVO);
 
-        return sessionVO;
+		return sessionVO;
 
-    }
+	}
 }

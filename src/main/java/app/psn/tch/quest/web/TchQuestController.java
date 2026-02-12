@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/tch")
+@TchMenuInfo(navi = TchNaviEnum.TCH_QEST, role = MberGrdEnum.TCH)
 public class TchQuestController {
 
 	private final TchQuestService tchQuestService;
@@ -29,7 +30,6 @@ public class TchQuestController {
 	/**
 	 * 퀘스트 페이지
 	 */
-	@TchMenuInfo(navi = TchNaviEnum.TCH_QEST, role = MberGrdEnum.TCH)
 	@RequestMapping("/qest.pg")
 	public String questPg() {
 
@@ -40,7 +40,6 @@ public class TchQuestController {
 	/**
 	 * 출석 요청 리스트
 	 */
-	@TchMenuInfo(navi = TchNaviEnum.TCH_QEST, role = MberGrdEnum.TCH)
 	@RequestMapping("/qest/reqQestList.ax")
 	public ResponseEntity<BodyResVO<Object>> reqAtndAx(@RequestParam(value = "reqMonth", defaultValue = "") String reqMonth) {
 
@@ -55,7 +54,6 @@ public class TchQuestController {
 	/**
 	 * 출석 승인/반려
 	 */
-	@TchMenuInfo(navi = TchNaviEnum.TCH_QEST, role = MberGrdEnum.TCH)
 	@RequestMapping("/qest/chkQest.ax")
 	public ResponseEntity<BodyResVO<Object>> atndChkAx(@Valid ReqQuestProcVO reqQuestProcVO) {
 
