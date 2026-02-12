@@ -20,7 +20,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
 
-import app.psn.std.quest.vo.StdQuestPendingVO;
+import app.psn.std.qest.vo.StdQestPendingVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -169,15 +169,15 @@ public class StringUtil {
 		return LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
 	}
 
-	public static StdQuestPendingVO setQuestPendingVO(Integer sn) {
+	public static StdQestPendingVO setQuestPendingVO(Integer sn) {
 
-		StdQuestPendingVO stdQuestPendingVO = new StdQuestPendingVO();
+		StdQestPendingVO stdQestPendingVO = new StdQestPendingVO();
 
-		stdQuestPendingVO.setMberSn(SessionUtil.getStdMberInfo().mberSn());
+		stdQestPendingVO.setMberSn(SessionUtil.getStdMberInfo().mberSn());
 
-		stdQuestPendingVO.setQuestSn(sn);
+		stdQestPendingVO.setQuestSn(sn);
 
-		return stdQuestPendingVO;
+		return stdQestPendingVO;
 
 	}
 

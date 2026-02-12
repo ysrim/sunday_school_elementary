@@ -45,7 +45,7 @@ public class StdLoginController {
 
         StdSessionVO stdSessionVO = stdLoginService.loginAx(loginVO);
 
-        return ResUtil.resSucc(stdSessionVO.ncnm() + "용사님 어서오세요.");
+        return ResUtil.resSucc(stdSessionVO.ncnm() + "용사님 어서오세요! ✅");
 
     }
 

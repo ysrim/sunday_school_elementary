@@ -38,14 +38,14 @@ public class StdJoinServiceImpl implements StdJoinService {
 		stdJoinMapper.insAvatarInfo(stdJoinMemberVO);
 
 		// 3. 길드 정보 조회
-		String guildSn = stdJoinMapper.sltGuildInfo(stdJoinMemberVO);
+		String guildSn = stdJoinMapper.sltGildInfo(stdJoinMemberVO);
 		if (guildSn == null) {
 			throw new RuntimeException("선택하신 학년/반에 해당하는 길드 정보가 없습니다.");
 		}
 
 		// 4. GUILD_MBER_LIST insert (누락된 로직 추가 필요)
 		stdJoinMemberVO.setGuildSn(guildSn);
-		stdJoinMapper.insGuildMberList(stdJoinMemberVO);
+		stdJoinMapper.insGildMberList(stdJoinMemberVO);
 
 	}
 

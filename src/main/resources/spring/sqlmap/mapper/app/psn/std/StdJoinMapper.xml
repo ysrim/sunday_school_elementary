@@ -23,12 +23,12 @@
 		VALUES (#{mberSn}, #{ncnm}, #{occpCode})
 	</insert>
 
-	<insert id="insGuildMberList" parameterType="app.psn.std.join.vo.StdJoinMemberVO">
+	<insert id="insGildMberList" parameterType="app.psn.std.join.vo.StdJoinMemberVO">
 		INSERT INTO GUILD_MBER_LIST (MBER_SN, GUILD_SN)
 		VALUES (#{mberSn}, #{guildSn})
 	</insert>
 
-	<select id="sltGuildInfo" parameterType="app.psn.std.join.vo.StdJoinMemberVO" resultType="string">
+	<select id="sltGildInfo" parameterType="app.psn.std.join.vo.StdJoinMemberVO" resultType="string">
 		SELECT GUILD_SN
 		FROM GUILD_INFO
 		WHERE GRADE = #{grade}

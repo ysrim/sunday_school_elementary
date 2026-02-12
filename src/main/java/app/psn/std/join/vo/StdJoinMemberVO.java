@@ -9,14 +9,12 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 /**
  * 회원가입 요청 정보
  */
 @Setter
 @Getter
-@ToString
 public class StdJoinMemberVO {
 
 	private String mberSn = ""; // 회원_일련번호

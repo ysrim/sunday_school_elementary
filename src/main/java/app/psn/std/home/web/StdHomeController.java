@@ -19,7 +19,7 @@ import com.base.vo.BodyResVO;
 import app.psn.com.service.CacheService;
 import app.psn.com.service.ToastMsgService;
 import app.psn.std.home.service.StdHomeService;
-import app.psn.std.quest.service.StdQuestService;
+import app.psn.std.qest.service.StdQestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,20 +27,20 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/std")
+@StdMenuInfo(navi = StdNaviEnum.STD_HOME, role = MberGrdEnum.STD)
 public class StdHomeController {
 
 	private final CacheService cacheService;
 
 	private final StdHomeService homeService;
 
-	private final StdQuestService stdQuestService;
+	private final StdQestService stdQestService;
 
 	private final ToastMsgService toastMsgService;
 
 	/**
 	 * 홈 대쉬보드 페이지
 	 */
-	@StdMenuInfo(navi = StdNaviEnum.STD_HOME, role = MberGrdEnum.STD)
 	@RequestMapping("/home.pg")
 	public String homePg(Model model) {
 
@@ -53,38 +53,36 @@ public class StdHomeController {
 		model.addAttribute("todayBibleVerse", cacheService.sltTodayBibleVerse()); // 오늘의 말씀
 
 		// sql
-		model.addAttribute("guildMberCnt", homeService.sltGuildMberList().size()); // 길드맴버 숫자
-		model.addAttribute("guildMberAccessList", homeService.sltGuildMberAccessList()); // 길드접속자 목록
-		model.addAttribute("guildInfo", homeService.sltGuildInfo()); // 길드정보
+		model.addAttribute("guildMberCnt", homeService.sltGildMberList().size()); // 길드맴버 숫자
+		model.addAttribute("guildMberAccessList", homeService.sltGildMberAccessList()); // 길드접속자 목록
+		model.addAttribute("guildInfo", homeService.sltGildInfo()); // 길드정보
 		model.addAttribute("toastMsgList", toastMsgService.sltToastMsgList()); // 토스트 메시지
-		model.addAttribute("qestCmpleteYn", stdQuestService.questCompleteChk(StringUtil.setQuestPendingVO(4)) ? "Y" : "N"); // 맑씀읽기 퀘스트 여부
+		model.addAttribute("qestCmpleteYn", stdQestService.qestCompleteChk(StringUtil.setQuestPendingVO(4)) ? "Y" : "N"); // 맑씀읽기 퀘스트 여부
 
 		// 미구현 기능: 공지사항
-		return ViewPathEnum.STD.to("/home/home");
+		return ViewPathEnum.STD.to("/home/stdHome");
 
 	}
 
 	/**
 	 * 공지사항 상세보기
 	 */
-	@StdMenuInfo(navi = StdNaviEnum.STD_HOME_1, role = MberGrdEnum.STD)
 	@RequestMapping("/home/noticeCont.pg")
 	public String noticeContPg() {
 
 		// TODO 공지사항 컨텐츠 구현
-		return ViewPathEnum.STD.to("/home/noticeCont");
+		return ViewPathEnum.STD.to("/home/stdNoticeCont");
 
 	}
 
 	/**
 	 * 토스트 메시지 삭제
 	 */
-	@StdMenuInfo(role = MberGrdEnum.STD)
 	@RequestMapping("/home/removeToast.ax")
 	public ResponseEntity<BodyResVO<Object>> removeToastAx(@RequestParam(name = "toastSn", defaultValue = "0") String toastSn) {
 
 		if ("0".equals(toastSn)) {
-			return ResUtil.resFail("변수 부족");
+			return ResUtil.resFail("변수 부족합니다! ❌");
 		}
 
 		toastMsgService.removeToast(Integer.parseInt(toastSn));
@@ -96,11 +94,10 @@ public class StdHomeController {
 	/**
 	 * 오늘의 말씀 클릭이벤트
 	 */
-	@StdMenuInfo(role = MberGrdEnum.STD)
 	@RequestMapping("/home/wordsAmen.ax")
 	public ResponseEntity<BodyResVO<Object>> wordsAmenAx() {
 
-		return homeService.wordsAmenDo() ? ResUtil.resSucc() : ResUtil.resFail("이미 수행");
+		return homeService.wordsAmenDo() ? ResUtil.resSucc() : ResUtil.resFail("이미 수행했습니다! ❌");
 
 	}
 

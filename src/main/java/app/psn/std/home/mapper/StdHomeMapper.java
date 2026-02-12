@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import app.psn.std.home.vo.StdHomeGuildInfoVO;
-import app.psn.std.home.vo.StdHomeGuildListVO;
+import app.psn.std.home.vo.StdHomeGildInfoVO;
+import app.psn.std.home.vo.StdHomeGildVO;
 
 @Mapper
 public interface StdHomeMapper {
@@ -13,11 +13,11 @@ public interface StdHomeMapper {
 	/**
 	 * 길드원 목록
 	 */
-	List<StdHomeGuildListVO> sltGuildMberList(Integer guildSn);
+	List<StdHomeGildVO> sltGildMberList(Integer guildSn);
 
 	/**
 	 * 길드 정보
 	 */
-	StdHomeGuildInfoVO sltGuildInfo(Integer guildSn);
+	StdHomeGildInfoVO sltGildInfo(Integer guildSn);
 
 }

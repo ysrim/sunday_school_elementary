@@ -16,10 +16,10 @@ import com.base.utl.StringUtil;
 import app.psn.com.service.CacheService;
 import app.psn.std.home.mapper.StdHomeMapper;
 import app.psn.std.home.service.StdHomeService;
-import app.psn.std.quest.service.StdQuestService;
-import app.psn.std.home.vo.StdHomeGuildInfoVO;
-import app.psn.std.home.vo.StdHomeGuildListVO;
-import app.psn.std.quest.vo.StdQuestPendingVO;
+import app.psn.std.qest.service.StdQestService;
+import app.psn.std.home.vo.StdHomeGildInfoVO;
+import app.psn.std.home.vo.StdHomeGildVO;
+import app.psn.std.qest.vo.StdQestPendingVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,14 +31,14 @@ public class StdHomeServiceImpl implements StdHomeService {
 
 	private final StdHomeMapper stdHomeMapper;
 
-	private final StdQuestService stdQuestService;
+	private final StdQestService stdQestService;
 
 	private final CacheService cacheService;
 
 	@Override
-	public List<StdHomeGuildListVO> sltGuildMberList() {
+	public List<StdHomeGildVO> sltGildMberList() {
 
-		List<StdHomeGuildListVO> list = stdHomeMapper.sltGuildMberList(SessionUtil.getStdMberInfo().guildSn());
+		List<StdHomeGildVO> list = stdHomeMapper.sltGildMberList(SessionUtil.getStdMberInfo().guildSn());
 
 		if (list != null)
 			list.parallelStream().forEach(vo -> vo.setAccess(cacheService.checkKeyExists(CacheKeys.OnlineMbers.name(), vo.getMberId())));
@@ -48,9 +48,9 @@ public class StdHomeServiceImpl implements StdHomeService {
 	}
 
 	@Override
-	public List<StdHomeGuildListVO> sltGuildMberAccessList() {
+	public List<StdHomeGildVO> sltGildMberAccessList() {
 
-		List<StdHomeGuildListVO> list = stdHomeMapper.sltGuildMberList(SessionUtil.getStdMberInfo().guildSn());
+		List<StdHomeGildVO> list = stdHomeMapper.sltGildMberList(SessionUtil.getStdMberInfo().guildSn());
 
 		return Optional.ofNullable(list).orElseGet(Collections::emptyList).stream() //
 			.filter(vo -> cacheService.checkKeyExists(CacheKeys.OnlineMbers.name(), vo.getMberId())) // 길드원이 온라인만 리스트업
@@ -59,20 +59,20 @@ public class StdHomeServiceImpl implements StdHomeService {
 	}
 
 	@Override
-	public StdHomeGuildInfoVO sltGuildInfo() {
+	public StdHomeGildInfoVO sltGildInfo() {
 
-		return stdHomeMapper.sltGuildInfo(SessionUtil.getStdMberInfo().guildSn());
+		return stdHomeMapper.sltGildInfo(SessionUtil.getStdMberInfo().guildSn());
 
 	}
 
 	@Override
 	public boolean wordsAmenDo() {
 
-		StdQuestPendingVO stdQuestPendingVO = StringUtil.setQuestPendingVO(4);
-		if (stdQuestService.questCompleteChk(stdQuestPendingVO)) {
+		StdQestPendingVO stdQestPendingVO = StringUtil.setQuestPendingVO(4);
+		if (stdQestService.qestCompleteChk(stdQestPendingVO)) {
 			return false;
 		} else {
-			stdQuestService.questDo(stdQuestPendingVO);
+			stdQestService.qestDo(stdQestPendingVO);
 			return true;
 		}
 

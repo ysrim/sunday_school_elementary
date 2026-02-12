@@ -30,6 +30,10 @@ login -> lgn
 option -> opt
 quest -> qest
 member -> mbr
+
+
+Continue -> ctnu
+
 ==> 프로젝트 축약어 정리 2.24일
 
 ==> 기초데이터가 DEL_YN Y 되었을 때 데이터 삭제하는거 만들기

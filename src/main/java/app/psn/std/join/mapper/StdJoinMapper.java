@@ -15,8 +15,8 @@ public interface StdJoinMapper {
 
 	void insAvatarInfo(StdJoinMemberVO stdJoinMemberVO);
 
-	void insGuildMberList(StdJoinMemberVO stdJoinMemberVO);
+	void insGildMberList(StdJoinMemberVO stdJoinMemberVO);
 
-	String sltGuildInfo(StdJoinMemberVO stdJoinMemberVO);
+	String sltGildInfo(StdJoinMemberVO stdJoinMemberVO);
 
 }
