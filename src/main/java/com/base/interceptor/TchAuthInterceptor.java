@@ -12,6 +12,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import com.base.annotation.com.PassAuth;
 import com.base.enumm.tch.TchNaviEnum;
 import com.base.utl.SessionUtil;
+import com.base.utl.StringUtil;
 
 import app.psn.tch.login.vo.TchSessionVO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,13 +42,13 @@ public class TchAuthInterceptor implements HandlerInterceptor {
 		// 3. 세션 인증 체크
 		TchSessionVO tchSessionVO = SessionUtil.getTchMberInfo();
 		if (tchSessionVO == null) {
-			handleAuthFail(request, response, "Login Required", "401");
+			StringUtil.handleAuthFail(request, response, "Login Required", HttpServletResponse.SC_UNAUTHORIZED, LOGIN_PAGE_URL);
 			return false;
 		}
 
 		// 4. 권한(인가) 체크
 		if (!checkMenuAuthorization(request, handlerMethod, tchSessionVO)) {
-			handleAuthFail(request, response, "Access Denied", "403");
+			StringUtil.handleAuthFail(request, response, "Access Denied", HttpServletResponse.SC_FORBIDDEN, LOGIN_PAGE_URL);
 			return false;
 		}
 
@@ -92,18 +93,8 @@ public class TchAuthInterceptor implements HandlerInterceptor {
 	}
 
 	private boolean isAuthorized(TchSessionVO session) {
+
 		return "200".equals(session.gradeCode());
-	}
-
-	private void handleAuthFail(HttpServletRequest request, HttpServletResponse response, String msg, String code) throws IOException {
-
-		if (SessionUtil.isAjaxRequest(request)) {
-			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-			response.setContentType("application/json;charset=UTF-8");
-			response.getWriter().write(String.format("{\"rtnCd\":\"%s\", \"rtnMsg\":\"%s\"}", code, msg));
-		} else {
-			response.sendRedirect(request.getContextPath() + LOGIN_PAGE_URL);
-		}
 
 	}
 

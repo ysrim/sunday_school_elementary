@@ -29,7 +29,6 @@ import java.util.Map;
 public class StdAuthInterceptor implements HandlerInterceptor {
 
 	private final CacheService cacheService;
-	private final ObjectMapper objectMapper; // [개선1] Bean으로 주입받아 재사용
 
 	private static final String LOGIN_PAGE_URL = "/std/idx/login.pg";
 	private static final String ADMIN_GRADE_CODE = "300";
@@ -56,13 +55,13 @@ public class StdAuthInterceptor implements HandlerInterceptor {
 		// 3. 세션 인증 체크
 		StdSessionVO stdSessionVO = SessionUtil.getStdMberInfo();
 		if (stdSessionVO == null) {
-			handleAuthFail(request, response, "Login Required", HttpServletResponse.SC_UNAUTHORIZED); // 401
+			StringUtil.handleAuthFail(request, response, "Login Required", HttpServletResponse.SC_UNAUTHORIZED, LOGIN_PAGE_URL);
 			return false;
 		}
 
 		// 4. 권한(인가) 체크 및 메뉴 정보 설정
 		if (!processMenuAuthorization(request, handlerMethod, stdSessionVO)) {
-			handleAuthFail(request, response, "Access Denied", HttpServletResponse.SC_FORBIDDEN); // 403
+			StringUtil.handleAuthFail(request, response, "Access Denied", HttpServletResponse.SC_FORBIDDEN, LOGIN_PAGE_URL);
 			return false;
 		}
 
@@ -129,19 +128,4 @@ public class StdAuthInterceptor implements HandlerInterceptor {
 		return !ADMIN_GRADE_CODE.equals(session.gradeCode());
 	}
 
-	private void handleAuthFail(HttpServletRequest request, HttpServletResponse response, String msg, int status) throws IOException {
-
-		if (SessionUtil.isAjaxRequest(request)) {
-			response.setStatus(status);
-			response.setContentType("application/json;charset=UTF-8");
-
-			Map<String, Object> responseMap = new HashMap<>();
-			responseMap.put("rtnCd", String.valueOf(status)); // 코드를 문자열로 변환
-			responseMap.put("rtnMsg", msg);
-
-			response.getWriter().write(objectMapper.writeValueAsString(responseMap));
-		} else {
-			response.sendRedirect(request.getContextPath() + LOGIN_PAGE_URL);
-		}
-	}
 }

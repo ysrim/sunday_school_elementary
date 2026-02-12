@@ -6,6 +6,7 @@ import com.base.annotation.com.PassAuth;
 import com.base.annotation.mng.MngMenuInfo;
 import com.base.enumm.mng.MngNaviEnum;
 import com.base.utl.SessionUtil;
+import com.base.utl.StringUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -45,23 +46,25 @@ public class MngAuthInterceptor implements HandlerInterceptor {
 		// 3. 세션 인증 체크
 		MngSessionVO mngSessionVO = SessionUtil.getMngMberInfo();
 		if (mngSessionVO == null) {
-			handleAuthFail(request, response, "Login Required", HttpServletResponse.SC_UNAUTHORIZED); // 401
+			StringUtil.handleAuthFail(request, response, "Login Required", HttpServletResponse.SC_UNAUTHORIZED, LOGIN_PAGE_URL);
 			return false;
 		}
 
 		// 4. 권한(인가) 및 메뉴 정보 설정
 		if (!checkMenuAuthorization(request, handlerMethod, mngSessionVO)) {
-			handleAuthFail(request, response, "Access Denied", HttpServletResponse.SC_FORBIDDEN); // 403
+			StringUtil.handleAuthFail(request, response, "Access Denied", HttpServletResponse.SC_FORBIDDEN, LOGIN_PAGE_URL);
 			return false;
 		}
 
 		return true;
+
 	}
 
 	/**
 	 * 메뉴 권한 체크 및 요청 속성 설정
 	 */
 	private boolean checkMenuAuthorization(HttpServletRequest request, HandlerMethod handlerMethod, MngSessionVO mngSessionVO) {
+
 		// 관리자 등급 체크 (공통)
 		if (!isAuthorized(mngSessionVO)) {
 			return false;
@@ -87,26 +90,20 @@ public class MngAuthInterceptor implements HandlerInterceptor {
 			log.error("Failed to parse MenuInfo: {}", e.getMessage());
 			return false;
 		}
+
 	}
 
 	private boolean hasPassAuth(HandlerMethod handler) {
+
 		return AnnotatedElementUtils.hasAnnotation(handler.getMethod(), PassAuth.class)
 			|| AnnotatedElementUtils.hasAnnotation(handler.getBeanType(), PassAuth.class);
+
 	}
 
 	private boolean isAuthorized(MngSessionVO session) {
+
 		return ADMIN_GRADE_CODE.equals(session.gradeCode());
+
 	}
 
-	private void handleAuthFail(HttpServletRequest request, HttpServletResponse response, String msg, int status) throws IOException {
-		if (SessionUtil.isAjaxRequest(request)) {
-			response.setStatus(status);
-			response.setCharacterEncoding("UTF-8"); // 인코딩 명시
-			response.setContentType("application/json;charset=UTF-8");
-			// Code는 status를 문자열로 변환하여 사용하거나 별도 에러 코드 사용
-			response.getWriter().write(String.format("{\"rtnCd\":\"%d\", \"rtnMsg\":\"%s\"}", status, msg));
-		} else {
-			response.sendRedirect(request.getContextPath() + LOGIN_PAGE_URL);
-		}
-	}
 }

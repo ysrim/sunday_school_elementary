@@ -1,5 +1,6 @@
 package com.base.utl;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.text.NumberFormat;
@@ -20,6 +21,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
 
 import app.psn.std.qest.vo.StdQestPendingVO;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -169,6 +172,18 @@ public class StringUtil {
 		// Safelist.none() : 모든 HTML 태그 제거
 		// Safelist.relaxed() : 이미지, 링크 등 다양한 태그 허용 (보안 주의)
 		return Jsoup.clean(value, Safelist.none());
+	}
+
+	public static void handleAuthFail(HttpServletRequest request, HttpServletResponse response, String msg, int code, String LOGIN_PAGE_URL) throws IOException {
+
+		if (SessionUtil.isAjaxRequest(request)) {
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			response.setContentType("application/json;charset=UTF-8");
+			response.getWriter().write(String.format("{\"rtnCd\":\"%s\", \"rtnMsg\":\"%s\"}", code, msg));
+		} else {
+			response.sendRedirect(request.getContextPath() + LOGIN_PAGE_URL);
+		}
+
 	}
 
 }
