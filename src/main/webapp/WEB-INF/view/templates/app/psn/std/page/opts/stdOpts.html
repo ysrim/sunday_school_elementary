@@ -10,7 +10,7 @@
 		<div style="display: flex; border-bottom: 1px solid #eee;">
 			<div style="flex: 1; padding: 25px 10px; text-align: center; border-right: 1px solid #eee;">
 				<div style="position: relative; width: 65px; height: 65px; margin: 0 auto 10px;">
-					<img th:src="|https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/${session.mberInfo.occpCode}_${#strings.toLowerCase(session.mberInfo.sexdstn)}.png|"
+					<img th:src="|https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/${session.stdMberInfo.occpCode}_${#strings.toLowerCase(session.stdMberInfo.sexdstn)}.png|"
 						 alt="내 캐릭터" class="mypage-profile-img">
 					<div style="position: absolute; bottom: -5px; right: -5px; background: #2563EB; color: #fff; font-size: 0.6rem; font-weight: 800; padding: 2px 6px; border-radius: 8px; border: 2px solid #fff;"
 						 th:text="|Lv. ${_mberLevel}|">
@@ -19,15 +19,15 @@
 				</div>
 
 				<div style="font-size: 0.85rem; color: #0D47A1; font-weight: 700; margin-bottom: 4px;"
-					 th:text="|직업: ${session.mberInfo.occpNm}|">전사
+					 th:text="|직업: ${session.stdMberInfo.occpNm}|">전사
 				</div>
 
 				<h2 id="mypage-name"
 					style="font-size: 1.25rem; margin: 0; color: #222; letter-spacing: -0.5px; font-weight: 800;"
-					th:text="|${session.mberInfo.mberNm} (${session.mberInfo.ncnm})|">김용사</h2>
+					th:text="|${session.stdMberInfo.mberNm} (${session.stdMberInfo.ncnm})|">김용사</h2>
 
 				<div class="text-light" style="font-size: 0.8rem; margin-top: 5px; color: #777;"
-					 th:text="|초등부 ${session.mberInfo.grade}학년 ${session.mberInfo.cla}반|">1학년 1반
+					 th:text="|초등부 ${session.stdMberInfo.grade}학년 ${session.stdMberInfo.cla}반|">1학년 1반
 				</div>
 			</div>
 
@@ -38,7 +38,7 @@
                 display: flex; align-items: center; justify-content: center;
                 border-radius: 50%; border: 2px solid #eee; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
 
-					<img th:src="|https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/guild/grade/guid_image_${session.mberInfo.grade}_${session.mberInfo.cla}.png|"
+					<img th:src="|https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/guild/grade/guid_image_${session.stdMberInfo.grade}_${session.stdMberInfo.cla}.png|"
 						 style="width: 80%; height: 80%; object-fit: contain;">
 
 					<div style="position: absolute; bottom: -5px; right: -5px; background: #3B82F6; color: #fff; font-size: 0.6rem; font-weight: 800; padding: 2px 6px; border-radius: 8px; border: 2px solid #fff;">
@@ -51,7 +51,7 @@
 				</div>
 
 				<h2 style="font-size: 1.25rem; margin: 0; color: #4E342E; letter-spacing: -0.5px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 4px;">
-					<span th:text="|${session.mberInfo.guildNm}|">다윗의 용사들</span>
+					<span th:text="|${session.stdMberInfo.guildNm}|">다윗의 용사들</span>
 				</h2>
 
 				<div style="font-size: 0.8rem; margin-top: 5px; color: #2563EB; font-weight: 700;" th:onclick="|location.href='@{/std/gild.pg}'|">

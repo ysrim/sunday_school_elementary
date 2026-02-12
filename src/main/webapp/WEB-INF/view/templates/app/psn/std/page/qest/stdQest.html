@@ -49,7 +49,7 @@
 	</div>
 	<div class="card text-center" style="border: 1px dashed #ced4da;">
 		<div class="text-bold mb-10"
-			 style="background: #f8f9fa; display: inline-block; padding: 4px 12px; border-radius: 12px; color: #555;">
+		     style="background: #f8f9fa; display: inline-block; padding: 4px 12px; border-radius: 12px; color: #555;">
 			💡 퀘스트 진행 방법
 		</div>
 		<div class="flex-center gap-10 mb-10">
@@ -88,7 +88,7 @@
 
 	<th:block th:fragment="questItemFragment(vo)">
 		<th:block th:if="${vo != null}">
-			<div th:class="|q-item ${vo.status == 'APPROVED' ? 'done' : ''}|">
+			<div th:class="|q-item ${vo.status == 'APPROVED' || vo.status == 'REJECTED' ? 'done' : ''}|">
 				<div class="q-icon-box" th:text="${vo.emoji}">🙏</div>
 				<div class="q-content flex-1">
 					<div class="q-title text-bold" th:text="${vo.title}">제목</div>
@@ -97,10 +97,8 @@
 				</div>
 				<div th:switch="${vo.status}">
 					<button th:case="APPROVED" class="btn-quest-action state-done" disabled>완료</button>
-					<button th:case="PENDING" class="btn-quest-action state-wait" th:data-sn="${vo.questSn}">승인요청
-					</button>
-					<button th:case="REJECTED" class="btn-quest-action state-ready" th:data-sn="${vo.questSn}">반려
-					</button>
+					<button th:case="PENDING" class="btn-quest-action state-wait" th:data-sn="${vo.questSn}">승인요청</button>
+					<button th:case="REJECTED" class="btn-quest-action state-done" disabled>반려</button>
 					<button th:case="*" class="btn-quest-action state-ready" th:data-sn="${vo.questSn}">도전</button>
 				</div>
 			</div>

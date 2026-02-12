@@ -78,7 +78,7 @@
 	<div class="profile-card">
 		<div class="flex-row mb-20">
 			<div class="profile-avatar-frame">
-				<img th:src="|https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/${session.mberInfo.occpCode}_${#strings.toLowerCase(session.mberInfo.sexdstn)}.png|" alt="내 캐릭터"
+				<img th:src="|https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/${session.stdMberInfo.occpCode}_${#strings.toLowerCase(session.stdMberInfo.sexdstn)}.png|" alt="내 캐릭터"
 					 style="width:100%; height:100%; object-fit:cover; border-radius:18px;">
 			</div>
 			<div style="margin-left: 15px;">
@@ -86,7 +86,7 @@
 					<span class="rank-badge" style="background: #E3F2FD; color: #4A90E2;" th:text="|${guildInfo.guildNm} 길드|"></span>
 					<span class="rank-badge" style="background: #FFF3E0; color: #EF6C00;"><span id="" th:text="|${_mberPoint}|">2,500</span> 달란트</span>
 				</div>
-				<h2 class="mt-5" style="font-size: 1.3rem;" th:text="|Lv.${_mberLevel} ${session.mberInfo.ncnm}|"></h2>
+				<h2 class="mt-5" style="font-size: 1.3rem;" th:text="|Lv.${_mberLevel} ${session.stdMberInfo.ncnm}|"></h2>
 			</div>
 		</div>
 		<div style="background: #FAFBFC; padding: 12px; border-radius: 15px;">
@@ -183,7 +183,7 @@
 
 			<div style="display: flex; flex-direction: column; gap: 8px;">
 				<div th:each="vo : ${guildMberAccessList}"
-					 th:style="|display: flex; align-items: center; padding: 8px 10px; border-radius: 10px; ${vo.mberId == session.mberInfo.mberId ? 'background: #F0F7FF; border: 1px solid #D1E3FF;' : 'background: #FAFAFA;'}|">
+					 th:style="|display: flex; align-items: center; padding: 8px 10px; border-radius: 10px; ${vo.mberId == session.stdMberInfo.mberId ? 'background: #F0F7FF; border: 1px solid #D1E3FF;' : 'background: #FAFAFA;'}|">
 
 					<img th:src="|https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/${vo.occpCode}_${#strings.toLowerCase(vo.sexdstn)}.png|"
 						 alt="아바타" style="width: 32px; height: 32px; margin-right: 10px;">
@@ -191,7 +191,7 @@
 					<div style="flex: 1;">
 						<div style="font-size: 0.9rem; font-weight: 700; color: #444;">
 							<span th:text="${vo.ncnm}">닉네임</span>
-							<span th:if="${vo.mberId == session.mberInfo.mberId}" style="font-size: 0.7rem; color: #2196F3; margin-left: 4px;">(나)</span>
+							<span th:if="${vo.mberId == session.stdMberInfo.mberId}" style="font-size: 0.7rem; color: #2196F3; margin-left: 4px;">(나)</span>
 						</div>
 					</div>
 
