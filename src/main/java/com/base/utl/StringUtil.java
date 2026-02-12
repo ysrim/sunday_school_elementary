@@ -133,14 +133,6 @@ public class StringUtil {
 
 	}
 
-	// 두 날짜 차이(date2-date1)
-	public static long getDateDiff(String date1, String date2) {
-
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-		return ChronoUnit.DAYS.between(LocalDate.parse(date2, formatter), LocalDate.parse(date1, formatter));
-
-	}
-
 	// 두 날짜 차이(오늘날짜-date1)
 	public static boolean getDateDiffToday(String date1) {
 
@@ -156,17 +148,6 @@ public class StringUtil {
 
 		return false;
 
-	}
-
-	// 패턴대로 현재 날짜 가져오기
-	public static String getDateFormatter(String pattern) {
-
-		return LocalDate.now().format(DateTimeFormatter.ofPattern(pattern));
-
-	}
-
-	public static LocalDate getSundayOfWeek() {
-		return LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
 	}
 
 	public static StdQestPendingVO setQuestPendingVO(Integer sn) {

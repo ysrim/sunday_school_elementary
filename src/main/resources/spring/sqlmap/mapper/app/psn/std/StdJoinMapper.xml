@@ -24,8 +24,8 @@
 	</insert>
 
 	<insert id="insGildMberList" parameterType="app.psn.std.join.vo.StdJoinMemberVO">
-		INSERT INTO GUILD_MBER_LIST (MBER_SN, GUILD_SN)
-		VALUES (#{mberSn}, #{guildSn})
+		INSERT INTO GUILD_MBER_LIST (MBER_SN, GUILD_SN, JOIN_DATE)
+		VALUES (#{mberSn}, #{guildSn}, DATE_FORMAT(NOW(), '%Y%m%d'))
 	</insert>
 
 	<select id="sltGildInfo" parameterType="app.psn.std.join.vo.StdJoinMemberVO" resultType="string">

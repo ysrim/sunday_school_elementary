@@ -61,7 +61,7 @@
 		$(function () {
 			$('#btn-amen').one("click", function () {
 				$.ajax({
-					type: 'GET', url: '/std/home/wordsAmen.ax', success: (data) => {
+					type: 'GET', url: '/std/home/wordsAmen.ax', success: () => {
 						$('#btn-amen').addClass('disabled').text('오늘의 말씀을 마음에 새겼습니다 ✨');
 						_showAlert('오늘도 하루도 말씀으로 승리해요!', '✨', '아멘!');
 					}, error: (e) => {

@@ -18,7 +18,6 @@
 			     INNER JOIN AVATAR_INFO C ON A.MBER_SN = C.MBER_SN
 		WHERE A.GUILD_SN = #{guildSn}
 		  AND A.DEL_YN = 'N'
-		ORDER BY A.CREAT_DE ASC
 		LIMIT 50
 	</select>
 
