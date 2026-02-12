@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="app.psn.std.guild.mapper.StdGildMapper">
+
+	<select id="getTchGildPost" resultType="app.psn.std.guild.vo.StdGildPostVO">
+		SELECT A.POST_SN
+			 , A.GUILD_SN
+			 , A.MBER_SN
+			 , B.MBER_NM
+			 , A.CONTENT
+			 , A.NTC_YN
+			 , C.OCCP_CODE
+			 , LOWER(B.SEXDSTN) AS SEXDSTN
+			 , DATE_FORMAT(A.CREAT_DE, '%m-%d %H:%I') AS CREAT_DE
+			 , IF(A.MBER_SN = #{mberSn}, 'Y', 'N')    AS IS_MINE
+		FROM GUILD_POST A
+			     INNER JOIN MBER_INFO B ON A.MBER_SN = B.MBER_SN
+			     INNER JOIN AVATAR_INFO C ON A.MBER_SN = C.MBER_SN
+		WHERE A.GUILD_SN = #{guildSn}
+		  AND A.DEL_YN = 'N'
+		ORDER BY A.CREAT_DE ASC
+		LIMIT 50
+	</select>
+
+	<delete id="delGildPost">
+		UPDATE GUILD_POST
+		SET DEL_YN = 'Y'
+		WHERE MBER_SN = #{mberSn}
+		  AND POST_SN = #{postSn}
+	</delete>
+
+	<insert id="regGildPost">
+		INSERT INTO GUILD_POST (GUILD_SN, MBER_SN, CONTENT)
+		VALUES (#{guildSn}, #{mberSn}, #{content})
+	</insert>
+
+</mapper>

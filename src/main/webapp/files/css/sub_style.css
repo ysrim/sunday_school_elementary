@@ -1183,3 +1183,232 @@ header::before {
         transform: scale(1);
     }
 }
+
+/* =========================================
+   9. Chat Room & Guild Support Styles
+   ========================================= */
+
+/* 채팅 목록 영역 */
+#guild-chat-list {
+    height: 350px; /* 고정 높이 */
+    overflow-y: auto;
+    background: #F8F9FA;
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    scroll-behavior: smooth;
+}
+
+/* 데이터 없음 (Empty State) */
+.empty-chat-placeholder {
+    display: none; /* 기본 숨김 */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--text-light);
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.empty-chat-placeholder img {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 10px;
+    opacity: 0.3;
+    filter: grayscale(100%);
+}
+
+/* 채팅 행 (공통) */
+.chat-row {
+    display: flex;
+    align-items: flex-start;
+    max-width: 100%;
+}
+
+/* 상대방 메시지 */
+.chat-row .chat-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    background: #fff;
+    border: 1px solid #eee;
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+.chat-row .chat-content-box {
+    display: flex;
+    flex-direction: column;
+    max-width: 75%;
+}
+
+.chat-row .chat-name {
+    font-size: 0.75rem;
+    color: var(--text-sub);
+    margin-bottom: 4px;
+    margin-left: 2px;
+}
+
+.chat-row .chat-bubble {
+    background: #fff;
+    padding: 10px 14px;
+    border-radius: 0 12px 12px 12px;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    border: 1px solid #eee;
+    word-break: break-all;
+    line-height: 1.4;
+    position: relative;
+}
+
+/* 본인 메시지 (오른쪽 정렬) */
+.chat-row.my-chat {
+    flex-direction: row-reverse;
+}
+
+.chat-row.my-chat .chat-avatar {
+    margin-right: 0;
+    margin-left: 8px;
+    display: none; /* 본인 아바타는 보통 숨김 (원하면 display: block) */
+}
+
+.chat-row.my-chat .chat-content-box {
+    align-items: flex-end;
+}
+
+.chat-row.my-chat .chat-name {
+    display: none; /* 본인 이름 숨김 */
+}
+
+.chat-row.my-chat .chat-bubble {
+    background: var(--secondary); /* 테마색 */
+    color: #fff;
+    border-radius: 12px 0 12px 12px;
+    border: none;
+    box-shadow: 0 2px 5px rgba(74, 144, 226, 0.3);
+}
+
+/* 삭제 버튼 */
+.chat-delete-btn {
+    font-size: 0.7rem;
+    color: #ff5252;
+    margin-top: 4px;
+    cursor: pointer;
+    background: none;
+    padding: 0;
+    text-decoration: underline;
+    opacity: 0.8;
+}
+
+/* 로딩 스피너 (버튼용) */
+.btn-spinner {
+    display: none; /* 기본 숨김 */
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid #fff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+.btn-text {
+    display: inline-block;
+}
+
+/* 버튼 로딩 상태 클래스 */
+button.loading {
+    pointer-events: none;
+    opacity: 0.8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+button.loading .btn-spinner {
+    display: block;
+}
+
+button.loading .btn-text {
+    display: none; /* 로딩 중엔 텍스트 숨김 (선택사항) */
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* ... 기존 스타일 유지 ... */
+.guild-header-bar {
+    margin: 25px;
+    display: flex;
+    align-items: center;
+}
+
+.guild-header-line {
+    width: 4px;
+    height: 16px;
+    background-color: #4A90E2;
+    border-radius: 2px;
+    margin-right: 10px;
+}
+
+.guild-header-title {
+    margin: 0;
+    font-size: 1.15rem;
+    color: #333;
+    font-weight: 800;
+}
+
+#guild-chat-list {
+    scroll-behavior: smooth;
+    position: relative;
+}
+
+/* position: relative 추가 */
+button:disabled {
+    background-color: #ccc !important;
+    cursor: not-allowed;
+}
+
+/* [추가] 채팅방 로딩 오버레이 스타일 */
+.chat-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    border-radius: 10px;
+}
+
+.chat-spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #4A90E2;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
