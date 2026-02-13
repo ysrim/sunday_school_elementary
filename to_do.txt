@@ -6,39 +6,34 @@ Data Transfer Object: DTO(ex. AddressDTO) 계층간 데이터 이동 ctl -> srv�
 
 => DB표준화(필드 사이즈 위주로)
 
-=> 신규 페이지 생성
+=> TO-DO
 1. 선생님 페이지 (완료)
 2. 관리자 페이지
-    - 로그인/세션 (2.8)
-    - 화면 템플릿 구성 (2.9)
     - 포인트/보상 관리 (2.12)
     - 퀘스트 승인 관리 (2.13)
     - 대쉬보드
     - 회원관리
-3. 학생 (공지사항 제외 2.3까지 완료)
-    미완료 항목
-        페이지
-        - 홈: 공지사항 (당분간 하드코드)
-        - 설정: 캐릭터명변경 (추후 개발)
+3. 학생
+    - 홈: 공지사항 (당분간 하드코드)
+    - 설정: 캐릭터명변경 (추후 개발)
 
-==> 축약어 정리해서 모든 이름 rename 처리 (기준 5자리이상은 3~4자리로)
+==> 축약어 정리: 시작이 기준 5자리이상은 3~4자리로 표현 이후 연결되는 단어는 상관 없음
+(ex. guildAccessList => gildAccessList)
+축약어 사전
 guild -> gild
 attendance -> atnd
 login -> lgn
 option -> opt
 quest -> qest
 member -> mbr
-
-
-Continue -> ctnu
+continue -> ctnu
 
 ==> 프로젝트 축약어 정리 2.24일
-
 ==> 기초데이터가 DEL_YN Y 되었을 때 데이터 삭제하는거 만들기
-
 --> toast msg는 항상 뒤에 !로 끝나자
-
 get -> 조회
 reg -> 등록
 udt -> 수정
 del -> 삭제
+
+GUILD_MBER_LIST 테이블 에서 join항목 자동화 설정
