@@ -1,7 +1,5 @@
 package app.psn.std.option.vo;
 
-import com.base.enumm.com.RewardGetPathEnum;
-
 /**
  * 적립 내역
  */
@@ -14,14 +12,4 @@ public record StdRewardHistoryVO( // 적립내역
 								  Integer amount,       // 금액(+,-)
 								  Integer balanceAfter  // 남은 최종 금액
 ) {
-	public StdRewardHistoryVO {
-		if (changeType != null) {
-			RewardGetPathEnum pathEnum = RewardGetPathEnum.findByName(changeType);
-			if (pathEnum != null) {
-				changeType = pathEnum.getRewardGetName();
-			}
-		}
-		if (amount == null) amount = 0;
-	}
-
 }

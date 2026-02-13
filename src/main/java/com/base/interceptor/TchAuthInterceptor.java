@@ -81,7 +81,7 @@ public class TchAuthInterceptor implements HandlerInterceptor {
 	private boolean isAuthorized(TchSessionVO session) {
 
 		// 선생님 권한만 접근 가능
-		return MberGrdEnum.TCH.getCode().equals(session.gradeCode());
+		return MberGrdEnum.TCH.is(session.gradeCode());
 
 	}
 

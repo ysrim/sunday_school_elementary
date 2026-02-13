@@ -5,8 +5,8 @@ import app.psn.std.login.vo.StdSessionVO;
 import com.base.annotation.com.PassAuth;
 import com.base.annotation.std.StdMenuInfo;
 import com.base.enumm.com.MberGrdEnum;
-import com.base.utl.SessionUtil;
 import com.base.utl.CommonUtil;
+import com.base.utl.SessionUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -110,8 +110,8 @@ public class StdAuthInterceptor implements HandlerInterceptor {
 	private boolean isAuthorized(StdSessionVO session) {
 
 		// 학생 페이지는 선생님등급과 학생등급만 접근 가능
-		return MberGrdEnum.STD.getCode().equals(session.gradeCode())
-				|| MberGrdEnum.TCH.getCode().equals(session.gradeCode());
+		return MberGrdEnum.STD.is(session.gradeCode())
+				|| MberGrdEnum.TCH.is(session.gradeCode());
 
 	}
 

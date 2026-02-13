@@ -82,7 +82,7 @@ public class MngAuthInterceptor implements HandlerInterceptor {
 
 	private boolean isAuthorized(MngSessionVO session) {
 
-		return MberGrdEnum.MNG.getCode().equals(session.gradeCode());
+		return MberGrdEnum.MNG.is(session.gradeCode());
 
 	}
 
