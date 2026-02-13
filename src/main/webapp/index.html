@@ -8,20 +8,21 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 	<script src="https://cdn.tailwindcss.com"></script>
 	<style>
-		@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 
-		body {
-			font-family: 'Pretendard', sans-serif;
-			background-color: #f8fafc;
-		}
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: #f8fafc;
+        }
 
-		.card-btn {
-			transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-		}
-		.card-btn:hover {
-			transform: translateY(-5px);
-			box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-		}
+        .card-btn {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
 	</style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-6">
@@ -41,7 +42,8 @@
 		</h2>
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-			<a href="/std/idx/intro.pg" class="card-btn bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center group cursor-pointer hover:border-blue-200">
+			<a href="/std/idx/intro.pg"
+			   class="card-btn bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center group cursor-pointer hover:border-blue-200">
 				<div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">
 					<i class="fas fa-child"></i>
 				</div>
@@ -49,7 +51,8 @@
 				<p class="text-sm text-slate-400 mt-1">나의 모험 시작하기</p>
 			</a>
 
-			<a href="/tch/idx/login.pg" class="card-btn bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center group cursor-pointer hover:border-indigo-200">
+			<a href="/tch/idx/login.pg"
+			   class="card-btn bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center group cursor-pointer hover:border-indigo-200">
 				<div class="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center text-2xl mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
 					<i class="fas fa-chalkboard-teacher"></i>
 				</div>
@@ -57,7 +60,8 @@
 				<p class="text-sm text-slate-400 mt-1">우리 반 길드 관리</p>
 			</a>
 
-			<a href="/mng/idx/login.pg" class="card-btn bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center group cursor-pointer hover:border-slate-300">
+			<a href="/mng/idx/login.pg"
+			   class="card-btn bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center group cursor-pointer hover:border-slate-300">
 				<div class="w-14 h-14 bg-slate-100 text-slate-600 rounded-full flex items-center justify-center text-2xl mb-4 group-hover:bg-slate-700 group-hover:text-white transition-colors">
 					<i class="fas fa-user-shield"></i>
 				</div>
@@ -74,7 +78,8 @@
 		</h2>
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-			<a href="student_guide.html" class="card-btn bg-slate-50 p-5 rounded-2xl border border-slate-200 flex items-center gap-4 hover:bg-white hover:border-blue-300 cursor-pointer">
+			<a href="student_guide.html"
+			   class="card-btn bg-slate-50 p-5 rounded-2xl border border-slate-200 flex items-center gap-4 hover:bg-white hover:border-blue-300 cursor-pointer">
 				<div class="w-10 h-10 bg-white border border-slate-200 rounded-lg flex items-center justify-center text-blue-500 shadow-sm">
 					<i class="fas fa-book"></i>
 				</div>
@@ -85,7 +90,8 @@
 				<i class="fas fa-arrow-right ml-auto text-slate-300"></i>
 			</a>
 
-			<a href="manager_guide.html#teacher-mobile" class="card-btn bg-slate-50 p-5 rounded-2xl border border-slate-200 flex items-center gap-4 hover:bg-white hover:border-indigo-300 cursor-pointer">
+			<a href="manager_guide.html#teacher-mobile"
+			   class="card-btn bg-slate-50 p-5 rounded-2xl border border-slate-200 flex items-center gap-4 hover:bg-white hover:border-indigo-300 cursor-pointer">
 				<div class="w-10 h-10 bg-white border border-slate-200 rounded-lg flex items-center justify-center text-indigo-500 shadow-sm">
 					<i class="fas fa-book-reader"></i>
 				</div>
@@ -96,7 +102,8 @@
 				<i class="fas fa-arrow-right ml-auto text-slate-300"></i>
 			</a>
 
-			<a href="manager_guide.html#total-admin" class="card-btn bg-slate-50 p-5 rounded-2xl border border-slate-200 flex items-center gap-4 hover:bg-white hover:border-slate-400 cursor-pointer">
+			<a href="manager_guide.html#total-admin"
+			   class="card-btn bg-slate-50 p-5 rounded-2xl border border-slate-200 flex items-center gap-4 hover:bg-white hover:border-slate-400 cursor-pointer">
 				<div class="w-10 h-10 bg-white border border-slate-200 rounded-lg flex items-center justify-center text-slate-600 shadow-sm">
 					<i class="fas fa-cogs"></i>
 				</div>
@@ -111,7 +118,8 @@
 	</div>
 
 	<div class="mt-16 text-center border-t border-slate-200 pt-8">
-		<p class="text-xs text-slate-400">Copyright © 2026 Bongdong Jungang Church Elementary Dept. All rights reserved.</p>
+		<p class="text-xs text-slate-400">Copyright © 2026 Bongdong Jungang Church Elementary Dept. All rights
+			reserved.</p>
 	</div>
 </div>
 

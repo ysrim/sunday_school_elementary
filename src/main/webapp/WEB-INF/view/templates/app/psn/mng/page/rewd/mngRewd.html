@@ -2,113 +2,164 @@
 <html xmlns:th="http//www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/app/psn/mng/layouts/mng_layout}" lang="ko">
 <th:block layout:fragment="content">
-    <div id="page-adjustment" class="page-content hidden-page">
-        <header class="mb-8">
-            <h1 class="text-2xl font-bold text-slate-800">보상 수동 지급</h1>
-            <p class="text-sm text-slate-500 mt-1">경험치(EXP)나 포인트(Gold)를 직접 관리합니다.</p>
-        </header>
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="lg:col-span-1">
-                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                    <h2 class="text-base font-bold mb-5 text-slate-800 border-b border-slate-100 pb-2">지급 설정</h2>
-                    <form class="space-y-5">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">대상 학생</label>
-                            <div class="relative">
-                                <input type="text"
-                                       class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-                                       placeholder="이름 검색">
-                                <button type="button"
-                                        class="absolute right-3 top-2.5 text-slate-400 hover:text-indigo-600"><i
-                                        class="fas fa-search"></i></button>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase mb-2">지급 유형</label>
-                            <div class="grid grid-cols-2 gap-3">
-                                <label class="cursor-pointer">
-                                    <input type="radio" name="type" class="peer sr-only" checked>
-                                    <div class="text-center py-2.5 text-sm border border-slate-200 rounded-lg peer-checked:border-indigo-500 peer-checked:bg-indigo-50 peer-checked:text-indigo-700 transition text-slate-600 hover:bg-slate-50">
-                                        <i class="fas fa-star mr-1"></i> 경험치
-                                    </div>
-                                </label>
-                                <label class="cursor-pointer">
-                                    <input type="radio" name="type" class="peer sr-only">
-                                    <div class="text-center py-2.5 text-sm border border-slate-200 rounded-lg peer-checked:border-amber-500 peer-checked:bg-amber-50 peer-checked:text-amber-700 transition text-slate-600 hover:bg-slate-50">
-                                        <i class="fas fa-coins mr-1"></i> 포인트
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase mb-2">조정 방식</label>
-                            <div class="flex gap-4">
-                                <label class="flex items-center cursor-pointer">
-                                    <input type="radio" name="action"
-                                           class="text-indigo-600 focus:ring-indigo-500 w-4 h-4" checked>
-                                    <span class="ml-2 text-sm text-slate-700">지급 (Add)</span>
-                                </label>
-                                <label class="flex items-center cursor-pointer">
-                                    <input type="radio" name="action" class="text-red-600 focus:ring-red-500 w-4 h-4">
-                                    <span class="ml-2 text-sm text-slate-700">차감 (Remove)</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">수량</label>
-                            <input type="number"
-                                   class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-                                   placeholder="0">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">사유</label>
-                            <input type="text"
-                                   class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-                                   placeholder="예: 친구 전도 보너스">
-                        </div>
-                        <button type="button"
-                                class="w-full bg-indigo-600 text-white font-bold py-2.5 rounded-lg hover:bg-indigo-700 shadow-sm hover:shadow transition text-sm">
-                            적용하기
-                        </button>
-                    </form>
-                </div>
-            </div>
-            <div class="lg:col-span-2">
-                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm h-full flex flex-col">
-                    <div class="mb-4 flex justify-between items-center">
-                        <h2 class="text-base font-bold text-slate-800">최근 조정 내역</h2>
-                        <button class="text-xs text-indigo-600 hover:underline">엑셀 다운로드</button>
-                    </div>
-                    <div class="overflow-x-auto flex-1 mb-4">
-                        <table class="w-full text-left">
-                            <thead class="text-xs text-slate-500 uppercase bg-slate-50/50 border-b border-slate-100">
-                            <tr>
-                                <th class="px-4 py-3 font-semibold">시간</th>
-                                <th class="px-4 py-3 font-semibold">대상</th>
-                                <th class="px-4 py-3 font-semibold">내용</th>
-                                <th class="px-4 py-3 font-semibold">변동값</th>
-                                <th class="px-4 py-3 font-semibold">담당자</th>
-                            </tr>
-                            </thead>
-                            <tbody id="adjustmentTableBody" class="text-sm divide-y divide-slate-100"></tbody>
-                        </table>
-                    </div>
-                    <div class="border-t border-slate-100 pt-4 flex justify-center items-center space-x-1 text-sm"
-                         id="adjustmentPagination"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script th:inline="javascript">
-        flatpickr("#dateRangePicker", {
-            mode: "range",
-            dateFormat: "Y.m.d",
-            defaultDate: [new Date().fp_incr(-30), new Date()],
-            locale: "ko",
-            theme: "airbnb"
-        });
 
-        // 더미 데이터 및 페이징 로직 (jQuery 적용)
+	<div id="page-adjustment"
+	     class="page-content w-full min-h-screen bg-[#f8f9fa] p-5 font-sans text-slate-600 animate-fade-in">
+
+		<header class="mb-6">
+			<span class="px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-600 text-[10px] font-bold uppercase tracking-wider mb-1 inline-block">Rewards</span>
+			<h1 class="text-2xl font-black text-slate-900 tracking-tight">Manual Adjustment</h1>
+			<p class="text-xs text-slate-500 mt-1 font-medium">학생들에게 경험치(EXP)나 포인트(Gold)를 수동으로 지급하거나 차감합니다.</p>
+		</header>
+
+		<div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+			<div class="lg:col-span-1">
+				<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm sticky top-5">
+					<h2 class="text-sm font-black text-slate-800 flex items-center border-b border-slate-100 pb-3 mb-5">
+						<i class="fas fa-sliders-h text-indigo-500 mr-2"></i> 지급 설정
+					</h2>
+
+					<form class="space-y-5" onsubmit="return false;">
+						<div>
+							<label class="form-label">대상 학생 <span class="text-red-500">*</span></label>
+							<div class="relative group">
+								<input type="hidden" id="selectedStudentId">
+								<input type="text" id="targetStudentDisplay"
+								       class="form-input pr-9 cursor-pointer hover:bg-slate-50"
+								       placeholder="이름 검색 (클릭)" onclick="openStudentModal()" readonly>
+								<button type="button" onclick="openStudentModal()"
+								        class="absolute right-3 top-2.5 text-slate-400 hover:text-indigo-600 transition">
+									<i class="fas fa-search"></i>
+								</button>
+							</div>
+						</div>
+
+						<div>
+							<label class="form-label">지급 유형 <span class="text-red-500">*</span></label>
+							<div class="grid grid-cols-2 gap-3">
+								<label class="cursor-pointer group">
+									<input type="radio" name="rewardType" class="peer sr-only radio-card-input" checked>
+									<div class="radio-card text-center py-3 rounded-xl border border-slate-200 transition-all group-hover:bg-slate-50">
+										<i class="fas fa-star mb-1 block text-sm"></i>
+										<span class="text-xs font-bold">경험치 (EXP)</span>
+									</div>
+								</label>
+								<label class="cursor-pointer group">
+									<input type="radio" name="rewardType" class="peer sr-only radio-card-input">
+									<div class="radio-card amber text-center py-3 rounded-xl border border-slate-200 transition-all group-hover:bg-slate-50">
+										<i class="fas fa-coins mb-1 block text-sm"></i>
+										<span class="text-xs font-bold">포인트 (Gold)</span>
+									</div>
+								</label>
+							</div>
+						</div>
+
+						<div>
+							<label class="form-label">조정 방식</label>
+							<div class="flex p-1 bg-slate-100 rounded-xl">
+								<label class="flex-1 cursor-pointer">
+									<input type="radio" name="actionType" class="peer sr-only" checked>
+									<div class="text-center py-2 rounded-lg text-xs font-bold text-slate-500 peer-checked:bg-white peer-checked:text-indigo-600 peer-checked:shadow-sm transition-all">
+										<i class="fas fa-plus mr-1"></i> 지급 (Add)
+									</div>
+								</label>
+								<label class="flex-1 cursor-pointer">
+									<input type="radio" name="actionType" class="peer sr-only">
+									<div class="text-center py-2 rounded-lg text-xs font-bold text-slate-500 peer-checked:bg-white peer-checked:text-red-600 peer-checked:shadow-sm transition-all">
+										<i class="fas fa-minus mr-1"></i> 차감 (Sub)
+									</div>
+								</label>
+							</div>
+						</div>
+
+						<div class="grid grid-cols-3 gap-3">
+							<div class="col-span-1">
+								<label class="form-label">수량</label>
+								<input type="number" class="form-input text-center font-bold" placeholder="0">
+							</div>
+							<div class="col-span-2">
+								<label class="form-label">사유</label>
+								<input type="text" class="form-input" placeholder="예: 심부름 보상">
+							</div>
+						</div>
+
+						<button type="button"
+						        class="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-700 shadow-lg shadow-indigo-200 hover:shadow-xl transition-all text-xs flex items-center justify-center transform active:scale-95">
+							<i class="fas fa-check-circle mr-2"></i> 설정 적용하기
+						</button>
+					</form>
+				</div>
+			</div>
+
+			<div class="lg:col-span-2">
+				<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm h-full flex flex-col">
+					<div class="mb-5 flex justify-between items-center">
+						<h2 class="text-sm font-black text-slate-800 flex items-center">
+							<i class="fas fa-history text-slate-400 mr-2"></i> 최근 조정 내역
+						</h2>
+
+						<div class="flex items-center gap-2">
+							<div class="relative group">
+								<input type="text" id="tableSearchInput" placeholder="내역 검색..."
+								       class="pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-[10px] font-bold outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-300 w-32 transition">
+								<i class="fas fa-search absolute left-2.5 top-2 text-slate-400 text-[10px] group-hover:text-indigo-500 transition-colors"></i>
+							</div>
+							<div class="h-4 w-px bg-slate-200"></div>
+							<button class="text-[10px] font-bold text-slate-500 bg-slate-100 hover:bg-slate-200 px-2.5 py-1.5 rounded-lg transition flex items-center">
+								<i class="fas fa-file-excel text-green-600 mr-1.5"></i> 엑셀
+							</button>
+						</div>
+					</div>
+
+					<div class="overflow-x-auto flex-1 mb-4 rounded-xl border border-slate-100">
+						<table class="w-full text-left">
+							<thead class="bg-slate-50/80 text-slate-500 text-[10px] uppercase font-bold tracking-wider">
+							<tr>
+								<th class="px-5 py-3 font-bold border-b border-slate-100">시간</th>
+								<th class="px-5 py-3 font-bold border-b border-slate-100">대상</th>
+								<th class="px-5 py-3 font-bold border-b border-slate-100">내용</th>
+								<th class="px-5 py-3 font-bold border-b border-slate-100 text-center">변동값</th>
+								<th class="px-5 py-3 font-bold border-b border-slate-100 text-center">담당자</th>
+							</tr>
+							</thead>
+							<tbody id="adjustmentTableBody" class="text-xs divide-y divide-slate-50"></tbody>
+						</table>
+					</div>
+
+					<div class="flex justify-center mt-auto" id="adjustmentPagination"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="studentModal" class="fixed inset-0 z-50 hidden">
+		<div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity"
+		     onclick="closeStudentModal()"></div>
+
+		<div class="relative w-full max-w-md mx-auto mt-20 bg-white rounded-2xl shadow-2xl modal-enter overflow-hidden flex flex-col max-h-[80vh]">
+			<div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+				<h3 class="text-sm font-black text-slate-800">학생 검색</h3>
+				<button onclick="closeStudentModal()" class="text-slate-400 hover:text-slate-600 transition"><i
+						class="fas fa-times"></i></button>
+			</div>
+
+			<div class="p-4 border-b border-slate-100">
+				<div class="relative">
+					<input type="text" id="modalSearchInput" placeholder="이름을 입력하세요 (예: 김철수)"
+					       class="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none">
+					<i class="fas fa-search absolute left-4 top-3.5 text-slate-400"></i>
+				</div>
+			</div>
+
+			<div class="overflow-y-auto p-2 flex-1 min-h-[300px]" id="studentListContainer">
+			</div>
+		</div>
+	</div>
+
+	<script th:inline="javascript">
+        // ==========================================
+        // 1. 데이터 정의 (더미 데이터)
+        // ==========================================
         const adjustmentData = [
             {time: '10:42 AM', name: '김철수', content: '특별 심부름 보상', change: '+50 EXP', type: 'exp-plus', admin: 'T.Lee'},
             {
@@ -119,66 +170,155 @@
                 type: 'gold-minus',
                 admin: 'System'
             },
-            // ... (데이터 생략, 필요 시 추가)
+            {time: '08:30 AM', name: '박민수', content: '아침 큐티 참석', change: '+10 EXP', type: 'exp-plus', admin: 'T.Kim'},
+            {time: '어제', name: '최유리', content: '친구 전도', change: '+100 EXP', type: 'exp-plus', admin: 'T.Lee'},
+            {time: '어제', name: '강호동', content: '지각 페널티', change: '-10 EXP', type: 'exp-minus', admin: 'T.Park'},
+            {time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
+            {time: '2일 전', name: '김철수', content: '준비물 미지참', change: '-50 Gold', type: 'gold-minus', admin: 'T.Lee'},
         ];
 
+        // [추가] 학생 더미 데이터
+        const studentList = [
+            {id: 'hong_123', name: '홍길동', grade: '3', class: '믿음', job: '전사', avatar: 'Felix'},
+            {id: 'kim_chul', name: '김철수', grade: '3', class: '믿음', job: '마법사', avatar: 'Aneka'},
+            {id: 'lee_young', name: '이영희', grade: '3', class: '소망', job: '궁수', avatar: 'Bob'},
+            {id: 'park_min', name: '박민수', grade: '3', class: '사랑', job: '도적', avatar: 'Jack'},
+            {id: 'choi_yuri', name: '최유리', grade: '2', class: '소망', job: '성직자', avatar: 'Molly'},
+            {id: 'kang_ho', name: '강호동', grade: '1', class: '믿음', job: '전사', avatar: 'Bear'},
+        ];
+
+        // ==========================================
+        // 2. 모달 관련 로직
+        // ==========================================
+        function openStudentModal() {
+            $('#studentModal').removeClass('hidden');
+            $('#modalSearchInput').val('').focus();
+            renderStudentList(studentList); // 전체 리스트 먼저 보여줌
+        }
+
+        function closeStudentModal() {
+            $('#studentModal').addClass('hidden');
+        }
+
+        // 학생 선택 시 실행
+        function selectStudent(id, name, info) {
+            $('#targetStudentDisplay').val(`${name} (${info})`);
+            $('#selectedStudentId').val(id); // 숨겨진 input에 ID 저장
+            closeStudentModal();
+        }
+
+        // 모달 내 리스트 렌더링
+        function renderStudentList(data) {
+            const container = $('#studentListContainer');
+            container.empty();
+
+            if (data.length === 0) {
+                container.html(`<div class="text-center py-10 text-slate-400 text-xs">검색 결과가 없습니다.</div>`);
+                return;
+            }
+
+            data.forEach(student => {
+                const html = `
+                    <div onclick="selectStudent('${student.id}', '${student.name}', '${student.grade}학년 ${student.class}반')"
+                         class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 cursor-pointer transition border border-transparent hover:border-indigo-100 group">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=${student.avatar}" class="w-10 h-10 rounded-full bg-white border border-slate-200">
+                        <div>
+                            <div class="font-bold text-sm text-slate-800 group-hover:text-indigo-600">${student.name}</div>
+                            <div class="text-[10px] text-slate-400 font-medium">${student.grade}학년 ${student.class}반 · ${student.job}</div>
+                        </div>
+                        <i class="fas fa-chevron-right ml-auto text-slate-300 text-xs group-hover:text-indigo-400"></i>
+                    </div>
+                `;
+                container.append(html);
+            });
+        }
+
+        // 모달 검색 이벤트
+        $('#modalSearchInput').on('input', function () {
+            const keyword = $(this).val().toLowerCase();
+            const filtered = studentList.filter(s =>
+                s.name.includes(keyword) || s.id.includes(keyword)
+            );
+            renderStudentList(filtered);
+        });
+
+        // ==========================================
+        // 3. 메인 테이블 로직 (기존 유지)
+        // ==========================================
         let currentAdjPage = 1;
-        const itemsPerAdjPage = 5;
+        const itemsPerAdjPage = 7;
+        let currentSearchKeyword = "";
+
+        function getFilteredData() {
+            if (!currentSearchKeyword) return adjustmentData;
+            return adjustmentData.filter(item => item.name.includes(currentSearchKeyword));
+        }
 
         function renderAdjustmentTable(page) {
             const $tableBody = $('#adjustmentTableBody');
             const $pagination = $('#adjustmentPagination');
+            const filteredData = getFilteredData();
 
             const start = (page - 1) * itemsPerAdjPage;
             const end = start + itemsPerAdjPage;
-            const paginatedItems = adjustmentData.slice(start, end);
-            const totalPages = Math.ceil(adjustmentData.length / itemsPerAdjPage);
+            const paginatedItems = filteredData.slice(start, end);
+            const totalPages = Math.ceil(filteredData.length / itemsPerAdjPage);
 
-            $tableBody.empty(); // jQuery로 내용 비우기
+            $tableBody.empty();
+
+            if (paginatedItems.length === 0) {
+                $tableBody.append(`<tr><td colspan="5" class="py-10 text-center text-slate-400 font-medium">검색 결과가 없습니다.</td></tr>`);
+                $pagination.empty();
+                return;
+            }
 
             paginatedItems.forEach(item => {
-                let colorClass = "text-slate-600";
-                if (item.type.includes('plus')) colorClass = item.type.includes('exp') ? "text-green-600" : "text-amber-600";
-                if (item.type.includes('minus')) colorClass = "text-red-500";
+                let badgeClass = "";
+                if (item.type.includes('exp-plus')) badgeClass = "bg-indigo-50 text-indigo-600 border border-indigo-100";
+                else if (item.type.includes('gold-plus')) badgeClass = "bg-amber-50 text-amber-600 border border-amber-100";
+                else if (item.type.includes('minus')) badgeClass = "bg-red-50 text-red-500 border border-red-100";
+
+                let nameHtml = item.name;
+                if (currentSearchKeyword) nameHtml = item.name.replace(currentSearchKeyword, `<span class='bg-yellow-100 text-yellow-700'>${currentSearchKeyword}</span>`);
 
                 const row = `
-					<tr class="hover:bg-slate-50 transition">
-						<td class="px-4 py-3 text-slate-500">${item.time}</td>
-						<td class="px-4 py-3 font-medium text-slate-800">${item.name}</td>
-						<td class="px-4 py-3 text-slate-600">${item.content}</td>
-						<td class="px-4 py-3 font-medium ${colorClass}">${item.change}</td>
-						<td class="px-4 py-3 text-slate-400">${item.admin}</td>
-					</tr>
-				`;
+                    <tr class="hover:bg-slate-50 transition group">
+                        <td class="px-5 py-3 text-slate-400 font-mono text-[10px]">${item.time}</td>
+                        <td class="px-5 py-3 font-bold text-slate-700">${nameHtml}</td>
+                        <td class="px-5 py-3 text-slate-600">${item.content}</td>
+                        <td class="px-5 py-3 text-center"><span class="${badgeClass} px-2 py-0.5 rounded text-[10px] font-bold inline-block min-w-[70px]">${item.change}</span></td>
+                        <td class="px-5 py-3 text-center"><span class="px-2 py-0.5 rounded bg-slate-100 text-slate-500 text-[10px] font-bold group-hover:bg-indigo-50 group-hover:text-indigo-500 transition">${item.admin}</span></td>
+                    </tr>
+                `;
                 $tableBody.append(row);
             });
 
-            let paginationHTML = `
-				<button onclick="changeAdjPage(${page - 1})" ${page === 1 ? 'disabled' : ''} class="px-2 py-1 text-slate-400 hover:text-indigo-600 disabled:opacity-30 disabled:hover:text-slate-400 transition">
-					<i class="fas fa-chevron-left"></i>
-				</button>
-			`;
-
+            let paginationHTML = `<nav class="flex items-center gap-1 bg-slate-50 p-1 rounded-xl shadow-sm border border-slate-100">
+                <button onclick="changeAdjPage(${page - 1})" ${page === 1 ? 'disabled' : ''} class="w-7 h-7 flex items-center justify-center rounded-lg text-slate-400 hover:bg-white hover:shadow-sm disabled:opacity-30 transition"><i class="fas fa-chevron-left text-[10px]"></i></button>`;
             for (let i = 1; i <= totalPages; i++) {
-                if (i === page) {
-                    paginationHTML += `<button class="px-3 py-1 font-semibold text-indigo-600 bg-indigo-50 rounded transition">${i}</button>`;
-                } else {
-                    paginationHTML += `<button onclick="changeAdjPage(${i})" class="px-3 py-1 text-slate-500 hover:bg-slate-100 rounded transition">${i}</button>`;
-                }
+                paginationHTML += `<button onclick="changeAdjPage(${i})" class="w-7 h-7 flex items-center justify-center rounded-lg ${i === page ? 'bg-indigo-600 text-white font-bold shadow-md transform scale-105' : 'text-slate-500 hover:bg-white hover:shadow-sm'} transition text-xs font-medium">${i}</button>`;
             }
-
-            paginationHTML += `
-				<button onclick="changeAdjPage(${page + 1})" ${page === totalPages ? 'disabled' : ''} class="px-2 py-1 text-slate-400 hover:text-indigo-600 disabled:opacity-30 disabled:hover:text-slate-400 transition">
-					<i class="fas fa-chevron-right"></i>
-				</button>
-			`;
+            paginationHTML += `<button onclick="changeAdjPage(${page + 1})" ${page === totalPages ? 'disabled' : ''} class="w-7 h-7 flex items-center justify-center rounded-lg text-slate-400 hover:bg-white hover:shadow-sm disabled:opacity-30 transition"><i class="fas fa-chevron-right text-[10px]"></i></button></nav>`;
 
             $pagination.html(paginationHTML);
         }
 
+        function changeAdjPage(newPage) {
+            const filteredData = getFilteredData();
+            const totalPages = Math.ceil(filteredData.length / itemsPerAdjPage);
+            if (newPage < 1 || newPage > totalPages || newPage === currentAdjPage) return;
+            currentAdjPage = newPage;
+            renderAdjustmentTable(currentAdjPage);
+        }
+
         $(function () {
             renderAdjustmentTable(1);
+            $('#tableSearchInput').on('input', function () {
+                currentSearchKeyword = $(this).val();
+                currentAdjPage = 1;
+                renderAdjustmentTable(1);
+            });
         });
-    </script>
+	</script>
 </th:block>
 </html>

@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <link rel="icon" type="image/png" sizes="16x16" href="/files/favicon-16x16.png">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="theme-color" content="#ffffff">
-    <title>Sunday School RPG Manager</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.5/js.cookie.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="/files/script/tch/js/tch_commons.js"></script>
-    <link rel="stylesheet" th:href="@{/files/css/tch/tch_login_style.css}">
+	<meta charset="UTF-8">
+	<meta name="viewport"
+	      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+	<link rel="icon" type="image/png" sizes="16x16" href="/files/favicon-16x16.png">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="theme-color" content="#ffffff">
+	<title>Sunday School RPG Manager</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.5/js.cookie.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<script src="/files/script/tch/js/tch_commons.js"></script>
+	<link rel="stylesheet" th:href="@{/files/css/tch/tch_login_style.css}">
 
-    <script th:inline="javascript">
+	<script th:inline="javascript">
         // 비밀번호 토글 기능
         function togglePassword() {
             const $passwordInput = $('#pwd');
@@ -108,7 +109,7 @@
                 });
             });
         });
-    </script>
+	</script>
 </head>
 <body class="h-screen flex flex-col items-center justify-center p-6 text-slate-600">
 
@@ -118,61 +119,61 @@
 <div class="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-100/50 rounded-full blur-[100px] -z-10"></div>
 
 <div class="text-center mb-10 relative animate-enter" style="animation: slideUp 0.6s ease-out;">
-    <div class="relative w-20 h-20 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-[2rem] mx-auto flex items-center justify-center shadow-xl shadow-blue-200 mb-6 transform -rotate-3">
-        <i class="fas fa-shield-alt text-3xl text-white"></i>
-    </div>
-    <h1 class="text-3xl font-black text-slate-800 tracking-tight">Teacher Mode</h1>
-    <p class="text-blue-600 font-bold mt-1 text-sm tracking-widest uppercase">Sunday School RPG Manager</p>
+	<div class="relative w-20 h-20 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-[2rem] mx-auto flex items-center justify-center shadow-xl shadow-blue-200 mb-6 transform -rotate-3">
+		<i class="fas fa-shield-alt text-3xl text-white"></i>
+	</div>
+	<h1 class="text-3xl font-black text-slate-800 tracking-tight">Teacher Mode</h1>
+	<p class="text-blue-600 font-bold mt-1 text-sm tracking-widest uppercase">Sunday School RPG Manager</p>
 </div>
 
 <div class="glass-card w-full max-w-sm p-8 rounded-[2.5rem] shadow-2xl shadow-blue-500/10 animate-enter"
      style="animation: slideUp 0.8s ease-out;">
-    <div class="space-y-6">
-        <div class="space-y-4">
-            <div>
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
-                        <i class="fas fa-user text-blue-400/50 text-sm"></i>
-                    </div>
-                    <input type="text" id="mberId" name="mberId" required
-                           class="block w-full pl-12 pr-4 py-4 bg-slate-50/50 border border-slate-200/60 rounded-2xl focus:ring-2 focus:ring-blue-400 focus:bg-white transition-all outline-none text-sm font-semibold text-slate-700 placeholder-slate-400"
-                           placeholder="관리자 아이디">
-                </div>
-            </div>
-            <div>
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
-                        <i class="fas fa-lock text-blue-400/50 text-sm"></i>
-                    </div>
-                    <input type="password" id="pwd" name="pwd" required
-                           class="block w-full pl-12 pr-12 py-4 bg-slate-50/50 border border-slate-200/60 rounded-2xl focus:ring-2 focus:ring-blue-400 focus:bg-white transition-all outline-none text-sm font-semibold text-slate-700 placeholder-slate-400"
-                           placeholder="비밀번호">
-                    <div class="absolute inset-y-0 right-0 pr-5 flex items-center cursor-pointer"
-                         onclick="togglePassword()">
-                        <i class="fas fa-eye text-slate-300 hover:text-blue-500 transition" id="eye-icon"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
+	<div class="space-y-6">
+		<div class="space-y-4">
+			<div>
+				<div class="relative">
+					<div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+						<i class="fas fa-user text-blue-400/50 text-sm"></i>
+					</div>
+					<input type="text" id="mberId" name="mberId" required
+					       class="block w-full pl-12 pr-4 py-4 bg-slate-50/50 border border-slate-200/60 rounded-2xl focus:ring-2 focus:ring-blue-400 focus:bg-white transition-all outline-none text-sm font-semibold text-slate-700 placeholder-slate-400"
+					       placeholder="관리자 아이디">
+				</div>
+			</div>
+			<div>
+				<div class="relative">
+					<div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+						<i class="fas fa-lock text-blue-400/50 text-sm"></i>
+					</div>
+					<input type="password" id="pwd" name="pwd" required
+					       class="block w-full pl-12 pr-12 py-4 bg-slate-50/50 border border-slate-200/60 rounded-2xl focus:ring-2 focus:ring-blue-400 focus:bg-white transition-all outline-none text-sm font-semibold text-slate-700 placeholder-slate-400"
+					       placeholder="비밀번호">
+					<div class="absolute inset-y-0 right-0 pr-5 flex items-center cursor-pointer"
+					     onclick="togglePassword()">
+						<i class="fas fa-eye text-slate-300 hover:text-blue-500 transition" id="eye-icon"></i>
+					</div>
+				</div>
+			</div>
+		</div>
 
-        <div class="flex items-center justify-between text-[13px] font-bold px-1">
-            <label class="flex items-center cursor-pointer group">
-                <input type="checkbox" name="remember-me" id="remember-me"
-                       class="w-4 h-4 text-blue-600 border-slate-300 rounded-lg focus:ring-blue-500 cursor-pointer">
-                <span class="ml-2 text-slate-400 group-hover:text-slate-600 transition">Save ID</span>
-            </label>
-        </div>
+		<div class="flex items-center justify-between text-[13px] font-bold px-1">
+			<label class="flex items-center cursor-pointer group">
+				<input type="checkbox" name="remember-me" id="remember-me"
+				       class="w-4 h-4 text-blue-600 border-slate-300 rounded-lg focus:ring-blue-500 cursor-pointer">
+				<span class="ml-2 text-slate-400 group-hover:text-slate-600 transition">Save ID</span>
+			</label>
+		</div>
 
-        <button type="submit" id="login_do"
-                class="w-full flex justify-center py-4 px-4 rounded-2xl shadow-xl shadow-blue-500/20 text-sm font-black text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active-scale transition-all duration-200 uppercase tracking-widest">
-            Login to Manager
-        </button>
-    </div>
+		<button type="submit" id="login_do"
+		        class="w-full flex justify-center py-4 px-4 rounded-2xl shadow-xl shadow-blue-500/20 text-sm font-black text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active-scale transition-all duration-200 uppercase tracking-widest">
+			Login to Manager
+		</button>
+	</div>
 </div>
 
 <div class="mt-12 text-center">
-    <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest">copyright ⓒ 봉동중앙교회 All rights
-        reserved.<br>Provided By 하나님의사람</p>
+	<p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest">copyright ⓒ 봉동중앙교회 All rights
+		reserved.<br>Provided By 하나님의사람</p>
 </div>
 </body>
 </html>

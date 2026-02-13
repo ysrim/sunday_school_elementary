@@ -1,47 +1,48 @@
 <!DOCTYPE html>
-<html xmlns:th="http//www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/app/psn/std/layouts/std_layout}" lang="ko">
+<html xmlns:th="http//www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/app/psn/std/layouts/std_layout}" lang="ko">
 <th:block layout:fragment="content">
 	<script th:inline="javascript">
-		$(function () {
-			let isProcessing = false; // 중복 클릭 방지 플래그
-			$(document).on('click', '.btn-quest-action', function () {
-				const $btn = $(this);
-				const questSn = $btn.data('sn');
-				if (isProcessing) return; // 이미 통신 중이면 중단
-				// 1. 이미 완료된 퀘스트는 무시
-				if ($btn.hasClass('state-done')) return;
-				// 2. 승인 대기 중일 때 안내
-				if ($btn.hasClass('state-wait')) {
-					_showAlert('선생님께 확인 요청을 보냈어요. 조금만 기다려주세요!', '✨', '퀘스트 확인 요청');
-					return;
-				}
-				// 3. 도전/재도전인 경우 AJAX 실행
-				if ($btn.hasClass('state-ready')) {
-					isProcessing = true;
-					$btn.css('opacity', '0.5'); // 시각적으로 처리 중임을 표시
-					$.ajax({
-						type: "POST",
-						url: "/std/qest/qest.ax",
-						data: {questSn: questSn},
-						success: (data) => {
-							if (data.rtnCd === '001') {
-								$btn.removeClass('state-ready').addClass('state-wait').text('승인요청');
-								_showAlert('선생님께 확인 요청을 보냈어요!', '🚀', '퀘스트 완료');
-							} else {
-								_showAlert(data.rtnMsg || '오류가 발생했습니다.', '🔥', '오류');
-							}
-						},
-						error: () => {
-							_showAlert('서버와 통신이 원활하지 않아요.', '😥', '통신 장애');
-						},
-						complete: () => {
-							isProcessing = false;
-							$btn.css('opacity', '1');
-						}
-					});
-				}
-			});
-		});
+        $(function () {
+            let isProcessing = false; // 중복 클릭 방지 플래그
+            $(document).on('click', '.btn-quest-action', function () {
+                const $btn = $(this);
+                const questSn = $btn.data('sn');
+                if (isProcessing) return; // 이미 통신 중이면 중단
+                // 1. 이미 완료된 퀘스트는 무시
+                if ($btn.hasClass('state-done')) return;
+                // 2. 승인 대기 중일 때 안내
+                if ($btn.hasClass('state-wait')) {
+                    _showAlert('선생님께 확인 요청을 보냈어요. 조금만 기다려주세요!', '✨', '퀘스트 확인 요청');
+                    return;
+                }
+                // 3. 도전/재도전인 경우 AJAX 실행
+                if ($btn.hasClass('state-ready')) {
+                    isProcessing = true;
+                    $btn.css('opacity', '0.5'); // 시각적으로 처리 중임을 표시
+                    $.ajax({
+                        type: "POST",
+                        url: "/std/qest/qest.ax",
+                        data: {questSn: questSn},
+                        success: (data) => {
+                            if (data.rtnCd === '001') {
+                                $btn.removeClass('state-ready').addClass('state-wait').text('승인요청');
+                                _showAlert('선생님께 확인 요청을 보냈어요!', '🚀', '퀘스트 완료');
+                            } else {
+                                _showAlert(data.rtnMsg || '오류가 발생했습니다.', '🔥', '오류');
+                            }
+                        },
+                        error: () => {
+                            _showAlert('서버와 통신이 원활하지 않아요.', '😥', '통신 장애');
+                        },
+                        complete: () => {
+                            isProcessing = false;
+                            $btn.css('opacity', '1');
+                        }
+                    });
+                }
+            });
+        });
 	</script>
 	<div style="margin: 25px 25px 10px 25px; display: flex; align-items: center;">
 		<div style="width: 4px; height: 16px; background-color: #4A90E2; border-radius: 2px; margin-right: 10px;"></div>
@@ -97,7 +98,8 @@
 				</div>
 				<div th:switch="${vo.status}">
 					<button th:case="APPROVED" class="btn-quest-action state-done" disabled>완료</button>
-					<button th:case="PENDING" class="btn-quest-action state-wait" th:data-sn="${vo.questSn}">승인요청</button>
+					<button th:case="PENDING" class="btn-quest-action state-wait" th:data-sn="${vo.questSn}">승인요청
+					</button>
 					<button th:case="REJECTED" class="btn-quest-action state-done" disabled>반려</button>
 					<button th:case="*" class="btn-quest-action state-ready" th:data-sn="${vo.questSn}">도전</button>
 				</div>

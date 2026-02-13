@@ -1,32 +1,32 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="|봉동중앙교회 초등부 RPG 통합관리자- ${_mngMenuNm}|">봉동중앙교회 초등부 RPG</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/airbnb.css">
-    <link rel="stylesheet" th:href="@{/files/css/mng/mng_style.css}">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.5/js.cookie.min.js"></script>
-    <script src="/files/script/mng/js/mng_commons.js"></script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title th:text="|봉동중앙교회 초등부 RPG 통합관리자- ${_mngMenuNm}|">봉동중앙교회 초등부 RPG</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+	<link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/airbnb.css">
+	<link rel="stylesheet" th:href="@{/files/css/mng/mng_style.css}">
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+	<script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.5/js.cookie.min.js"></script>
+	<script src="/files/script/mng/js/mng_commons.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-600">
 <div class="flex h-screen overflow-hidden">
 
 
-    <th:block th:replace="~{/app/psn/mng/fragments/mng_header :: headerFragment}"></th:block>
-    <main class="flex-1 overflow-y-auto h-full">
-        <div class="p-8 max-w-7xl mx-auto">
-            <th:block layout:fragment="content"></th:block>
-        </div>
-    </main>
-    <div th:replace="~{/app/psn/mng/fragments/mng_footer :: footerFragment}"></div>
+	<th:block th:replace="~{/app/psn/mng/fragments/mng_header :: headerFragment}"></th:block>
+	<main class="flex-1 overflow-y-auto h-full">
+		<div class="p-8 max-w-7xl mx-auto">
+			<th:block layout:fragment="content"></th:block>
+		</div>
+	</main>
+	<div th:replace="~{/app/psn/mng/fragments/mng_footer :: footerFragment}"></div>
 </body>
 </html>
 

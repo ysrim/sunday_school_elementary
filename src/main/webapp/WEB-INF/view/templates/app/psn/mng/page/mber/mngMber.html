@@ -2,92 +2,317 @@
 <html xmlns:th="http//www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/app/psn/mng/layouts/mng_layout}" lang="ko">
 <th:block layout:fragment="content">
-    <div id="page-members" class="page-content">
-        <header class="flex justify-between items-center mb-8">
-            <div>
-                <h1 class="text-2xl font-bold text-slate-800">용사 관리</h1>
-                <p class="text-sm text-slate-500 mt-1">학생 정보 조회 및 수정</p>
-            </div>
-            <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 shadow-sm transition flex items-center">
-                <i class="fas fa-user-plus mr-2"></i> 신규 등록
-            </button>
-        </header>
-        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-6 flex flex-wrap gap-4 justify-between items-center">
-            <div class="flex gap-2">
-                <select class="border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white text-slate-600">
-                    <option value="">학년 전체</option>
-                    <option value="1">1학년</option>
-                    <option value="2">2학년</option>
-                    <option value="3">3학년</option>
-                </select>
-                <select class="border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white text-slate-600">
-                    <option value="">반 전체</option>
-                    <option value="믿음">믿음반</option>
-                    <option value="소망">소망반</option>
-                    <option value="사랑">사랑반</option>
-                </select>
-            </div>
-            <div class="relative w-full md:w-64">
-                <input type="text" placeholder="이름/ID 검색"
-                       class="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
-                <i class="fas fa-search absolute left-3 top-2.5 text-slate-400 text-xs"></i>
-            </div>
-        </div>
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-            <table class="w-full text-left">
-                <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold">
-                <tr>
-                    <th class="p-4">용사 정보</th>
-                    <th class="p-4">소속</th>
-                    <th class="p-4">성장 (LV / EXP)</th>
-                    <th class="p-4">자산</th>
-                    <th class="p-4">연락처</th>
-                    <th class="p-4 text-center">관리</th>
-                </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100 text-sm text-slate-700">
-                <tr class="hover:bg-slate-50 transition">
-                    <td class="p-4 flex items-center gap-3">
-                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"
-                             class="w-9 h-9 rounded-full bg-slate-100 border border-slate-200">
-                        <div>
-                            <div class="font-bold text-slate-800">김철수 <span class="text-xs text-slate-400 font-normal">(@cs_kim)</span>
-                            </div>
-                            <span class="inline-flex items-center text-xs font-medium text-slate-500"><i
-                                    class="fas fa-sword mr-1 text-slate-400"></i> 전사</span>
-                        </div>
-                    </td>
-                    <td class="p-4">
-                        <div class="font-medium">3학년</div>
-                        <div class="text-slate-400 text-xs">믿음반</div>
-                    </td>
-                    <td class="p-4">
-                        <div class="flex items-center gap-2 mb-1"><span
-                                class="font-bold text-indigo-600 text-xs">LV.12</span><span
-                                class="text-[10px] text-slate-400">1,250/2,000</span></div>
-                        <div class="w-24 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                            <div class="bg-indigo-500 h-full" style="width: 65%"></div>
-                        </div>
-                    </td>
-                    <td class="p-4">
-                        <div class="text-amber-600 font-semibold"><i class="fas fa-coins mr-1 text-amber-400"></i> 5,400
-                        </div>
-                    </td>
-                    <td class="p-4 text-slate-500 font-mono text-xs">010-1234-5678</td>
-                    <td class="p-4 text-center">
-                        <button class="text-slate-400 hover:text-indigo-600 p-1.5 rounded transition"><i
-                                class="fas fa-edit"></i></button>
-                        <button class="text-slate-400 hover:text-red-500 p-1.5 rounded transition"><i
-                                class="fas fa-trash-alt"></i></button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <script th:inline="javascript">
+
+	<div id="page-members" class="page-content w-full min-h-screen bg-[#f8f9fa] p-5 font-sans text-slate-600">
+
+		<div id="view-list" class="animate-fade-in">
+			<header class="flex justify-between items-end mb-6">
+				<div>
+					<span class="px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-600 text-[10px] font-bold uppercase tracking-wider mb-1 inline-block">Management</span>
+					<h1 class="text-2xl font-black text-slate-900 tracking-tight">Kingdom Warriors</h1>
+					<p class="text-xs text-slate-500 mt-1 font-medium">왕국에 소속된 용사들의 정보를 관리합니다.</p>
+				</div>
+				<button onclick="toggleMode('write')"
+				        class="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-200 transition flex items-center transform hover:scale-105 active:scale-95">
+					<i class="fas fa-user-plus mr-2"></i> 신규 용사 등록
+				</button>
+			</header>
+
+			<div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-5 flex flex-wrap gap-3 justify-between items-center">
+				<div class="flex gap-2">
+					<select class="appearance-none bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-xs font-bold text-slate-600 outline-none cursor-pointer hover:border-indigo-300 transition focus:ring-2 focus:ring-indigo-100">
+						<option value="">학년 전체</option>
+						<option value="1">1학년</option>
+						<option value="2">2학년</option>
+						<option value="3">3학년</option>
+					</select>
+					<select class="appearance-none bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-xs font-bold text-slate-600 outline-none cursor-pointer hover:border-indigo-300 transition focus:ring-2 focus:ring-indigo-100">
+						<option value="">반 전체</option>
+						<option value="믿음">믿음반</option>
+						<option value="소망">소망반</option>
+						<option value="사랑">사랑반</option>
+					</select>
+				</div>
+				<div class="relative w-full md:w-64 group">
+					<input type="text" placeholder="이름 또는 ID 검색"
+					       class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition group-hover:bg-white">
+					<i class="fas fa-search absolute left-3.5 top-2.5 text-slate-400 text-xs group-hover:text-indigo-500 transition-colors"></i>
+				</div>
+			</div>
+
+			<div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+				<table class="w-full text-left">
+					<thead class="bg-slate-50/80 text-slate-500 text-[10px] uppercase font-bold tracking-wider border-b border-slate-200">
+					<tr>
+						<th class="py-3 px-5">용사 정보</th>
+						<th class="py-3 px-5">소속</th>
+						<th class="py-3 px-5">성장 지표 (LV / EXP)</th>
+						<th class="py-3 px-5">보유 자산</th>
+						<th class="py-3 px-5">연락처</th>
+						<th class="py-3 px-5 text-center">관리</th>
+					</tr>
+					</thead>
+					<tbody class="divide-y divide-slate-50 text-xs text-slate-600">
+					<tr class="hover:bg-slate-50 transition group cursor-pointer">
+						<td class="py-3 px-5">
+							<div class="flex items-center gap-3">
+								<div class="relative">
+									<img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"
+									     class="w-10 h-10 rounded-xl bg-slate-100 border border-slate-100 group-hover:scale-105 transition">
+									<div class="absolute -bottom-1 -right-1 bg-green-500 w-2.5 h-2.5 rounded-full border-2 border-white"></div>
+								</div>
+								<div>
+									<div class="font-bold text-slate-800 text-sm">김철수</div>
+									<div class="text-[10px] text-slate-400 font-medium mt-0.5">ID: @cs_kim</div>
+									<span class="inline-flex items-center mt-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-indigo-50 text-indigo-600 border border-indigo-100">
+                                        <i class="fas fa-shield-alt mr-1"></i> 전사
+                                    </span>
+								</div>
+							</div>
+						</td>
+						<td class="py-3 px-5">
+							<div class="font-bold text-slate-700">3학년</div>
+							<div class="text-slate-400 text-[10px] font-medium mt-0.5">믿음반</div>
+						</td>
+						<td class="py-3 px-5">
+							<div class="flex items-center gap-2 mb-1.5">
+								<span class="font-black text-indigo-600 italic">LV.12</span>
+								<span class="text-[10px] text-slate-400 font-bold bg-slate-100 px-1.5 rounded-sm">1,250 / 2,000</span>
+							</div>
+							<div class="w-32 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+								<div class="bg-gradient-to-r from-indigo-500 to-purple-500 h-full rounded-full"
+								     style="width: 65%"></div>
+							</div>
+						</td>
+						<td class="py-3 px-5">
+							<div class="flex items-center text-amber-600 font-bold bg-amber-50 px-2 py-1 rounded-lg border border-amber-100 w-fit">
+								<i class="fas fa-coins mr-1.5 text-amber-500 text-xs"></i> 5,400
+							</div>
+						</td>
+						<td class="py-3 px-5 font-mono text-slate-500 tracking-tight">010-1234-5678</td>
+						<td class="py-3 px-5 text-center">
+							<div class="flex justify-center gap-1 opacity-60 group-hover:opacity-100 transition">
+								<button onclick="toggleMode('edit')"
+								        class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-indigo-50 text-slate-400 hover:text-indigo-600 transition">
+									<i class="fas fa-pen text-xs"></i></button>
+								<button class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500 transition">
+									<i class="fas fa-trash-alt text-xs"></i></button>
+							</div>
+						</td>
+					</tr>
+					<tr class="hover:bg-slate-50 transition group cursor-pointer">
+						<td class="py-3 px-5">
+							<div class="flex items-center gap-3">
+								<div class="relative">
+									<img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka"
+									     class="w-10 h-10 rounded-xl bg-slate-100 border border-slate-100 group-hover:scale-105 transition">
+									<div class="absolute -bottom-1 -right-1 bg-slate-300 w-2.5 h-2.5 rounded-full border-2 border-white"></div>
+								</div>
+								<div>
+									<div class="font-bold text-slate-800 text-sm">이영희</div>
+									<div class="text-[10px] text-slate-400 font-medium mt-0.5">ID: @yh_lee</div>
+									<span class="inline-flex items-center mt-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-pink-50 text-pink-600 border border-pink-100">
+                                        <i class="fas fa-magic mr-1"></i> 마법사
+                                    </span>
+								</div>
+							</div>
+						</td>
+						<td class="py-3 px-5">
+							<div class="font-bold text-slate-700">3학년</div>
+							<div class="text-slate-400 text-[10px] font-medium mt-0.5">소망반</div>
+						</td>
+						<td class="py-3 px-5">
+							<div class="flex items-center gap-2 mb-1.5">
+								<span class="font-black text-indigo-600 italic">LV.9</span>
+								<span class="text-[10px] text-slate-400 font-bold bg-slate-100 px-1.5 rounded-sm">450 / 1,500</span>
+							</div>
+							<div class="w-32 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+								<div class="bg-gradient-to-r from-indigo-500 to-purple-500 h-full rounded-full"
+								     style="width: 30%"></div>
+							</div>
+						</td>
+						<td class="py-3 px-5">
+							<div class="flex items-center text-amber-600 font-bold bg-amber-50 px-2 py-1 rounded-lg border border-amber-100 w-fit">
+								<i class="fas fa-coins mr-1.5 text-amber-500 text-xs"></i> 2,100
+							</div>
+						</td>
+						<td class="py-3 px-5 font-mono text-slate-500 tracking-tight">010-9876-5432</td>
+						<td class="py-3 px-5 text-center">
+							<div class="flex justify-center gap-1 opacity-60 group-hover:opacity-100 transition">
+								<button onclick="toggleMode('edit')"
+								        class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-indigo-50 text-slate-400 hover:text-indigo-600 transition">
+									<i class="fas fa-pen text-xs"></i></button>
+								<button class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500 transition">
+									<i class="fas fa-trash-alt text-xs"></i></button>
+							</div>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="flex justify-center mt-5">
+				<nav class="flex items-center gap-1 bg-white p-1 rounded-xl shadow-sm border border-slate-200">
+					<button class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:bg-slate-50 transition">
+						<i class="fas fa-chevron-left text-xs"></i></button>
+					<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-indigo-600 text-white font-bold text-xs shadow-md">
+						1
+					</button>
+					<button class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-600 hover:bg-slate-50 font-bold text-xs transition">
+						2
+					</button>
+					<button class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-600 hover:bg-slate-50 font-bold text-xs transition">
+						3
+					</button>
+					<button class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:bg-slate-50 transition">
+						<i class="fas fa-chevron-right text-xs"></i></button>
+				</nav>
+			</div>
+		</div>
+
+		<div id="view-write" class="hidden animate-fade-in">
+			<header class="flex justify-between items-center mb-6">
+				<div class="flex items-center gap-3">
+					<button onclick="toggleMode('list')"
+					        class="w-8 h-8 rounded-full bg-white border border-slate-200 text-slate-500 flex items-center justify-center hover:bg-slate-50 hover:text-slate-800 transition shadow-sm">
+						<i class="fas fa-arrow-left text-xs"></i>
+					</button>
+					<h1 id="form-title" class="text-xl font-black text-slate-900 tracking-tight">신규 용사 등록</h1>
+				</div>
+				<div class="flex gap-2">
+					<button onclick="toggleMode('list')"
+					        class="px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-600 text-xs font-bold hover:bg-slate-50 transition shadow-sm">
+						취소
+					</button>
+					<button class="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 shadow-md shadow-indigo-200 transition flex items-center">
+						<i class="fas fa-check mr-1.5"></i> 저장하기
+					</button>
+				</div>
+			</header>
+
+			<div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+				<div class="lg:col-span-1">
+					<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-center">
+						<div class="relative inline-block mb-4 group cursor-pointer">
+							<img src="https://api.dicebear.com/7.x/avataaars/svg?seed=New"
+							     class="w-24 h-24 rounded-2xl bg-slate-50 border-2 border-slate-100 group-hover:border-indigo-300 transition-colors">
+							<div class="absolute bottom-0 right-0 bg-indigo-600 w-8 h-8 rounded-full text-white flex items-center justify-center border-2 border-white shadow-md group-hover:scale-110 transition-transform">
+								<i class="fas fa-camera text-xs"></i>
+							</div>
+						</div>
+						<h3 class="font-bold text-slate-800">프로필 이미지</h3>
+						<p class="text-[10px] text-slate-400 mt-1">클릭하여 아바타를 변경하세요.</p>
+
+						<div class="mt-6 pt-6 border-t border-slate-100 text-left space-y-3">
+							<div>
+								<label class="form-label">초기 레벨 설정</label>
+								<div class="flex items-center gap-2">
+									<input type="number" value="1"
+									       class="form-input text-center font-black text-indigo-600"
+									       style="width: 4rem;">
+									<span class="text-xs font-bold text-slate-400">LV</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="lg:col-span-2">
+					<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-5">
+						<h2 class="text-sm font-black text-slate-800 flex items-center border-b border-slate-100 pb-3 mb-5">
+							<i class="fas fa-info-circle text-indigo-500 mr-2"></i> 기본 정보
+						</h2>
+
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+							<div>
+								<label class="form-label">이름 <span class="text-red-500">*</span></label>
+								<input type="text" placeholder="예: 홍길동" class="form-input">
+							</div>
+							<div>
+								<label class="form-label">아이디 (ID) <span class="text-red-500">*</span></label>
+								<input type="text" placeholder="예: hong_123" class="form-input">
+							</div>
+							<div>
+								<label class="form-label">학년 / 반 <span class="text-red-500">*</span></label>
+								<div class="flex gap-2">
+									<select class="form-input">
+										<option>학년 선택</option>
+										<option>1학년</option>
+										<option>2학년</option>
+										<option>3학년</option>
+									</select>
+									<select class="form-input">
+										<option>반 선택</option>
+										<option>믿음반</option>
+										<option>소망반</option>
+										<option>사랑반</option>
+									</select>
+								</div>
+							</div>
+							<div>
+								<label class="form-label">직업 (Class) <span class="text-red-500">*</span></label>
+								<select class="form-input">
+									<option>직업 선택</option>
+									<option>전사 (Warrior)</option>
+									<option>마법사 (Mage)</option>
+									<option>궁수 (Archer)</option>
+									<option>도적 (Rogue)</option>
+								</select>
+							</div>
+						</div>
+
+						<h2 class="text-sm font-black text-slate-800 flex items-center border-b border-slate-100 pb-3 mb-5 pt-4">
+							<i class="fas fa-phone-alt text-green-500 mr-2"></i> 연락처 정보
+						</h2>
+
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+							<div>
+								<label class="form-label">학생 연락처</label>
+								<input type="tel" placeholder="010-0000-0000" class="form-input">
+							</div>
+							<div>
+								<label class="form-label">보호자 연락처</label>
+								<input type="tel" placeholder="010-0000-0000" class="form-input">
+							</div>
+							<div class="md:col-span-2">
+								<label class="form-label">특이사항 / 메모</label>
+								<textarea rows="3" class="form-input resize-none"
+								          placeholder="학생에 대한 특이사항을 입력하세요."></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<script th:inline="javascript">
+        // 모드 전환 함수 (목록 <-> 등록/수정)
+        function toggleMode(mode) {
+            const listDiv = document.getElementById('view-list');
+            const writeDiv = document.getElementById('view-write');
+            const title = document.getElementById('form-title');
+
+            if (mode === 'write') {
+                listDiv.classList.add('hidden');
+                writeDiv.classList.remove('hidden');
+                title.innerText = '신규 용사 등록';
+                // 폼 초기화 로직 추가 가능
+            } else if (mode === 'edit') {
+                listDiv.classList.add('hidden');
+                writeDiv.classList.remove('hidden');
+                title.innerText = '용사 정보 수정';
+                // 데이터 바인딩 로직 추가 가능
+            } else {
+                writeDiv.classList.add('hidden');
+                listDiv.classList.remove('hidden');
+            }
+        }
+
         $(function () {
+            // 초기화 로직
         });
-    </script>
+	</script>
 </th:block>
 </html>

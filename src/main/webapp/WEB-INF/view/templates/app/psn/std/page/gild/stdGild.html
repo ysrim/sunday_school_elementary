@@ -103,89 +103,89 @@
 	</div>
 
 	<script th:inline="javascript">
-		/*<![CDATA[*/
-		// 상수 및 캐시
-		const API = {
-			LIST: '/std/gild/getGildPost.ax',
-			REG: '/std/gild/regGildPost.ax',
-			DEL: '/std/gild/delGildPost.ax'
-		};
+        /*<![CDATA[*/
+        // 상수 및 캐시
+        const API = {
+            LIST: '/std/gild/getGildPost.ax',
+            REG: '/std/gild/regGildPost.ax',
+            DEL: '/std/gild/delGildPost.ax'
+        };
 
-		let $els = {}; // DOM 요소 그룹화
+        let $els = {}; // DOM 요소 그룹화
 
-		$(function () { // $(document).ready 단축
-			// DOM 캐싱
-			$els = {
-				chatList: $('#guild-chat-list'),
-				emptyMsg: $('#empty-msg'),
-				input: $('#guild-chat-input'),
-				btnSend: $('#btn-send'),
-				loading: $('#chat-loading')
-			};
+        $(function () { // $(document).ready 단축
+            // DOM 캐싱
+            $els = {
+                chatList: $('#guild-chat-list'),
+                emptyMsg: $('#empty-msg'),
+                input: $('#guild-chat-input'),
+                btnSend: $('#btn-send'),
+                loading: $('#chat-loading')
+            };
 
-			loadChats();
-			initEvents();
-		});
+            loadChats();
+            initEvents();
+        });
 
-		function initEvents() {
-			$els.btnSend.on('click', sendChat);
+        function initEvents() {
+            $els.btnSend.on('click', sendChat);
 
-			$els.input.on('keypress', e => {
-				if (e.which === 13) {
-					sendChat();
-					return false;
-				}
-			});
+            $els.input.on('keypress', e => {
+                if (e.which === 13) {
+                    sendChat();
+                    return false;
+                }
+            });
 
-			// 이벤트 위임 (동적 요소 처리)
-			$els.chatList.on('click', '.chat-delete-btn', function () {
-				deleteChat($(this).data('sn'), $(this));
-			});
-		}
+            // 이벤트 위임 (동적 요소 처리)
+            $els.chatList.on('click', '.chat-delete-btn', function () {
+                deleteChat($(this).data('sn'), $(this));
+            });
+        }
 
-		// 채팅 목록 로드
-		function loadChats() {
-			$els.loading.fadeIn(200);
+        // 채팅 목록 로드
+        function loadChats() {
+            $els.loading.fadeIn(200);
 
-			$.ajax({
-				url: API.LIST,
-				type: 'GET',
-				dataType: 'json',
-			})
-				.done(res => { // Promise 패턴 (.done, .fail, .always) 사용
-					const list = res.rtnData || [];
+            $.ajax({
+                url: API.LIST,
+                type: 'GET',
+                dataType: 'json',
+            })
+                .done(res => { // Promise 패턴 (.done, .fail, .always) 사용
+                    const list = res.rtnData || [];
 
-					// 기존 채팅만 제거 (로딩바, 빈 메시지 유지)
-					$els.chatList.children().not('#empty-msg, #chat-loading').remove();
+                    // 기존 채팅만 제거 (로딩바, 빈 메시지 유지)
+                    $els.chatList.children().not('#empty-msg, #chat-loading').remove();
 
-					if (list.length === 0) {
-						$els.emptyMsg.css('display', 'flex');
-					} else {
-						$els.emptyMsg.hide();
+                    if (list.length === 0) {
+                        $els.emptyMsg.css('display', 'flex');
+                    } else {
+                        $els.emptyMsg.hide();
 
-						// DocumentFragment 사용으로 렌더링 성능 최적화
-						const fragment = document.createDocumentFragment();
-						list.forEach(chat => {
-							const isMine = (chat.isMine === 'Y');
-							fragment.appendChild(createChatEl(chat, isMine));
-						});
+                        // DocumentFragment 사용으로 렌더링 성능 최적화
+                        const fragment = document.createDocumentFragment();
+                        list.forEach(chat => {
+                            const isMine = (chat.isMine === 'Y');
+                            fragment.appendChild(createChatEl(chat, isMine));
+                        });
 
-						$els.chatList.append(fragment);
-						scrollBottom();
-					}
-				})
-				.fail(xhr => console.error("Load failed:", xhr))
-				.always(() => setTimeout(() => $els.loading.fadeOut(200), 300));
-		}
+                        $els.chatList.append(fragment);
+                        scrollBottom();
+                    }
+                })
+                .fail(xhr => console.error("Load failed:", xhr))
+                .always(() => setTimeout(() => $els.loading.fadeOut(200), 300));
+        }
 
-		// 채팅 DOM 생성
-		function createChatEl(data, isMine) {
-			const avatar = `https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/${data.occpCode}_${data.sexdstn}.png`;
-			const delBtn = isMine ? `<button class="chat-delete-btn" data-sn="${data.postSn}">삭제</button>` : '';
+        // 채팅 DOM 생성
+        function createChatEl(data, isMine) {
+            const avatar = `https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/${data.occpCode}_${data.sexdstn}.png`;
+            const delBtn = isMine ? `<button class="chat-delete-btn" data-sn="${data.postSn}">삭제</button>` : '';
 
-			const div = document.createElement('div');
-			div.className = `chat-row ${isMine ? 'my-chat' : ''}`;
-			div.innerHTML = `
+            const div = document.createElement('div');
+            div.className = `chat-row ${isMine ? 'my-chat' : ''}`;
+            div.innerHTML = `
                <img src="${avatar}" class="chat-avatar">
                <div class="chat-content-box">
                    <span class="chat-name">${data.mberNm}</span>
@@ -193,79 +193,79 @@
                    ${delBtn}
                </div>
             `;
-			return div;
-		}
+            return div;
+        }
 
-		// 메시지 전송
-		function sendChat() {
-			const msg = $els.input.val().trim();
-			if (!msg) {
-				_showAlert('메시지를 입력해주세요.', '⚠️');
-				return $els.input.focus();
-			}
-			if ($els.btnSend.prop('disabled')) return;
+        // 메시지 전송
+        function sendChat() {
+            const msg = $els.input.val().trim();
+            if (!msg) {
+                _showAlert('메시지를 입력해주세요.', '⚠️');
+                return $els.input.focus();
+            }
+            if ($els.btnSend.prop('disabled')) return;
 
-			toggleLoading(true);
+            toggleLoading(true);
 
-			$.ajax({
-				url: API.REG,
-				type: 'POST',
-				data: {content: msg}
-			})
-				.done(() => {
-					loadChats();
-					$els.input.val('');
-					_showAlert('공유 완료! 🚀');
-				})
-				.fail(() => _showAlert('전송 실패 ❌'))
-				.always(() => {
-					setTimeout(() => {
-						toggleLoading(false);
-						$els.input.focus();
-					}, 300);
-				});
-		}
+            $.ajax({
+                url: API.REG,
+                type: 'POST',
+                data: {content: msg}
+            })
+                .done(() => {
+                    loadChats();
+                    $els.input.val('');
+                    _showAlert('공유 완료! 🚀');
+                })
+                .fail(() => _showAlert('전송 실패 ❌'))
+                .always(() => {
+                    setTimeout(() => {
+                        toggleLoading(false);
+                        $els.input.focus();
+                    }, 300);
+                });
+        }
 
-		// 메시지 삭제
-		function deleteChat(sn, $btn) {
-			if (!confirm("삭제하시겠습니까?")) return;
+        // 메시지 삭제
+        function deleteChat(sn, $btn) {
+            if (!confirm("삭제하시겠습니까?")) return;
 
-			$.ajax({
-				url: API.DEL,
-				type: 'POST',
-				data: {postSn: sn}
-			})
-				.done(res => {
-					if (res.rtnCd === '001') {
-						$btn.closest('.chat-row').fadeOut(300, function () {
-							$(this).remove();
-							if ($els.chatList.children().not('#empty-msg, #chat-loading').length === 0) {
-								$els.emptyMsg.fadeIn();
-							}
-						});
-						_showAlert('삭제 완료 🗑️');
-					} else {
-						_showAlert(`삭제 실패 (코드: ${res.rtnCd}) ❌`);
-					}
-				})
-				.fail(() => _showAlert('서버 오류 ❌'));
-		}
+            $.ajax({
+                url: API.DEL,
+                type: 'POST',
+                data: {postSn: sn}
+            })
+                .done(res => {
+                    if (res.rtnCd === '001') {
+                        $btn.closest('.chat-row').fadeOut(300, function () {
+                            $(this).remove();
+                            if ($els.chatList.children().not('#empty-msg, #chat-loading').length === 0) {
+                                $els.emptyMsg.fadeIn();
+                            }
+                        });
+                        _showAlert('삭제 완료 🗑️');
+                    } else {
+                        _showAlert(`삭제 실패 (코드: ${res.rtnCd}) ❌`);
+                    }
+                })
+                .fail(() => _showAlert('서버 오류 ❌'));
+        }
 
-		// UI 유틸리티
-		function toggleLoading(state) {
-			$els.btnSend.prop('disabled', state).toggleClass('loading', state);
-			$els.input.prop('disabled', state);
+        // UI 유틸리티
+        function toggleLoading(state) {
+            $els.btnSend.prop('disabled', state).toggleClass('loading', state);
+            $els.input.prop('disabled', state);
 
-			const $txt = $els.btnSend.find('.btn-text');
-			const $spin = $els.btnSend.find('.btn-spinner');
-			state ? ($txt.hide(), $spin.show()) : ($txt.show(), $spin.hide());
-		}
+            const $txt = $els.btnSend.find('.btn-text');
+            const $spin = $els.btnSend.find('.btn-spinner');
+            state ? ($txt.hide(), $spin.show()) : ($txt.show(), $spin.hide());
+        }
 
-		function scrollBottom() {
-			setTimeout(() => $els.chatList.scrollTop($els.chatList[0].scrollHeight), 50);
-		}
+        function scrollBottom() {
+            setTimeout(() => $els.chatList.scrollTop($els.chatList[0].scrollHeight), 50);
+        }
 
-		/*]]>*/
+        /*]]>*/
 	</script>
 </th:block>
 </html>

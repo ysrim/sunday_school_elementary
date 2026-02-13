@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http//www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{/app/psn/tch/layouts/tch_layout}" lang="ko">
+      layout:decorate="~{/app/psn/tch/layouts/tch_layout}" lang="ko">
 <th:block layout:fragment="content">
 	<section id="tab-quest" class="section-content active">
 		<div class="flex items-center justify-between mb-5 px-1">
@@ -22,11 +22,15 @@
 		</div>
 
 		<div class="flex border-b border-slate-200 mb-6">
-			<button class="flex-1 py-3 text-sm font-bold border-b-2 status-tab active" data-status="PENDING" style="border-color: #2563eb; color: #2563eb;">
-				승인대기 <span id="cnt-pending" class="ml-1 text-xs bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded-full align-middle">0</span>
+			<button class="flex-1 py-3 text-sm font-bold border-b-2 status-tab active" data-status="PENDING"
+			        style="border-color: #2563eb; color: #2563eb;">
+				승인대기 <span id="cnt-pending"
+				           class="ml-1 text-xs bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded-full align-middle">0</span>
 			</button>
-			<button class="flex-1 py-3 text-sm font-bold border-b-2 status-tab text-slate-400" data-status="APPROVED,REJECTED" style="border-color: transparent;">
-				완료됨 <span id="cnt-completed" class="ml-1 text-xs bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded-full align-middle">0</span>
+			<button class="flex-1 py-3 text-sm font-bold border-b-2 status-tab text-slate-400"
+			        data-status="APPROVED,REJECTED" style="border-color: transparent;">
+				완료됨 <span id="cnt-completed"
+				          class="ml-1 text-xs bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded-full align-middle">0</span>
 			</button>
 		</div>
 
@@ -89,129 +93,129 @@
 	</style>
 
 	<script th:inline="javascript">
-		$(function () {
-			// ==========================================
-			// 1. 상수 및 상태 관리
-			// ==========================================
-			const CONFIG = {
-				API: {
-					LIST: /*[[@{/tch/qest/reqQestList.ax}]]*/ '/tch/qest/reqQestList.ax',
-					ACTION: /*[[@{/tch/qest/chkQest.ax}]]*/ '/tch/qest/chkQest.ax'
-				},
-				BADGES: {
-					'DAILY': {cls: 'bg-blue-50 text-blue-600', txt: 'Daily Mission'},
-					'WEEKLY': {cls: 'bg-green-50 text-green-600', txt: 'Sunday Mission'},
-					'EVENT': {cls: 'bg-indigo-50 text-indigo-600', txt: 'Special Quest'}
-				}
-			};
+        $(function () {
+            // ==========================================
+            // 1. 상수 및 상태 관리
+            // ==========================================
+            const CONFIG = {
+                API: {
+                    LIST: /*[[@{/tch/qest/reqQestList.ax}]]*/ '/tch/qest/reqQestList.ax',
+                    ACTION: /*[[@{/tch/qest/chkQest.ax}]]*/ '/tch/qest/chkQest.ax'
+                },
+                BADGES: {
+                    'DAILY': {cls: 'bg-blue-50 text-blue-600', txt: 'Daily Mission'},
+                    'WEEKLY': {cls: 'bg-green-50 text-green-600', txt: 'Sunday Mission'},
+                    'EVENT': {cls: 'bg-indigo-50 text-indigo-600', txt: 'Special Quest'}
+                }
+            };
 
-			const STATE = {
-				year: new Date().getFullYear(),
-				month: new Date().getMonth() + 1,
-				data: [] // 전체 데이터 캐싱
-			};
+            const STATE = {
+                year: new Date().getFullYear(),
+                month: new Date().getMonth() + 1,
+                data: [] // 전체 데이터 캐싱
+            };
 
-			const $dom = {
-				yearBadge: $('#year-badge'),
-				monthBtns: $('.quest-month-btn'),
-				monthList: $('#month-list'),
-				categoryBtns: $('.quest-category-btn'),
-				statusTabs: $('.status-tab'),
-				list: $('#quest-list'),
-				loading: $('#quest-loading'),
-				empty: $('#quest-empty'),
-				cntPending: $('#cnt-pending'),
-				cntCompleted: $('#cnt-completed')
-			};
+            const $dom = {
+                yearBadge: $('#year-badge'),
+                monthBtns: $('.quest-month-btn'),
+                monthList: $('#month-list'),
+                categoryBtns: $('.quest-category-btn'),
+                statusTabs: $('.status-tab'),
+                list: $('#quest-list'),
+                loading: $('#quest-loading'),
+                empty: $('#quest-empty'),
+                cntPending: $('#cnt-pending'),
+                cntCompleted: $('#cnt-completed')
+            };
 
-			// ==========================================
-			// 2. 유틸리티 함수
-			// ==========================================
-			const Utils = {
-				toast: (msg) => _showToast(msg), // 실제 토스트 라이브러리로 대체 가능
-				formatDate: (dateStr) => {
-					const d = new Date(dateStr);
-					return `${d.getMonth() + 1}월 ${d.getDate()}일`;
-				},
-				setActive: ($group, $target) => {
-					$group.removeClass('active');
-					$target.addClass('active');
-				}
-			};
+            // ==========================================
+            // 2. 유틸리티 함수
+            // ==========================================
+            const Utils = {
+                toast: (msg) => _showToast(msg), // 실제 토스트 라이브러리로 대체 가능
+                formatDate: (dateStr) => {
+                    const d = new Date(dateStr);
+                    return `${d.getMonth() + 1}월 ${d.getDate()}일`;
+                },
+                setActive: ($group, $target) => {
+                    $group.removeClass('active');
+                    $target.addClass('active');
+                }
+            };
 
-			// ==========================================
-			// 3. 초기화 및 데이터 로드
-			// ==========================================
-			function init() {
-				$dom.yearBadge.text(`${STATE.year}년`);
+            // ==========================================
+            // 3. 초기화 및 데이터 로드
+            // ==========================================
+            function init() {
+                $dom.yearBadge.text(`${STATE.year}년`);
 
-				// 현재 월 활성화 및 스크롤
-				const $targetMonth = $dom.monthBtns.filter(`[data-month="${STATE.month}"]`);
-				Utils.setActive($dom.monthBtns, $targetMonth);
+                // 현재 월 활성화 및 스크롤
+                const $targetMonth = $dom.monthBtns.filter(`[data-month="${STATE.month}"]`);
+                Utils.setActive($dom.monthBtns, $targetMonth);
 
-				if ($targetMonth.length) {
-					const scrollLeft = $targetMonth.offset().left + $dom.monthList.scrollLeft()
-						- ($dom.monthList.width() / 2) - ($targetMonth.width() / 2);
-					$dom.monthList.animate({scrollLeft: scrollLeft}, 300);
-				}
+                if ($targetMonth.length) {
+                    const scrollLeft = $targetMonth.offset().left + $dom.monthList.scrollLeft()
+                        - ($dom.monthList.width() / 2) - ($targetMonth.width() / 2);
+                    $dom.monthList.animate({scrollLeft: scrollLeft}, 300);
+                }
 
-				fetchData();
-			}
+                fetchData();
+            }
 
-			function fetchData() {
-				// UI 리셋
-				$dom.list.empty().addClass('hidden');
-				$dom.empty.addClass('hidden');
-				$dom.loading.removeClass('hidden');
+            function fetchData() {
+                // UI 리셋
+                $dom.list.empty().addClass('hidden');
+                $dom.empty.addClass('hidden');
+                $dom.loading.removeClass('hidden');
 
-				$.ajax({
-					url: CONFIG.API.LIST,
-					type: 'POST',
-					data: {reqMonth: $dom.monthBtns.filter('.active').data('month')},
-					success: (res) => {
-						if (res.rtnCd === '001') {
-							setTimeout(() => { // UX용 딜레이
-								STATE.data = res.rtnData || [];
-								renderList(); // HTML 생성
-								updateUI();   // 필터링 및 카운트 갱신
-								$dom.loading.addClass('hidden');
-							}, 300);
-						} else {
-							Utils.toast(`처리 실패: ${res.rtnMsg} ❌`);
-							$dom.loading.addClass('hidden');
-						}
-					},
-					error: () => {
-						Utils.toast('통신 오류 ❌');
-						$dom.loading.addClass('hidden');
-					}
-				});
-			}
+                $.ajax({
+                    url: CONFIG.API.LIST,
+                    type: 'POST',
+                    data: {reqMonth: $dom.monthBtns.filter('.active').data('month')},
+                    success: (res) => {
+                        if (res.rtnCd === '001') {
+                            setTimeout(() => { // UX용 딜레이
+                                STATE.data = res.rtnData || [];
+                                renderList(); // HTML 생성
+                                updateUI();   // 필터링 및 카운트 갱신
+                                $dom.loading.addClass('hidden');
+                            }, 300);
+                        } else {
+                            Utils.toast(`처리 실패: ${res.rtnMsg} ❌`);
+                            $dom.loading.addClass('hidden');
+                        }
+                    },
+                    error: () => {
+                        Utils.toast('통신 오류 ❌');
+                        $dom.loading.addClass('hidden');
+                    }
+                });
+            }
 
-			// ==========================================
-			// 4. 렌더링 및 UI 업데이트
-			// ==========================================
-			function renderList() {
-				if (STATE.data.length === 0) return;
+            // ==========================================
+            // 4. 렌더링 및 UI 업데이트
+            // ==========================================
+            function renderList() {
+                if (STATE.data.length === 0) return;
 
-				const html = STATE.data.map(item => {
-					const badge = CONFIG.BADGES[item.questType] || CONFIG.BADGES['DAILY'];
-					const isCompleted = ['APPROVED', 'REJECTED'].includes(item.status);
-					const titleStyle = isCompleted ? 'line-through text-slate-400' : 'text-slate-800';
+                const html = STATE.data.map(item => {
+                    const badge = CONFIG.BADGES[item.questType] || CONFIG.BADGES['DAILY'];
+                    const isCompleted = ['APPROVED', 'REJECTED'].includes(item.status);
+                    const titleStyle = isCompleted ? 'line-through text-slate-400' : 'text-slate-800';
 
-					// 보상 뱃지
-					const expBadge = item.rewardExp ? `<div class="font-extrabold text-blue-600 bg-blue-50 px-2 py-1.5 rounded-lg border border-blue-100 text-xs text-center min-w-[60px]">${item.rewardExp} EXP</div>` : '';
-					const pointBadge = `<div class="font-extrabold text-amber-500 bg-amber-50 px-2 py-1.5 rounded-lg border border-amber-100 text-xs text-center min-w-[60px]">${item.rewardPoint} P</div>`;
+                    // 보상 뱃지
+                    const expBadge = item.rewardExp ? `<div class="font-extrabold text-blue-600 bg-blue-50 px-2 py-1.5 rounded-lg border border-blue-100 text-xs text-center min-w-[60px]">${item.rewardExp} EXP</div>` : '';
+                    const pointBadge = `<div class="font-extrabold text-amber-500 bg-amber-50 px-2 py-1.5 rounded-lg border border-amber-100 text-xs text-center min-w-[60px]">${item.rewardPoint} P</div>`;
 
-					// 하단 액션 버튼
-					const actionArea = isCompleted
-						? `<div class="text-xs text-slate-400 font-bold bg-slate-50 p-2 rounded text-center">${item.status === 'APPROVED' ? '지급 완료됨' : '반려됨'}</div>`
-						: `<div class="flex gap-3 action-buttons">
+                    // 하단 액션 버튼
+                    const actionArea = isCompleted
+                        ? `<div class="text-xs text-slate-400 font-bold bg-slate-50 p-2 rounded text-center">${item.status === 'APPROVED' ? '지급 완료됨' : '반려됨'}</div>`
+                        : `<div class="flex gap-3 action-buttons">
                                 <button type="button" class="btn-action flex-1 py-3 bg-slate-50 text-slate-500 rounded-xl text-xs font-bold active:scale-95 transition" data-type="REJECTED" data-sn="${item.logSn}">반려</button>
                                 <button type="button" class="btn-action flex-1 py-3 bg-blue-600 text-white rounded-xl text-xs font-bold shadow-lg active:scale-95 transition" data-type="APPROVED" data-sn="${item.logSn}">승인 및 지급</button>
                            </div>`;
 
-					return `
+                    return `
                         <div class="card-box p-5 quest-item" data-type="${item.questType}" data-status="${item.status}">
                             <div class="flex justify-between items-start mb-4">
                                 <div class="flex-1 pr-2">
@@ -231,99 +235,105 @@
                             </div>
                             ${actionArea}
                         </div>`;
-				}).join('');
+                }).join('');
 
-				$dom.list.html(html);
-			}
+                $dom.list.html(html);
+            }
 
-			// 필터링 및 카운트 업데이트 통합 함수
-			function updateUI() {
-				const activeStatus = $dom.statusTabs.filter('.active').data('status'); // "PENDING" or "APPROVED,REJECTED"
-				const activeCategory = $dom.categoryBtns.filter('.active').data('filter');
+            // 필터링 및 카운트 업데이트 통합 함수
+            function updateUI() {
+                const activeStatus = $dom.statusTabs.filter('.active').data('status'); // "PENDING" or "APPROVED,REJECTED"
+                const activeCategory = $dom.categoryBtns.filter('.active').data('filter');
 
-				// 1. 카운트 업데이트 (현재 카테고리 기준)
-				const filteredByCategory = STATE.data.filter(item => activeCategory === 'ALL' || item.questType === activeCategory);
-				$dom.cntPending.text(filteredByCategory.filter(i => i.status === 'PENDING').length);
-				$dom.cntCompleted.text(filteredByCategory.filter(i => ['APPROVED', 'REJECTED'].includes(i.status)).length);
+                // 1. 카운트 업데이트 (현재 카테고리 기준)
+                const filteredByCategory = STATE.data.filter(item => activeCategory === 'ALL' || item.questType === activeCategory);
+                $dom.cntPending.text(filteredByCategory.filter(i => i.status === 'PENDING').length);
+                $dom.cntCompleted.text(filteredByCategory.filter(i => ['APPROVED', 'REJECTED'].includes(i.status)).length);
 
-				// 2. 리스트 필터링 (DOM 표시/숨김)
-				let visibleCount = 0;
-				$dom.list.children('.quest-item').each(function () {
-					const $el = $(this);
-					const isStatusMatch = activeStatus.includes($el.data('status'));
-					const isCategoryMatch = (activeCategory === 'ALL' || $el.data('type') === activeCategory);
+                // 2. 리스트 필터링 (DOM 표시/숨김)
+                let visibleCount = 0;
+                $dom.list.children('.quest-item').each(function () {
+                    const $el = $(this);
+                    const isStatusMatch = activeStatus.includes($el.data('status'));
+                    const isCategoryMatch = (activeCategory === 'ALL' || $el.data('type') === activeCategory);
 
-					if (isStatusMatch && isCategoryMatch) {
-						$el.removeClass('hidden');
-						visibleCount++;
-					} else {
-						$el.addClass('hidden');
-					}
-				});
+                    if (isStatusMatch && isCategoryMatch) {
+                        $el.removeClass('hidden');
+                        visibleCount++;
+                    } else {
+                        $el.addClass('hidden');
+                    }
+                });
 
-				// 3. 빈 화면 처리
-				if (visibleCount === 0) {
-					$dom.list.addClass('hidden');
-					$dom.empty.removeClass('hidden');
-				} else {
-					$dom.list.removeClass('hidden');
-					$dom.empty.addClass('hidden');
-				}
-			}
+                // 3. 빈 화면 처리
+                if (visibleCount === 0) {
+                    $dom.list.addClass('hidden');
+                    $dom.empty.removeClass('hidden');
+                } else {
+                    $dom.list.removeClass('hidden');
+                    $dom.empty.addClass('hidden');
+                }
+            }
 
-			// ==========================================
-			// 5. 이벤트 핸들러
-			// ==========================================
+            // ==========================================
+            // 5. 이벤트 핸들러
+            // ==========================================
 
-			// 월 변경 -> 데이터 재요청
-			$dom.monthBtns.on('click', function () {
-				Utils.setActive($dom.monthBtns, $(this));
-				fetchData();
-			});
+            // 월 변경 -> 데이터 재요청
+            $dom.monthBtns.on('click', function () {
+                Utils.setActive($dom.monthBtns, $(this));
+                fetchData();
+            });
 
-			// 카테고리 변경 -> UI만 갱신
-			$dom.categoryBtns.on('click', function () {
-				Utils.setActive($dom.categoryBtns, $(this));
-				updateUI();
-			});
+            // 카테고리 변경 -> UI만 갱신
+            $dom.categoryBtns.on('click', function () {
+                Utils.setActive($dom.categoryBtns, $(this));
+                updateUI();
+            });
 
-			// 상태 탭 변경 -> UI만 갱신
-			$dom.statusTabs.on('click', function () {
-				const $this = $(this);
-				$dom.statusTabs.removeClass('active').addClass('text-slate-400').css({'border-color': 'transparent', 'color': '#94a3b8'});
-				$this.addClass('active').removeClass('text-slate-400').css({'border-color': '#2563eb', 'color': '#2563eb'});
-				updateUI();
-			});
+            // 상태 탭 변경 -> UI만 갱신
+            $dom.statusTabs.on('click', function () {
+                const $this = $(this);
+                $dom.statusTabs.removeClass('active').addClass('text-slate-400').css({
+                    'border-color': 'transparent',
+                    'color': '#94a3b8'
+                });
+                $this.addClass('active').removeClass('text-slate-400').css({
+                    'border-color': '#2563eb',
+                    'color': '#2563eb'
+                });
+                updateUI();
+            });
 
-			// 승인/반려 액션
-			$(document).on('click', '.btn-action', function () {
-				const type = $(this).data('type');
-				const sn = $(this).data('sn');
-				const $card = $(this).closest('.quest-item');
+            // 승인/반려 액션
+            $(document).on('click', '.btn-action', function () {
+                const type = $(this).data('type');
+                const sn = $(this).data('sn');
+                const $card = $(this).closest('.quest-item');
 
-				if (type === 'REJECTED' && !confirm('정말 반려하시겠습니까?')) return;
-				if (type === 'APPROVED') $(this).html('<i class="fas fa-spinner fa-spin"></i>');
+                if (type === 'REJECTED' && !confirm('정말 반려하시겠습니까?')) return;
+                if (type === 'APPROVED') $(this).html('<i class="fas fa-spinner fa-spin"></i>');
 
-				$.ajax({
-					url: CONFIG.API.ACTION,
-					type: 'POST',
-					data: {logSn: sn, status: type},
-					success: (res) => {
-						if (res.rtnCd === '001') {
-							$card.css({transform: 'scale(0.9)', opacity: '0', transition: '0.3s'});
-							setTimeout(() => {
-								Utils.toast(res.rtnMsg);
-								fetchData(); // 데이터 갱신을 위해 재로드 (안전성 확보)
-							}, 300);
-						} else {
-							Utils.toast(`처리 실패: ${res.rtnMsg} ❌`);
-						}
-					},
-					error: () => Utils.toast('통신 오류 ❌')
-				});
-			});
-			init();
-		});
+                $.ajax({
+                    url: CONFIG.API.ACTION,
+                    type: 'POST',
+                    data: {logSn: sn, status: type},
+                    success: (res) => {
+                        if (res.rtnCd === '001') {
+                            $card.css({transform: 'scale(0.9)', opacity: '0', transition: '0.3s'});
+                            setTimeout(() => {
+                                Utils.toast(res.rtnMsg);
+                                fetchData(); // 데이터 갱신을 위해 재로드 (안전성 확보)
+                            }, 300);
+                        } else {
+                            Utils.toast(`처리 실패: ${res.rtnMsg} ❌`);
+                        }
+                    },
+                    error: () => Utils.toast('통신 오류 ❌')
+                });
+            });
+            init();
+        });
 	</script>
 </th:block>
 </html>
