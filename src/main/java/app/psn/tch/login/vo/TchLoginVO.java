@@ -1,7 +1,6 @@
 package app.psn.tch.login.vo;
 
 import com.base.annotation.com.XssCheck;
-
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;

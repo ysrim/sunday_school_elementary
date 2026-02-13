@@ -1,10 +1,9 @@
 package app.psn.com.service;
 
-import java.util.List;
-
+import app.psn.com.vo.ToastMsgVO;
 import com.base.vo.ToastMsgEvent;
 
-import app.psn.com.vo.ToastMsgVO;
+import java.util.List;
 
 public interface ToastMsgService {
 

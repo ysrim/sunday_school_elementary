@@ -14,5 +14,4 @@ public interface TchGuildMapper {
 	 */
 	List<TchGuildMemberVO> sltTchGuildMberList(@Param("guildSn") Integer guildSn);
 
-
 }

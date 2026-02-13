@@ -7,14 +7,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum TchNaviEnum {
 
-    TCH_HOME(1, "HOME"),
-    TCH_ATND(10, "주일 출석부"),
-    TCH_QEST(20, "퀘스트 보드"),
-    TCH_GILD(30, "길드"),
-    EMPTY(0, "공백");
+	TCH_HOME(1, "HOME"),
+	TCH_ATND(10, "주일 출석부"),
+	TCH_QEST(20, "퀘스트 보드"),
+	TCH_GILD(30, "길드"),
+	EMPTY(0, "공백");
 
-    private final Integer seq;
+	private final Integer seq;
 
-    private final String naviNm;
+	private final String naviNm;
 
 }

@@ -1,12 +1,10 @@
 package app.psn.com.mapper;
 
-import java.util.List;
-
+import app.psn.com.vo.ToastMsgVO;
+import com.base.vo.ToastMsgEvent;
 import org.apache.ibatis.annotations.Mapper;
 
-import com.base.vo.ToastMsgEvent;
-
-import app.psn.com.vo.ToastMsgVO;
+import java.util.List;
 
 @Mapper
 public interface ToastMsgMapper {

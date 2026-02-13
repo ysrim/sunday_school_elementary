@@ -1,24 +1,19 @@
 package app.psn.std.join.web;
 
+import app.psn.std.join.service.StdJoinService;
+import app.psn.std.join.vo.StdJoinMemberVO;
 import com.base.enumm.com.ViewPathEnum;
-
+import com.base.utl.ResUtil;
+import com.base.vo.ResponseBody;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.base.utl.ResUtil;
-import com.base.vo.BodyResVO;
-
-import app.psn.std.join.service.StdJoinService;
-import app.psn.std.join.vo.StdJoinMemberVO;
-import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
@@ -44,8 +39,8 @@ public class StdJoinController {
 	 * 회원 가입 요청
 	 */
 	@RequestMapping(path = "/join.ax")
-	@ResponseBody
-	public ResponseEntity<BodyResVO<Object>> joinAx(@Valid StdJoinMemberVO stdJoinMemberVO) {
+	@org.springframework.web.bind.annotation.ResponseBody
+	public ResponseEntity<ResponseBody<Object>> joinAx(@Valid StdJoinMemberVO stdJoinMemberVO) {
 
 		stdJoinMemberVO.setPwd(passwordEncoder.encode(stdJoinMemberVO.getPwd()));
 
@@ -59,8 +54,8 @@ public class StdJoinController {
 	 * 아이디 중복 체크 요청
 	 */
 	@RequestMapping(path = "/idDupleChk.ax")
-	@ResponseBody
-	public ResponseEntity<BodyResVO<Object>> idDupleChkAx(@RequestParam(name = "mberId", defaultValue = "") String mberId) {
+	@org.springframework.web.bind.annotation.ResponseBody
+	public ResponseEntity<ResponseBody<Object>> idDupleChkAx(@RequestParam(name = "mberId", defaultValue = "") String mberId) {
 
 		if ("".equals(mberId)) {
 			return ResUtil.resValid("잘못된 형식의 아이디입니다! ❌");

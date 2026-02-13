@@ -7,14 +7,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum MngNaviEnum {
 
-    MNG_HOME(1, "대쉬보드"),
-    MNG_MBER(10, "회원 관리"),
-    MNG_FEED(20, "게시판 관리"),
-    MNG_REWD(30, "리워드 관리"),
-    EMPTY(0, "공백");
+	MNG_HOME(1, "대쉬보드"),
+	MNG_MBER(10, "회원 관리"),
+	MNG_FEED(20, "게시판 관리"),
+	MNG_REWD(30, "리워드 관리"),
+	EMPTY(0, "공백");
 
-    private final Integer seq;
+	private final Integer seq;
 
-    private final String naviNm;
+	private final String naviNm;
 
 }

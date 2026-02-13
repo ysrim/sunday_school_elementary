@@ -1,12 +1,11 @@
 package app.psn.tch.quest.mapper;
 
-import java.util.List;
-
+import app.psn.tch.quest.vo.ReqQuestProcVO;
+import app.psn.tch.quest.vo.TchReqQestVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import app.psn.tch.quest.vo.ReqQuestProcVO;
-import app.psn.tch.quest.vo.TchReqQestVO;
+import java.util.List;
 
 @Mapper
 public interface TchQuestMapper {

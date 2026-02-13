@@ -1,14 +1,12 @@
 package app.psn.std.join.vo;
 
-import org.hibernate.validator.constraints.Range;
-
 import com.base.annotation.com.XssCheck;
 import com.base.enumm.com.MberGrdEnum;
-
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Range;
 
 /**
  * 회원가입 요청 정보

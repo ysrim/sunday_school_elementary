@@ -10,7 +10,6 @@ public enum ToastTypeEnum {
 	REWARD,  // 리워드
 	SUCCESS, // 성공
 	WARNING, // 경고
-	INFO     // 정보
-	;
+	INFO;     // 정보
 
 }

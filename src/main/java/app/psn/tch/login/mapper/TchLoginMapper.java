@@ -1,9 +1,8 @@
 package app.psn.tch.login.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
-
 import app.psn.tch.login.vo.TchLoginVO;
 import app.psn.tch.login.vo.TchSessionVO;
+import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface TchLoginMapper {

@@ -1,13 +1,12 @@
 package app.psn.std.join.service.impl;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import app.psn.std.join.mapper.StdJoinMapper;
 import app.psn.std.join.service.StdJoinService;
 import app.psn.std.join.vo.StdJoinMemberVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service("stdJoinService")

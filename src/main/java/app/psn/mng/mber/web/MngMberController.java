@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/mng")
 public class MngMberController {
 
-    @MngMenuInfo(navi = MngNaviEnum.MNG_MBER, role = MberGrdEnum.MNG)
-    @RequestMapping("/mber.pg")
-    public String mberPg() {
+	@MngMenuInfo(navi = MngNaviEnum.MNG_MBER, role = MberGrdEnum.MNG)
+	@RequestMapping("/mber.pg")
+	public String mberPg() {
 
-        return ViewPathEnum.MNG.to("/mber/mngMber");
+		return ViewPathEnum.MNG.to("/mber/mngMber");
 
-    }
+	}
 
 }

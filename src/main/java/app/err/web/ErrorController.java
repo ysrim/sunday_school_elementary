@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/error")
 public class ErrorController {
 
-    /**
-     * error page sending
-     */
-    @GetMapping({"/404.pg", "/400.pg", "/500.pg"})
-    public String error404() {
+	/**
+	 * error page sending
+	 */
+	@GetMapping({"/404.pg", "/400.pg", "/500.pg"})
+	public String error404() {
 
-        return ViewPathEnum.DEF.to("/err/errorPage");
+		return ViewPathEnum.DEF.to("/err/errorPage");
 
-    }
+	}
 
 }

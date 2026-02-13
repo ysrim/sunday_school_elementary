@@ -1,9 +1,9 @@
 package com.base.enumm.com;
 
-import java.util.Arrays;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
+import java.util.Arrays;
 
 @Getter
 @RequiredArgsConstructor
@@ -11,8 +11,7 @@ public enum MberGrdEnum {
 
 	STD("100", "학생"),   //
 	TCH("200", "선생님"), //
-	MNG("300", "관리자")  //
-	;
+	MNG("300", "관리자");  //
 
 	private final String code; // DB에 저장되는 값
 	private final String desc; // 화면에 보여줄 값
@@ -23,9 +22,9 @@ public enum MberGrdEnum {
 	 */
 	public static MberGrdEnum of(String code) {
 		return Arrays.stream(values()) //
-			.filter(r -> r.code.equals(code))//
-			.findAny() //
-			.orElse(null); // 혹은 예외 발생
+				.filter(r -> r.code.equals(code))//
+				.findAny() //
+				.orElse(null); // 혹은 예외 발생
 	}
 
 	/**

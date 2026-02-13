@@ -1,8 +1,7 @@
 package app.psn.std.join.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
-
 import app.psn.std.join.vo.StdJoinMemberVO;
+import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface StdJoinMapper {

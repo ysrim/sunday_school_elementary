@@ -15,7 +15,9 @@ public enum QuestTypeEnum {
 	private final String description;
 
 	public boolean isSameStatus(String nm) {
+
 		return this.name().equals(nm);
+
 	}
 
 }

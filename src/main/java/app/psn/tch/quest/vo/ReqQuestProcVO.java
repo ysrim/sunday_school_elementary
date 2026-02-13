@@ -16,13 +16,13 @@ import lombok.ToString;
 @ToString
 public class ReqQuestProcVO {
 
-    @Min(value = 0, message = "퀘스트 수행 순번은 필수 값입니다.")
-    private Integer logSn;
+	@Min(value = 0, message = "퀘스트 수행 순번은 필수 값입니다.")
+	private Integer logSn;
 
-    @NotBlank(message = "상태값은 필수입니다.")
-    @Pattern(regexp = "^(APPROVED|REJECTED)$", message = "입력값이 부적절 합니다.")
-    private String status;
+	@NotBlank(message = "상태값은 필수입니다.")
+	@Pattern(regexp = "^(APPROVED|REJECTED)$", message = "입력값이 부적절 합니다.")
+	private String status;
 
-    private Integer processedBy = SessionUtil.getTchMberInfo().mberSn();
+	private Integer processedBy = SessionUtil.getTchMberInfo().mberSn();
 
 }

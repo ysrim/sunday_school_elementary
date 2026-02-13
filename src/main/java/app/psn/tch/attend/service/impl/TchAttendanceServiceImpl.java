@@ -19,22 +19,22 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class TchAttendanceServiceImpl implements TchAttendanceService {
 
-    private final TchAttendanceMapper tchAttendanceMapper;
+	private final TchAttendanceMapper tchAttendanceMapper;
 
-    private final TchQuestService tchQuestService;
+	private final TchQuestService tchQuestService;
 
-    @Override
-    public List<AtndApprovalVO> sltReqAtndList(String reqDate) {
+	@Override
+	public List<AtndApprovalVO> sltReqAtndList(String reqDate) {
 
-        return tchAttendanceMapper.sltReqAtndList(SessionUtil.getTchMberInfo().guildSn(), reqDate);
+		return tchAttendanceMapper.sltReqAtndList(SessionUtil.getTchMberInfo().guildSn(), reqDate);
 
-    }
+	}
 
-    @Override
-    public void atndChk(ReqQuestProcVO reqQuestProcVO) {
+	@Override
+	public void atndChk(ReqQuestProcVO reqQuestProcVO) {
 
-        tchQuestService.questProc(reqQuestProcVO);
+		tchQuestService.questProc(reqQuestProcVO);
 
-    }
+	}
 
 }

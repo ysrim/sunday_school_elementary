@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.base.enumm.com.RewardTypeEnum;
 import com.base.enumm.com.ToastTypeEnum;
-import com.base.utl.StringUtil;
+import com.base.utl.CommonUtil;
 import com.base.vo.AvatarLvlUdtEvent;
 import com.base.vo.QuestCompleteEvent;
 import com.base.vo.ToastMsgEvent;
@@ -101,7 +101,7 @@ public class RewardServiceImpl implements RewardService {
 
 		// 3. 수행이력 정보가 있고 어제일자로 동일한 퀘스트 수행이력이 있으면 newStreak변수에 +1을 해준다.
 		if (currentStreak != null) {
-			newStreak = StringUtil.getDateDiffToday(currentStreak.lastSuccessDe()) ? (currentStreak.currentStreak() + 1) : 1;
+			newStreak = CommonUtil.getDateDiffToday(currentStreak.lastSuccessDe()) ? (currentStreak.currentStreak() + 1) : 1;
 		}
 
 		// 4. 수행일수가 연속퀘스트 일자에 맞으면 추가 보상을 해주고 수행일 수를 0으로 바꾼다.

@@ -1,9 +1,8 @@
 package app.psn.com.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
-
 import app.psn.com.vo.AvatarLevelVO;
 import app.psn.com.vo.TodayBibleVerseVO;
+import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface CacheMapper {

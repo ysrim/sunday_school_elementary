@@ -7,12 +7,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum RewardTypeEnum {
 
-    POINT(1, "달란트"), //
-    EXP(2, "경험치")    //
-    ;
+	POINT(1, "달란트"), //
+	EXP(2, "경험치");   //
 
-    private final Integer seq;
+	private final Integer seq;
 
-    private final String rewardName;
+	private final String rewardName;
 
 }

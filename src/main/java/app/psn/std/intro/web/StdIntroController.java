@@ -12,18 +12,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/std/idx")
 public class StdIntroController {
 
-    private final StdIntroService stdIntroService;
+	private final StdIntroService stdIntroService;
 
-    /**
-     * 인트로 페이지
-     */
-    @RequestMapping("/intro.pg")
-    public String introPage(Model model) {
+	/**
+	 * 인트로 페이지
+	 */
+	@RequestMapping("/intro.pg")
+	public String introPage(Model model) {
 
-        model.addAttribute("stdMberCnt", stdIntroService.stdMberCnt());
+		model.addAttribute("stdMberCnt", stdIntroService.stdMberCnt());
 
-        return ViewPathEnum.STD.to("/idx/intro");
+		return ViewPathEnum.STD.to("/idx/intro");
 
-    }
+	}
 
 }

@@ -4,13 +4,10 @@ import app.psn.mng.login.mapper.MngLoginMapper;
 import app.psn.mng.login.service.MngLoginService;
 import app.psn.mng.login.vo.MngLoginVO;
 import app.psn.mng.login.vo.MngSessionVO;
-
 import com.base.enumm.com.SessionKeyEnum;
 import com.base.utl.SessionUtil;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +24,9 @@ public class MngLoginServiceImpl implements MngLoginService {
 
 	@Override
 	public MngSessionVO sltMber(MngLoginVO loginVO) {
+
 		return mngLoginMapper.sltMber(loginVO);
+
 	}
 
 	@Override
@@ -50,4 +49,5 @@ public class MngLoginServiceImpl implements MngLoginService {
 		return sessionVO;
 
 	}
+
 }

@@ -1,8 +1,8 @@
 package app.psn.com.mapper;
 
-import java.time.LocalDate;
-
 import org.apache.ibatis.annotations.Mapper;
+
+import java.time.LocalDate;
 
 @Mapper
 public interface BibleVerseMapper {

@@ -15,15 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/mng")
 public class MngHomeController {
 
-    /**
-     * 홈 대쉬보드 페이지
-     */
-    @MngMenuInfo(navi = MngNaviEnum.MNG_HOME, role = MberGrdEnum.MNG)
-    @RequestMapping("/home.pg")
-    public String homePg() {
+	/**
+	 * 홈 대쉬보드 페이지
+	 */
+	@MngMenuInfo(navi = MngNaviEnum.MNG_HOME, role = MberGrdEnum.MNG)
+	@RequestMapping("/home.pg")
+	public String homePg() {
 
-        return ViewPathEnum.MNG.to("/home/mngHome");
+		return ViewPathEnum.MNG.to("/home/mngHome");
 
-    }
+	}
 
 }

@@ -15,18 +15,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/std/idx")
 public class StdQrCodeController {
 
-    private final StdQrCodeService stdQrCodeService;
+	private final StdQrCodeService stdQrCodeService;
 
-    /**
-     * QR코드 사용자 정보
-     */
-    @RequestMapping(path = "/qrCode/stdMember.pg")
-    public String stdMemberAx(@RequestParam(name = "value", defaultValue = "") String value, Model model) {
+	/**
+	 * QR코드 사용자 정보
+	 */
+	@RequestMapping(path = "/qrCode/stdMember.pg")
+	public String stdMemberAx(@RequestParam(name = "value", defaultValue = "") String value, Model model) {
 
-        model.addAttribute("qrInfo", "".equals(value) ? null : stdQrCodeService.sltMberSn(value));
+		model.addAttribute("qrInfo", "".equals(value) ? null : stdQrCodeService.sltMberSn(value));
 
-        return ViewPathEnum.STD.to("/idx/qr");
+		return ViewPathEnum.STD.to("/idx/qr");
 
-    }
+	}
 
 }

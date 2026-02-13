@@ -11,5 +11,4 @@ public interface TchGuildService {
 	 */
 	List<TchGuildMemberVO> sltTchGuildMberList();
 
-
 }

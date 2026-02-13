@@ -2,17 +2,14 @@ package app.psn.std.option.web;
 
 import app.psn.std.home.service.StdHomeService;
 import app.psn.std.option.service.StdOptsService;
-
 import com.base.annotation.std.StdMenuInfo;
 import com.base.enumm.com.MberGrdEnum;
 import com.base.enumm.com.ViewPathEnum;
 import com.base.enumm.std.StdNaviEnum;
 import com.base.utl.ResUtil;
-import com.base.vo.BodyResVO;
-
+import com.base.vo.ResponseBody;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -71,8 +68,8 @@ public class StdOptsController {
 	 */
 	@StdMenuInfo(navi = StdNaviEnum.STD_OPTS_2, role = MberGrdEnum.STD)
 	@RequestMapping("/opts/pwChg.ax")
-	public ResponseEntity<BodyResVO<Object>> pwChgAx(@RequestParam(value = "currentPw", defaultValue = "") String currentPw // 기존 패스워드
-		, @RequestParam(value = "newPw", defaultValue = "") String newPw // 기존 패스워드
+	public ResponseEntity<ResponseBody<Object>> pwChgAx(@RequestParam(value = "currentPw", defaultValue = "") String currentPw // 기존 패스워드
+			, @RequestParam(value = "newPw", defaultValue = "") String newPw // 기존 패스워드
 	) {
 
 		if ("".equals(newPw) || "".equals(currentPw)) {

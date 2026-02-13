@@ -1,9 +1,8 @@
 package app.psn.std.login.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
-
 import app.psn.com.vo.LoginVO;
 import app.psn.std.login.vo.StdSessionVO;
+import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface StdLoginMapper {

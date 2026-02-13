@@ -26,7 +26,7 @@ public interface CacheService {
 	void evictLevel(Integer mberSn);
 
 	/**
-	 *캐쉬생성 - 경험치
+	 * 캐쉬생성 - 경험치
 	 */
 	AvatarLevelVO sltExp(Integer mberSn);
 

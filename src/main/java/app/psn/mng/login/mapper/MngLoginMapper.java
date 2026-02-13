@@ -7,9 +7,9 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface MngLoginMapper {
 
-    /**
-     * 관리자 회원 사용자 정보 요청
-     */
-    MngSessionVO sltMber(MngLoginVO loginVO);
+	/**
+	 * 관리자 회원 사용자 정보 요청
+	 */
+	MngSessionVO sltMber(MngLoginVO loginVO);
 
 }

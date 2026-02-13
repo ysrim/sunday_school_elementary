@@ -1,24 +1,22 @@
 package com.base.interceptor;
 
-import java.io.IOException;
-
+import app.psn.tch.login.vo.TchSessionVO;
+import com.base.annotation.com.PassAuth;
 import com.base.annotation.tch.TchMenuInfo;
-
+import com.base.enumm.com.MberGrdEnum;
+import com.base.utl.SessionUtil;
+import com.base.utl.CommonUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import com.base.annotation.com.PassAuth;
-import com.base.enumm.tch.TchNaviEnum;
-import com.base.utl.SessionUtil;
-import com.base.utl.StringUtil;
-
-import app.psn.tch.login.vo.TchSessionVO;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -42,13 +40,13 @@ public class TchAuthInterceptor implements HandlerInterceptor {
 		// 3. 세션 인증 체크
 		TchSessionVO tchSessionVO = SessionUtil.getTchMberInfo();
 		if (tchSessionVO == null) {
-			StringUtil.handleAuthFail(request, response, "Login Required", HttpServletResponse.SC_UNAUTHORIZED, LOGIN_PAGE_URL);
+			CommonUtil.handleAuthFail(request, response, "Login Required", HttpServletResponse.SC_UNAUTHORIZED, LOGIN_PAGE_URL);
 			return false;
 		}
 
 		// 4. 권한(인가) 체크
 		if (!checkMenuAuthorization(request, handlerMethod, tchSessionVO)) {
-			StringUtil.handleAuthFail(request, response, "Access Denied", HttpServletResponse.SC_FORBIDDEN, LOGIN_PAGE_URL);
+			CommonUtil.handleAuthFail(request, response, "Access Denied", HttpServletResponse.SC_FORBIDDEN, LOGIN_PAGE_URL);
 			return false;
 		}
 
@@ -56,31 +54,18 @@ public class TchAuthInterceptor implements HandlerInterceptor {
 
 	}
 
+	/**
+	 * 메뉴권한 체크 및 메뉴 정보 설정
+	 */
 	private boolean checkMenuAuthorization(HttpServletRequest request, HandlerMethod handlerMethod, TchSessionVO tchSessionVO) {
 
-		TchMenuInfo menuInfo = AnnotatedElementUtils.findMergedAnnotation(handlerMethod.getMethod(), TchMenuInfo.class);
+		TchMenuInfo menuInfo = Optional.ofNullable(AnnotatedElementUtils.findMergedAnnotation(handlerMethod.getMethod(), TchMenuInfo.class)) // method
+				.orElseGet(() -> AnnotatedElementUtils.findMergedAnnotation(handlerMethod.getBeanType(), TchMenuInfo.class)); // bean
 
-		if (menuInfo == null) {
-			menuInfo = AnnotatedElementUtils.findMergedAnnotation(handlerMethod.getBeanType(), TchMenuInfo.class);
-		}
+		if (menuInfo == null || !isAuthorized(tchSessionVO)) return false;
 
-		if (menuInfo == null)
-			return true;
-
-		// 권한 체크
-		if (!isAuthorized(tchSessionVO)) {
-			return false;
-		}
-
-		// 메뉴 정보 설정
-		try {
-			String naviKey = menuInfo.navi().toString();
-			TchNaviEnum navi = TchNaviEnum.valueOf(naviKey);
-			request.setAttribute("_tchMenuInfo", naviKey);
-			request.setAttribute("_tchMenuNm", navi.getNaviNm());
-		} catch (IllegalArgumentException e) {
-			log.error("Invalid NaviEnum value in @MenuInfo: {}", menuInfo.navi());
-		}
+		request.setAttribute("_tchMenuInfo", menuInfo.navi().name());
+		request.setAttribute("_tchMenuNm", menuInfo.navi().getNaviNm());
 
 		return true;
 
@@ -88,13 +73,15 @@ public class TchAuthInterceptor implements HandlerInterceptor {
 
 	private boolean hasPassAuth(HandlerMethod handler) {
 
-		return AnnotatedElementUtils.hasAnnotation(handler.getMethod(), PassAuth.class) || AnnotatedElementUtils.hasAnnotation(handler.getBeanType(), PassAuth.class);
+		return AnnotatedElementUtils.hasAnnotation(handler.getMethod(), PassAuth.class) //
+				|| AnnotatedElementUtils.hasAnnotation(handler.getBeanType(), PassAuth.class); //
 
 	}
 
 	private boolean isAuthorized(TchSessionVO session) {
 
-		return "200".equals(session.gradeCode());
+		// 선생님 권한만 접근 가능
+		return MberGrdEnum.TCH.getCode().equals(session.gradeCode());
 
 	}
 

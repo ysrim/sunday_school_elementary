@@ -1,24 +1,22 @@
 package app.psn.std.option.service.impl;
 
-import java.util.HashMap;
-import java.util.List;
-
+import app.psn.com.vo.LoginVO;
+import app.psn.std.login.service.StdLoginService;
+import app.psn.std.login.vo.StdSessionVO;
+import app.psn.std.option.mapper.StdOptsMapper;
+import app.psn.std.option.service.StdOptsService;
+import app.psn.std.option.vo.StdRewardHistoryVO;
+import com.base.utl.CommonUtil;
+import com.base.utl.SessionUtil;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.base.utl.SessionUtil;
-import com.base.utl.StringUtil;
-
-import app.psn.std.login.service.StdLoginService;
-import app.psn.com.vo.LoginVO;
-import app.psn.std.login.vo.StdSessionVO;
-import app.psn.std.option.mapper.StdOptsMapper;
-import app.psn.std.option.service.StdOptsService;
-import app.psn.std.option.vo.StdRewardHistoryVO;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.HashMap;
+import java.util.List;
 
 @Slf4j
 @Service("optionService")
@@ -39,7 +37,7 @@ public class StdOptsServiceImpl implements StdOptsService {
 
 		try {
 			StdSessionVO stdSessionVo = SessionUtil.getStdMberInfo();
-			return StringUtil.encrypt(stdSessionVo.mberSn() + "", secretKey);
+			return CommonUtil.encrypt(stdSessionVo.mberSn() + "", secretKey);
 		} catch (Exception e) {
 			throw new RuntimeException("QR코드 생성중 에러가 발생했습니다.");
 		}

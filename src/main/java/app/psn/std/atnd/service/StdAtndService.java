@@ -1,8 +1,8 @@
 package app.psn.std.atnd.service;
 
-import java.util.List;
-
 import app.psn.std.atnd.vo.StdAtndVO;
+
+import java.util.List;
 
 public interface StdAtndService {
 

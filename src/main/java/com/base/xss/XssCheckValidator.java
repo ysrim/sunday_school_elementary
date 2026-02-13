@@ -1,23 +1,21 @@
 package com.base.xss;
 
+import com.base.annotation.com.XssCheck;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
 
-import com.base.annotation.com.XssCheck;
-
 public class XssCheckValidator implements ConstraintValidator<XssCheck, String> {
 
-    @Override
-    public boolean isValid(String value, ConstraintValidatorContext context) {
+	@Override
+	public boolean isValid(String value, ConstraintValidatorContext context) {
 
-        if (value == null) {
-            return true;
-        }
+		if (value == null)
+			return true;
 
-        return Jsoup.isValid(value, Safelist.none());
-    }
+		return Jsoup.isValid(value, Safelist.none());
+
+	}
 
 }

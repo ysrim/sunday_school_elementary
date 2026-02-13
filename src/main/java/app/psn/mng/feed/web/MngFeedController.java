@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/mng")
 public class MngFeedController {
 
-    @MngMenuInfo(navi = MngNaviEnum.MNG_FEED, role = MberGrdEnum.MNG)
-    @RequestMapping("/feed.pg")
-    public String feedPg() {
+	@MngMenuInfo(navi = MngNaviEnum.MNG_FEED, role = MberGrdEnum.MNG)
+	@RequestMapping("/feed.pg")
+	public String feedPg() {
 
-        return ViewPathEnum.MNG.to("/feed/mngFeed");
+		return ViewPathEnum.MNG.to("/feed/mngFeed");
 
-    }
+	}
 
 }

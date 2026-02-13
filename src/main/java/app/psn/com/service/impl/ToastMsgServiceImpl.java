@@ -1,19 +1,16 @@
 package app.psn.com.service.impl;
 
-import java.util.List;
-
-import com.base.utl.SessionUtil;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.base.vo.ToastMsgEvent;
-
 import app.psn.com.mapper.ToastMsgMapper;
 import app.psn.com.service.ToastMsgService;
 import app.psn.com.vo.ToastMsgVO;
+import com.base.utl.SessionUtil;
+import com.base.vo.ToastMsgEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Slf4j
 @Service("toastMsgService")
@@ -41,7 +38,7 @@ public class ToastMsgServiceImpl implements ToastMsgService {
 	public void removeToast(Integer toastSn) {
 
 		toastMsgMapper.removeToast(toastSn);
-		
+
 	}
 
 }

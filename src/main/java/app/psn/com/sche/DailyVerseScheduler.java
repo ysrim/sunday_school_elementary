@@ -1,17 +1,15 @@
 package app.psn.com.sche;
 
-import java.time.LocalDate;
-
+import app.psn.com.mapper.BibleVerseMapper;
+import com.base.enumm.std.CacheKeys;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.base.enumm.std.CacheKeys;
-
-import app.psn.com.mapper.BibleVerseMapper;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDate;
 
 @Slf4j
 @Service("dailyVerseScheduler")
@@ -24,9 +22,8 @@ public class DailyVerseScheduler {
 	 * 매일 자정 (00:00:00) 실행
 	 * 표현식: 초 분 시 일 월 요일
 	 */
-	//@Scheduled(cron = "0 0 0 * * *")
+	@Scheduled(cron = "0 0 0 * * *")
 	@CacheEvict(value = CacheKeys.TodayBibleVerseEnum, allEntries = true)
-	@Scheduled(fixedDelay = 1000000000)
 	@Transactional
 	public void rotateDailyVerse() {
 
@@ -34,6 +31,7 @@ public class DailyVerseScheduler {
 		log.info("[DailyVerseScheduler] {} 오늘의 말씀 로테이션 작업 시작", today);
 
 		try {
+
 			// 1. 오늘 날짜(SCHEDULE_DATE)에 이미 할당된 성구가 있는지 확인 (관리자 수동 지정 등)
 			Integer count = bibleVerseMapper.sltVerseByDateCnt(today);
 

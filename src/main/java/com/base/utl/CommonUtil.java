@@ -1,5 +1,16 @@
 package com.base.utl;
 
+import app.psn.std.qest.vo.StdQestPendingVO;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
@@ -12,29 +23,16 @@ import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 import java.util.Optional;
 
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.GCMParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-
-import org.jsoup.Jsoup;
-import org.jsoup.safety.Safelist;
-
-import app.psn.std.qest.vo.StdQestPendingVO;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
-
 @Slf4j
-public class StringUtil {
+public class CommonUtil {
 
 	private static final String ALGORITHM = "AES/GCM/NoPadding";
 	private static final Integer TAG_LENGTH_BIT = 128;
 	private static final Integer IV_LENGTH_BYTE = 12;
 	private static final String KOREA_ZONE = "Asia/Seoul";
 
-	// 인스턴스화 방지
-	private StringUtil() {
+	// 인스턴스 방지
+	private CommonUtil() {
 
 		throw new UnsupportedOperationException("Utility class");
 
@@ -50,8 +48,7 @@ public class StringUtil {
 	// AES-GCM 암호화
 	public static String encrypt(String plainText, String secretKey) {
 
-		if (plainText == null || secretKey == null)
-			return null;
+		if (plainText == null || secretKey == null) return null;
 
 		try {
 			byte[] iv = new byte[IV_LENGTH_BYTE];
@@ -79,13 +76,11 @@ public class StringUtil {
 	// AES-GCM 복호화
 	public static String decrypt(String encryptedText, String secretKey) {
 
-		if (encryptedText == null || secretKey == null)
-			return null;
+		if (encryptedText == null || secretKey == null) return null;
 
 		try {
 			byte[] decoded = Base64.getUrlDecoder().decode(encryptedText);
-			if (decoded.length < IV_LENGTH_BYTE)
-				throw new IllegalArgumentException("Invalid cipher text");
+			if (decoded.length < IV_LENGTH_BYTE) throw new IllegalArgumentException("Invalid cipher text");
 
 			byte[] iv = new byte[IV_LENGTH_BYTE];
 			System.arraycopy(decoded, 0, iv, 0, iv.length);
@@ -165,13 +160,14 @@ public class StringUtil {
 	}
 
 	public static String xssSanitize(String value) {
-		if (value == null) {
-			return null;
-		}
+
+		if (value == null) return null;
+
 		// Safelist.basic() : 기본 텍스트 서식 태그(b, i, u 등)만 허용하고 스크립트 제거
 		// Safelist.none() : 모든 HTML 태그 제거
 		// Safelist.relaxed() : 이미지, 링크 등 다양한 태그 허용 (보안 주의)
 		return Jsoup.clean(value, Safelist.none());
+
 	}
 
 	public static void handleAuthFail(HttpServletRequest request, HttpServletResponse response, String msg, int code, String LOGIN_PAGE_URL) throws IOException {

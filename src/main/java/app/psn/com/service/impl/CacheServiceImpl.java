@@ -1,20 +1,18 @@
 package app.psn.com.service.impl;
 
+import app.psn.com.mapper.CacheMapper;
+import app.psn.com.service.CacheService;
+import app.psn.com.vo.AvatarLevelVO;
+import app.psn.com.vo.TodayBibleVerseVO;
+import com.base.enumm.std.CacheKeys;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.base.enumm.std.CacheKeys;
-
-import app.psn.com.mapper.CacheMapper;
-import app.psn.com.service.CacheService;
-import app.psn.com.vo.AvatarLevelVO;
-import app.psn.com.vo.TodayBibleVerseVO;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service("cacheService")

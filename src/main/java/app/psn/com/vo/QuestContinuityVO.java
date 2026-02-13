@@ -12,9 +12,9 @@ public record QuestContinuityVO(Integer mberSn,            // 회원_일련번�
 ) {
 	public static QuestContinuityVO ofIns(QuestCompleteEvent event, Integer currentStreak) {
 		return new QuestContinuityVO( //
-			event.mberSn() //
-			, event.questSn() //
-			, currentStreak //
-			, "");
+				event.mberSn() //
+				, event.questSn() //
+				, currentStreak //
+				, "");
 	}
 }

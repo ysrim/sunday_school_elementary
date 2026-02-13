@@ -7,12 +7,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum RstCdEnum {
 
-    SUCC("001", "Success"),            // 성공
-    VALID("002", "Validation Failed"), // valid error
-    FAIL("999", "An error occurred")   // 에러
-    ;
+	SUCC("001", "Success"),            // 성공
+	VALID("002", "Validation Failed"), // valid error
+	ERR("999", "An error occurred");   // 에러
 
-    private final String code;
-    private final String defaultMessage;
+	private final String code;
+	private final String defaultMessage;
 
 }

@@ -5,7 +5,7 @@ import app.psn.mng.login.vo.MngLoginVO;
 import app.psn.mng.login.vo.MngSessionVO;
 import com.base.enumm.com.ViewPathEnum;
 import com.base.utl.ResUtil;
-import com.base.vo.BodyResVO;
+import com.base.vo.ResponseBody;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,40 +22,40 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/mng/idx")
 public class MngLoginController {
 
-    private final MngLoginService loginService;
+	private final MngLoginService loginService;
 
-    /**
-     * 로그인 페이지
-     */
-    @RequestMapping(path = "/login.pg")
-    public String loginPg() {
+	/**
+	 * 로그인 페이지
+	 */
+	@RequestMapping(path = "/login.pg")
+	public String loginPg() {
 
-        return ViewPathEnum.MNG.to("/idx/mngLogin");
+		return ViewPathEnum.MNG.to("/idx/mngLogin");
 
-    }
+	}
 
-    /**
-     * 로그인 요청
-     */
-    @PostMapping(path = "/login.ax")
-    public ResponseEntity<BodyResVO<Object>> loginAx(@RequestBody @Valid MngLoginVO loginVO) {
+	/**
+	 * 로그인 요청
+	 */
+	@PostMapping(path = "/login.ax")
+	public ResponseEntity<ResponseBody<Object>> loginAx(@RequestBody @Valid MngLoginVO loginVO) {
 
-        MngSessionVO sessionVO = loginService.loginAx(loginVO);
+		MngSessionVO sessionVO = loginService.loginAx(loginVO);
 
-        return ResUtil.resSucc(sessionVO.ncnm() + "용사님 어서오세요.");
+		return ResUtil.resSucc(sessionVO.ncnm() + "용사님 어서오세요.");
 
-    }
+	}
 
-    /**
-     * 로그아웃
-     */
-    @RequestMapping(path = "/logOut.pg")
-    public String logOutAx(HttpSession session) {
+	/**
+	 * 로그아웃
+	 */
+	@RequestMapping(path = "/logOut.pg")
+	public String logOutAx(HttpSession session) {
 
-        session.invalidate();
+		session.invalidate();
 
-        return "redirect:/mng/idx/login.pg";
+		return "redirect:/mng/idx/login.pg";
 
-    }
+	}
 
 }

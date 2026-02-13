@@ -15,13 +15,13 @@ import lombok.ToString;
 @ToString
 public class MngLoginVO {
 
-    @NotEmpty(message = "아이디를 입력해주세요!")
-    @Size(min = 5, message = "아이디는 5자 이상이어야 합니다.")
-    @XssCheck
-    private String mberId = ""; // 회원_아이디
+	@NotEmpty(message = "아이디를 입력해주세요!")
+	@Size(min = 5, message = "아이디는 5자 이상이어야 합니다.")
+	@XssCheck
+	private String mberId = ""; // 회원_아이디
 
-    @NotEmpty(message = "패스워드를 입력해주세요!")
-    @Size(min = 8, message = "패스워드는 8자 이상이어야 합니다.")
-    private String pwd = ""; // 패스워드
+	@NotEmpty(message = "패스워드를 입력해주세요!")
+	@Size(min = 8, message = "패스워드는 8자 이상이어야 합니다.")
+	private String pwd = ""; // 패스워드
 
 }

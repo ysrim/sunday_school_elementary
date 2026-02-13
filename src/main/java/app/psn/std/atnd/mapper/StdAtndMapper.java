@@ -1,10 +1,9 @@
 package app.psn.std.atnd.mapper;
 
-import java.util.List;
-
+import app.psn.std.atnd.vo.StdAtndVO;
 import org.apache.ibatis.annotations.Mapper;
 
-import app.psn.std.atnd.vo.StdAtndVO;
+import java.util.List;
 
 @Mapper
 public interface StdAtndMapper {
