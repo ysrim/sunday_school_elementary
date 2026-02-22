@@ -7,10 +7,13 @@ import app.psn.com.service.RewardService;
 import app.psn.com.vo.AvatarLevelRulesVO;
 import app.psn.com.vo.AvatarVO;
 import app.psn.com.vo.RewardVO;
+
 import com.base.enumm.com.ToastTypeEnum;
 import com.base.vo.ToastMsgEvent;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +38,10 @@ public class AvatarServiceImpl implements AvatarService {
 
 		// 1. 아바타 정보 조회 (현재 레벨, 누적 경험치)
 		AvatarVO avatar = domainService.sltAvatar(mberSn);
+		if (avatar == null) {
+			log.error("[AvatarService] 회원 번호 {}의 아바타 정보를 찾을 수 없습니다.", mberSn);
+			return; // 또는 throw new CustomException(...) 처리
+		}
 		Integer currentLevel = avatar.level();
 
 		// 2. 현재 경험치 기준 도달해야 할 '목표 레벨' 산출
