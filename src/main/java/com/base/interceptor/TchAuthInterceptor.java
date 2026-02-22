@@ -1,17 +1,20 @@
 package com.base.interceptor;
 
 import app.psn.tch.login.vo.TchSessionVO;
+
 import com.base.annotation.com.PassAuth;
 import com.base.annotation.tch.TchMenuInfo;
 import com.base.enumm.com.MberGrdEnum;
 import com.base.utl.SessionUtil;
 import com.base.utl.CommonUtil;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jspecify.annotations.NonNull;
+
 import org.springframework.core.annotation.AnnotatedElementUtils;
+import org.springframework.lang.NonNull;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -60,9 +63,10 @@ public class TchAuthInterceptor implements HandlerInterceptor {
 	private boolean checkMenuAuthorization(HttpServletRequest request, HandlerMethod handlerMethod, TchSessionVO tchSessionVO) {
 
 		TchMenuInfo menuInfo = Optional.ofNullable(AnnotatedElementUtils.findMergedAnnotation(handlerMethod.getMethod(), TchMenuInfo.class)) // method
-				.orElseGet(() -> AnnotatedElementUtils.findMergedAnnotation(handlerMethod.getBeanType(), TchMenuInfo.class)); // bean
+			.orElseGet(() -> AnnotatedElementUtils.findMergedAnnotation(handlerMethod.getBeanType(), TchMenuInfo.class)); // bean
 
-		if (menuInfo == null || !isAuthorized(tchSessionVO)) return false;
+		if (menuInfo == null || !isAuthorized(tchSessionVO))
+			return false;
 
 		request.setAttribute("_tchMenuInfo", menuInfo.navi().name());
 		request.setAttribute("_tchMenuNm", menuInfo.navi().getNaviNm());
@@ -74,7 +78,7 @@ public class TchAuthInterceptor implements HandlerInterceptor {
 	private boolean hasPassAuth(HandlerMethod handler) {
 
 		return AnnotatedElementUtils.hasAnnotation(handler.getMethod(), PassAuth.class) //
-				|| AnnotatedElementUtils.hasAnnotation(handler.getBeanType(), PassAuth.class); //
+			|| AnnotatedElementUtils.hasAnnotation(handler.getBeanType(), PassAuth.class); //
 
 	}
 

@@ -1,19 +1,22 @@
 package com.base.interceptor;
 
 import app.psn.mng.login.vo.MngSessionVO;
+
 import com.base.annotation.com.PassAuth;
 import com.base.annotation.mng.MngMenuInfo;
 import com.base.enumm.com.MberGrdEnum;
 import com.base.utl.SessionUtil;
 import com.base.utl.CommonUtil;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jspecify.annotations.NonNull;
+
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.lang.NonNull;
 
 import java.util.Optional;
 
@@ -59,10 +62,10 @@ public class MngAuthInterceptor implements HandlerInterceptor {
 	private boolean checkMenuAuthorization(HttpServletRequest request, HandlerMethod handlerMethod, MngSessionVO mngSessionVO) {
 
 		MngMenuInfo menuInfo = Optional.ofNullable(AnnotatedElementUtils.findMergedAnnotation(handlerMethod.getMethod(), MngMenuInfo.class)) // method
-				.orElseGet(() -> AnnotatedElementUtils.findMergedAnnotation(handlerMethod.getBeanType(), MngMenuInfo.class)); // bean
+			.orElseGet(() -> AnnotatedElementUtils.findMergedAnnotation(handlerMethod.getBeanType(), MngMenuInfo.class)); // bean
 
 		if (menuInfo == null // 메뉴 정보가 없으면 실패
-				|| !isAuthorized(mngSessionVO) //  관리자 등급 체크 (공통)
+			|| !isAuthorized(mngSessionVO) //  관리자 등급 체크 (공통)
 		) {
 			return false;
 		}
@@ -76,7 +79,7 @@ public class MngAuthInterceptor implements HandlerInterceptor {
 	private boolean hasPassAuth(HandlerMethod handler) {
 
 		return AnnotatedElementUtils.hasAnnotation(handler.getMethod(), PassAuth.class) // method
-				|| AnnotatedElementUtils.hasAnnotation(handler.getBeanType(), PassAuth.class); // bean
+			|| AnnotatedElementUtils.hasAnnotation(handler.getBeanType(), PassAuth.class); // bean
 
 	}
 
