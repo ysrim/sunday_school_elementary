@@ -15,7 +15,6 @@ import com.base.vo.ResponseBody;
 import app.psn.com.service.RewardService;
 import app.psn.com.vo.RewardVO;
 import app.psn.mng.rewd.service.MngRewdService;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,10 +45,10 @@ public class MngRewardController {
 	}
 
 	@RequestMapping("/rewd/saveRewd.ax")
-	public ResponseEntity<ResponseBody<Object>> saveRewdAx(@RequestBody @Valid RewardVO rewardVO, HttpServletResponse response) {
+	public ResponseEntity<ResponseBody<Object>> saveRewdAx(@RequestBody @Valid RewardVO rewardVO) {
 
 		rewardService.insMberReward(rewardVO);
-		//CommonUtil.setCookieMsg(response, "_alertMsg", "요청하신 값을 수동 조정 했습니다! ✅");
+
 		return ResUtil.resSucc();
 
 	}
