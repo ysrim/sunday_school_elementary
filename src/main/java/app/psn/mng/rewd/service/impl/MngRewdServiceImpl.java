@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import app.psn.mng.rewd.mapper.MngRewdMapper;
 import app.psn.mng.rewd.service.MngRewdService;
+import app.psn.mng.rewd.vo.MngRewdHistVO;
 import app.psn.mng.rewd.vo.MngStdVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,11 @@ public class MngRewdServiceImpl implements MngRewdService {
 
 		return mngRewdMapper.getStdList();
 
+	}
+
+	@Override
+	public List<MngRewdHistVO> getRewdHistList() {
+		return mngRewdMapper.getRewdHistList();
 	}
 
 }

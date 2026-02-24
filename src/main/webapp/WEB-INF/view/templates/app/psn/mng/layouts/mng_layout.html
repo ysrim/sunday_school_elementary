@@ -24,6 +24,7 @@
 	<main class="flex-1 overflow-y-auto h-full">
 		<div class="p-8 max-w-7xl mx-auto">
 			<th:block layout:fragment="content"></th:block>
+			<div id="toast-container" class="fixed top-5 right-5 z-[60] flex flex-col gap-3 pointer-events-none"></div>
 		</div>
 	</main>
 	<div th:replace="~{/app/psn/mng/fragments/mng_footer :: footerFragment}"></div>

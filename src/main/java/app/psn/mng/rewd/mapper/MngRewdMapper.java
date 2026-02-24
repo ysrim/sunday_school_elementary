@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import app.psn.mng.rewd.vo.MngRewdHistVO;
 import app.psn.mng.rewd.vo.MngStdVO;
 
 @Mapper
@@ -13,5 +14,10 @@ public interface MngRewdMapper {
 	 * 학생
 	 */
 	List<MngStdVO> getStdList();
+
+	/**
+	 * 리워드 이력
+	 */
+	List<MngRewdHistVO> getRewdHistList();
 
 }

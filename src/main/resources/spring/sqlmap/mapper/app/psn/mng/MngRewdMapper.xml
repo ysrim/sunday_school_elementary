@@ -24,4 +24,24 @@
 		  AND A.USE_AT = 'Y'
 	</select>
 
+	<select id="getRewdHistList" resultType="app.psn.mng.rewd.vo.MngRewdHistVO">
+		SELECT A.LOG_SN
+			 , DATE_FORMAT(A.CREAT_DE, '%Y-%m-%d %H:%I')                            AS CREAT_DATE
+			 , A.MBER_SN
+			 , B.MBER_NM
+			 , A.REWARD_TYPE
+			 , A.AMOUNT
+			 , A.REFERENCE_SN
+			 , (SELECT S.MBER_NM FROM MBER_INFO S WHERE S.MBER_SN = A.REFERENCE_SN) AS MNG_NM
+			 , A.DESCRIPTION
+			 , D.GRADE
+			 , D.CLA
+		FROM MBER_REWARD_LOGS A
+				 LEFT OUTER JOIN MBER_INFO B ON A.MBER_SN = B.MBER_SN
+				 LEFT OUTER JOIN GUILD_MBER_LIST C ON A.MBER_SN = C.MBER_SN
+				 LEFT OUTER JOIN GUILD_INFO D ON D.GUILD_SN = C.GUILD_SN
+		WHERE A.CHANGE_TYPE = 'ADMIN_MANUAL'
+		ORDER BY A.CREAT_DE DESC
+	</select>
+
 </mapper>

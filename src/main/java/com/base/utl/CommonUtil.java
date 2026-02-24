@@ -1,17 +1,7 @@
 package com.base.utl;
 
-import app.psn.std.qest.vo.StdQestPendingVO;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
-import org.jsoup.Jsoup;
-import org.jsoup.safety.Safelist;
-
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.GCMParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.text.NumberFormat;
@@ -22,6 +12,20 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 import java.util.Optional;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
+import org.springframework.http.ResponseCookie;
+
+import app.psn.std.qest.vo.StdQestPendingVO;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class CommonUtil {
@@ -48,7 +52,8 @@ public class CommonUtil {
 	// AES-GCM 암호화
 	public static String encrypt(String plainText, String secretKey) {
 
-		if (plainText == null || secretKey == null) return null;
+		if (plainText == null || secretKey == null)
+			return null;
 
 		try {
 			byte[] iv = new byte[IV_LENGTH_BYTE];
@@ -76,11 +81,13 @@ public class CommonUtil {
 	// AES-GCM 복호화
 	public static String decrypt(String encryptedText, String secretKey) {
 
-		if (encryptedText == null || secretKey == null) return null;
+		if (encryptedText == null || secretKey == null)
+			return null;
 
 		try {
 			byte[] decoded = Base64.getUrlDecoder().decode(encryptedText);
-			if (decoded.length < IV_LENGTH_BYTE) throw new IllegalArgumentException("Invalid cipher text");
+			if (decoded.length < IV_LENGTH_BYTE)
+				throw new IllegalArgumentException("Invalid cipher text");
 
 			byte[] iv = new byte[IV_LENGTH_BYTE];
 			System.arraycopy(decoded, 0, iv, 0, iv.length);
@@ -161,7 +168,8 @@ public class CommonUtil {
 
 	public static String xssSanitize(String value) {
 
-		if (value == null) return null;
+		if (value == null)
+			return null;
 
 		// Safelist.basic() : 기본 텍스트 서식 태그(b, i, u 등)만 허용하고 스크립트 제거
 		// Safelist.none() : 모든 HTML 태그 제거
@@ -178,6 +186,28 @@ public class CommonUtil {
 			response.getWriter().write(String.format("{\"rtnCd\":\"%s\", \"rtnMsg\":\"%s\"}", code, msg));
 		} else {
 			response.sendRedirect(request.getContextPath() + LOGIN_PAGE_URL);
+		}
+
+	}
+
+	// CommonUtil.java 내부 수정
+	public static void setCookieMsg(HttpServletResponse response, String key, String message) {
+
+		try {
+
+			String encodedValue = URLEncoder.encode(message, StandardCharsets.UTF_8);
+
+			ResponseCookie cookie = ResponseCookie.from(key, encodedValue)
+				.path("/")
+				.maxAge(60) // 60초 유지 (필요에 따라 조절)
+				.httpOnly(false) // 자바스크립트에서 읽으려면 false여야 함
+				.secure(false) // https 환경이면 true
+				.build();
+
+			response.addHeader("Set-Cookie", cookie.toString());
+
+		} catch (Exception e) {
+			//
 		}
 
 	}

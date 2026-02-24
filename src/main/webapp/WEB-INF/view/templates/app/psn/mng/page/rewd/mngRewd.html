@@ -5,8 +5,7 @@
 
 	<script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
 
-	<div id="page-adjustment"
-	     class="page-content w-full min-h-screen bg-[#f8f9fa] p-5 font-sans text-slate-600 animate-fade-in">
+	<div id="page-adjustment" class="page-content w-full min-h-screen bg-[#f8f9fa] p-5 font-sans text-slate-600 animate-fade-in">
 
 		<header class="mb-6">
 			<span class="px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-600 text-[10px] font-bold uppercase tracking-wider mb-1 inline-block">Rewards</span>
@@ -22,12 +21,13 @@
 					</h2>
 
 					<form id="rewardForm" class="space-y-5" onsubmit="return false;">
+						<input type="hidden" id="rewdMberSn" name="mberSn">
+
 						<div>
 							<label class="form-label font-bold text-xs text-slate-700 mb-1 block">대상 학생 <span class="text-red-500">*</span></label>
 							<div class="relative group">
-								<input type="hidden" id="rewdMberSn" name="mberSn">
 								<input type="text" id="targetStudentDisplay"
-								       class="w-full pl-3 pr-9 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none cursor-pointer hover:bg-white transition"
+								       class="w-full pl-3 pr-9 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none cursor-pointer hover:bg-white transition truncate"
 								       placeholder="이름 검색 (클릭)" readonly>
 								<button type="button" id="btnOpenModal"
 								        class="absolute right-3 top-2.5 text-slate-400 hover:text-indigo-600 transition">
@@ -47,10 +47,10 @@
 									</div>
 								</label>
 								<label class="cursor-pointer group">
-									<input type="radio" name="rewardType" value="GOLD" class="peer sr-only">
+									<input type="radio" name="rewardType" value="POINT" class="peer sr-only">
 									<div class="text-center py-3 rounded-xl border border-slate-200 transition-all group-hover:bg-slate-50 peer-checked:border-amber-500 peer-checked:bg-amber-50 peer-checked:text-amber-700">
 										<i class="fas fa-coins mb-1 block text-sm"></i>
-										<span class="text-xs font-bold">포인트 (Gold)</span>
+										<span class="text-xs font-bold">달란트 (POINT)</span>
 									</div>
 								</label>
 							</div>
@@ -90,7 +90,7 @@
 						</div>
 
 						<button type="button" id="btnSave"
-						        class="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-700 shadow-lg shadow-indigo-200 hover:shadow-xl transition-all text-xs flex items-center justify-center transform active:scale-95">
+						        class="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-700 shadow-lg shadow-indigo-200 hover:shadow-xl transition-all text-xs flex items-center justify-center transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
 							<i class="fas fa-check-circle mr-2"></i> 설정 적용하기
 						</button>
 					</form>
@@ -117,16 +117,16 @@
 						</div>
 					</div>
 
-					<div id="adjustmentGrid" class="ag-theme-quartz flex-1 min-h-[400px] rounded-xl overflow-hidden border border-slate-100"></div>
+					<div id="adjustmentGrid" class="ag-theme-quartz flex-1 min-h-[500px] rounded-xl overflow-hidden border border-slate-100"></div>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<div id="studentModal" class="fixed inset-0 z-50 hidden transition-opacity duration-300" aria-hidden="true">
+	<div id="studentModal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
 		<div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" id="modalBackdrop"></div>
 
-		<div class="relative w-full max-w-md mx-auto mt-20 bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh] transform transition-all scale-100">
+		<div class="relative w-full max-w-md mx-auto mt-20 bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh] animate-fade-in-up">
 			<div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
 				<h3 class="text-sm font-black text-slate-800">학생 검색</h3>
 				<button id="btnCloseModal" class="text-slate-400 hover:text-slate-600 transition outline-none">
@@ -153,125 +153,168 @@
 	</div>
 
 	<script th:inline="javascript">
-		/**
-		 * RewardManager: 보상 관리 페이지의 모든 로직을 담당하는 객체
-		 */
+		/*<![CDATA[*/
+		const MANAGER_SN = [[${session.mngMberInfo.mberSn}]]; // Thymeleaf safe variable injection
+
 		const RewardManager = {
 			gridApi: null,
-			studentDataCache: null, // 학생 데이터 캐싱
+			studentDataCache: null,
+			debounceTimer: null,
 
-			// 초기화
-			init: function() {
-				this.initGrid();
-				this.initEventListeners();
+			init() {
+				this.grid.init();
+				this.bindEvents();
+				this.grid.loadData();
 			},
 
-			// 1. AG Grid 초기화
-			initGrid: function() {
-				// 더미 데이터 (실제로는 서버에서 가져와야 함)
-				const dummyData = [
-					{time: '10:42 AM', name: '김철수', content: '특별 심부름 보상', change: '+50 EXP', type: 'exp-plus', admin: 'T.Lee'},
-					{time: '09:15 AM', name: '이영희', content: '상점 아이템 구매', change: '-200 Gold', type: 'gold-minus', admin: 'System'},
-					{time: '08:30 AM', name: '박민수', content: '아침 큐티 참석', change: '+10 EXP', type: 'exp-plus', admin: 'T.Kim'},
-					{time: '어제', name: '최유리', content: '친구 전도', change: '+100 EXP', type: 'exp-plus', admin: 'T.Lee'},
-					{time: '어제', name: '강호동', content: '지각 페널티', change: '-10 EXP', type: 'exp-minus', admin: 'T.Park'},
-				];
+			// --- 1. Grid Logic ---
+			grid: {
+				init() {
+					const columnDefs = [
+						{
+							headerName: "지급시간", field: "creatDate", width: 130,
+							valueFormatter: (params) => {
+								// 날짜 포맷팅 로직 (필요시 moment.js 등 사용)
+								return params.value ? params.value.substring(0, 16) : '-';
+							},
+							cellClass: "text-[11px] text-slate-500 flex items-center"
+						},
+						{
+							headerName: "이름", field: "mberNm", width: 110, filter: true,
+							cellRenderer: (params) => {
+								// 아바타 + 이름 렌더링
+								const initial = params.value ? params.value.charAt(0) : '?';
+								return `
+                            <div class="flex items-center gap-2 h-full">
+                               <div class="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center text-[9px] font-bold text-slate-500">${initial}</div>
+                               <span class="font-bold text-slate-700 text-[11px]">${params.value}</span>
+                            </div>
+                         `;
+							}
+						},
+						{
+							headerName: "학년/반", valueGetter: (p) => `${p.data.grade}-${p.data.cla}`, width: 90,
+							cellClass: "text-[11px] text-slate-500 flex items-center justify-center"
+						},
+						{
+							headerName: "조정내용 (사유)", field: "description", flex: 1, minWidth: 150,
+							cellClass: "text-[11px] text-slate-600 flex items-center"
+						},
+						{
+							headerName: "변동값", field: "amount", width: 120,
+							cellRenderer: (params) => {
+								// 값에 따른 색상 및 아이콘 처리 (핵심 개선 사항)
+								const amount = params.value;
+								const type = params.data.rewardType;
+								const isPlus = amount > 0;
+								const colorClass = isPlus
+									? (type === 'POINT' ? 'text-amber-600 bg-amber-50 border-amber-100' : 'text-indigo-600 bg-indigo-50 border-indigo-100')
+									: 'text-red-600 bg-red-50 border-red-100';
+								const icon = type === 'POINT' ? 'fa-coins' : 'fa-star';
+								const sign = isPlus ? '+' : '';
 
-				const columnDefs = [
-					{headerName: "시간", field: "time", width: 90, cellStyle: {color: '#94a3b8', fontSize: '10px', fontFamily: 'monospace'}},
-					{headerName: "대상", field: "name", width: 100, filter: true, cellStyle: {fontWeight: 'bold', color: '#334155'}},
-					{headerName: "내용", field: "content", flex: 1, minWidth: 150},
-					{headerName: "변동값", field: "change", cellRenderer: this.renderers.changeBadge, width: 120},
-					{headerName: "담당자", field: "admin", cellRenderer: this.renderers.adminBadge, width: 100}
-				];
+								return `
+                            <div class="flex items-center h-full">
+                               <span class="px-2 py-0.5 rounded-md border ${colorClass} text-[10px] font-bold inline-flex items-center gap-1.5">
+                                  <i class="fas ${icon} text-[9px] opacity-70"></i>
+                                  ${sign}${amount.toLocaleString()}
+                               </span>
+                            </div>
+                         `;
+							}
+						},
+						{
+							headerName: "담당자", field: "mngNm", width: 90,
+							cellClass: "text-[10px] text-slate-400 flex items-center justify-center"
+						}
+					];
 
-				const gridOptions = {
-					columnDefs: columnDefs,
-					rowData: dummyData, // 실제 구현 시 빈 배열로 시작 후 API 호출
-					defaultColDef: { resizable: true, sortable: true },
-					pagination: true,
-					paginationPageSize: 10,
-					paginationPageSizeSelector: [10, 20, 50, 100],
-					headerHeight: 35,
-					rowHeight: 33,
-					domLayout: 'autoHeight',
-					overlayNoRowsTemplate: '<span class="text-xs text-slate-400">데이터가 없습니다.</span>'
-				};
+					const gridOptions = {
+						columnDefs: columnDefs,
+						rowData: [],
+						defaultColDef: {resizable: true, sortable: true},
+						pagination: true,
+						paginationPageSize: 20,
+						headerHeight: 40,
+						rowHeight: 36,
+						rowClass: "hover:bg-slate-50 transition-colors",
+						domLayout: 'normal', // autoHeight 대신 normal 사용 (스크롤바 생성)
+						overlayNoRowsTemplate: '<div class="text-xs text-slate-400 py-10">조정 내역이 없습니다.</div>',
+						overlayLoadingTemplate: '<div class="text-xs font-bold text-indigo-500"><i class="fas fa-spinner fa-spin mr-2"></i>Loading...</div>'
+					};
 
-				const gridDiv = document.querySelector('#adjustmentGrid');
-				this.gridApi = agGrid.createGrid(gridDiv, gridOptions);
-			},
-
-			// Grid Renderers
-			renderers: {
-				changeBadge: function(params) {
-					if (!params.data) return '';
-					const type = params.data.type || '';
-					const change = params.value;
-
-					let badgeClass = "bg-slate-50 text-slate-600 border-slate-200";
-					if (type.includes('exp-plus')) badgeClass = "bg-indigo-50 text-indigo-600 border-indigo-100";
-					else if (type.includes('gold-plus')) badgeClass = "bg-amber-50 text-amber-600 border-amber-100";
-					else if (type.includes('minus')) badgeClass = "bg-red-50 text-red-500 border-red-100";
-
-					return `<div class="flex items-center justify-center w-full h-full">
-                                <span class="${badgeClass} border px-2 py-0.5 rounded text-[10px] font-bold inline-block min-w-[70px] text-center shadow-sm">
-                                    ${change}
-                                </span>
-                            </div>`;
+					const gridDiv = document.querySelector('#adjustmentGrid');
+					RewardManager.gridApi = agGrid.createGrid(gridDiv, gridOptions);
 				},
-				adminBadge: function(params) {
-					if (!params.value) return '';
-					return `<div class="flex items-center justify-center w-full h-full">
-                                <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-500 text-[10px] font-bold">
-                                    ${params.value}
-                                </span>
-                            </div>`;
+
+				loadData() {
+					const api = RewardManager.gridApi;
+					if (api) api.showLoadingOverlay();
+
+					$.ajax({
+						url: '/mng/rewd/getRewdHistList.ax',
+						type: 'POST',
+						contentType: "application/json",
+						success: function (res) {
+							const data = res.rtnData || [];
+							if (api) {
+								api.setGridOption('rowData', data); // 매핑 없이 원본 데이터 주입 (ValueGetter/Renderer 활용)
+								data.length === 0 ? api.showNoRowsOverlay() : api.hideOverlay();
+							}
+						},
+						error: function (e) {
+							console.error("Load Error", e);
+							if (api) api.setGridOption('rowData', []);
+						}
+					});
 				}
 			},
 
-			// 2. 이벤트 리스너 바인딩
-			initEventListeners: function() {
+			// --- 2. Event Listeners ---
+			bindEvents() {
 				const self = this;
 
-				// 모달 열기/닫기
+				// Modal
 				$('#targetStudentDisplay, #btnOpenModal').on('click', () => self.modal.open());
 				$('#modalBackdrop, #btnCloseModal').on('click', () => self.modal.close());
 
-				// 모달 내부 검색 (Debounce 적용 권장하지만 여기선 간단히)
-				$('#modalSearchInput').on('input', function() {
-					self.modal.filterList($(this).val());
+				// Search with Debounce
+				$('#modalSearchInput').on('input', function () {
+					const keyword = $(this).val();
+					clearTimeout(self.debounceTimer);
+					self.debounceTimer = setTimeout(() => self.modal.filterList(keyword), 300); // 300ms 딜레이
 				});
 
-				// 저장 버튼
-				$('#btnSave').on('click', () => self.handleSave());
+				// Save Action
+				$('#btnSave').on('click', () => self.api.save());
 
-				// 그리드 검색 및 엑셀
-				$('#tableSearchInput').on('input', function() {
-					self.gridApi.setGridOption('quickFilterText', $(this).val());
+				// Grid Search & Export
+				$('#tableSearchInput').on('input', function () {
+					if (self.gridApi) self.gridApi.setGridOption('quickFilterText', $(this).val());
 				});
-				$('#btnExport').on('click', function() {
-					self.gridApi.exportDataAsCsv({ fileName: '조정내역.csv' });
+				$('#btnExport').on('click', function () {
+					if (self.gridApi) self.gridApi.exportDataAsCsv({fileName: `Reward_Adjustment_${new Date().toISOString().slice(0, 10)}.csv`});
 				});
 			},
 
-			// 3. 모달 관련 로직
+			// --- 3. Modal Logic ---
 			modal: {
-				open: function() {
+				open() {
 					$('#studentModal').removeClass('hidden');
+					$('body').addClass('overflow-hidden'); // 배경 스크롤 방지
 					$('#modalSearchInput').val('').focus();
 
-					// 데이터가 없으면 로드, 있으면 기존 데이터로 렌더링
 					if (!RewardManager.studentDataCache) {
 						this.fetchData();
 					} else {
 						this.renderList(RewardManager.studentDataCache);
 					}
 				},
-				close: function() {
+				close() {
 					$('#studentModal').addClass('hidden');
+					$('body').removeClass('overflow-hidden');
 				},
-				fetchData: function() {
+				fetchData() {
 					$('#studentListContainer').hide();
 					$('#modalLoading').removeClass('hidden').addClass('flex');
 
@@ -279,124 +322,124 @@
 						url: '/mng/rewd/getStdList.ax',
 						type: 'POST',
 						contentType: "application/json",
-						success: function(response) {
-							RewardManager.studentDataCache = response.rtnData || [];
+						success: function (res) {
+							RewardManager.studentDataCache = res.rtnData || [];
 							RewardManager.modal.renderList(RewardManager.studentDataCache);
 						},
-						error: function(xhr, status, error) {
-							console.error("학생 목록 로드 실패:", error);
-						},
-						complete: function() {
+						complete: function () {
 							$('#modalLoading').removeClass('flex').addClass('hidden');
 							$('#studentListContainer').show();
 						}
 					});
 				},
-				renderList: function(data) {
+				renderList(data) {
 					const container = $('#studentListContainer');
 					container.empty();
+
 					if (!data || data.length === 0) {
 						container.html(`<div class="text-center py-10 text-slate-400 text-xs">검색 결과가 없습니다.</div>`);
 						return;
 					}
+
+					// Document Fragment를 사용하여 DOM 조작 최소화 (성능 향상)
+					const fragment = document.createDocumentFragment();
+
 					data.forEach(student => {
 						const imgSrc = `https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/${student.occpCode || 'default'}_${(student.sexdstn || 'M').toLowerCase()}.png`;
-						const html = `
-                            <div class="student-item flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 cursor-pointer transition border border-transparent hover:border-indigo-100 group"
-                                 data-sn="${student.mberSn}" data-name="${student.mberNm}" data-info="${student.grade}학년 ${student.cla}반">
-                                <div class="w-10 h-10 rounded-full bg-slate-100 overflow-hidden border border-slate-200 flex-shrink-0">
-                                    <img src="${imgSrc}" alt="" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/40x40?text=U'">
-                                </div>
-                                <div>
-                                    <div class="font-bold text-sm text-slate-800 group-hover:text-indigo-600">${student.mberNm}</div>
-                                    <div class="text-[10px] text-slate-400 font-medium">${student.grade}학년 ${student.cla}반 · ${student.occpNm}</div>
-                                </div>
-                                <i class="fas fa-chevron-right ml-auto text-slate-300 text-xs group-hover:text-indigo-400"></i>
-                            </div>
-                        `;
-						container.append(html);
+
+						const div = document.createElement('div');
+						div.className = "student-item flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 cursor-pointer transition border border-transparent hover:border-indigo-100 group";
+						div.onclick = () => RewardManager.modal.select(student);
+
+						div.innerHTML = `
+                      <div class="w-10 h-10 rounded-full bg-slate-100 overflow-hidden border border-slate-200 flex-shrink-0">
+                         <img src="${imgSrc}" alt="Avatar" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/40x40?text=U'">
+                      </div>
+                      <div>
+                         <div class="font-bold text-sm text-slate-800 group-hover:text-indigo-600">${student.mberNm}</div>
+                         <div class="text-[10px] text-slate-400 font-medium">${student.grade}학년 ${student.cla}반 · ${student.occpNm || '-'}</div>
+                      </div>
+                      <i class="fas fa-chevron-right ml-auto text-slate-300 text-xs group-hover:text-indigo-400"></i>
+                   `;
+						fragment.appendChild(div);
 					});
-					$('.student-item').on('click', function() {
-						const sn = $(this).data('sn');
-						const name = $(this).data('name');
-						const info = $(this).data('info');
-						RewardManager.modal.selectStudent(sn, name, info);
-					});
+					container.append(fragment);
 				},
-				filterList: function(keyword) {
+				filterList(keyword) {
 					if (!RewardManager.studentDataCache) return;
 					const lowerKey = keyword.toLowerCase();
-					const filtered = RewardManager.studentDataCache.filter(s =>
-						s.mberNm.includes(lowerKey)
-					);
+					const filtered = RewardManager.studentDataCache.filter(s => s.mberNm.includes(lowerKey));
 					this.renderList(filtered);
 				},
-				selectStudent: function(sn, name, info) {
-					$('#targetStudentDisplay').val(`${name} (${info})`);
-					$('#rewdMberSn').val(sn);
+				select(student) {
+					$('#targetStudentDisplay').val(`${student.mberNm} (${student.grade}학년 ${student.cla}반)`);
+					$('#rewdMberSn').val(student.mberSn);
 					this.close();
 				}
 			},
 
-			// 4. 저장 로직
-			handleSave: function() {
-				// Validation
-				const mberSn = $('#rewdMberSn').val();
-				const amount = $('#amountInput').val();
-				const reason = $('#reasonInput').val();
+			// --- 4. API Actions ---
+			api: {
+				save() {
+					const mberSn = $('#rewdMberSn').val();
+					const amountVal = $('#amountInput').val();
+					const reason = $('#reasonInput').val();
+					const rewardType = $('input[name="rewardType"]:checked').val();
+					const actionType = $('input[name="actionType"]:checked').val(); // ADD or SUB
 
-				if (!mberSn) {
-					alert("학생을 선택해주세요.");
-					this.modal.open();
-					return;
-				}
-				if (!amount || amount <= 0) {
-					alert("유효한 수량을 입력해주세요.");
-					$('#amountInput').focus();
-					return;
-				}
-
-				const formData = {
-					mberSn: mberSn,
-					rewardType: $('input[name="rewardType"]:checked').val(), // EXP or GOLD
-					actionType: $('input[name="actionType"]:checked').val(), // ADD or SUB
-					amount: Number(amount),
-					reason: reason
-				};
-
-				if(!confirm(`[${formData.rewardType}] ${formData.amount}을 ${formData.actionType === 'ADD' ? '지급' : '차감'}하시겠습니까?`)) {
-					return;
-				}
-
-				// AJAX Save (Simulation)
-				console.log("Saving...", formData);
-
-				// 실제 서버 통신 예시
-				/*
-				$.ajax({
-					url: '/mng/rewd/saveAdjustment.ax',
-					type: 'POST',
-					data: JSON.stringify(formData),
-					contentType: 'application/json',
-					success: function(res) {
-						alert("저장되었습니다.");
-						location.reload(); // 혹은 그리드만 갱신
+					// Validation
+					if (!mberSn) return alert("학생을 먼저 선택해주세요.");
+					if (!amountVal || amountVal <= 0) {
+						alert("유효한 수량을 입력해주세요.");
+						return $('#amountInput').focus();
 					}
-				});
-				*/
 
-				// UI 시뮬레이션
-				alert("성공적으로 적용되었습니다! (테스트 모드)");
-				$('#rewardForm')[0].reset(); // 폼 초기화
-				$('#targetStudentDisplay').val('');
-				$('#rewdMberSn').val('');
+					// Data Construction
+					const finalAmount = parseInt(amountVal) * (actionType === 'ADD' ? 1 : -1);
+					const reqData = {
+						mberSn: mberSn,
+						rewardType: rewardType,
+						amount: finalAmount,
+						description: reason,
+						changeType: 'ADMIN_MANUAL',
+						referenceSn: MANAGER_SN // 상단에서 정의한 상수 사용
+					};
+
+					const actionTxt = actionType === 'ADD' ? '지급' : '차감';
+					if (!confirm(`[${rewardType}] ${amountVal}을 ${actionTxt}하시겠습니까?`)) return;
+
+					// Disable button to prevent double submit
+					const btn = $('#btnSave');
+					btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-2"></i> 처리 중...');
+
+					$.ajax({
+						url: '/mng/rewd/saveRewd.ax',
+						type: 'POST',
+						data: JSON.stringify(reqData),
+						contentType: 'application/json',
+						success: function () {
+							alert("정상적으로 처리되었습니다.");
+							// Reset Form
+							$('#amountInput').val('');
+							$('#reasonInput').val('');
+							// Reload Grid
+							RewardManager.grid.loadData();
+						},
+						error: function (xhr) {
+							alert("오류가 발생했습니다: " + (xhr.statusText || 'Unknown Error'));
+						},
+						complete: function () {
+							btn.prop('disabled', false).html('<i class="fas fa-check-circle mr-2"></i> 설정 적용하기');
+						}
+					});
+				}
 			}
 		};
 
-		// DOM Ready
-		$(function() {
+		$(function () {
 			RewardManager.init();
 		});
+		/*]]>*/
 	</script>
 </th:block>
 </html>

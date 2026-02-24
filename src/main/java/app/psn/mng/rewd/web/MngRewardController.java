@@ -2,6 +2,7 @@ package app.psn.mng.rewd.web;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.base.annotation.mng.MngMenuInfo;
@@ -11,7 +12,11 @@ import com.base.enumm.mng.MngNaviEnum;
 import com.base.utl.ResUtil;
 import com.base.vo.ResponseBody;
 
+import app.psn.com.service.RewardService;
+import app.psn.com.vo.RewardVO;
 import app.psn.mng.rewd.service.MngRewdService;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,6 +29,8 @@ public class MngRewardController {
 
 	private final MngRewdService mngRewdService;
 
+	private final RewardService rewardService;
+
 	@RequestMapping("/rewd.pg")
 	public String rewdPg() {
 
@@ -35,6 +42,22 @@ public class MngRewardController {
 	public ResponseEntity<ResponseBody<Object>> getStdListAx() {
 
 		return ResUtil.resSucc(mngRewdService.getStdList());
+
+	}
+
+	@RequestMapping("/rewd/saveRewd.ax")
+	public ResponseEntity<ResponseBody<Object>> saveRewdAx(@RequestBody @Valid RewardVO rewardVO, HttpServletResponse response) {
+
+		rewardService.insMberReward(rewardVO);
+		//CommonUtil.setCookieMsg(response, "_alertMsg", "요청하신 값을 수동 조정 했습니다! ✅");
+		return ResUtil.resSucc();
+
+	}
+
+	@RequestMapping("/rewd/getRewdHistList.ax")
+	public ResponseEntity<ResponseBody<Object>> getRewdHistListAx() {
+
+		return ResUtil.resSucc(mngRewdService.getRewdHistList());
 
 	}
 
