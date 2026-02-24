@@ -89,6 +89,11 @@
                     class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
                 <i class="fas fa-magic mr-3 w-5 text-center"></i> 포인트/보상 관리
             </button>
+			<button onclick="showPage('quest', this)"
+        class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+    <i class="fas fa-scroll mr-3 w-5 text-center"></i> 퀘스트 승인
+    <span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">N</span>
+</button>
         </nav>
 
         <div class="p-4 border-t border-slate-100">
@@ -607,6 +612,181 @@
                     </form>
                 </div>
             </div>
+			
+			<div id="page-quest" class="page-content hidden-page">
+    <header class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800">퀘스트 승인 관리</h1>
+            <p class="text-sm text-slate-500 mt-1">학생들이 제출한 퀘스트 인증샷을 확인하고 보상을 지급합니다.</p>
+        </div>
+        <div class="flex gap-2">
+            <button class="bg-white border border-slate-200 text-slate-600 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-slate-50 transition shadow-sm">
+                <i class="fas fa-history mr-2"></i> 처리 내역
+            </button>
+        </div>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+                <p class="text-sm text-slate-400 font-bold mb-1">대기 중인 요청</p>
+                <h3 class="text-2xl font-bold text-amber-500">12건</h3>
+            </div>
+            <div class="p-3 bg-amber-50 rounded-lg text-amber-500">
+                <i class="fas fa-clock text-xl"></i>
+            </div>
+        </div>
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+                <p class="text-sm text-slate-400 font-bold mb-1">오늘 승인 완료</p>
+                <h3 class="text-2xl font-bold text-emerald-600">28건</h3>
+            </div>
+            <div class="p-3 bg-emerald-50 rounded-lg text-emerald-600">
+                <i class="fas fa-check-double text-xl"></i>
+            </div>
+        </div>
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+                <p class="text-sm text-slate-400 font-bold mb-1">오늘 반려됨</p>
+                <h3 class="text-2xl font-bold text-red-500">3건</h3>
+            </div>
+            <div class="p-3 bg-red-50 rounded-lg text-red-500">
+                <i class="fas fa-times-circle text-xl"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-6 flex flex-wrap gap-4 justify-between items-center">
+        <div class="flex gap-2">
+            <select id="questStatusFilter" onchange="renderQuestTable()" class="border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white text-slate-600">
+                <option value="all">전체 상태</option>
+                <option value="pending" selected>대기 중 (Pending)</option>
+                <option value="approved">승인됨</option>
+                <option value="rejected">반려됨</option>
+            </select>
+            <select class="border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white text-slate-600">
+                <option value="">모든 퀘스트</option>
+                <option value="daily">일일 퀘스트</option>
+                <option value="weekly">주간 퀘스트</option>
+                <option value="special">특별 퀘스트</option>
+            </select>
+        </div>
+        <div class="relative w-full md:w-64">
+            <input type="text" placeholder="학생 이름 검색"
+                   class="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+            <i class="fas fa-search absolute left-3 top-2.5 text-slate-400 text-xs"></i>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <table class="w-full text-left">
+            <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold">
+            <tr>
+                <th class="p-4 w-32">요청 시간</th>
+                <th class="p-4">학생 정보</th>
+                <th class="p-4">퀘스트 내용</th>
+                <th class="p-4 text-center">인증</th>
+                <th class="p-4">보상</th>
+                <th class="p-4 text-center">상태</th>
+                <th class="p-4 text-center">관리</th>
+            </tr>
+            </thead>
+            <tbody id="questTableBody" class="divide-y divide-slate-100 text-sm text-slate-700">
+                </tbody>
+        </table>
+        <div class="p-4 border-t border-slate-100 flex justify-center items-center space-x-1 text-sm">
+            <button class="px-2 py-1 text-slate-400 hover:text-indigo-600 disabled:opacity-50"><i class="fas fa-chevron-left"></i></button>
+            <button class="px-3 py-1 font-semibold text-indigo-600 bg-indigo-50 rounded">1</button>
+            <button class="px-3 py-1 text-slate-500 hover:bg-slate-100 rounded">2</button>
+            <button class="px-3 py-1 text-slate-500 hover:bg-slate-100 rounded">3</button>
+            <button class="px-2 py-1 text-slate-400 hover:text-indigo-600"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </div>
+</div>
+
+<div id="questModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="fixed inset-0 bg-slate-900 bg-opacity-40 transition-opacity backdrop-blur-sm" onclick="closeQuestModal()"></div>
+
+    <div class="fixed inset-0 z-10 overflow-y-auto">
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <div class="relative transform overflow-hidden rounded-xl bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl">
+                
+                <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 border-b border-slate-100 flex justify-between items-start">
+                    <div>
+                        <h3 class="text-lg font-bold leading-6 text-slate-900" id="modal-title">퀘스트 인증 확인</h3>
+                        <p class="text-sm text-slate-500 mt-1">제출된 인증 사진을 확인하고 승인 여부를 결정해주세요.</p>
+                    </div>
+                    <button onclick="closeQuestModal()" class="text-slate-400 hover:text-slate-600 transition">
+                        <i class="fas fa-times text-lg"></i>
+                    </button>
+                </div>
+
+                <div class="bg-slate-50 px-4 py-6 sm:p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex flex-col gap-2">
+                        <div class="aspect-w-4 aspect-h-3 w-full overflow-hidden rounded-lg bg-slate-200 border border-slate-300 relative group">
+                            <img id="modalQuestImage" src="" alt="Proof" class="object-cover w-full h-64">
+                            <a id="modalImageLink" href="#" target="_blank" class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition flex items-center justify-center opacity-0 group-hover:opacity-100">
+                                <span class="bg-white/90 text-slate-800 px-3 py-1.5 rounded-full text-xs font-bold shadow-sm">
+                                    <i class="fas fa-expand mr-1"></i> 원본 보기
+                                </span>
+                            </a>
+                        </div>
+                        <div class="text-xs text-slate-400 text-center mt-1">
+                            <i class="fas fa-camera mr-1"></i> 촬영일시: 2026.02.24 14:30
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3 pb-4 border-b border-slate-200">
+                            <img id="modalStudentAvatar" src="" class="w-10 h-10 rounded-full bg-white border border-slate-200">
+                            <div>
+                                <div id="modalStudentName" class="font-bold text-slate-800"></div>
+                                <div id="modalStudentClass" class="text-xs text-slate-500"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">퀘스트명</label>
+                            <div id="modalQuestTitle" class="text-sm font-semibold text-slate-800"></div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">학생의 한마디</label>
+                            <div id="modalStudentComment" class="bg-white border border-slate-200 rounded-lg p-3 text-sm text-slate-600 italic">
+                                "선생님 저 이번엔 진짜 열심히 했어요!"
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">보상 정보</label>
+                            <div class="flex gap-2">
+                                <span id="modalRewardExp" class="px-2.5 py-1 rounded bg-indigo-50 text-indigo-700 text-xs font-bold border border-indigo-100"></span>
+                                <span id="modalRewardGold" class="px-2.5 py-1 rounded bg-amber-50 text-amber-700 text-xs font-bold border border-amber-100"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="rejectReasonSection" class="hidden px-4 py-3 bg-red-50 border-t border-red-100 transition-all">
+                    <label class="block text-xs font-bold text-red-600 mb-1">반려 사유 입력</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="rejectReasonInput" class="flex-1 text-sm border-red-200 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-red-500" placeholder="예: 사진이 흐려서 확인할 수 없습니다.">
+                        <button onclick="confirmReject()" class="bg-red-600 text-white text-xs px-3 py-1 rounded hover:bg-red-700 font-bold">확인</button>
+                    </div>
+                </div>
+
+                <div class="bg-white px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 border-t border-slate-100">
+                    <button type="button" onclick="confirmApprove()" class="inline-flex w-full justify-center rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-indigo-700 sm:ml-3 sm:w-auto transition flex items-center">
+                        <i class="fas fa-check mr-2"></i> 승인하기
+                    </button>
+                    <button type="button" onclick="toggleRejectInput()" class="mt-3 inline-flex w-full justify-center rounded-lg bg-white px-4 py-2.5 text-sm font-bold text-slate-600 shadow-sm ring-1 ring-inset ring-slate-300 hover:bg-slate-50 sm:mt-0 sm:w-auto transition">
+                        반려
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
         </div>
     </main>
@@ -841,6 +1021,224 @@
     // 초기 로드
     document.addEventListener('DOMContentLoaded', function () {
         renderAdjustmentTable(1);
+    });
+	// ==========================================
+    // [추가] 퀘스트 승인 관리 로직
+    // ==========================================
+
+    // 1. 더미 데이터 (퀘스트 요청)
+    const questRequests = [
+        {
+            id: 1,
+            time: '방금 전',
+            fullTime: '2026-02-24 14:30',
+            studentName: '김철수',
+            studentClass: '믿음반 (3학년)',
+            avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix',
+            questTitle: '📖 주일 설교 요약하기',
+            questType: 'weekly',
+            proofImage: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+            comment: '목사님 말씀 너무 좋았습니다! 요약해서 올립니다.',
+            rewardExp: 100,
+            rewardGold: 50,
+            status: 'pending'
+        },
+        {
+            id: 2,
+            time: '10분 전',
+            fullTime: '2026-02-24 14:20',
+            studentName: '이영희',
+            studentClass: '소망반 (2학년)',
+            avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka',
+            questTitle: '🧹 내 방 청소 인증',
+            questType: 'daily',
+            proofImage: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+            comment: '깨끗하게 청소했어요~',
+            rewardExp: 30,
+            rewardGold: 10,
+            status: 'pending'
+        },
+        {
+            id: 3,
+            time: '30분 전',
+            fullTime: '2026-02-24 14:00',
+            studentName: '박민수',
+            studentClass: '사랑반 (1학년)',
+            avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Bob',
+            questTitle: '🙏 아침 기도하기',
+            questType: 'daily',
+            proofImage: 'https://images.unsplash.com/photo-1507692049790-de58293a469d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+            comment: '오늘도 감사한 하루!',
+            rewardExp: 20,
+            rewardGold: 5,
+            status: 'approved'
+        },
+        {
+            id: 4,
+            time: '1시간 전',
+            fullTime: '2026-02-24 13:30',
+            studentName: '최유리',
+            studentClass: '믿음반 (3학년)',
+            avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Yuri',
+            questTitle: '🎨 성경 그림 그리기',
+            questType: 'special',
+            proofImage: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+            comment: '노아의 방주를 그렸어요.',
+            rewardExp: 150,
+            rewardGold: 100,
+            status: 'rejected'
+        }
+    ];
+
+    // 현재 선택된 퀘스트 ID 저장용
+    let currentQuestId = null;
+
+    // 테이블 렌더링 함수
+    function renderQuestTable() {
+        const filterStatus = document.getElementById('questStatusFilter').value;
+        const tbody = document.getElementById('questTableBody');
+        tbody.innerHTML = '';
+
+        const filteredData = questRequests.filter(item => {
+            if (filterStatus === 'all') return true;
+            return item.status === filterStatus;
+        });
+
+        if (filteredData.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" class="p-8 text-center text-slate-400">데이터가 없습니다.</td></tr>';
+            return;
+        }
+
+        filteredData.forEach(item => {
+            // 상태 뱃지 스타일
+            let statusBadge = '';
+            if (item.status === 'pending') statusBadge = '<span class="bg-amber-50 text-amber-600 border border-amber-100 px-2 py-1 rounded-md text-xs font-bold"><i class="fas fa-spinner fa-spin mr-1"></i> 대기 중</span>';
+            else if (item.status === 'approved') statusBadge = '<span class="bg-indigo-50 text-indigo-600 border border-indigo-100 px-2 py-1 rounded-md text-xs font-bold">승인됨</span>';
+            else if (item.status === 'rejected') statusBadge = '<span class="bg-red-50 text-red-600 border border-red-100 px-2 py-1 rounded-md text-xs font-bold">반려됨</span>';
+
+            const row = `
+                <tr class="hover:bg-slate-50 transition border-b border-slate-50 last:border-0 cursor-pointer" onclick="openQuestModal(${item.id})">
+                    <td class="p-4 text-slate-500 font-mono text-xs">${item.time}</td>
+                    <td class="p-4">
+                        <div class="flex items-center gap-3">
+                            <img src="${item.avatar}" class="w-8 h-8 rounded-full bg-slate-100 border border-slate-200">
+                            <div>
+                                <div class="font-bold text-slate-800 text-xs">${item.studentName}</div>
+                                <div class="text-[10px] text-slate-400">${item.studentClass}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="p-4 font-medium text-slate-700">
+                        <span class="text-[10px] text-slate-400 border border-slate-200 rounded px-1 mr-1 uppercase">${item.questType}</span>
+                        ${item.questTitle}
+                    </td>
+                    <td class="p-4 text-center">
+                        <div class="w-10 h-10 rounded bg-slate-100 border border-slate-200 mx-auto overflow-hidden relative group">
+                            <img src="${item.proofImage}" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black/20 hidden group-hover:flex items-center justify-center text-white text-xs">
+                                <i class="fas fa-search"></i>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="p-4">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs font-bold text-indigo-600">+${item.rewardExp} EXP</span>
+                            <span class="text-[10px] font-bold text-amber-500">+${item.rewardGold} G</span>
+                        </div>
+                    </td>
+                    <td class="p-4 text-center">${statusBadge}</td>
+                    <td class="p-4 text-center" onclick="event.stopPropagation()">
+                        ${item.status === 'pending' ? `
+                            <button onclick="openQuestModal(${item.id})" class="text-xs bg-indigo-600 text-white px-3 py-1.5 rounded hover:bg-indigo-700 transition font-bold shadow-sm">
+                                심사
+                            </button>
+                        ` : `
+                            <button class="text-slate-400 hover:text-slate-600"><i class="fas fa-ellipsis-h"></i></button>
+                        `}
+                    </td>
+                </tr>
+            `;
+            tbody.insertAdjacentHTML('beforeend', row);
+        });
+    }
+
+    // 모달 열기
+    function openQuestModal(id) {
+        const item = questRequests.find(q => q.id === id);
+        if (!item) return;
+
+        currentQuestId = id;
+
+        // 데이터 바인딩
+        document.getElementById('modalStudentName').textContent = item.studentName;
+        document.getElementById('modalStudentClass').textContent = item.studentClass;
+        document.getElementById('modalStudentAvatar').src = item.avatar;
+        
+        document.getElementById('modalQuestTitle').textContent = item.questTitle;
+        document.getElementById('modalStudentComment').textContent = `"${item.comment}"`;
+        
+        document.getElementById('modalQuestImage').src = item.proofImage;
+        document.getElementById('modalImageLink').href = item.proofImage;
+        
+        document.getElementById('modalRewardExp').textContent = `+${item.rewardExp} EXP`;
+        document.getElementById('modalRewardGold').textContent = `+${item.rewardGold} G`;
+
+        // 반려 입력창 초기화
+        document.getElementById('rejectReasonSection').classList.add('hidden');
+        document.getElementById('rejectReasonInput').value = '';
+
+        // 모달 표시
+        document.getElementById('questModal').classList.remove('hidden');
+    }
+
+    // 모달 닫기
+    function closeQuestModal() {
+        document.getElementById('questModal').classList.add('hidden');
+        currentQuestId = null;
+    }
+
+    // 반려 입력창 토글
+    function toggleRejectInput() {
+        const section = document.getElementById('rejectReasonSection');
+        section.classList.toggle('hidden');
+        if (!section.classList.contains('hidden')) {
+            document.getElementById('rejectReasonInput').focus();
+        }
+    }
+
+    // 승인 처리 (예시)
+    function confirmApprove() {
+        if(!currentQuestId) return;
+        alert("성공적으로 승인되었습니다! 보상이 지급됩니다.");
+        
+        // 데이터 상태 업데이트 (실제로는 서버 통신)
+        const item = questRequests.find(q => q.id === currentQuestId);
+        if(item) item.status = 'approved';
+        
+        renderQuestTable();
+        closeQuestModal();
+    }
+
+    // 반려 처리 (예시)
+    function confirmReject() {
+        const reason = document.getElementById('rejectReasonInput').value;
+        if (!reason) {
+            alert("반려 사유를 입력해주세요.");
+            return;
+        }
+        alert(`반려되었습니다. (사유: ${reason})`);
+        
+        // 데이터 상태 업데이트
+        const item = questRequests.find(q => q.id === currentQuestId);
+        if(item) item.status = 'rejected';
+
+        renderQuestTable();
+        closeQuestModal();
+    }
+
+    // 페이지 로드 시 퀘스트 테이블 초기화
+    document.addEventListener('DOMContentLoaded', function () {
+        renderQuestTable();
     });
 </script>
 </body>
