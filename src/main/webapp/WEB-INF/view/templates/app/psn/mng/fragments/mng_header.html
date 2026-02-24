@@ -37,10 +37,13 @@
 			</button>
 			<button onclick="_naviPage('MNG_REWD', this)"
 			        th:class="|btn-side btn-side-${_mngMenuInfo == 'MNG_REWD' ? 'on' : 'off'}|">
-				<i class="fas fa-magic mr-2.5 text-center"></i> 포인트/보상 관리
+				<i class="fas fa-magic mr-2.5 text-center"></i> 리워드 관리
+			</button>
+			<button onclick="_naviPage('MNG_QEST', this)"
+			        th:class="|btn-side btn-side-${_mngMenuInfo == 'MNG_QEST' ? 'on' : 'off'}|">
+				<i class="fas fa-scroll mr-2.5 text-center"></i> 퀘스트 승인 관리
 			</button>
 		</nav>
-
 		<div class="p-3 border-t border-slate-50">
 			<button class="btn-side text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors w-full"
 			        th:onclick="|location.href='@{/mng/idx/logOut.pg}'|">

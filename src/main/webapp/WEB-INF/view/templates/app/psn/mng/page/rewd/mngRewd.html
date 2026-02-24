@@ -125,36 +125,27 @@
 
 	<div id="studentModal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
 		<div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" id="modalBackdrop"></div>
-
 		<div class="relative w-full max-w-md mx-auto mt-20 bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh] animate-fade-in-up">
 			<div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
 				<h3 class="text-sm font-black text-slate-800">학생 검색</h3>
-				<button id="btnCloseModal" class="text-slate-400 hover:text-slate-600 transition outline-none">
-					<i class="fas fa-times"></i>
-				</button>
+				<button id="btnCloseModal" class="text-slate-400 hover:text-slate-600 transition outline-none"><i class="fas fa-times"></i></button>
 			</div>
-
 			<div class="p-4 border-b border-slate-100">
 				<div class="relative">
-					<input type="text" id="modalSearchInput" placeholder="이름을 입력하세요 (예: 김철수)"
-					       class="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none">
+					<input type="text" id="modalSearchInput" placeholder="이름을 입력하세요 (예: 김철수)" class="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none">
 					<i class="fas fa-search absolute left-4 top-3.5 text-slate-400"></i>
 				</div>
 			</div>
-
 			<div id="modalLoading" class="hidden flex-col items-center justify-center py-10 text-slate-400">
-				<i class="fas fa-spinner fa-spin text-2xl mb-2 text-indigo-500"></i>
-				<span class="text-xs">학생 목록을 불러오는 중...</span>
+				<i class="fas fa-spinner fa-spin text-2xl mb-2 text-indigo-500"></i><span class="text-xs">학생 목록을 불러오는 중...</span>
 			</div>
-
-			<div class="overflow-y-auto p-2 flex-1 min-h-[300px]" id="studentListContainer">
-			</div>
+			<div class="overflow-y-auto p-2 flex-1 min-h-[300px]" id="studentListContainer"></div>
 		</div>
 	</div>
 
 	<script th:inline="javascript">
 		/*<![CDATA[*/
-		const MANAGER_SN = [[${session.mngMberInfo.mberSn}]]; // Thymeleaf safe variable injection
+		const MANAGER_SN = [[${session.mngMberInfo.mberSn}]];
 
 		const RewardManager = {
 			gridApi: null,
@@ -173,16 +164,12 @@
 					const columnDefs = [
 						{
 							headerName: "지급시간", field: "creatDate", width: 130,
-							valueFormatter: (params) => {
-								// 날짜 포맷팅 로직 (필요시 moment.js 등 사용)
-								return params.value ? params.value.substring(0, 16) : '-';
-							},
+							valueFormatter: (params) => params.value ? params.value.substring(0, 16) : '-',
 							cellClass: "text-[11px] text-slate-500 flex items-center"
 						},
 						{
 							headerName: "이름", field: "mberNm", width: 110, filter: true,
 							cellRenderer: (params) => {
-								// 아바타 + 이름 렌더링
 								const initial = params.value ? params.value.charAt(0) : '?';
 								return `
                             <div class="flex items-center gap-2 h-full">
@@ -203,22 +190,35 @@
 						{
 							headerName: "변동값", field: "amount", width: 120,
 							cellRenderer: (params) => {
-								// 값에 따른 색상 및 아이콘 처리 (핵심 개선 사항)
+								// [수정] 배경색 제거, 글자색과 아이콘만 사용
 								const amount = params.value;
-								const type = params.data.rewardType;
+								const type = params.data.rewardType; // 'EXP' or 'POINT'
 								const isPlus = amount > 0;
-								const colorClass = isPlus
-									? (type === 'POINT' ? 'text-amber-600 bg-amber-50 border-amber-100' : 'text-indigo-600 bg-indigo-50 border-indigo-100')
-									: 'text-red-600 bg-red-50 border-red-100';
-								const icon = type === 'POINT' ? 'fa-coins' : 'fa-star';
+
+								let textColor = '';
+								let icon = '';
+
+								if (!isPlus) {
+									// 차감 (빨강 + 화살표)
+									textColor = 'text-red-500';
+									icon = 'fa-caret-down';
+								} else if (type === 'POINT') {
+									// 포인트 (주황 + 동전)
+									textColor = 'text-amber-500';
+									icon = 'fa-coins';
+								} else {
+									// 경험치 (남색 + 별)
+									textColor = 'text-indigo-500';
+									icon = 'fa-star';
+								}
+
 								const sign = isPlus ? '+' : '';
 
+								// 배경(bg-) 및 테두리(border-) 클래스 제거
 								return `
-                            <div class="flex items-center h-full">
-                               <span class="px-2 py-0.5 rounded-md border ${colorClass} text-[10px] font-bold inline-flex items-center gap-1.5">
-                                  <i class="fas ${icon} text-[9px] opacity-70"></i>
-                                  ${sign}${amount.toLocaleString()}
-                               </span>
+                            <div class="flex items-center h-full ${textColor} font-bold text-xs">
+                               <i class="fas ${icon} mr-1.5 opacity-80 w-4 text-center"></i>
+                               <span>${sign}${amount.toLocaleString()}</span>
                             </div>
                          `;
 							}
@@ -238,7 +238,7 @@
 						headerHeight: 40,
 						rowHeight: 36,
 						rowClass: "hover:bg-slate-50 transition-colors",
-						domLayout: 'normal', // autoHeight 대신 normal 사용 (스크롤바 생성)
+						domLayout: 'normal',
 						overlayNoRowsTemplate: '<div class="text-xs text-slate-400 py-10">조정 내역이 없습니다.</div>',
 						overlayLoadingTemplate: '<div class="text-xs font-bold text-indigo-500"><i class="fas fa-spinner fa-spin mr-2"></i>Loading...</div>'
 					};
@@ -258,7 +258,7 @@
 						success: function (res) {
 							const data = res.rtnData || [];
 							if (api) {
-								api.setGridOption('rowData', data); // 매핑 없이 원본 데이터 주입 (ValueGetter/Renderer 활용)
+								api.setGridOption('rowData', data);
 								data.length === 0 ? api.showNoRowsOverlay() : api.hideOverlay();
 							}
 						},
@@ -270,25 +270,17 @@
 				}
 			},
 
-			// --- 2. Event Listeners ---
+			// --- 2. Event Listeners (이전과 동일) ---
 			bindEvents() {
 				const self = this;
-
-				// Modal
 				$('#targetStudentDisplay, #btnOpenModal').on('click', () => self.modal.open());
 				$('#modalBackdrop, #btnCloseModal').on('click', () => self.modal.close());
-
-				// Search with Debounce
 				$('#modalSearchInput').on('input', function () {
 					const keyword = $(this).val();
 					clearTimeout(self.debounceTimer);
-					self.debounceTimer = setTimeout(() => self.modal.filterList(keyword), 300); // 300ms 딜레이
+					self.debounceTimer = setTimeout(() => self.modal.filterList(keyword), 300);
 				});
-
-				// Save Action
 				$('#btnSave').on('click', () => self.api.save());
-
-				// Grid Search & Export
 				$('#tableSearchInput').on('input', function () {
 					if (self.gridApi) self.gridApi.setGridOption('quickFilterText', $(this).val());
 				});
@@ -297,13 +289,12 @@
 				});
 			},
 
-			// --- 3. Modal Logic ---
+			// --- 3. Modal Logic (이전과 동일) ---
 			modal: {
 				open() {
 					$('#studentModal').removeClass('hidden');
-					$('body').addClass('overflow-hidden'); // 배경 스크롤 방지
+					$('body').addClass('overflow-hidden');
 					$('#modalSearchInput').val('').focus();
-
 					if (!RewardManager.studentDataCache) {
 						this.fetchData();
 					} else {
@@ -317,7 +308,6 @@
 				fetchData() {
 					$('#studentListContainer').hide();
 					$('#modalLoading').removeClass('hidden').addClass('flex');
-
 					$.ajax({
 						url: '/mng/rewd/getStdList.ax',
 						type: 'POST',
@@ -335,22 +325,16 @@
 				renderList(data) {
 					const container = $('#studentListContainer');
 					container.empty();
-
 					if (!data || data.length === 0) {
 						container.html(`<div class="text-center py-10 text-slate-400 text-xs">검색 결과가 없습니다.</div>`);
 						return;
 					}
-
-					// Document Fragment를 사용하여 DOM 조작 최소화 (성능 향상)
 					const fragment = document.createDocumentFragment();
-
 					data.forEach(student => {
 						const imgSrc = `https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/${student.occpCode || 'default'}_${(student.sexdstn || 'M').toLowerCase()}.png`;
-
 						const div = document.createElement('div');
 						div.className = "student-item flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 cursor-pointer transition border border-transparent hover:border-indigo-100 group";
 						div.onclick = () => RewardManager.modal.select(student);
-
 						div.innerHTML = `
                       <div class="w-10 h-10 rounded-full bg-slate-100 overflow-hidden border border-slate-200 flex-shrink-0">
                          <img src="${imgSrc}" alt="Avatar" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/40x40?text=U'">
@@ -378,23 +362,21 @@
 				}
 			},
 
-			// --- 4. API Actions ---
+			// --- 4. API Actions (이전과 동일) ---
 			api: {
 				save() {
 					const mberSn = $('#rewdMberSn').val();
 					const amountVal = $('#amountInput').val();
 					const reason = $('#reasonInput').val();
 					const rewardType = $('input[name="rewardType"]:checked').val();
-					const actionType = $('input[name="actionType"]:checked').val(); // ADD or SUB
+					const actionType = $('input[name="actionType"]:checked').val();
 
-					// Validation
 					if (!mberSn) return alert("학생을 먼저 선택해주세요.");
 					if (!amountVal || amountVal <= 0) {
 						alert("유효한 수량을 입력해주세요.");
 						return $('#amountInput').focus();
 					}
 
-					// Data Construction
 					const finalAmount = parseInt(amountVal) * (actionType === 'ADD' ? 1 : -1);
 					const reqData = {
 						mberSn: mberSn,
@@ -402,13 +384,12 @@
 						amount: finalAmount,
 						description: reason,
 						changeType: 'ADMIN_MANUAL',
-						referenceSn: MANAGER_SN // 상단에서 정의한 상수 사용
+						referenceSn: MANAGER_SN
 					};
 
 					const actionTxt = actionType === 'ADD' ? '지급' : '차감';
 					if (!confirm(`[${rewardType}] ${amountVal}을 ${actionTxt}하시겠습니까?`)) return;
 
-					// Disable button to prevent double submit
 					const btn = $('#btnSave');
 					btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-2"></i> 처리 중...');
 
@@ -419,10 +400,8 @@
 						contentType: 'application/json',
 						success: function () {
 							alert("정상적으로 처리되었습니다.");
-							// Reset Form
 							$('#amountInput').val('');
 							$('#reasonInput').val('');
-							// Reload Grid
 							RewardManager.grid.loadData();
 						},
 						error: function (xhr) {
