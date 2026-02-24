@@ -58,7 +58,7 @@
 					</div>
 					<input type="text" id="mberId" name="mberId"
 					       class="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all placeholder-slate-400 text-slate-800"
-					       value="" placeholder="아이디 입력" required>
+					       value="ysrim" placeholder="아이디 입력" required>
 				</div>
 			</div>
 
@@ -72,7 +72,7 @@
 					</div>
 					<input type="password" id="pwd" name="pwd"
 					       class="w-full pl-10 pr-10 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all placeholder-slate-400 text-slate-800"
-					       value="" placeholder="비밀번호 입력" required>
+					       value="a1234567*" placeholder="비밀번호 입력" required>
 					<button type="button" onclick="togglePassword()"
 					        class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-indigo-600 cursor-pointer focus:outline-none">
 						<i class="fas fa-eye text-sm" id="eyeIcon"></i>
@@ -102,77 +102,77 @@
 </div>
 
 <script th:inline="javascript">
-    function togglePassword() {
-        const $pwdInput = $('#password');
-        const $eyeIcon = $('#eyeIcon');
+	function togglePassword() {
+		const $pwdInput = $('#password');
+		const $eyeIcon = $('#eyeIcon');
 
-        if ($pwdInput.attr('type') === 'pwd') {
-            // 비밀번호 보이기
-            $pwdInput.attr('type', 'text');
-            $eyeIcon.removeClass('fa-eye').addClass('fa-eye-slash');
-        } else {
-            // 비밀번호 숨기기
-            $pwdInput.attr('type', 'password');
-            $eyeIcon.removeClass('fa-eye-slash').addClass('fa-eye');
-        }
-    }
+		if ($pwdInput.attr('type') === 'pwd') {
+			// 비밀번호 보이기
+			$pwdInput.attr('type', 'text');
+			$eyeIcon.removeClass('fa-eye').addClass('fa-eye-slash');
+		} else {
+			// 비밀번호 숨기기
+			$pwdInput.attr('type', 'password');
+			$eyeIcon.removeClass('fa-eye-slash').addClass('fa-eye');
+		}
+	}
 
-    $(function () {
-        // 'savedMberId'라는 이름의 쿠키를 찾습니다.
-        const savedId = Cookies.get('savedMberId');
-        if (savedId) {
-            $('#mberId').val(savedId); // HTML ID에 맞춰 #mberId로 수정
-            $('#remember-me').prop('checked', true);
-        }
+	$(function () {
+		// 'savedMberId'라는 이름의 쿠키를 찾습니다.
+		const savedId = Cookies.get('savedMberId');
+		if (savedId) {
+			$('#mberId').val(savedId); // HTML ID에 맞춰 #mberId로 수정
+			$('#remember-me').prop('checked', true);
+		}
 
-        // 로그인 버튼 클릭 이벤트
-        $('#login_do').on('click', function (e) {
-            // 기본 submit 방지 (버튼이 form 안에 있을 경우 대비)
-            e.preventDefault();
+		// 로그인 버튼 클릭 이벤트
+		$('#login_do').on('click', function (e) {
+			// 기본 submit 방지 (버튼이 form 안에 있을 경우 대비)
+			e.preventDefault();
 
-            const $mberIdInput = $('#mberId');
-            const $pwdInput = $('#pwd');
-            const $loginBtn = $(this);
+			const $mberIdInput = $('#mberId');
+			const $pwdInput = $('#pwd');
+			const $loginBtn = $(this);
 
-            if ($mberIdInput.val() === "" || $pwdInput.val() === "") {
-                //
-                return;
-            }
+			if ($mberIdInput.val() === "" || $pwdInput.val() === "") {
+				//
+				return;
+			}
 
-            if ($('#remember-me').is(':checked')) {
-                // 7일 동안 유효한 쿠키 생성, 경로는 루트('/')로 설정
-                Cookies.set('savedMberId', $mberIdInput.val(), {expires: 7, path: '/'});
-            } else {
-                // 쿠키 삭제
-                Cookies.remove('savedMberId', {path: '/'});
-            }
+			if ($('#remember-me').is(':checked')) {
+				// 7일 동안 유효한 쿠키 생성, 경로는 루트('/')로 설정
+				Cookies.set('savedMberId', $mberIdInput.val(), {expires: 7, path: '/'});
+			} else {
+				// 쿠키 삭제
+				Cookies.remove('savedMberId', {path: '/'});
+			}
 
-            // 로그인 요청
-            $.ajax({
-                type: "POST",
-                url: /*[[@{/mng/idx/login.ax}]]*/ "/mng/idx/login.ax",
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify({mberId: $mberIdInput.val(), pwd: $pwdInput.val()}),
-                success: (data) => {
-                    if (data.rtnCd === '001') {
-                        setTimeout(() => {
-                            if (typeof _showToast === 'function') {
-                                alert("반갑습니다, 관리자님! 환영합니다.");
-                            }
-                            setTimeout(() => {
-                                location.href = /*[[@{/mng/home.pg}]]*/ "/mng/home.pg";
-                            }, 500);
-                        }, 500);
-                    } else {
-                        alert(data.rtnMsg);
-                    }
-                },
-                error: (e) => {
-                    alert("시스템 오류가 발생했습니다.");
-                }
-            });
-        });
-    });
+			// 로그인 요청
+			$.ajax({
+				type: "POST",
+				url: /*[[@{/mng/idx/login.ax}]]*/ "/mng/idx/login.ax",
+				contentType: "application/json; charset=utf-8",
+				data: JSON.stringify({mberId: $mberIdInput.val(), pwd: $pwdInput.val()}),
+				success: (data) => {
+					if (data.rtnCd === '001') {
+						setTimeout(() => {
+							if (typeof _showToast === 'function') {
+								alert("반갑습니다, 관리자님! 환영합니다.");
+							}
+							setTimeout(() => {
+								location.href = /*[[@{/mng/home.pg}]]*/ "/mng/home.pg";
+							}, 500);
+						}, 500);
+					} else {
+						alert(data.rtnMsg);
+					}
+				},
+				error: (e) => {
+					alert("시스템 오류가 발생했습니다.");
+				}
+			});
+		});
+	});
 </script>
 </body>
 </html>

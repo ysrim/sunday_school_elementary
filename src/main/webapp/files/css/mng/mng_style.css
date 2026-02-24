@@ -166,3 +166,23 @@
         transform: scale(1);
     }
 }
+
+/* 스탠다드 에디션 모던 라이트 테마 커스텀 */
+.ag-theme-quartz {
+    --ag-header-background-color: #f8fafc;
+    --ag-header-foreground-color: #475569;
+    --ag-border-color: #e2e8f0;
+    --ag-row-border-color: #f1f5f9;
+    --ag-row-hover-color: #f0f9ff;
+    --ag-font-size: 12px;
+    --ag-font-family: inherit;
+    --ag-header-column-separator-display: block;
+    --ag-header-column-separator-color: #e2e8f0;
+}
+
+/* 그리드 내부의 커스텀 렌더러 수직 정렬을 위한 스타일 */
+.ag-cell-wrapper {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}

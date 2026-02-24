@@ -5,28 +5,6 @@
 
 	<script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
 
-	<style>
-        /* 스탠다드 에디션 모던 라이트 테마 커스텀 */
-        .ag-theme-quartz {
-            --ag-header-background-color: #f8fafc;
-            --ag-header-foreground-color: #475569;
-            --ag-border-color: #e2e8f0;
-            --ag-row-border-color: #f1f5f9;
-            --ag-row-hover-color: #f0f9ff;
-            --ag-font-size: 12px;
-            --ag-font-family: inherit;
-            --ag-header-column-separator-display: block;
-            --ag-header-column-separator-color: #e2e8f0;
-        }
-
-        /* 그리드 내부의 커스텀 렌더러 수직 정렬을 위한 스타일 */
-        .ag-cell-wrapper {
-            display: flex;
-            align-items: center;
-            height: 100%;
-        }
-	</style>
-
 	<div id="page-adjustment"
 	     class="page-content w-full min-h-screen bg-[#f8f9fa] p-5 font-sans text-slate-600 animate-fade-in">
 
@@ -43,15 +21,15 @@
 						<i class="fas fa-sliders-h text-indigo-500 mr-2"></i> 지급 설정
 					</h2>
 
-					<form class="space-y-5" onsubmit="return false;">
+					<form id="rewardForm" class="space-y-5" onsubmit="return false;">
 						<div>
-							<label class="form-label">대상 학생 <span class="text-red-500">*</span></label>
+							<label class="form-label font-bold text-xs text-slate-700 mb-1 block">대상 학생 <span class="text-red-500">*</span></label>
 							<div class="relative group">
-								<input type="hidden" id="selectedStudentId">
+								<input type="hidden" id="rewdMberSn" name="mberSn">
 								<input type="text" id="targetStudentDisplay"
-								       class="form-input pr-9 cursor-pointer hover:bg-slate-50"
-								       placeholder="이름 검색 (클릭)" onclick="openStudentModal()" readonly>
-								<button type="button" onclick="openStudentModal()"
+								       class="w-full pl-3 pr-9 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none cursor-pointer hover:bg-white transition"
+								       placeholder="이름 검색 (클릭)" readonly>
+								<button type="button" id="btnOpenModal"
 								        class="absolute right-3 top-2.5 text-slate-400 hover:text-indigo-600 transition">
 									<i class="fas fa-search"></i>
 								</button>
@@ -59,18 +37,18 @@
 						</div>
 
 						<div>
-							<label class="form-label">지급 유형 <span class="text-red-500">*</span></label>
+							<label class="form-label font-bold text-xs text-slate-700 mb-1 block">지급 유형 <span class="text-red-500">*</span></label>
 							<div class="grid grid-cols-2 gap-3">
 								<label class="cursor-pointer group">
-									<input type="radio" name="rewardType" class="peer sr-only radio-card-input" checked>
-									<div class="radio-card text-center py-3 rounded-xl border border-slate-200 transition-all group-hover:bg-slate-50">
+									<input type="radio" name="rewardType" value="EXP" class="peer sr-only" checked>
+									<div class="text-center py-3 rounded-xl border border-slate-200 transition-all group-hover:bg-slate-50 peer-checked:border-indigo-500 peer-checked:bg-indigo-50 peer-checked:text-indigo-700">
 										<i class="fas fa-star mb-1 block text-sm"></i>
 										<span class="text-xs font-bold">경험치 (EXP)</span>
 									</div>
 								</label>
 								<label class="cursor-pointer group">
-									<input type="radio" name="rewardType" class="peer sr-only radio-card-input">
-									<div class="radio-card amber text-center py-3 rounded-xl border border-slate-200 transition-all group-hover:bg-slate-50">
+									<input type="radio" name="rewardType" value="GOLD" class="peer sr-only">
+									<div class="text-center py-3 rounded-xl border border-slate-200 transition-all group-hover:bg-slate-50 peer-checked:border-amber-500 peer-checked:bg-amber-50 peer-checked:text-amber-700">
 										<i class="fas fa-coins mb-1 block text-sm"></i>
 										<span class="text-xs font-bold">포인트 (Gold)</span>
 									</div>
@@ -79,16 +57,16 @@
 						</div>
 
 						<div>
-							<label class="form-label">조정 방식</label>
+							<label class="form-label font-bold text-xs text-slate-700 mb-1 block">조정 방식</label>
 							<div class="flex p-1 bg-slate-100 rounded-xl">
 								<label class="flex-1 cursor-pointer">
-									<input type="radio" name="actionType" class="peer sr-only" checked>
+									<input type="radio" name="actionType" value="ADD" class="peer sr-only" checked>
 									<div class="text-center py-2 rounded-lg text-xs font-bold text-slate-500 peer-checked:bg-white peer-checked:text-indigo-600 peer-checked:shadow-sm transition-all">
 										<i class="fas fa-plus mr-1"></i> 지급 (Add)
 									</div>
 								</label>
 								<label class="flex-1 cursor-pointer">
-									<input type="radio" name="actionType" class="peer sr-only">
+									<input type="radio" name="actionType" value="SUB" class="peer sr-only">
 									<div class="text-center py-2 rounded-lg text-xs font-bold text-slate-500 peer-checked:bg-white peer-checked:text-red-600 peer-checked:shadow-sm transition-all">
 										<i class="fas fa-minus mr-1"></i> 차감 (Sub)
 									</div>
@@ -98,16 +76,20 @@
 
 						<div class="grid grid-cols-3 gap-3">
 							<div class="col-span-1">
-								<label class="form-label">수량</label>
-								<input type="number" class="form-input text-center font-bold" placeholder="0">
+								<label class="form-label font-bold text-xs text-slate-700 mb-1 block">수량 <span class="text-red-500">*</span></label>
+								<input type="number" id="amountInput" min="1"
+								       class="w-full text-center font-bold px-3 py-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none"
+								       placeholder="0" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null">
 							</div>
 							<div class="col-span-2">
-								<label class="form-label">사유</label>
-								<input type="text" class="form-input" placeholder="예: 심부름 보상">
+								<label class="form-label font-bold text-xs text-slate-700 mb-1 block">사유</label>
+								<input type="text" id="reasonInput"
+								       class="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none"
+								       placeholder="예: 심부름 보상">
 							</div>
 						</div>
 
-						<button type="button"
+						<button type="button" id="btnSave"
 						        class="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-700 shadow-lg shadow-indigo-200 hover:shadow-xl transition-all text-xs flex items-center justify-center transform active:scale-95">
 							<i class="fas fa-check-circle mr-2"></i> 설정 적용하기
 						</button>
@@ -141,15 +123,15 @@
 		</div>
 	</div>
 
-	<div id="studentModal" class="fixed inset-0 z-50 hidden">
-		<div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity"
-		     onclick="closeStudentModal()"></div>
+	<div id="studentModal" class="fixed inset-0 z-50 hidden transition-opacity duration-300" aria-hidden="true">
+		<div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" id="modalBackdrop"></div>
 
-		<div class="relative w-full max-w-md mx-auto mt-20 bg-white rounded-2xl shadow-2xl modal-enter overflow-hidden flex flex-col max-h-[80vh]">
+		<div class="relative w-full max-w-md mx-auto mt-20 bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh] transform transition-all scale-100">
 			<div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
 				<h3 class="text-sm font-black text-slate-800">학생 검색</h3>
-				<button onclick="closeStudentModal()" class="text-slate-400 hover:text-slate-600 transition"><i
-						class="fas fa-times"></i></button>
+				<button id="btnCloseModal" class="text-slate-400 hover:text-slate-600 transition outline-none">
+					<i class="fas fa-times"></i>
+				</button>
 			</div>
 
 			<div class="p-4 border-b border-slate-100">
@@ -160,231 +142,260 @@
 				</div>
 			</div>
 
+			<div id="modalLoading" class="hidden flex-col items-center justify-center py-10 text-slate-400">
+				<i class="fas fa-spinner fa-spin text-2xl mb-2 text-indigo-500"></i>
+				<span class="text-xs">학생 목록을 불러오는 중...</span>
+			</div>
+
 			<div class="overflow-y-auto p-2 flex-1 min-h-[300px]" id="studentListContainer">
 			</div>
 		</div>
 	</div>
 
 	<script th:inline="javascript">
-		// ==========================================
-		// 1. 데이터 정의 (더미 데이터)
-		// ==========================================
-		const adjustmentData = [
-			{time: '10:42 AM', name: '김철수', content: '특별 심부름 보상', change: '+50 EXP', type: 'exp-plus', admin: 'T.Lee'},
-			{time: '09:15 AM', name: '이영희', content: '상점 아이템 구매', change: '-200 Gold', type: 'gold-minus', admin: 'System'},
-			{time: '08:30 AM', name: '박민수', content: '아침 큐티 참석', change: '+10 EXP', type: 'exp-plus', admin: 'T.Kim'},
-			{time: '어제', name: '최유리', content: '친구 전도', change: '+100 EXP', type: 'exp-plus', admin: 'T.Lee'},
-			{time: '어제', name: '강호동', content: '지각 페널티', change: '-10 EXP', type: 'exp-minus', admin: 'T.Park'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '08:30 AM', name: '박민수', content: '아침 큐티 참석', change: '+10 EXP', type: 'exp-plus', admin: 'T.Kim'},
-			{time: '어제', name: '최유리', content: '친구 전도', change: '+100 EXP', type: 'exp-plus', admin: 'T.Lee'},
-			{time: '어제', name: '강호동', content: '지각 페널티', change: '-10 EXP', type: 'exp-minus', admin: 'T.Park'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '08:30 AM', name: '박민수', content: '아침 큐티 참석', change: '+10 EXP', type: 'exp-plus', admin: 'T.Kim'},
-			{time: '어제', name: '최유리', content: '친구 전도', change: '+100 EXP', type: 'exp-plus', admin: 'T.Lee'},
-			{time: '어제', name: '강호동', content: '지각 페널티', change: '-10 EXP', type: 'exp-minus', admin: 'T.Park'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '09:15 AM', name: '이영희', content: '상점 아이템 구매', change: '-200 Gold', type: 'gold-minus', admin: 'System'},
-			{time: '08:30 AM', name: '박민수', content: '아침 큐티 참석', change: '+10 EXP', type: 'exp-plus', admin: 'T.Kim'},
-			{time: '어제', name: '최유리', content: '친구 전도', change: '+100 EXP', type: 'exp-plus', admin: 'T.Lee'},
-			{time: '어제', name: '강호동', content: '지각 페널티', change: '-10 EXP', type: 'exp-minus', admin: 'T.Park'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '08:30 AM', name: '박민수', content: '아침 큐티 참석', change: '+10 EXP', type: 'exp-plus', admin: 'T.Kim'},
-			{time: '어제', name: '최유리', content: '친구 전도', change: '+100 EXP', type: 'exp-plus', admin: 'T.Lee'},
-			{time: '어제', name: '강호동', content: '지각 페널티', change: '-10 EXP', type: 'exp-minus', admin: 'T.Park'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '08:30 AM', name: '박민수', content: '아침 큐티 참석', change: '+10 EXP', type: 'exp-plus', admin: 'T.Kim'},
-			{time: '어제', name: '최유리', content: '친구 전도', change: '+100 EXP', type: 'exp-plus', admin: 'T.Lee'},
-			{time: '어제', name: '강호동', content: '지각 페널티', change: '-10 EXP', type: 'exp-minus', admin: 'T.Park'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '어제', name: '유재석', content: '반장 선출 보너스', change: '+500 Gold', type: 'gold-plus', admin: 'Principal'},
-			{time: '2일 전', name: '김철수', content: '준비물 미지참', change: '-50 Gold', type: 'gold-minus', admin: 'T.Lee'},
-		];
+		/**
+		 * RewardManager: 보상 관리 페이지의 모든 로직을 담당하는 객체
+		 */
+		const RewardManager = {
+			gridApi: null,
+			studentDataCache: null, // 학생 데이터 캐싱
 
-		const studentList = [
-			{id: 'hong_123', name: '홍길동', grade: '3', class: '믿음', job: '전사', avatar: 'Felix'},
-			{id: 'kim_chul', name: '김철수', grade: '3', class: '믿음', job: '마법사', avatar: 'Aneka'},
-			{id: 'lee_young', name: '이영희', grade: '3', class: '소망', job: '궁수', avatar: 'Bob'},
-			{id: 'park_min', name: '박민수', grade: '3', class: '사랑', job: '도적', avatar: 'Jack'},
-			{id: 'choi_yuri', name: '최유리', grade: '2', class: '소망', job: '성직자', avatar: 'Molly'},
-			{id: 'kang_ho', name: '강호동', grade: '1', class: '믿음', job: '전사', avatar: 'Bear'},
-		];
+			// 초기화
+			init: function() {
+				this.initGrid();
+				this.initEventListeners();
+			},
 
-		// ==========================================
-		// 2. 모달 관련 로직
-		// ==========================================
-		function openStudentModal() {
-			$('#studentModal').removeClass('hidden');
-			$('#modalSearchInput').val('').focus();
-			renderStudentList(studentList);
-		}
+			// 1. AG Grid 초기화
+			initGrid: function() {
+				// 더미 데이터 (실제로는 서버에서 가져와야 함)
+				const dummyData = [
+					{time: '10:42 AM', name: '김철수', content: '특별 심부름 보상', change: '+50 EXP', type: 'exp-plus', admin: 'T.Lee'},
+					{time: '09:15 AM', name: '이영희', content: '상점 아이템 구매', change: '-200 Gold', type: 'gold-minus', admin: 'System'},
+					{time: '08:30 AM', name: '박민수', content: '아침 큐티 참석', change: '+10 EXP', type: 'exp-plus', admin: 'T.Kim'},
+					{time: '어제', name: '최유리', content: '친구 전도', change: '+100 EXP', type: 'exp-plus', admin: 'T.Lee'},
+					{time: '어제', name: '강호동', content: '지각 페널티', change: '-10 EXP', type: 'exp-minus', admin: 'T.Park'},
+				];
 
-		function closeStudentModal() {
-			$('#studentModal').addClass('hidden');
-		}
+				const columnDefs = [
+					{headerName: "시간", field: "time", width: 90, cellStyle: {color: '#94a3b8', fontSize: '10px', fontFamily: 'monospace'}},
+					{headerName: "대상", field: "name", width: 100, filter: true, cellStyle: {fontWeight: 'bold', color: '#334155'}},
+					{headerName: "내용", field: "content", flex: 1, minWidth: 150},
+					{headerName: "변동값", field: "change", cellRenderer: this.renderers.changeBadge, width: 120},
+					{headerName: "담당자", field: "admin", cellRenderer: this.renderers.adminBadge, width: 100}
+				];
 
-		function selectStudent(id, name, info) {
-			$('#targetStudentDisplay').val(`${name} (${info})`);
-			$('#selectedStudentId').val(id);
-			closeStudentModal();
-		}
+				const gridOptions = {
+					columnDefs: columnDefs,
+					rowData: dummyData, // 실제 구현 시 빈 배열로 시작 후 API 호출
+					defaultColDef: { resizable: true, sortable: true },
+					pagination: true,
+					paginationPageSize: 10,
+					paginationPageSizeSelector: [10, 20, 50, 100],
+					headerHeight: 35,
+					rowHeight: 33,
+					domLayout: 'autoHeight',
+					overlayNoRowsTemplate: '<span class="text-xs text-slate-400">데이터가 없습니다.</span>'
+				};
 
-		function renderStudentList(data) {
-			const container = $('#studentListContainer');
-			container.empty();
+				const gridDiv = document.querySelector('#adjustmentGrid');
+				this.gridApi = agGrid.createGrid(gridDiv, gridOptions);
+			},
 
-			if (data.length === 0) {
-				container.html(`<div class="text-center py-10 text-slate-400 text-xs">검색 결과가 없습니다.</div>`);
-				return;
-			}
+			// Grid Renderers
+			renderers: {
+				changeBadge: function(params) {
+					if (!params.data) return '';
+					const type = params.data.type || '';
+					const change = params.value;
 
-			data.forEach(student => {
-				const html = `
-                    <div onclick="selectStudent('${student.id}', '${student.name}', '${student.grade}학년 ${student.class}반')"
-                         class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 cursor-pointer transition border border-transparent hover:border-indigo-100 group">
-                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=${student.avatar}" class="w-10 h-10 rounded-full bg-white border border-slate-200">
-                        <div>
-                            <div class="font-bold text-sm text-slate-800 group-hover:text-indigo-600">${student.name}</div>
-                            <div class="text-[10px] text-slate-400 font-medium">${student.grade}학년 ${student.class}반 · ${student.job}</div>
-                        </div>
-                        <i class="fas fa-chevron-right ml-auto text-slate-300 text-xs group-hover:text-indigo-400"></i>
-                    </div>
-                `;
-				container.append(html);
-			});
-		}
+					let badgeClass = "bg-slate-50 text-slate-600 border-slate-200";
+					if (type.includes('exp-plus')) badgeClass = "bg-indigo-50 text-indigo-600 border-indigo-100";
+					else if (type.includes('gold-plus')) badgeClass = "bg-amber-50 text-amber-600 border-amber-100";
+					else if (type.includes('minus')) badgeClass = "bg-red-50 text-red-500 border-red-100";
 
-		// ==========================================
-		// 3. ag-Grid 커스텀 렌더러
-		// ==========================================
-		function changeRenderer(params) {
-			if (!params.data) return '';
-			const type = params.data.type;
-			const change = params.value;
-
-			let badgeClass = "";
-			if (type.includes('exp-plus')) badgeClass = "bg-indigo-50 text-indigo-600 border-indigo-100";
-			else if (type.includes('gold-plus')) badgeClass = "bg-amber-50 text-amber-600 border-amber-100";
-			else if (type.includes('minus')) badgeClass = "bg-red-50 text-red-500 border-red-100";
-
-			return `
-                <div class="flex items-center justify-center w-full h-full">
-                    <span class="${badgeClass} border px-2 py-0.5 rounded text-[10px] font-bold inline-block min-w-[70px] text-center">
-                        ${change}
-                    </span>
-                </div>
-            `;
-		}
-
-		function adminRenderer(params) {
-			if (!params.value) return '';
-			return `
-                <div class="flex items-center justify-center w-full h-full">
-                    <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-500 text-[10px] font-bold hover:bg-indigo-50 hover:text-indigo-500 transition cursor-default">
-                        ${params.value}
-                    </span>
-                </div>
-            `;
-		}
-
-		// ==========================================
-		// 4. 이벤트 바인딩 및 그리드 초기화 (jQuery 최적화)
-		// ==========================================
-		$(function () {
-			// 모달 검색 이벤트 바인딩
-			$('#modalSearchInput').on('input', function () {
-				const keyword = $(this).val().toLowerCase();
-				const filtered = studentList.filter(s =>
-					s.name.includes(keyword) || s.id.includes(keyword)
-				);
-				renderStudentList(filtered);
-			});
-
-			// ag-Grid 컬럼 및 옵션 설정
-			const columnDefs = [
-				{headerName: "시간", field: "time", width: 90, cellStyle: {color: '#94a3b8', fontSize: '10px', fontFamily: 'monospace'}},
-				{headerName: "대상", field: "name", width: 100, filter: true, cellStyle: {fontWeight: 'bold', color: '#334155'}},
-				{headerName: "내용", field: "content", flex: 1, minWidth: 150},
-				{headerName: "변동값", field: "change", cellRenderer: changeRenderer, width: 120},
-				{headerName: "담당자", field: "admin", cellRenderer: adminRenderer, width: 100}
-			];
-
-			const gridOptions = {
-				columnDefs: columnDefs,
-				rowData: adjustmentData,
-				defaultColDef: {
-					resizable: true,
-					sortable: true
+					return `<div class="flex items-center justify-center w-full h-full">
+                                <span class="${badgeClass} border px-2 py-0.5 rounded text-[10px] font-bold inline-block min-w-[70px] text-center shadow-sm">
+                                    ${change}
+                                </span>
+                            </div>`;
 				},
-				pagination: true,
-				paginationPageSize: 10,  // 시작 데이터 개수 (기본 10개)
-				paginationPageSizeSelector: [10, 20, 50, 100],  // 🚀 이 부분이 추가된 속성입니다!
-				headerHeight: 35,
-				rowHeight: 33,
-				domLayout: 'autoHeight'
-			};
+				adminBadge: function(params) {
+					if (!params.value) return '';
+					return `<div class="flex items-center justify-center w-full h-full">
+                                <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-500 text-[10px] font-bold">
+                                    ${params.value}
+                                </span>
+                            </div>`;
+				}
+			},
 
-			// 그리드 생성 (ag-Grid는 순수 DOM 객체를 필요로 하므로 [0] 사용)
-			const gridDiv = $('#adjustmentGrid')[0];
-			const gridApi = agGrid.createGrid(gridDiv, gridOptions);
+			// 2. 이벤트 리스너 바인딩
+			initEventListeners: function() {
+				const self = this;
 
-			// 그리드 검색 이벤트 바인딩
-			$('#tableSearchInput').on('input', function () {
-				gridApi.setGridOption('quickFilterText', $(this).val());
-			});
+				// 모달 열기/닫기
+				$('#targetStudentDisplay, #btnOpenModal').on('click', () => self.modal.open());
+				$('#modalBackdrop, #btnCloseModal').on('click', () => self.modal.close());
 
-			// 엑셀 다운로드 이벤트 바인딩
-			$('#btnExport').on('click', function () {
-				gridApi.exportDataAsCsv({
-					fileName: '학생_포인트_경험치_조정내역.csv',
-					columnSeparator: ',',
-					processCellCallback: function (params) {
-						return params.value;
+				// 모달 내부 검색 (Debounce 적용 권장하지만 여기선 간단히)
+				$('#modalSearchInput').on('input', function() {
+					self.modal.filterList($(this).val());
+				});
+
+				// 저장 버튼
+				$('#btnSave').on('click', () => self.handleSave());
+
+				// 그리드 검색 및 엑셀
+				$('#tableSearchInput').on('input', function() {
+					self.gridApi.setGridOption('quickFilterText', $(this).val());
+				});
+				$('#btnExport').on('click', function() {
+					self.gridApi.exportDataAsCsv({ fileName: '조정내역.csv' });
+				});
+			},
+
+			// 3. 모달 관련 로직
+			modal: {
+				open: function() {
+					$('#studentModal').removeClass('hidden');
+					$('#modalSearchInput').val('').focus();
+
+					// 데이터가 없으면 로드, 있으면 기존 데이터로 렌더링
+					if (!RewardManager.studentDataCache) {
+						this.fetchData();
+					} else {
+						this.renderList(RewardManager.studentDataCache);
+					}
+				},
+				close: function() {
+					$('#studentModal').addClass('hidden');
+				},
+				fetchData: function() {
+					$('#studentListContainer').hide();
+					$('#modalLoading').removeClass('hidden').addClass('flex');
+
+					$.ajax({
+						url: '/mng/rewd/getStdList.ax',
+						type: 'POST',
+						contentType: "application/json",
+						success: function(response) {
+							RewardManager.studentDataCache = response.rtnData || [];
+							RewardManager.modal.renderList(RewardManager.studentDataCache);
+						},
+						error: function(xhr, status, error) {
+							console.error("학생 목록 로드 실패:", error);
+						},
+						complete: function() {
+							$('#modalLoading').removeClass('flex').addClass('hidden');
+							$('#studentListContainer').show();
+						}
+					});
+				},
+				renderList: function(data) {
+					const container = $('#studentListContainer');
+					container.empty();
+					if (!data || data.length === 0) {
+						container.html(`<div class="text-center py-10 text-slate-400 text-xs">검색 결과가 없습니다.</div>`);
+						return;
+					}
+					data.forEach(student => {
+						const imgSrc = `https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/${student.occpCode || 'default'}_${(student.sexdstn || 'M').toLowerCase()}.png`;
+						const html = `
+                            <div class="student-item flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 cursor-pointer transition border border-transparent hover:border-indigo-100 group"
+                                 data-sn="${student.mberSn}" data-name="${student.mberNm}" data-info="${student.grade}학년 ${student.cla}반">
+                                <div class="w-10 h-10 rounded-full bg-slate-100 overflow-hidden border border-slate-200 flex-shrink-0">
+                                    <img src="${imgSrc}" alt="" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/40x40?text=U'">
+                                </div>
+                                <div>
+                                    <div class="font-bold text-sm text-slate-800 group-hover:text-indigo-600">${student.mberNm}</div>
+                                    <div class="text-[10px] text-slate-400 font-medium">${student.grade}학년 ${student.cla}반 · ${student.occpNm}</div>
+                                </div>
+                                <i class="fas fa-chevron-right ml-auto text-slate-300 text-xs group-hover:text-indigo-400"></i>
+                            </div>
+                        `;
+						container.append(html);
+					});
+					$('.student-item').on('click', function() {
+						const sn = $(this).data('sn');
+						const name = $(this).data('name');
+						const info = $(this).data('info');
+						RewardManager.modal.selectStudent(sn, name, info);
+					});
+				},
+				filterList: function(keyword) {
+					if (!RewardManager.studentDataCache) return;
+					const lowerKey = keyword.toLowerCase();
+					const filtered = RewardManager.studentDataCache.filter(s =>
+						s.mberNm.includes(lowerKey)
+					);
+					this.renderList(filtered);
+				},
+				selectStudent: function(sn, name, info) {
+					$('#targetStudentDisplay').val(`${name} (${info})`);
+					$('#rewdMberSn').val(sn);
+					this.close();
+				}
+			},
+
+			// 4. 저장 로직
+			handleSave: function() {
+				// Validation
+				const mberSn = $('#rewdMberSn').val();
+				const amount = $('#amountInput').val();
+				const reason = $('#reasonInput').val();
+
+				if (!mberSn) {
+					alert("학생을 선택해주세요.");
+					this.modal.open();
+					return;
+				}
+				if (!amount || amount <= 0) {
+					alert("유효한 수량을 입력해주세요.");
+					$('#amountInput').focus();
+					return;
+				}
+
+				const formData = {
+					mberSn: mberSn,
+					rewardType: $('input[name="rewardType"]:checked').val(), // EXP or GOLD
+					actionType: $('input[name="actionType"]:checked').val(), // ADD or SUB
+					amount: Number(amount),
+					reason: reason
+				};
+
+				if(!confirm(`[${formData.rewardType}] ${formData.amount}을 ${formData.actionType === 'ADD' ? '지급' : '차감'}하시겠습니까?`)) {
+					return;
+				}
+
+				// AJAX Save (Simulation)
+				console.log("Saving...", formData);
+
+				// 실제 서버 통신 예시
+				/*
+				$.ajax({
+					url: '/mng/rewd/saveAdjustment.ax',
+					type: 'POST',
+					data: JSON.stringify(formData),
+					contentType: 'application/json',
+					success: function(res) {
+						alert("저장되었습니다.");
+						location.reload(); // 혹은 그리드만 갱신
 					}
 				});
-			});
+				*/
+
+				// UI 시뮬레이션
+				alert("성공적으로 적용되었습니다! (테스트 모드)");
+				$('#rewardForm')[0].reset(); // 폼 초기화
+				$('#targetStudentDisplay').val('');
+				$('#rewdMberSn').val('');
+			}
+		};
+
+		// DOM Ready
+		$(function() {
+			RewardManager.init();
 		});
 	</script>
 </th:block>
