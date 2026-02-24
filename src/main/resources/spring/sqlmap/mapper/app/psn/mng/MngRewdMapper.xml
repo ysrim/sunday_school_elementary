@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><!--Converted at: Wed May 11 15:49:38 KST 2016 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="app.psn.mng.rewd.mapper.MngRewdMapper">
+
+	<select id="getStdList" resultType="app.psn.mng.rewd.vo.MngStdVO">
+		SELECT A.MBER_SN
+			 , A.MBER_ID
+			 , A.MBER_NM
+			 , A.SEXDSTN
+			 , B.NCNM
+			 , B.OCCP_CODE
+			 , FN_GET_CODE_NM('OCCP', B.OCCP_CODE) as OCCP_NM
+			 , B.EXP
+			 , B.LEVEL
+			 , B.POINT
+			 , D.GUILD_NM
+			 , D.GRADE
+			 , D.CLA
+		FROM MBER_INFO A
+				 LEFT OUTER JOIN AVATAR_INFO B ON A.MBER_SN = B.MBER_SN
+				 LEFT OUTER JOIN GUILD_MBER_LIST C ON A.MBER_SN = C.MBER_SN
+				 LEFT OUTER JOIN GUILD_INFO D ON C.GUILD_SN = D.GUILD_SN
+		WHERE A.GRADE_CODE = '100'
+		  AND A.USE_AT = 'Y'
+	</select>
+
+</mapper>
