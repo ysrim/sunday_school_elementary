@@ -34,6 +34,7 @@ public class TchQuestServiceImpl implements TchQuestService {
 		return tchQuestMapper.sltReqQestList(SessionUtil.getTchMberInfo().guildSn(), reqMonth);
 	}
 
+	@Override
 	public void questProc(ReqQuestProcVO reqQuestProcVO) {
 
 		// 1. 퀘스트 승인 처리

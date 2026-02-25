@@ -4,25 +4,20 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import app.psn.mng.qest.vo.StdQestListVO;
-import app.psn.mng.qest.vo.StdQestPendingVO;
+import app.psn.mng.qest.vo.MngQestVO;
+import app.psn.mng.qest.vo.MngReqQuestProcVO;
 
 @Mapper
 public interface MngQestMapper {
 
 	/**
-	 * 퀘스트 목록
+	 * 퀘스트 수행 목록
 	 */
-	List<StdQestListVO> sltQestList(String mberSn);
+	List<MngQestVO> getQestLogList();
 
 	/**
-	 * 퀘스트 수행 요청
+	 * 퀘스트 승인
 	 */
-	Integer qestDo(StdQestPendingVO questVO);
-
-	/**
-	 * 퀘스트 완료 체크
-	 */
-	Integer qestCompleteChk(StdQestPendingVO questVO);
+	void questProc(MngReqQuestProcVO mngReqQuestProcVO);
 
 }

@@ -2,24 +2,19 @@ package app.psn.mng.qest.service;
 
 import java.util.List;
 
-import app.psn.mng.qest.vo.StdQestListVO;
-import app.psn.mng.qest.vo.StdQestPendingVO;
+import app.psn.mng.qest.vo.MngQestVO;
+import app.psn.mng.qest.vo.MngReqQuestProcVO;
 
 public interface MngQestService {
 
 	/**
-	 * 길드원 목록
+	 * 퀘스트 수행 목록
 	 */
-	List<StdQestListVO> sltQestList();
+	List<MngQestVO> getQestLogList();
 
 	/**
-	 * 퀘스트 수행 요청
+	 * 퀘스트 승인
 	 */
-	void qestDo(StdQestPendingVO stdQestPendingVO);
-
-	/**
-	 * 퀘스트 완료 체크
-	 */
-	boolean qestCompleteChk(StdQestPendingVO stdQestPendingVO);
+	void questProc(MngReqQuestProcVO mngReqQuestProcVO);
 
 }

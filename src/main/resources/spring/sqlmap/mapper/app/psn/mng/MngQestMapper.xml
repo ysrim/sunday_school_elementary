@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?><!--Converted at: Wed May 11 15:49:38 KST 2016 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="app.psn.mng.qest.mapper.MngQestMapper">
+
+	<select id="getQestLogList" resultType="app.psn.mng.qest.vo.MngQestVO">
+		SELECT A.LOG_SN
+			 , A.QUEST_SN
+			 , A.MBER_SN
+			 , DATE_FORMAT(A.CREAT_DE, '%m-%d %H:%I')                          AS CREAT_DATE
+			 , B.QUEST_TYPE
+			 , B.TITLE
+			 , B.DESCRIPTION
+			 , B.EMOJI
+			 , B.REWARD_EXP
+			 , B.REWARD_POINT
+			 , DATE_FORMAT(A.PROCESSED_DE, '%m-%d %H:%I')                      AS PROCESSED_DATE
+			 , (SELECT C.MBER_NM FROM MBER_INFO C WHERE C.MBER_SN = A.MBER_SN) AS MBER_NM
+			 , A.STATUS
+			 , D.GRADE
+			 , D.CLA
+		FROM QUEST_LOGS A
+				 LEFT OUTER JOIN QUESTS B ON A.QUEST_SN = B.QUEST_SN
+				 LEFT OUTER JOIN GUILD_MBER_LIST C ON A.MBER_SN = C.MBER_SN
+				 LEFT OUTER JOIN GUILD_INFO D ON C.GUILD_SN = D.GUILD_SN
+		ORDER BY A.LOG_SN DESC
+	</select>
+
+	<update id="questProc" parameterType="app.psn.mng.qest.vo.MngReqQuestProcVO">
+		UPDATE QUEST_LOGS
+		SET STATUS       = #{status}
+		  , PROCESSED_BY = #{processedBy}
+		WHERE LOG_SN = #{logSn};
+	</update>
+
+</mapper>

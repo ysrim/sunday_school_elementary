@@ -2,20 +2,18 @@ package app.psn.mng.qest.web;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.base.annotation.mng.MngMenuInfo;
-import com.base.annotation.std.StdMenuInfo;
 import com.base.enumm.com.MberGrdEnum;
 import com.base.enumm.com.ViewPathEnum;
 import com.base.enumm.mng.MngNaviEnum;
-import com.base.utl.CommonUtil;
 import com.base.utl.ResUtil;
 import com.base.vo.ResponseBody;
 
 import app.psn.mng.qest.service.MngQestService;
-import app.psn.mng.qest.vo.StdQestPendingVO;
+import app.psn.mng.qest.vo.MngReqQuestProcVO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,31 +25,37 @@ import lombok.extern.slf4j.Slf4j;
 @MngMenuInfo(navi = MngNaviEnum.MNG_QEST, role = MberGrdEnum.MNG)
 public class MngQestController {
 
-	private final MngQestService stdQestService;
+	private final MngQestService mngQestService;
 
 	/**
 	 * 퀘스트 페이지
 	 */
 	@RequestMapping("/qest.pg")
-	public String qestPg(Model model) {
-
-		//model.addAttribute("isAttnd", CommonUtil.isTodaySunday()); // 주일 여부
-
-		//model.addAttribute("qestList", stdQestService.sltQestList());
+	public String qestPg() {
 
 		return ViewPathEnum.MNG.to("/qest/mngQest");
 
 	}
 
 	/**
-	 * 퀘스트 수행 요청
+	 * 퀘스트 수행 목록
 	 */
-	@RequestMapping("/qest/qest.ax")
-	public ResponseEntity<ResponseBody<Object>> qestAx(@Valid StdQestPendingVO questVO) {
+	@RequestMapping("/qest/getQestLogList.ax")
+	public ResponseEntity<ResponseBody<Object>> getQestLogListAx() {
 
-		stdQestService.qestDo(questVO);
+		return ResUtil.resSucc(mngQestService.getQestLogList());
 
-		return ResUtil.resSucc();
+	}
+
+	/**
+	 * 퀘스트 승인/반려
+	 */
+	@RequestMapping("/qest/qestProc.ax")
+	public ResponseEntity<ResponseBody<Object>> atndChkAx(@RequestBody @Valid MngReqQuestProcVO mngReqQuestProcVO) {
+
+		mngQestService.questProc(mngReqQuestProcVO);
+
+		return ResUtil.resSucc("APPROVED".equals(mngReqQuestProcVO.getStatus()) ? "처리가 완료되었습니다! ✅" : "반려 처리되었습니다. ❌");
 
 	}
 

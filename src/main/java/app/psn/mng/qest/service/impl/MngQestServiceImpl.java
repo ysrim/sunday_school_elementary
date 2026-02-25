@@ -6,15 +6,15 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.base.utl.SessionUtil;
+import com.base.enumm.com.QuestLogStatusEnum;
 import com.base.vo.QuestCompleteEvent;
 
 import app.psn.com.service.DomainService;
-import app.psn.com.vo.QuestVO;
+import app.psn.com.vo.QuestLogsVO;
 import app.psn.mng.qest.mapper.MngQestMapper;
 import app.psn.mng.qest.service.MngQestService;
-import app.psn.mng.qest.vo.StdQestListVO;
-import app.psn.mng.qest.vo.StdQestPendingVO;
+import app.psn.mng.qest.vo.MngQestVO;
+import app.psn.mng.qest.vo.MngReqQuestProcVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,39 +24,28 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class MngQestServiceImpl implements MngQestService {
 
-	private final ApplicationEventPublisher publisher;
-
 	private final MngQestMapper mngQestMapper;
+
+	private final ApplicationEventPublisher publisher;
 
 	private final DomainService domainService;
 
 	@Override
-	public List<StdQestListVO> sltQestList() {
-
-		return mngQestMapper.sltQestList(SessionUtil.getStdMberInfo().mberSn() + "");
-
-	}
-
-	public void qestDo(StdQestPendingVO stdQestPendingVO) {
-
-		QuestVO questVO = domainService.sltQuest(stdQestPendingVO.getQuestSn());
-
-		if (mngQestMapper.qestDo(stdQestPendingVO) < 1) { // 비즈니스 로직상 필수라면 예외 처리
-			throw new RuntimeException("퀘스트 수행 내역 저장 중 오류가 발생했습니다.");
-		}
-
-		log.warn("questVO => {}", questVO);
-
-		if ("Y".equals(questVO.immediatePayYn())) { // 퀘스트가 즉시 보상이면 바로 보상
-			publisher.publishEvent(new QuestCompleteEvent(stdQestPendingVO.getMberSn(), stdQestPendingVO.getQuestSn(), stdQestPendingVO.getLogSn()));
-		}
-
+	public List<MngQestVO> getQestLogList() {
+		return mngQestMapper.getQestLogList();
 	}
 
 	@Override
-	public boolean qestCompleteChk(StdQestPendingVO stdQestPendingVO) {
+	public void questProc(MngReqQuestProcVO mngReqQuestProcVO) {
 
-		return mngQestMapper.qestCompleteChk(stdQestPendingVO) > 0;
+		// 1. 퀘스트 승인 처리
+		mngQestMapper.questProc(mngReqQuestProcVO);
+
+		// 2. 승인인 경우에는 보상지급
+		if (QuestLogStatusEnum.APPROVED.isSameStatus(mngReqQuestProcVO.getStatus())) {
+			QuestLogsVO questLogsVO = domainService.sltQuestLogs(mngReqQuestProcVO.getLogSn());
+			publisher.publishEvent(new QuestCompleteEvent(questLogsVO.mberSn(), questLogsVO.questSn(), questLogsVO.logSn()));
+		}
 
 	}
 

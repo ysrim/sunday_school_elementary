@@ -3,8 +3,8 @@
       layout:decorate="~{/app/psn/mng/layouts/mng_layout}" lang="ko">
 <th:block layout:fragment="content">
 	<script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
-	<div id="page-quest" class="page-content w-full min-h-screen bg-[#f8f9fa] p-5 font-sans text-slate-600 animate-fade-in">
 
+	<div id="page-quest" class="page-content w-full min-h-screen bg-[#f8f9fa] p-5 font-sans text-slate-600 animate-fade-in">
 		<header class="mb-6 flex justify-between items-end">
 			<div>
 				<span class="px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-600 text-[10px] font-bold uppercase tracking-wider mb-1 inline-block">Approval</span>
@@ -19,7 +19,7 @@
 					</div>
 					<div>
 						<p class="text-[10px] text-slate-400 font-bold uppercase">Pending</p>
-						<p class="text-lg font-black text-slate-800 leading-none">12</p>
+						<p id="count-pending" class="text-lg font-black text-slate-800 leading-none">0</p>
 					</div>
 				</div>
 				<div class="bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-sm flex items-center gap-3">
@@ -28,14 +28,13 @@
 					</div>
 					<div>
 						<p class="text-[10px] text-slate-400 font-bold uppercase">Approved</p>
-						<p class="text-lg font-black text-slate-800 leading-none">28</p>
+						<p id="count-approved" class="text-lg font-black text-slate-800 leading-none">0</p>
 					</div>
 				</div>
 			</div>
 		</header>
 
 		<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm h-full flex flex-col">
-
 			<div class="mb-5 flex justify-between items-center">
 				<h2 class="text-sm font-black text-slate-800 flex items-center">
 					<i class="fas fa-list-ul text-slate-400 mr-2"></i> 요청 목록
@@ -50,14 +49,14 @@
 					<div class="h-4 w-px bg-slate-200"></div>
 
 					<select id="statusFilter" class="bg-slate-50 border border-slate-200 text-slate-600 text-[11px] font-bold rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block p-1.5 outline-none cursor-pointer hover:bg-slate-100 transition">
-						<option value="all">전체 상태</option>
-						<option value="pending" selected>대기 중</option>
-						<option value="approved">승인됨</option>
-						<option value="rejected">반려됨</option>
+						<option value="ALL" selected>전체 상태</option>
+						<option value="PENDING">대기 중</option>
+						<option value="APPROVED">승인됨</option>
+						<option value="REJECTED">반려됨</option>
 					</select>
 
-					<button id="btnExport" class="text-[10px] font-bold text-slate-500 bg-slate-100 hover:bg-slate-200 px-2.5 py-1.5 rounded-lg transition flex items-center cursor-pointer">
-						<i class="fas fa-file-excel text-green-600 mr-1.5"></i> 엑셀
+					<button id="btnExport" class="text-[10px] font-bold text-slate-500 bg-slate-100 hover:bg-slate-200 px-2.5 py-1.5 rounded-lg transition flex items-center">
+						<i class="fas fa-file-excel text-green-600 mr-1.5"></i> 엑셀 저장
 					</button>
 				</div>
 			</div>
@@ -68,280 +67,174 @@
 
 	<script th:inline="javascript">
 		/*<![CDATA[*/
-
 		const QuestManager = {
 			gridApi: null,
 
 			init() {
 				this.grid.init();
 				this.bindEvents();
-				this.grid.loadData(); // 초기화 후 데이터 로드 호출
+				this.grid.loadData();
 			},
 
-			// --- Grid Logic ---
 			grid: {
 				init() {
 					const columnDefs = [
 						{
-							headerName: "요청시간", field: "creatDate", width: 130,
-							valueFormatter: (params) => params.value ? params.value.substring(5, 16) : '-', // MM-DD HH:mm
-							cellClass: "text-[11px] text-slate-500 flex items-center font-mono"
+							headerName: "요청시간", field: "creatDate", width: 140,
+							cellClass: "text-[11px] text-slate-500 font-mono"
 						},
 						{
-							headerName: "학생정보", field: "mberNm", width: 140, filter: true,
-							cellRenderer: (params) => {
-								const initial = params.value ? params.value.charAt(0) : '?';
-								const gradeCla = `${params.data.grade}-${params.data.cla}`;
+							headerName: "학생정보", field: "mberNm", width: 150,
+							cellRenderer: params => {
+								if (!params.value) return '';
+								const initial = params.value.charAt(0);
 								return `
                             <div class="flex items-center gap-2.5 h-full">
-                               <div class="w-6 h-6 rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center text-[10px] font-bold text-slate-400">${initial}</div>
+                               <div class="w-6 h-6 rounded-full bg-indigo-50 border border-indigo-100 flex items-center justify-center text-[10px] font-bold text-indigo-500">${initial}</div>
                                <div class="flex flex-col justify-center leading-tight">
                                    <span class="font-bold text-slate-700 text-xs">${params.value}</span>
-                                   <span class="text-[9px] text-slate-400">${gradeCla}반</span>
+                                   <span class="text-[9px] text-slate-400">${params.data.grade || '-'}학년 ${params.data.cla || '-'}반</span>
                                </div>
-                            </div>
-                         `;
+                            </div>`;
 							}
 						},
 						{
-							headerName: "퀘스트", field: "questTitle", flex: 1, minWidth: 200, filter: true,
-							cellRenderer: (params) => {
-								let iconClass = "";
-								let textClass = "";
-
-								if (params.data.questType === 'DAILY') {
-									iconClass = "fa-calendar-day text-slate-400";
-									textClass = "text-slate-500";
-								} else if (params.data.questType === 'WEEKLY') {
-									iconClass = "fa-calendar-week text-violet-500";
-									textClass = "text-slate-700";
-								} else {
-									iconClass = "fa-star text-amber-500";
-									textClass = "text-amber-700";
-								}
-
+							headerName: "퀘스트 내용", field: "description", flex: 1, minWidth: 200,
+							cellRenderer: params => {
+								const typeMap = {
+									'DAILY': {icon: 'fa-calendar-day', color: 'text-slate-400', bg: 'text-slate-500'},
+									'WEEKLY': {icon: 'fa-calendar-week', color: 'text-violet-500', bg: 'text-slate-700'},
+									'SPECIAL': {icon: 'fa-star', color: 'text-amber-500', bg: 'text-amber-700'}
+								};
+								const config = typeMap[params.data.questType] || typeMap['DAILY'];
 								return `
                             <div class="flex items-center h-full gap-2">
-                               <i class="fas ${iconClass} text-[10px] w-4 text-center"></i>
-                               <span class="text-xs font-bold ${textClass} truncate">${params.value}</span>
-                            </div>
-                         `;
+                               <i class="fas ${config.icon} ${config.color} text-[10px] w-4"></i>
+                               <span class="text-xs font-bold ${config.bg} truncate">${params.value || ''}</span>
+                            </div>`;
 							}
 						},
 						{
-							headerName: "보상", width: 150,
-							cellRenderer: (params) => {
-								return `
-                            <div class="flex items-center h-full gap-3">
-                               <span class="text-indigo-600 font-bold text-xs flex items-center">
-                                  <i class="fas fa-star text-[9px] mr-1.5 opacity-80"></i>${params.data.rewardExp}
-                               </span>
-                               <span class="text-amber-600 font-bold text-xs flex items-center">
-                                  <i class="fas fa-coins text-[9px] mr-1.5 opacity-80"></i>${params.data.rewardGold}
-                               </span>
-                            </div>
-                         `;
-							}
+							headerName: "보상", width: 130,
+							cellRenderer: params => `
+                         <div class="flex items-center h-full gap-3">
+                            <span class="text-indigo-600 font-bold text-[11px] flex items-center">
+                               <i class="fas fa-star text-[9px] mr-1 opacity-70"></i>${params.data.rewardExp || 0}
+                            </span>
+                            <span class="text-amber-600 font-bold text-[11px] flex items-center">
+                               <i class="fas fa-coins text-[9px] mr-1 opacity-70"></i>${params.data.rewardPoint || 0}
+                            </span>
+                         </div>`
 						},
 						{
-							headerName: "상태", field: "status", width: 110,
+							headerName: "상태",
+							field: "status",
+							width: 100,
 							cellClass: "flex items-center",
-							cellRenderer: (params) => {
-								if (params.value === 'pending') {
-									return `
-                                <span class="text-amber-500 text-xs font-bold flex items-center">
-                                    <i class="fas fa-hourglass-start mr-1.5 text-[10px]"></i>대기
-                                </span>`;
-								} else if (params.value === 'approved') {
-									return `
-                                <span class="text-emerald-600 text-xs font-bold flex items-center">
-                                    <i class="fas fa-check mr-1.5 text-[10px]"></i>승인됨
-                                </span>`;
-								} else {
-									return `
-                                <span class="text-red-500 text-xs font-bold flex items-center">
-                                    <i class="fas fa-ban mr-1.5 text-[10px]"></i>반려됨
-                                </span>`;
-								}
+							cellRenderer: params => {
+								const statusStyles = {
+									'PENDING': {color: 'text-amber-500', icon: 'fa-hourglass-start', label: '대기'},
+									'APPROVED': {color: 'text-emerald-600', icon: 'fa-check', label: '승인됨'},
+									'REJECTED': {color: 'text-red-500', icon: 'fa-ban', label: '반려됨'}
+								};
+								const s = statusStyles[params.value] || statusStyles['PENDING'];
+								// h-full을 추가하여 부모(셀)의 높이를 꽉 채우도록 합니다.
+								return `<span class="${s.color} text-xs font-bold flex items-center h-full">
+						                 <i class="fas ${s.icon} mr-1.5 text-[10px]"></i>${s.label}
+						              </span>`;
 							}
 						},
 						{
-							headerName: "관리", field: "id", width: 130,
+							headerName: "관리", field: "logSn", width: 110, sortable: false,
 							cellClass: "flex items-center justify-center",
-							cellRenderer: (params) => {
-								if (params.data.status === 'pending') {
+							cellRenderer: params => {
+								if (params.data.status === 'PENDING') {
 									return `
-                                <div class="flex gap-1.5">
-                                   <button onclick="QuestManager.api.approve(${params.value})" class="w-6 h-6 rounded bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center transition shadow-sm" title="승인">
+                                <div class="flex gap-2">
+                                   <button onclick="QuestManager.api.updateStatus(${params.value}, 'APPROVED')" class="w-7 h-7 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center transition shadow-sm">
                                       <i class="fas fa-check text-[10px]"></i>
                                    </button>
-                                   <button onclick="QuestManager.api.reject(${params.value})" class="w-6 h-6 rounded bg-white border border-slate-200 hover:bg-red-50 hover:border-red-200 hover:text-red-500 text-slate-400 flex items-center justify-center transition shadow-sm" title="반려">
+                                   <button onclick="QuestManager.api.updateStatus(${params.value}, 'REJECTED')" class="w-7 h-7 rounded-lg bg-white border border-slate-200 hover:bg-red-50 hover:text-red-500 text-slate-400 flex items-center justify-center transition shadow-sm">
                                       <i class="fas fa-times text-[10px]"></i>
                                    </button>
-                                </div>
-                             `;
+                                </div>`;
 								}
-								return '<span class="text-[10px] text-slate-300">-</span>';
+								return '<span class="text-[10px] text-slate-300">처리완료</span>';
 							}
 						}
 					];
 
 					const gridOptions = {
-						columnDefs: columnDefs,
-						rowData: [], // 초기 데이터는 비워둠
-						defaultColDef: {resizable: true, sortable: true},
+						columnDefs,
+						defaultColDef: {resizable: true, sortable: true, filter: true},
 						pagination: true,
 						paginationPageSize: 15,
-						headerHeight: 40,
-						rowHeight: 40,
-						rowClass: "hover:bg-slate-50 transition-colors cursor-default",
-
-						// [추가] 로딩 오버레이 템플릿
-						overlayLoadingTemplate:
-							`<div class="flex flex-col items-center justify-center p-4">
-                           <i class="fas fa-spinner fa-spin text-2xl text-indigo-500 mb-2"></i>
-                           <span class="text-xs font-bold text-slate-500">데이터를 불러오는 중...</span>
-                       </div>`,
-						// 데이터 없음 오버레이 템플릿
-						overlayNoRowsTemplate:
-							`<div class="text-xs text-slate-400 py-10">요청 내역이 없습니다.</div>`
+						paginationPageSizeSelector: [15, 30, 50],
+						rowHeight: 48,
+						headerHeight: 44,
+						overlayLoadingTemplate: '<div class="loader-inner"><i class="fas fa-circle-notch fa-spin text-indigo-500 text-2xl"></i></div>',
+						isExternalFilterPresent: () => $('#statusFilter').val() !== 'ALL',
+						doesExternalFilterPass: (node) => node.data.status === $('#statusFilter').val()
 					};
 
-					const gridDiv = $('#questGrid')[0];
-					QuestManager.gridApi = agGrid.createGrid(gridDiv, gridOptions);
+					QuestManager.gridApi = agGrid.createGrid($('#questGrid')[0], gridOptions);
 				},
 
-				// [추가] AJAX 데이터 로드 함수
 				loadData() {
-					const api = QuestManager.gridApi;
-					if (!api) return;
-
-					// 1. 로딩바 표시
-					api.showLoadingOverlay();
-
-					// 2. AJAX 호출
+					QuestManager.gridApi.showLoadingOverlay();
 					$.ajax({
-						url: '/app/psn/mng/quest/getQuestList.ax', // [확인필요] 실제 서버 URL로 변경해주세요
-						type: 'POST', // or GET
+						url: '/mng/qest/getQestLogList.ax',
+						type: 'POST',
 						contentType: "application/json",
-						// data: JSON.stringify({ searchParam: ... }), // 필요 시 파라미터 전달
-						success: function (res) {
-							// 3. 데이터 바인딩 (서버 응답 구조에 맞춰 변경: res.rtnData, res.list 등)
-							const data = res.rtnData || [];
-
-							api.setGridOption('rowData', data);
-
-							// 데이터가 비었을 경우 '데이터 없음' 표시
-							if (data.length === 0) {
-								api.showNoRowsOverlay();
-							} else {
-								// 초기 필터 적용 (대기 중만 보기 등)
-								QuestManager.grid.applyExternalFilter($('#statusFilter').val());
-							}
+						success: (res) => {
+							const list = res.rtnData || [];
+							QuestManager.gridApi.setGridOption('rowData', list);
+							this.updateCounts(list);
+							if (list.length === 0) QuestManager.gridApi.showNoRowsOverlay();
 						},
-						error: function (e) {
-							console.error("Data Load Error:", e);
-							api.setGridOption('rowData', []);
-							api.showNoRowsOverlay(); // 또는 에러 메시지 표시
-						}
-						// complete는 success/error 내부에서 처리됨
+						error: () => QuestManager.gridApi.showNoRowsOverlay()
 					});
 				},
 
-				applyExternalFilter(status) {
-					if (!QuestManager.gridApi) return;
-
-					if (status === 'all') {
-						QuestManager.gridApi.setGridOption('isExternalFilterPresent', () => false);
-					} else {
-						QuestManager.gridApi.setGridOption('isExternalFilterPresent', () => true);
-						QuestManager.gridApi.setGridOption('doesExternalFilterPass', (node) => node.data.status === status);
-					}
-					QuestManager.gridApi.onFilterChanged();
+				updateCounts(data) {
+					const pending = data.filter(i => i.status === 'PENDING').length;
+					const approved = data.filter(i => i.status === 'APPROVED').length;
+					$('#count-pending').text(pending);
+					$('#count-approved').text(approved);
 				}
 			},
 
-			// --- Event Listeners ---
 			bindEvents() {
-				$('#tableSearchInput').on('input', function () {
-					const keyword = $(this).val();
-					if (QuestManager.gridApi) {
-						QuestManager.gridApi.setGridOption('quickFilterText', keyword);
-					}
-				});
-
-				$('#statusFilter').on('change', function () {
-					const status = $(this).val();
-					QuestManager.grid.applyExternalFilter(status);
-				});
-
-				$('#btnExport').on('click', function () {
-					QuestManager.api.exportCsv();
+				$('#tableSearchInput').on('input', e => QuestManager.gridApi.setGridOption('quickFilterText', e.target.value));
+				$('#statusFilter').on('change', () => QuestManager.gridApi.onFilterChanged());
+				$('#btnExport').on('click', () => {
+					const now = new Date().toISOString().split('T')[0];
+					QuestManager.gridApi.exportDataAsCsv({fileName: `Quest_Report_${now}.csv`});
 				});
 			},
 
-			// --- API Actions ---
 			api: {
-				approve(id) {
-					if (!confirm("해당 퀘스트를 승인하시겠습니까?")) return;
-
-					// [추가] 승인 처리 AJAX
-					$.ajax({
-						url: '/app/psn/mng/quest/approveQuest.ax', // [확인필요] 실제 URL
-						type: 'POST',
-						contentType: 'application/json',
-						data: JSON.stringify({id: id}),
-						success: function (res) {
-							alert("승인되었습니다.");
-							// 그리드 데이터 갱신 (전체 다시 로드 또는 로컬 업데이트)
-							QuestManager.grid.loadData();
-						},
-						error: function (e) {
-							alert("처리 중 오류가 발생했습니다.");
-							console.error(e);
-						}
-					});
-				},
-
-				reject(id) {
-					if (!confirm("해당 퀘스트를 반려하시겠습니까?")) return;
-
-					// [추가] 반려 처리 AJAX
-					$.ajax({
-						url: '/app/psn/mng/quest/rejectQuest.ax', // [확인필요] 실제 URL
-						type: 'POST',
-						contentType: 'application/json',
-						data: JSON.stringify({id: id}),
-						success: function (res) {
-							alert("반려되었습니다.");
-							QuestManager.grid.loadData();
-						},
-						error: function (e) {
-							alert("처리 중 오류가 발생했습니다.");
-							console.error(e);
-						}
-					});
-				},
-
-				exportCsv() {
-					QuestManager.gridApi.exportDataAsCsv({fileName: `Quest_Approval_${new Date().toISOString().slice(0, 10)}.csv`});
+				updateStatus(logSn, statusCode) {
+					const msg = statusCode === 'APPROVED' ? "승인하시겠습니까?" : "반려하시겠습니까?";
+					if (confirm(msg)) {
+						$.ajax({
+							url: '/mng/qest/qestProc.ax',
+							type: 'POST',
+							contentType: 'application/json',
+							data: JSON.stringify({logSn: logSn, status: statusCode}),
+							success: (res) => {
+								Toast.success(res.rtnMsg);
+								QuestManager.grid.loadData();
+							},
+							error: () => alert("처리 중 오류가 발생했습니다.")
+						});
+					}
 				}
 			}
 		};
 
-		$(function () {
-			QuestManager.init();
-		});
+		$(() => QuestManager.init());
 		/*]]>*/
 	</script>
 </th:block>
 </html>
-<!--
-		const dummyData = [
-			{id: 1, creatDate: '2026-02-24 14:30', mberNm: '김철수', grade: 3, cla: 1, questTitle: '주일 설교 요약하기', questType: 'WEEKLY', rewardExp: 100, rewardGold: 50, status: 'pending'},
-			{id: 2, creatDate: '2026-02-24 14:20', mberNm: '이영희', grade: 2, cla: 3, questTitle: '내 방 청소 인증', questType: 'DAILY', rewardExp: 30, rewardGold: 10, status: 'pending'},
-			{id: 3, creatDate: '2026-02-24 14:00', mberNm: '박민수', grade: 1, cla: 2, questTitle: '아침 기도하기', questType: 'DAILY', rewardExp: 20, rewardGold: 5, status: 'approved'},
-			{id: 4, creatDate: '2026-02-24 13:30', mberNm: '최유리', grade: 3, cla: 1, questTitle: '성경 그림 그리기', questType: 'SPECIAL', rewardExp: 150, rewardGold: 100, status: 'rejected'},
-			{id: 5, creatDate: '2026-02-24 13:10', mberNm: '강호동', grade: 2, cla: 3, questTitle: '성경 1장 읽기', questType: 'DAILY', rewardExp: 50, rewardGold: 20, status: 'pending'},
-		];
-		-->
