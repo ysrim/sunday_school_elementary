@@ -1,273 +1,348 @@
 <!DOCTYPE html>
-<html xmlns:th="http//www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/app/psn/mng/layouts/mng_layout}" lang="ko">
 <th:block layout:fragment="content">
+	<script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
 
-	<div id="page-notice" class="page-content w-full min-h-screen bg-[#f8f9fa] p-5 font-sans text-slate-600">
+	<div id="page-notice" class="page-content w-full min-h-screen bg-[#f8fafc] p-6 lg:p-10 font-sans text-slate-600 animate-slide-up">
 
-		<div id="view-list" class="animate-fade-in">
-			<header class="flex justify-between items-end mb-6">
+		<div id="view-list" class="flex flex-col h-full max-w-7xl mx-auto">
+
+			<header class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
 				<div>
-					<span class="px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-600 text-[10px] font-bold uppercase tracking-wider mb-1 inline-block">Community</span>
-					<h1 class="text-2xl font-black text-slate-900 tracking-tight">Kingdom Notices</h1>
-					<p class="text-xs text-slate-500 mt-1 font-medium">왕국 소식과 이벤트를 관리하세요.</p>
+					<div class="flex items-center gap-2 mb-2">
+						<span class="px-2.5 py-0.5 rounded bg-indigo-50 text-indigo-600 text-[11px] font-bold uppercase tracking-wider border border-indigo-100">Community</span>
+						<span class="text-xs text-slate-400 font-medium">Kingdom Notices</span>
+					</div>
+					<h1 class="text-3xl font-black text-slate-900 tracking-tight">공지사항 관리</h1>
+					<p class="text-sm text-slate-500 mt-2 font-medium">왕국 내 소식, 이벤트, 가정통신문을 작성하고 관리합니다.</p>
 				</div>
-				<button onclick="toggleMode('write')"
-				        class="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-200 transition flex items-center transform hover:scale-105 active:scale-95">
+				<button onclick="NoticeManager.ui.toggleMode('write')"
+				        class="bg-indigo-600 text-white px-5 py-3 rounded-xl text-sm font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-200 transition flex items-center transform hover:-translate-y-0.5 active:translate-y-0">
 					<i class="fas fa-pen mr-2"></i> 공지사항 작성
 				</button>
 			</header>
 
-			<div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-5 flex flex-wrap gap-3 justify-between items-center">
-				<div class="flex gap-2">
-					<select class="appearance-none bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-xs font-bold text-slate-600 outline-none cursor-pointer hover:border-indigo-300 transition focus:ring-2 focus:ring-indigo-100">
+			<div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 mb-6 flex flex-wrap gap-3 justify-between items-center">
+				<div class="flex gap-2 w-full md:w-auto">
+					<select id="filterCategory" onchange="NoticeManager.grid.onFilterChanged()"
+					        class="appearance-none bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-600 outline-none cursor-pointer hover:border-indigo-300 transition focus:ring-2 focus:ring-indigo-100 min-w-[120px]">
 						<option value="">전체 분류</option>
 						<option value="NOTICE">📢 공지사항</option>
 						<option value="EVENT">🎉 이벤트</option>
 						<option value="NEWS">📰 가정통신문</option>
 					</select>
-					<select class="appearance-none bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-xs font-bold text-slate-600 outline-none cursor-pointer hover:border-indigo-300 transition focus:ring-2 focus:ring-indigo-100">
+					<select class="appearance-none bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-600 outline-none cursor-pointer hover:border-indigo-300 transition focus:ring-2 focus:ring-indigo-100">
 						<option value="">전체 기간</option>
 						<option value="1W">최근 1주</option>
 						<option value="1M">최근 1달</option>
 					</select>
 				</div>
-				<div class="relative w-full md:w-72 group">
-					<input type="text" placeholder="제목 또는 내용 검색..."
-					       class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition group-hover:bg-white">
-					<i class="fas fa-search absolute left-3.5 top-2.5 text-slate-400 text-xs group-hover:text-indigo-500 transition-colors"></i>
+				<div class="relative w-full md:w-80 group">
+					<input type="text" id="gridSearchInput" placeholder="제목 또는 작성자 검색..."
+					       class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border-none ring-1 ring-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all placeholder:text-slate-400">
+					<i class="fas fa-search absolute left-3.5 top-3 text-slate-400 group-focus-within:text-indigo-500 transition-colors"></i>
 				</div>
 			</div>
 
-			<div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-				<table class="w-full text-left">
-					<thead class="bg-slate-50/80 text-slate-500 text-[10px] uppercase font-bold tracking-wider border-b border-slate-200">
-					<tr>
-						<th class="py-3 px-5 w-16 text-center">No</th>
-						<th class="py-3 px-5 w-28 text-center">분류</th>
-						<th class="py-3 px-5">제목</th>
-						<th class="py-3 px-5 w-32 text-center">작성자</th>
-						<th class="py-3 px-5 w-32 text-center">작성일</th>
-						<th class="py-3 px-5 w-20 text-center">조회</th>
-						<th class="py-3 px-5 w-24 text-center">관리</th>
-					</tr>
-					</thead>
-					<tbody class="divide-y divide-slate-50 text-xs text-slate-600">
-					<tr class="bg-red-50/30 hover:bg-red-50/60 transition group cursor-pointer">
-						<td class="py-3 px-5 text-center font-bold text-red-400"><i class="fas fa-thumbtack"></i></td>
-						<td class="py-3 px-5 text-center">
-							<span class="bg-red-100 text-red-600 border border-red-200 px-2 py-0.5 rounded text-[10px] font-bold">긴급공지</span>
-						</td>
-						<td class="py-3 px-5">
-							<div class="font-bold text-slate-800 group-hover:text-red-600 transition">이번 주 주일예배 시간 변경
-								안내
-							</div>
-						</td>
-						<td class="py-3 px-5 text-center font-medium">관리자</td>
-						<td class="py-3 px-5 text-center font-mono text-slate-500">2026.02.13</td>
-						<td class="py-3 px-5 text-center text-slate-400">1,204</td>
-						<td class="py-3 px-5 text-center">
-							<button onclick="toggleMode('edit')"
-							        class="text-slate-400 hover:text-indigo-600 p-1.5 rounded-lg hover:bg-white transition">
-								<i class="fas fa-edit"></i></button>
-						</td>
-					</tr>
-					<tr class="hover:bg-slate-50 transition group cursor-pointer">
-						<td class="py-3 px-5 text-center text-slate-400 font-mono">15</td>
-						<td class="py-3 px-5 text-center">
-							<span class="bg-indigo-50 text-indigo-600 border border-indigo-100 px-2 py-0.5 rounded text-[10px] font-bold">이벤트</span>
-						</td>
-						<td class="py-3 px-5">
-							<div class="font-bold text-slate-800 group-hover:text-indigo-600 transition">👑 달란트 시장 개최 안내
-								(2/28)
-							</div>
-						</td>
-						<td class="py-3 px-5 text-center font-medium">김선생</td>
-						<td class="py-3 px-5 text-center font-mono text-slate-500">2026.02.10</td>
-						<td class="py-3 px-5 text-center text-slate-400">854</td>
-						<td class="py-3 px-5 text-center">
-							<button onclick="toggleMode('edit')"
-							        class="text-slate-400 hover:text-indigo-600 p-1.5 rounded-lg hover:bg-indigo-50 transition">
-								<i class="fas fa-edit"></i></button>
-						</td>
-					</tr>
-					<tr class="hover:bg-slate-50 transition group cursor-pointer">
-						<td class="py-3 px-5 text-center text-slate-400 font-mono">14</td>
-						<td class="py-3 px-5 text-center">
-							<span class="bg-slate-100 text-slate-500 border border-slate-200 px-2 py-0.5 rounded text-[10px] font-bold">일반</span>
-						</td>
-						<td class="py-3 px-5">
-							<div class="font-bold text-slate-700 group-hover:text-indigo-600 transition">2월 생일자 파티 사진
-								모음
-							</div>
-						</td>
-						<td class="py-3 px-5 text-center font-medium">박선생</td>
-						<td class="py-3 px-5 text-center font-mono text-slate-500">2026.02.05</td>
-						<td class="py-3 px-5 text-center text-slate-400">342</td>
-						<td class="py-3 px-5 text-center">
-							<button onclick="toggleMode('edit')"
-							        class="text-slate-400 hover:text-indigo-600 p-1.5 rounded-lg hover:bg-indigo-50 transition">
-								<i class="fas fa-edit"></i></button>
-						</td>
-					</tr>
-					</tbody>
-				</table>
-			</div>
-
-			<div class="flex justify-center mt-5">
-				<nav class="flex items-center gap-1 bg-white p-1 rounded-xl shadow-sm border border-slate-200">
-					<button class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:bg-slate-50 transition">
-						<i class="fas fa-chevron-left text-xs"></i></button>
-					<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-indigo-600 text-white font-bold text-xs shadow-md">
-						1
-					</button>
-					<button class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-600 hover:bg-slate-50 font-bold text-xs transition">
-						2
-					</button>
-					<button class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-600 hover:bg-slate-50 font-bold text-xs transition">
-						3
-					</button>
-					<button class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:bg-slate-50 transition">
-						<i class="fas fa-chevron-right text-xs"></i></button>
-				</nav>
+			<div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex-grow relative">
+				<div id="noticeGrid" class="ag-theme-quartz" style="width: 100%; height: 600px;"></div>
 			</div>
 		</div>
 
-		<div id="view-write" class="hidden animate-fade-in">
-			<header class="flex justify-between items-center mb-6">
-				<div class="flex items-center gap-3">
-					<button onclick="toggleMode('list')"
-					        class="w-8 h-8 rounded-full bg-white border border-slate-200 text-slate-500 flex items-center justify-center hover:bg-slate-50 hover:text-slate-800 transition shadow-sm">
-						<i class="fas fa-arrow-left text-xs"></i>
+		<div id="view-write" class="hidden animate-slide-up max-w-5xl mx-auto">
+			<header class="flex justify-between items-center mb-8 sticky top-0 bg-[#f8fafc]/90 backdrop-blur-sm z-10 py-4">
+				<div class="flex items-center gap-4">
+					<button onclick="NoticeManager.ui.toggleMode('list')"
+					        class="w-10 h-10 rounded-full bg-white border border-slate-200 text-slate-500 flex items-center justify-center hover:bg-slate-50 hover:text-slate-900 transition shadow-sm">
+						<i class="fas fa-arrow-left"></i>
 					</button>
-					<h1 id="form-title" class="text-xl font-black text-slate-900 tracking-tight">공지사항 작성</h1>
+					<div>
+						<h1 id="form-title" class="text-2xl font-black text-slate-900 tracking-tight">공지사항 작성</h1>
+						<p class="text-xs text-slate-500 font-medium mt-1">새로운 소식을 왕국 구성원들에게 알립니다.</p>
+					</div>
 				</div>
 				<div class="flex gap-2">
-					<button onclick="toggleMode('list')"
-					        class="px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-600 text-xs font-bold hover:bg-slate-50 transition shadow-sm">
+					<button onclick="NoticeManager.ui.toggleMode('list')"
+					        class="px-5 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-600 text-sm font-bold hover:bg-slate-50 transition shadow-sm">
 						취소
 					</button>
-					<button class="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 shadow-md shadow-indigo-200 transition flex items-center">
-						<i class="fas fa-paper-plane mr-1.5"></i> 게시하기
+					<button class="px-6 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-200 transition flex items-center">
+						<i class="fas fa-paper-plane mr-2"></i> 게시하기
 					</button>
 				</div>
 			</header>
 
-			<div class="grid grid-cols-1 lg:grid-cols-4 gap-5">
-				<div class="lg:col-span-3 space-y-5">
-					<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-						<div class="mb-5">
-							<label class="form-label">제목 <span class="text-red-500">*</span></label>
-							<input type="text" placeholder="제목을 입력하세요"
-							       class="form-input text-sm py-3 font-bold placeholder-slate-300">
-						</div>
-
-						<div>
-							<label class="form-label">내용</label>
-							<div class="border border-slate-200 rounded-t-xl bg-slate-50/50 p-2 flex gap-1 border-b-0">
-								<button type="button" class="editor-toolbar-btn"><i class="fas fa-bold"></i></button>
-								<button type="button" class="editor-toolbar-btn"><i class="fas fa-italic"></i></button>
-								<button type="button" class="editor-toolbar-btn"><i class="fas fa-underline"></i>
-								</button>
-								<div class="w-px h-4 bg-slate-300 mx-1 my-auto"></div>
-								<button type="button" class="editor-toolbar-btn"><i class="fas fa-align-left"></i>
-								</button>
-								<button type="button" class="editor-toolbar-btn"><i class="fas fa-align-center"></i>
-								</button>
-								<button type="button" class="editor-toolbar-btn"><i class="fas fa-align-right"></i>
-								</button>
-								<div class="w-px h-4 bg-slate-300 mx-1 my-auto"></div>
-								<button type="button" class="editor-toolbar-btn"><i class="fas fa-image"></i></button>
-								<button type="button" class="editor-toolbar-btn"><i class="fas fa-link"></i></button>
-							</div>
-							<textarea
-									class="w-full h-80 border border-slate-200 rounded-b-xl p-4 text-sm text-slate-700 outline-none resize-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition"
-									placeholder="내용을 자유롭게 작성하세요."></textarea>
-						</div>
-					</div>
-
-					<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-						<label class="form-label flex items-center"><i class="fas fa-paperclip mr-2"></i> 첨부파일</label>
-						<div class="border-2 border-dashed border-slate-300 rounded-xl p-8 text-center hover:bg-slate-50 transition cursor-pointer group">
-							<div class="w-10 h-10 bg-indigo-50 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-								<i class="fas fa-cloud-upload-alt"></i>
-							</div>
-							<p class="text-xs font-bold text-slate-600">클릭하여 파일을 업로드하세요.</p>
-							<p class="text-[10px] text-slate-400 mt-1">또는 파일을 여기로 드래그하세요.</p>
-						</div>
-					</div>
-				</div>
-
-				<div class="lg:col-span-1 space-y-5">
-					<div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-						<h2 class="text-xs font-black text-slate-800 uppercase mb-4 tracking-wider border-b border-slate-100 pb-2">
-							게시 설정</h2>
-
-						<div class="space-y-4">
-							<div>
-								<label class="form-label">카테고리</label>
-								<select class="form-input">
-									<option value="NOTICE">공지사항</option>
-									<option value="EVENT">이벤트</option>
-									<option value="NEWS">가정통신문</option>
-								</select>
+			<form id="noticeForm" class="pb-20">
+				<div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+					<div class="lg:col-span-3 space-y-6">
+						<div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm">
+							<div class="mb-6">
+								<label class="form-label">제목 <span class="text-red-500">*</span></label>
+								<input type="text" placeholder="공지사항 제목을 입력하세요"
+								       class="form-input text-lg font-bold placeholder-slate-300 py-3">
 							</div>
 
 							<div>
-								<label class="form-label">옵션</label>
-								<div class="space-y-2">
-									<label class="flex items-center gap-2 cursor-pointer group">
-										<input type="checkbox"
-										       class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer">
-										<span class="text-xs font-bold text-slate-600 group-hover:text-indigo-600">상단 고정 (Pin)</span>
-									</label>
-									<label class="flex items-center gap-2 cursor-pointer group">
-										<input type="checkbox"
-										       class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer">
-										<span class="text-xs font-bold text-slate-600 group-hover:text-indigo-600">비공개 처리</span>
-									</label>
+								<label class="form-label">내용</label>
+								<div class="border border-slate-200 rounded-t-xl bg-slate-50 p-2 flex gap-1 border-b-0">
+									<button type="button" class="p-2 text-slate-500 hover:bg-white hover:text-indigo-600 rounded transition"><i class="fas fa-bold"></i></button>
+									<button type="button" class="p-2 text-slate-500 hover:bg-white hover:text-indigo-600 rounded transition"><i class="fas fa-italic"></i></button>
+									<button type="button" class="p-2 text-slate-500 hover:bg-white hover:text-indigo-600 rounded transition"><i class="fas fa-underline"></i></button>
+									<div class="w-px h-5 bg-slate-300 mx-2 my-auto"></div>
+									<button type="button" class="p-2 text-slate-500 hover:bg-white hover:text-indigo-600 rounded transition"><i class="fas fa-align-left"></i></button>
+									<button type="button" class="p-2 text-slate-500 hover:bg-white hover:text-indigo-600 rounded transition"><i class="fas fa-align-center"></i></button>
+									<div class="w-px h-5 bg-slate-300 mx-2 my-auto"></div>
+									<button type="button" class="p-2 text-slate-500 hover:bg-white hover:text-indigo-600 rounded transition"><i class="fas fa-image"></i></button>
+								</div>
+								<textarea
+										class="w-full h-96 border border-slate-200 rounded-b-xl p-5 text-sm text-slate-700 outline-none resize-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition leading-relaxed"
+										placeholder="내용을 자유롭게 작성하세요."></textarea>
+							</div>
+						</div>
+
+						<div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+							<label class="form-label flex items-center mb-3"><i class="fas fa-paperclip mr-2"></i> 첨부파일</label>
+							<div class="border-2 border-dashed border-slate-200 rounded-2xl p-10 text-center hover:bg-indigo-50/50 hover:border-indigo-300 transition cursor-pointer group">
+								<div class="w-12 h-12 bg-indigo-50 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform shadow-sm">
+									<i class="fas fa-cloud-upload-alt text-lg"></i>
+								</div>
+								<p class="text-sm font-bold text-slate-600">클릭하여 파일을 업로드하세요</p>
+								<p class="text-xs text-slate-400 mt-1">또는 파일을 여기로 드래그하세요 (최대 10MB)</p>
+							</div>
+						</div>
+					</div>
+
+					<div class="lg:col-span-1 space-y-6">
+						<div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm sticky top-24">
+							<h2 class="text-xs font-black text-slate-800 uppercase mb-5 tracking-wider border-b border-slate-100 pb-3 flex items-center justify-between">
+								게시 설정 <i class="fas fa-cog text-slate-300"></i>
+							</h2>
+
+							<div class="space-y-5">
+								<div>
+									<label class="form-label">카테고리</label>
+									<select class="form-input">
+										<option value="NOTICE">📢 공지사항</option>
+										<option value="EVENT">🎉 이벤트</option>
+										<option value="NEWS">📰 가정통신문</option>
+									</select>
+								</div>
+
+								<div>
+									<label class="form-label">게시 옵션</label>
+									<div class="space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-100">
+										<label class="flex items-center gap-3 cursor-pointer group">
+											<input type="checkbox" class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+											<span class="text-xs font-bold text-slate-600 group-hover:text-indigo-600 transition-colors">📌 상단 고정 (Pin)</span>
+										</label>
+										<label class="flex items-center gap-3 cursor-pointer group">
+											<input type="checkbox" class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+											<span class="text-xs font-bold text-slate-600 group-hover:text-indigo-600 transition-colors">🔒 비공개 처리</span>
+										</label>
+									</div>
+								</div>
+
+								<div>
+									<label class="form-label">게시 기간</label>
+									<input type="text" placeholder="설정 안함"
+									       class="form-input text-center cursor-not-allowed bg-slate-50 text-slate-400" disabled
+									       value="상시 게시">
 								</div>
 							</div>
-
-							<div>
-								<label class="form-label">게시 기간 설정</label>
-								<input type="text" placeholder="설정 안함"
-								       class="form-input text-center cursor-not-allowed bg-slate-50" disabled
-								       value="상시 게시">
-							</div>
 						</div>
 					</div>
 				</div>
-			</div>
+			</form>
 		</div>
 
 	</div>
 
 	<script th:inline="javascript">
-        function toggleMode(mode) {
-            const listDiv = document.getElementById('view-list');
-            const writeDiv = document.getElementById('view-write');
-            const title = document.getElementById('form-title');
+		/*<![CDATA[*/
 
-            if (mode === 'write') {
-                listDiv.classList.add('hidden');
-                writeDiv.classList.remove('hidden');
-                title.innerText = '공지사항 작성';
-                window.scrollTo(0, 0);
-            } else if (mode === 'edit') {
-                listDiv.classList.add('hidden');
-                writeDiv.classList.remove('hidden');
-                title.innerText = '공지사항 수정';
-                window.scrollTo(0, 0);
-            } else {
-                writeDiv.classList.add('hidden');
-                listDiv.classList.remove('hidden');
-            }
-        }
+		/*<![CDATA[*/
 
-        $(function () {
-            // 초기화 스크립트
-        });
+		const NoticeManager = {
+			gridApi: null,
+
+			init() {
+				this.grid.init();
+				this.bindEvents();
+				this.grid.loadData();
+			},
+
+			grid: {
+				init() {
+					const columnDefs = [
+						{
+							headerName: "No", field: "id", width: 80,
+							cellClass: "flex items-center justify-center font-mono text-slate-400 text-xs",
+						},
+						{
+							headerName: "분류", field: "category", width: 120,
+							cellClass: "flex items-center justify-center",
+							cellRenderer: (params) => {
+								let badgeClass = "bg-slate-100 text-slate-500 border-slate-200";
+								let label = "일반";
+
+								if (params.value === 'NOTICE') {
+									badgeClass = "bg-red-50 text-red-600 border-red-100";
+									label = "📢 공지";
+								} else if (params.value === 'EVENT') {
+									badgeClass = "bg-indigo-50 text-indigo-600 border-indigo-100";
+									label = "🎉 이벤트";
+								} else if (params.value === 'NEWS') {
+									badgeClass = "bg-green-50 text-green-600 border-green-100";
+									label = "📰 통신문";
+								}
+
+								return `<span class="px-2.5 py-1 rounded-lg text-[11px] font-bold border ${badgeClass}">${label}</span>`;
+							}
+						},
+						{
+							headerName: "제목", field: "title", flex: 1, minWidth: 300,
+							cellClass: "flex items-center",
+							cellRenderer: (params) => {
+								const pinIcon = params.data.isPinned
+									? `<i class="fas fa-thumbtack text-red-400 mr-2 text-xs transform rotate-45"></i>`
+									: ``;
+								const titleClass = params.data.isPinned ? "text-slate-900 font-black" : "text-slate-700 font-bold";
+
+								return `
+                            <div class="flex items-center w-full cursor-pointer group">
+                                ${pinIcon}
+                                <span class="${titleClass} group-hover:text-indigo-600 transition-colors text-sm truncate">${params.value}</span>
+                                ${params.data.isNew ? '<span class="ml-2 w-1.5 h-1.5 bg-red-500 rounded-full"></span>' : ''}
+                            </div>
+                        `;
+							}
+						},
+						{
+							headerName: "작성자", field: "writer", width: 120,
+							cellClass: "flex items-center justify-center font-medium text-slate-600 text-xs",
+						},
+						{
+							headerName: "작성일", field: "regDate", width: 120,
+							cellClass: "flex items-center justify-center font-mono text-slate-500 text-xs",
+						},
+						{
+							headerName: "조회", field: "viewCount", width: 100,
+							cellClass: "flex items-center justify-center text-slate-400 text-xs font-mono",
+							valueFormatter: (params) => params.value.toLocaleString()
+						},
+						{
+							headerName: "관리", width: 100,
+							cellClass: "flex items-center justify-center",
+							cellRenderer: (params) => {
+								return `
+                            <button class="w-8 h-8 rounded-lg hover:bg-indigo-50 text-slate-400 hover:text-indigo-600 transition flex items-center justify-center" onclick="NoticeManager.ui.edit(${params.data.id})">
+                                <i class="fas fa-edit text-xs"></i>
+                            </button>
+                        `;
+							}
+						}
+					];
+
+					const gridOptions = {
+						columnDefs: columnDefs,
+						rowData: [],
+						defaultColDef: {resizable: true, sortable: true},
+
+						// [수정] 페이지네이션 설정 강화
+						pagination: true,
+						paginationPageSize: 10, // 기본 페이지 크기 (10개씩 보기)
+						paginationPageSizeSelector: [10, 20, 50, 100], // 사용자가 선택 가능한 옵션
+
+						rowHeight: 60,
+						headerHeight: 48,
+						rowClass: "hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-none",
+						onRowClicked: (event) => {
+							// Row 클릭 이벤트
+						}
+					};
+
+					const gridDiv = document.querySelector('#noticeGrid');
+					NoticeManager.gridApi = agGrid.createGrid(gridDiv, gridOptions);
+				},
+
+				loadData() {
+					const api = NoticeManager.gridApi;
+					if (!api) return;
+
+					// [수정] 페이징 테스트를 위해 더미 데이터 50개 생성
+					const dummyData = [];
+					const categories = ['NOTICE', 'EVENT', 'NEWS'];
+					const writers = ['관리자', '김선생', '박선생', '이총무'];
+
+					for (let i = 1; i <= 55; i++) {
+						const isPinned = i <= 3; // 상위 3개 고정
+						const randomCat = categories[Math.floor(Math.random() * categories.length)];
+
+						dummyData.push({
+							id: 1000 - i,
+							category: isPinned ? 'NOTICE' : randomCat,
+							title: isPinned ? `[필독] 중요 공지사항 테스트 제목 ${i}` : `왕국 소식 및 이벤트 안내 게시글 ${i}`,
+							writer: writers[i % writers.length],
+							regDate: `2026.02.${String((i % 28) + 1).padStart(2, '0')}`,
+							viewCount: Math.floor(Math.random() * 2000),
+							isPinned: isPinned,
+							isNew: i < 10
+						});
+					}
+
+					api.updateGridOptions({rowData: dummyData});
+				},
+
+				onFilterChanged() {
+					const category = document.getElementById('filterCategory').value;
+					const api = NoticeManager.gridApi;
+
+					if (category) {
+						// 간단 필터링 예시
+						api.setGridOption('quickFilterText', category === 'NOTICE' ? '공지' : (category === 'EVENT' ? '이벤트' : '통신문'));
+					} else {
+						api.setGridOption('quickFilterText', '');
+					}
+				}
+			},
+
+			bindEvents() {
+				$('#gridSearchInput').on('input', function () {
+					if (NoticeManager.gridApi) NoticeManager.gridApi.setGridOption('quickFilterText', $(this).val());
+				});
+			},
+
+			ui: {
+				toggleMode(mode) {
+					const listDiv = $('#view-list');
+					const writeDiv = $('#view-write');
+					const title = $('#form-title');
+
+					if (mode === 'write') {
+						$('#noticeForm')[0].reset();
+						title.text('공지사항 작성');
+						listDiv.addClass('hidden');
+						writeDiv.removeClass('hidden');
+						window.scrollTo(0, 0);
+					} else if (mode === 'list') {
+						writeDiv.addClass('hidden');
+						listDiv.removeClass('hidden');
+						if (NoticeManager.gridApi) NoticeManager.gridApi.sizeColumnsToFit();
+					}
+				},
+
+				edit(id) {
+					this.toggleMode('write');
+					$('#form-title').text('공지사항 수정');
+				}
+			}
+		};
+
+		$(function () {
+			NoticeManager.init();
+		});
+		/*]]>*/
 	</script>
 </th:block>
 </html>
