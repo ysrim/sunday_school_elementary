@@ -4,7 +4,7 @@ import app.psn.com.service.DomainService;
 import app.psn.com.vo.QuestVO;
 import app.psn.std.qest.mapper.StdQestMapper;
 import app.psn.std.qest.service.StdQestService;
-import app.psn.std.qest.vo.StdQestListVO;
+import app.psn.std.qest.vo.StdQestVO;
 import app.psn.std.qest.vo.StdQestPendingVO;
 import com.base.utl.SessionUtil;
 import com.base.vo.QuestCompleteEvent;
@@ -29,7 +29,7 @@ public class StdQestServiceImpl implements StdQestService {
 	private final DomainService domainService;
 
 	@Override
-	public List<StdQestListVO> sltQestList() {
+	public List<StdQestVO> sltQestList() {
 
 		return stdQestMapper.sltQestList(SessionUtil.getStdMberInfo().mberSn() + "");
 

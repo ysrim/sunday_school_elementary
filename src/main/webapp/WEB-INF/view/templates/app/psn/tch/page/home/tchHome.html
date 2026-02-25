@@ -7,7 +7,7 @@
 			<h2 class="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
 				[[${session.tchMberInfo.guildNm}]]길드 모험 브리핑
 				<span class="text-[11px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-lg border border-blue-100"
-				      th:text="${new java.lang.String(dashboard.weekName, 'UTF-8')}">1월 4주</span>
+				      th:text="${dashboard.weekName}">1월 4주</span>
 			</h2>
 			<p class="text-sm text-slate-400 mt-1">오늘의 왕국 활동 현황을 확인하세요.</p>
 		</div>
@@ -15,7 +15,7 @@
 			<div class="flex justify-between items-center mb-6 relative z-10">
 				<div>
 					<div class="text-blue-100 text-xs font-bold mb-1 opacity-80"
-					     th:text="|출석현황 ${new java.lang.String(dashboard.monthName, 'UTF-8')}|">출석현황(02.01)
+					     th:text="|출석현황 ${dashboard.monthName}|">출석현황(02.01)
 					</div>
 					<div class="text-4xl font-black">[[${dashboard.atndCnt}]] <span
 							class="text-lg opacity-70 font-medium" th:text="|/ ${dashboard.gildCnt}명|">/ 21명</span>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="app.psn.tch.qest.mapper.TchQestMapper">
+
+	<select id="sltReqQestList" resultType="app.psn.tch.qest.vo.TchResQestVO">
+		SELECT A.LOG_SN
+			 , A.QUEST_SN
+			 , A.MBER_SN
+			 , DATE_FORMAT(A.CREAT_DE, '%m-%d %H:%I')                          AS CREAT_DATE
+			 , B.QUEST_TYPE
+			 , B.TITLE
+			 , B.DESCRIPTION
+			 , B.EMOJI
+			 , B.REWARD_EXP
+			 , B.REWARD_POINT
+			 , DATE_FORMAT(A.PROCESSED_DE, '%m-%d %H:%I')                      AS PROCESSED_DATE
+			 , (SELECT C.MBER_NM FROM MBER_INFO C WHERE C.MBER_SN = A.MBER_SN) AS MBER_NM
+			 , STATUS
+		FROM QUEST_LOGS A
+				 left join QUESTS B on A.QUEST_SN = B.QUEST_SN
+		WHERE DATE_FORMAT(A.CREAT_DE, '%c') = #{reqMonth}
+		  AND A.MBER_SN IN (SELECT MBER_SN
+							FROM GUILD_MBER_LIST
+							WHERE GUILD_SN = #{guildSn})
+		order by A.CREAT_DE DESC
+	</select>
+
+	<update id="questProc" parameterType="app.psn.tch.qest.vo.ReqQestProcVO">
+		UPDATE QUEST_LOGS
+		SET STATUS       = #{status}
+		  , PROCESSED_BY = #{processedBy}
+		WHERE LOG_SN = #{logSn};
+	</update>
+
+</mapper>

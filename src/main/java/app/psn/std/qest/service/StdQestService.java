@@ -1,6 +1,6 @@
 package app.psn.std.qest.service;
 
-import app.psn.std.qest.vo.StdQestListVO;
+import app.psn.std.qest.vo.StdQestVO;
 import app.psn.std.qest.vo.StdQestPendingVO;
 
 import java.util.List;
@@ -10,7 +10,7 @@ public interface StdQestService {
 	/**
 	 * 길드원 목록
 	 */
-	List<StdQestListVO> sltQestList();
+	List<StdQestVO> sltQestList();
 
 	/**
 	 * 퀘스트 수행 요청

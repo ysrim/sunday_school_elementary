@@ -17,7 +17,7 @@
 					<h1 class="text-3xl font-black text-slate-900 tracking-tight">공지사항 관리</h1>
 					<p class="text-sm text-slate-500 mt-2 font-medium">왕국 내 소식, 이벤트, 가정통신문을 작성하고 관리합니다.</p>
 				</div>
-				<button onclick="NoticeManager.ui.toggleMode('write')"
+				<button onclick="alert('1');"
 				        class="bg-indigo-600 text-white px-5 py-3 rounded-xl text-sm font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-200 transition flex items-center transform hover:-translate-y-0.5 active:translate-y-0">
 					<i class="fas fa-pen mr-2"></i> 공지사항 작성
 				</button>
@@ -236,7 +236,7 @@
 							cellClass: "flex items-center justify-center",
 							cellRenderer: (params) => {
 								return `
-                            <button class="w-8 h-8 rounded-lg hover:bg-indigo-50 text-slate-400 hover:text-indigo-600 transition flex items-center justify-center" onclick="NoticeManager.ui.edit(${params.data.id})">
+                            <button class="w-8 h-8 rounded-lg hover:bg-indigo-50 text-slate-400 hover:text-indigo-600 transition flex items-center justify-center" onclick="alert(${params.data.id});">
                                 <i class="fas fa-edit text-xs"></i>
                             </button>
                         `;
@@ -311,31 +311,6 @@
 				$('#gridSearchInput').on('input', function () {
 					if (NoticeManager.gridApi) NoticeManager.gridApi.setGridOption('quickFilterText', $(this).val());
 				});
-			},
-
-			ui: {
-				toggleMode(mode) {
-					const listDiv = $('#view-list');
-					const writeDiv = $('#view-write');
-					const title = $('#form-title');
-
-					if (mode === 'write') {
-						$('#noticeForm')[0].reset();
-						title.text('공지사항 작성');
-						listDiv.addClass('hidden');
-						writeDiv.removeClass('hidden');
-						window.scrollTo(0, 0);
-					} else if (mode === 'list') {
-						writeDiv.addClass('hidden');
-						listDiv.removeClass('hidden');
-						if (NoticeManager.gridApi) NoticeManager.gridApi.sizeColumnsToFit();
-					}
-				},
-
-				edit(id) {
-					this.toggleMode('write');
-					$('#form-title').text('공지사항 수정');
-				}
 			}
 		};
 

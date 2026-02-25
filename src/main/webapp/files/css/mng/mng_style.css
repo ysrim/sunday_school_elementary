@@ -186,3 +186,14 @@
     align-items: center;
     height: 100%;
 }
+
+.toastui-editor-defaultUI {
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 0.75rem !important;
+}
+
+.toastui-editor-defaultUI-toolbar {
+    background-color: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    border-radius: 0.75rem 0.75rem 0 0 !important;
+}

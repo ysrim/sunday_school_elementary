@@ -1,6 +1,6 @@
 package app.psn.std.qest.mapper;
 
-import app.psn.std.qest.vo.StdQestListVO;
+import app.psn.std.qest.vo.StdQestVO;
 import app.psn.std.qest.vo.StdQestPendingVO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -12,7 +12,7 @@ public interface StdQestMapper {
 	/**
 	 * 퀘스트 목록
 	 */
-	List<StdQestListVO> sltQestList(String mberSn);
+	List<StdQestVO> sltQestList(String mberSn);
 
 	/**
 	 * 퀘스트 수행 요청
