@@ -51,6 +51,11 @@ public class RewardServiceImpl implements RewardService {
 		String toastMsg = rewardType + "보상으로 " + reward.amount() + " " + reward.rewardType() + " 들어왔어요.";
 		publisher.publishEvent(new ToastMsgEvent(reward.mberSn(), ToastTypeEnum.REWARD.toString(), reward.description(), toastMsg));
 
+		// 경험치 리워드가 지급되면 레벨업가능한지 여부 검증
+		if (RewardTypeEnum.EXP.name().equals(reward.rewardType())) {
+			publisher.publishEvent(new AvatarLvlUdtEvent(reward.mberSn()));
+		}
+
 	}
 
 	/**
@@ -82,9 +87,6 @@ public class RewardServiceImpl implements RewardService {
 		if (rules != null) { // QUEST_CONTINUITY_RULES 수행하는 퀘스트가 연퀘가 가능한지 여부 판단. 연퀘보상정보가 없으면 pass
 			handleQuestContinuity(event, rules);
 		}
-
-		// 5. 등록한 경험치 검증 핸들러
-		publisher.publishEvent(new AvatarLvlUdtEvent(event.mberSn()));
 
 	}
 

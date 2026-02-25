@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><!--Converted at: Wed May 11 15:49:38 KST 2016 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="app.psn.mng.mber.mapper.MngMberMapper">
+
+	<select id="getMberList" resultType="app.psn.mng.mber.vo.MngMberVO">
+		SELECT A.MBER_SN
+			 , A.MBER_ID
+			 , A.MBER_NM
+			 , A.SEXDSTN
+			 , B.OCCP_CODE
+			 , FN_GET_CODE_NM('OCCP', B.OCCP_CODE)       AS OCCP_NM
+			 , D.GRADE
+			 , D.CLA
+			 , D.GUILD_NM
+			 , B.LEVEL
+			 , B.EXP
+			 , (B.EXP - LVL.PRE_EXP)                     AS CURR_EXP
+			 , (LVL.REQUIRED_EXP - LVL.PRE_EXP)          AS MAX_EXP
+			 , B.POINT
+			 , DATE_FORMAT(A.CREAT_DE, '%Y-%m-%d %H:%I') AS CREAT_DATE
+		FROM MBER_INFO A
+				 LEFT OUTER JOIN AVATAR_INFO B ON A.MBER_SN = B.MBER_SN
+				 LEFT OUTER JOIN GUILD_MBER_LIST C ON A.MBER_SN = C.MBER_SN
+				 LEFT OUTER JOIN GUILD_INFO D ON C.GUILD_SN = D.GUILD_SN
+				 LEFT OUTER JOIN (SELECT X.LEVEL,
+										 X.REQUIRED_EXP,
+										 IFNULL((SELECT MAX(REQUIRED_EXP)
+												 FROM AVATAR_LEVEL_RULES
+												 WHERE LEVEL <![CDATA[ < ]]> X.LEVEL), 0) AS PRE_EXP
+								  FROM AVATAR_LEVEL_RULES X) LVL ON B.EXP <![CDATA[ < ]]> LVL.REQUIRED_EXP
+			AND B.EXP >= LVL.PRE_EXP
+		WHERE A.GRADE_CODE = 100
+		  AND A.USE_AT = 'Y'
+	</select>
+
+</mapper>
