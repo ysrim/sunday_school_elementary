@@ -12,7 +12,6 @@
 
         body {
             font-family: 'Pretendard', sans-serif;
-            background-color: #f8fafc;
         }
 
         .card-btn {
@@ -23,103 +22,122 @@
             transform: translateY(-5px);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
+
+        .hero-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .hero-icon:hover {
+            transform: rotate(0deg) scale(1.1);
+        }
 	</style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-6">
+<body class="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
 
 <div class="max-w-5xl w-full">
-	<div class="text-center mb-12">
-		<div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-3xl shadow-lg shadow-indigo-200 mb-6 transform -rotate-6">
-			<i class="fas fa-shield-alt text-4xl text-white"></i>
+	<div class="text-center mb-16">
+		<div class="hero-icon inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-3xl shadow-xl shadow-indigo-200/50 mb-6 transform -rotate-6 cursor-pointer">
+			<i class="fas fa-shield-alt text-5xl text-white"></i>
 		</div>
-		<h1 class="text-3xl md:text-4xl font-black text-slate-800 mb-2">RPG Adventure Portal</h1>
-		<p class="text-slate-500 font-medium">봉동중앙교회 초등부 성장 시스템</p>
+
+		<h1 class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-600 mb-4 tracking-tight drop-shadow-sm">
+			RPG Adventure Portal
+		</h1>
+
+		<h2 class="text-xl md:text-2xl font-extrabold text-slate-700 mb-4">
+			말씀으로 레벨업! 달란트가 팡팡 터지는 즐거운 신앙 모험 ✨
+		</h2>
+
+		<span class="inline-block bg-white px-5 py-2 rounded-full text-sm font-semibold text-slate-500 border border-slate-200 shadow-sm">
+          봉동중앙교회 초등부 신앙 성장 RPG 프로젝트
+       </span>
 	</div>
 
-	<div class="mb-10">
-		<h2 class="text-lg font-bold text-slate-700 mb-4 flex items-center gap-2">
+	<div class="mb-12">
+		<h2 class="text-xl font-bold text-slate-700 mb-5 flex items-center gap-2 pl-1">
 			<i class="fas fa-gamepad text-indigo-500"></i> 서비스 접속 (Game Start)
 		</h2>
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
 			<a href="/std/idx/intro.pg"
-			   class="card-btn bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center group cursor-pointer hover:border-blue-200">
-				<div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+			   class="card-btn bg-white p-8 rounded-2xl border border-blue-100 shadow-sm flex flex-col items-center text-center group cursor-pointer hover:border-blue-300 ring-offset-2 focus:ring-2 focus:ring-blue-500 outline-none">
+				<div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-3xl mb-5 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
 					<i class="fas fa-child"></i>
 				</div>
-				<h3 class="text-lg font-bold text-slate-800 group-hover:text-blue-600">학생용 (Student)</h3>
-				<p class="text-sm text-slate-400 mt-1">나의 모험 시작하기</p>
+				<h3 class="text-xl font-bold text-slate-800 group-hover:text-blue-600 transition-colors">학생용 (Student)</h3>
+				<p class="text-sm text-slate-500 mt-2 font-medium">나의 모험 시작하기</p>
 			</a>
 
 			<a href="/tch/idx/login.pg"
-			   class="card-btn bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center group cursor-pointer hover:border-indigo-200">
-				<div class="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center text-2xl mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+			   class="card-btn bg-white p-8 rounded-2xl border border-indigo-100 shadow-sm flex flex-col items-center text-center group cursor-pointer hover:border-indigo-300 ring-offset-2 focus:ring-2 focus:ring-indigo-500 outline-none">
+				<div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center text-3xl mb-5 group-hover:bg-indigo-600 group-hover:text-white transition-colors duration-300">
 					<i class="fas fa-chalkboard-teacher"></i>
 				</div>
-				<h3 class="text-lg font-bold text-slate-800 group-hover:text-indigo-600">선생님용 (Teacher)</h3>
-				<p class="text-sm text-slate-400 mt-1">우리 반 길드 관리</p>
+				<h3 class="text-xl font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">선생님용 (Teacher)</h3>
+				<p class="text-sm text-slate-500 mt-2 font-medium">우리 반 길드 관리</p>
 			</a>
 
 			<a href="/mng/idx/login.pg"
-			   class="card-btn bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center group cursor-pointer hover:border-slate-300">
-				<div class="w-14 h-14 bg-slate-100 text-slate-600 rounded-full flex items-center justify-center text-2xl mb-4 group-hover:bg-slate-700 group-hover:text-white transition-colors">
+			   class="card-btn bg-white p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center text-center group cursor-pointer hover:border-slate-400 ring-offset-2 focus:ring-2 focus:ring-slate-500 outline-none">
+				<div class="w-16 h-16 bg-slate-100 text-slate-600 rounded-2xl flex items-center justify-center text-3xl mb-5 group-hover:bg-slate-700 group-hover:text-white transition-colors duration-300">
 					<i class="fas fa-user-shield"></i>
 				</div>
-				<h3 class="text-lg font-bold text-slate-800 group-hover:text-slate-700">관리자용 (Admin)</h3>
-				<p class="text-sm text-slate-400 mt-1">시스템 통합 설정</p>
+				<h3 class="text-xl font-bold text-slate-800 group-hover:text-slate-700 transition-colors">관리자용 (Admin)</h3>
+				<p class="text-sm text-slate-500 mt-2 font-medium">시스템 통합 설정</p>
 			</a>
 
 		</div>
 	</div>
 
 	<div>
-		<h2 class="text-lg font-bold text-slate-700 mb-4 flex items-center gap-2">
+		<h2 class="text-xl font-bold text-slate-700 mb-5 flex items-center gap-2 pl-1">
 			<i class="fas fa-book-open text-emerald-500"></i> 이용 가이드 (Manual)
 		</h2>
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
 			<a href="student_guide.html"
-			   class="card-btn bg-slate-50 p-5 rounded-2xl border border-slate-200 flex items-center gap-4 hover:bg-white hover:border-blue-300 cursor-pointer">
-				<div class="w-10 h-10 bg-white border border-slate-200 rounded-lg flex items-center justify-center text-blue-500 shadow-sm">
+			   class="card-btn bg-white p-5 rounded-2xl border border-slate-200 flex items-center gap-4 hover:border-blue-300 cursor-pointer outline-none focus:ring-2 focus:ring-blue-400 ring-offset-1">
+				<div class="w-12 h-12 bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-center text-blue-500 shadow-sm">
 					<i class="fas fa-book"></i>
 				</div>
-				<div class="text-left">
-					<h3 class="font-bold text-slate-700">학생용 가이드</h3>
-					<p class="text-xs text-slate-400">모험을 떠나는 법</p>
+				<div class="text-left flex-1">
+					<h3 class="font-bold text-slate-800">학생용 가이드</h3>
+					<p class="text-sm text-slate-400 mt-0.5">모험을 떠나는 법</p>
 				</div>
-				<i class="fas fa-arrow-right ml-auto text-slate-300"></i>
+				<i class="fas fa-chevron-right text-slate-300 group-hover:text-blue-400 transition-colors"></i>
 			</a>
 
 			<a href="manager_guide.html#teacher-mobile"
-			   class="card-btn bg-slate-50 p-5 rounded-2xl border border-slate-200 flex items-center gap-4 hover:bg-white hover:border-indigo-300 cursor-pointer">
-				<div class="w-10 h-10 bg-white border border-slate-200 rounded-lg flex items-center justify-center text-indigo-500 shadow-sm">
+			   class="card-btn bg-white p-5 rounded-2xl border border-slate-200 flex items-center gap-4 hover:border-indigo-300 cursor-pointer outline-none focus:ring-2 focus:ring-indigo-400 ring-offset-1">
+				<div class="w-12 h-12 bg-indigo-50 border border-indigo-100 rounded-xl flex items-center justify-center text-indigo-500 shadow-sm">
 					<i class="fas fa-book-reader"></i>
 				</div>
-				<div class="text-left">
-					<h3 class="font-bold text-slate-700">선생님 가이드</h3>
-					<p class="text-xs text-slate-400">길드 운영 방법</p>
+				<div class="text-left flex-1">
+					<h3 class="font-bold text-slate-800">선생님 가이드</h3>
+					<p class="text-sm text-slate-400 mt-0.5">길드 운영 방법</p>
 				</div>
-				<i class="fas fa-arrow-right ml-auto text-slate-300"></i>
+				<i class="fas fa-chevron-right text-slate-300 group-hover:text-indigo-400 transition-colors"></i>
 			</a>
 
 			<a href="manager_guide.html#total-admin"
-			   class="card-btn bg-slate-50 p-5 rounded-2xl border border-slate-200 flex items-center gap-4 hover:bg-white hover:border-slate-400 cursor-pointer">
-				<div class="w-10 h-10 bg-white border border-slate-200 rounded-lg flex items-center justify-center text-slate-600 shadow-sm">
+			   class="card-btn bg-white p-5 rounded-2xl border border-slate-200 flex items-center gap-4 hover:border-slate-400 cursor-pointer outline-none focus:ring-2 focus:ring-slate-400 ring-offset-1">
+				<div class="w-12 h-12 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-center text-slate-600 shadow-sm">
 					<i class="fas fa-cogs"></i>
 				</div>
-				<div class="text-left">
-					<h3 class="font-bold text-slate-700">관리자 가이드</h3>
-					<p class="text-xs text-slate-400">시스템 운영 매뉴얼</p>
+				<div class="text-left flex-1">
+					<h3 class="font-bold text-slate-800">관리자 가이드</h3>
+					<p class="text-sm text-slate-400 mt-0.5">시스템 운영 매뉴얼</p>
 				</div>
-				<i class="fas fa-arrow-right ml-auto text-slate-300"></i>
+				<i class="fas fa-chevron-right text-slate-300 group-hover:text-slate-400 transition-colors"></i>
 			</a>
 
 		</div>
 	</div>
 
-	<div class="mt-16 text-center border-t border-slate-200 pt-8">
-		<p class="text-xs text-slate-400">Copyright © 2026 Bongdong Jungang Church Elementary Dept. All rights
-			reserved.</p>
+	<div class="mt-20 text-center border-t border-slate-200/60 pt-8 pb-4">
+		<p class="text-sm text-slate-400 font-medium">
+			Copyright © 2026 Bongdong Jungang Church Elementary Dept. All rights reserved.
+		</p>
 	</div>
 </div>
 
