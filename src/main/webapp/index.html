@@ -4,7 +4,6 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<title>봉동중앙교회 초등부 RPG - 포털</title>
-
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 	<script src="https://cdn.tailwindcss.com"></script>
 	<style>
@@ -31,6 +30,18 @@
             transform: rotate(0deg) scale(1.1);
         }
 	</style>
+	<script>
+		// 1. 현재 접속한 프로토콜이 'http:' 인지 확인합니다.
+		if (window.location.protocol === 'http:') {
+			// 2. http라면, 기존 주소 정보를 조합하여 https용 새 URL을 만듭니다.
+			const secureUrl = 'https://'
+				+ window.location.host
+				+ window.location.pathname
+				+ window.location.search;
+			// 3. 페이지를 안전한 URL로 즉시 이동시킵니다. (뒤로 가기 방지)
+			window.location.replace(secureUrl);
+		}
+	</script>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
 

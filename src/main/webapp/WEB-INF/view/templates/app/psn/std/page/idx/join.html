@@ -11,272 +11,272 @@
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<link rel="stylesheet" th:href="@{/files/css/join_style.css}">
 	<script th:inline="javascript">
-        /*<![CDATA[*/
-        $(function () {
-            'use strict';
-            const CONFIG = {
-                urls: {
-                    checkId: /*[[@{/std/idx/idDupleChk.ax}]]*/ '/std/idx/idDupleChk.ax',
-                    join: /*[[@{/std/idx/join.ax}]]*/ '/std/idx/join.ax',
-                    login: /*[[@{/std/idx/login.pg}]]*/ '/std/idx/login.pg'
-                }
-            };
-            const JoinApp = {
-                isIdChecked: false,
-                init: function () {
-                    this.cacheDOM();
-                    this.bindEvents();
-                    this.updateClassOptions();
-                },
-                cacheDOM: function () {
-                    this.$form = $('#joinFm');
-                    this.$idInput = $('#mberId');
-                    this.$pwInput = $('#pwd');
-                    this.$pwConfirm = $('#pwd-confirm');
-                    this.$nameInput = $('#mberNm');
-                    this.$nickInput = $('#ncnm');
-                    this.$occpInput = $('#occpCode');
-                    this.$gradeSelect = $('#grade');
-                    this.$classSelect = $('#cls');
-                    this.$avatars = $('.avatar-item');
-                    this.$msgId = $('#msg-id');
-                    this.$msgPw = $('#msg-pw');
-                    this.$genderInputs = $('input[name="sexdstn"]');
-                    this.$alert = $('#custom-alert');
-                    this.$alertMsg = $('#alert-message');
-                    this.$alertIcon = $('#alert-icon');
-                    this.$alertTitle = $('#alert-title');
-                    this.$alertConfirm = $('.custom-alert-confirm');
-                    this.$btnGoLogin = $('#btn-go-login'); // 로그인 이동 버튼 캐싱
-                },
-                bindEvents: function () {
-                    this.$avatars.on('click', (e) => this.handleAvatarSelect(e));
-                    this.$idInput.on('input', () => {
-                        this.isIdChecked = false;
-                        this.$msgId.text('').removeClass('msg-success msg-error');
-                    });
-                    $('#btn-check-id').on('click', () => this.checkIdDuplicate());
-                    this.$pwInput.add(this.$pwConfirm).on('input', () => this.checkPasswordMatch());
-                    // 비밀번호 입력 시 강도 체크와 일치 체크를 동시에 수행
-                    this.$pwInput.on('input', () => {
-                        this.checkPasswordStrength();
-                        this.checkPasswordMatch();
-                    });
-                    this.$pwConfirm.on('input', () => this.checkPasswordMatch());
-                    this.$gradeSelect.on('change', () => this.updateClassOptions());
-                    $('#btn-submit').on('click', () => this.handleSubmit());
-                    this.$alertConfirm.on('click', () => this.closePopup());
-                    this.$genderInputs.on('click', () => this.genderImageChg());
-                    this.$btnGoLogin.on('click', () => {
-                        location.href = CONFIG.urls.login; // CONFIG에 정의된 login URL로 이동
-                    });
-                },
-                handleAvatarSelect: function (e) {
-                    const $target = $(e.currentTarget);
-                    this.$avatars.removeClass('selected');
-                    $target.addClass('selected');
-                    this.$occpInput.val($target.data('id'));
-                },
-                checkPasswordStrength: function () {
-                    const pw = this.$pwInput.val();
-                    const $bar = $('#pw-strength-bar');
-                    const $text = $('#pw-strength-text');
+		/*<![CDATA[*/
+		$(function () {
+			'use strict';
+			const CONFIG = {
+				urls: {
+					checkId: /*[[@{/std/idx/idDupleChk.ax}]]*/ '/std/idx/idDupleChk.ax',
+					join: /*[[@{/std/idx/join.ax}]]*/ '/std/idx/join.ax',
+					login: /*[[@{/std/idx/login.pg}]]*/ '/std/idx/login.pg'
+				}
+			};
+			const JoinApp = {
+				isIdChecked: false,
+				init: function () {
+					this.cacheDOM();
+					this.bindEvents();
+					this.updateClassOptions();
+				},
+				cacheDOM: function () {
+					this.$form = $('#joinFm');
+					this.$idInput = $('#mberId');
+					this.$pwInput = $('#pwd');
+					this.$pwConfirm = $('#pwd-confirm');
+					this.$nameInput = $('#mberNm');
+					this.$nickInput = $('#ncnm');
+					this.$occpInput = $('#occpCode');
+					this.$gradeSelect = $('#grade');
+					this.$classSelect = $('#cls');
+					this.$avatars = $('.avatar-item');
+					this.$msgId = $('#msg-id');
+					this.$msgPw = $('#msg-pw');
+					this.$genderInputs = $('input[name="sexdstn"]');
+					this.$alert = $('#custom-alert');
+					this.$alertMsg = $('#alert-message');
+					this.$alertIcon = $('#alert-icon');
+					this.$alertTitle = $('#alert-title');
+					this.$alertConfirm = $('.custom-alert-confirm');
+					this.$btnGoLogin = $('#btn-go-login'); // 로그인 이동 버튼 캐싱
+				},
+				bindEvents: function () {
+					this.$avatars.on('click', (e) => this.handleAvatarSelect(e));
+					this.$idInput.on('input', () => {
+						this.isIdChecked = false;
+						this.$msgId.text('').removeClass('msg-success msg-error');
+					});
+					$('#btn-check-id').on('click', () => this.checkIdDuplicate());
+					this.$pwInput.add(this.$pwConfirm).on('input', () => this.checkPasswordMatch());
+					// 비밀번호 입력 시 강도 체크와 일치 체크를 동시에 수행
+					this.$pwInput.on('input', () => {
+						this.checkPasswordStrength();
+						this.checkPasswordMatch();
+					});
+					this.$pwConfirm.on('input', () => this.checkPasswordMatch());
+					this.$gradeSelect.on('change', () => this.updateClassOptions());
+					$('#btn-submit').on('click', () => this.handleSubmit());
+					this.$alertConfirm.on('click', () => this.closePopup());
+					this.$genderInputs.on('click', () => this.genderImageChg());
+					this.$btnGoLogin.on('click', () => {
+						location.href = CONFIG.urls.login; // CONFIG에 정의된 login URL로 이동
+					});
+				},
+				handleAvatarSelect: function (e) {
+					const $target = $(e.currentTarget);
+					this.$avatars.removeClass('selected');
+					$target.addClass('selected');
+					this.$occpInput.val($target.data('id'));
+				},
+				checkPasswordStrength: function () {
+					const pw = this.$pwInput.val();
+					const $bar = $('#pw-strength-bar');
+					const $text = $('#pw-strength-text');
 
-                    // 강도 측정 기준
-                    const hasLetter = /[a-zA-Z]/.test(pw);
-                    const hasNumber = /[0-9]/.test(pw);
-                    const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(pw);
-                    const isLongEnough = pw.length >= 8;
+					// 강도 측정 기준
+					const hasLetter = /[a-zA-Z]/.test(pw);
+					const hasNumber = /[0-9]/.test(pw);
+					const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(pw);
+					const isLongEnough = pw.length >= 8;
 
-                    let score = 0;
-                    if (hasLetter) score++;
-                    if (hasNumber) score++;
-                    if (hasSpecial) score++;
-                    if (isLongEnough) score++;
+					let score = 0;
+					if (hasLetter) score++;
+					if (hasNumber) score++;
+					if (hasSpecial) score++;
+					if (isLongEnough) score++;
 
-                    let color = '#FF5252'; // 위험 (빨강)
-                    let label = '조금 더 복잡하게 만들어볼까요? 🛡️';
-                    let width = '25%';
+					let color = '#FF5252'; // 위험 (빨강)
+					let label = '조금 더 복잡하게 만들어볼까요? 🛡️';
+					let width = '25%';
 
-                    if (pw.length === 0) {
-                        width = '0%';
-                        label = '보안을 위해 8자 이상 조합해주세요!';
-                        color = '#eee';
-                    } else {
-                        switch (score) {
-                            case 1:
-                                width = '25%';
-                                color = '#FF5252';
-                                label = '너무 위험해요! 😱';
-                                break;
-                            case 2:
-                                width = '50%';
-                                color = '#FFC107';
-                                label = '보통이에요. 더 튼튼하게! 🤔';
-                                break;
-                            case 3:
-                                width = '75%';
-                                color = '#4A90E2';
-                                label = '좋아요! 거의 다 됐어요. 👍';
-                                break;
-                            case 4:
-                                width = '100%';
-                                color = '#4CAF50';
-                                label = '완벽한 방어력입니다! 💪';
-                                break;
-                        }
-                    }
+					if (pw.length === 0) {
+						width = '0%';
+						label = '보안을 위해 8자 이상 조합해주세요!';
+						color = '#eee';
+					} else {
+						switch (score) {
+							case 1:
+								width = '25%';
+								color = '#FF5252';
+								label = '너무 위험해요! 😱';
+								break;
+							case 2:
+								width = '50%';
+								color = '#FFC107';
+								label = '보통이에요. 더 튼튼하게! 🤔';
+								break;
+							case 3:
+								width = '75%';
+								color = '#4A90E2';
+								label = '좋아요! 거의 다 됐어요. 👍';
+								break;
+							case 4:
+								width = '100%';
+								color = '#4CAF50';
+								label = '완벽한 방어력입니다! 💪';
+								break;
+						}
+					}
 
-                    $bar.css({'width': width, 'background-color': color});
-                    $text.text(label).css('color', color);
+					$bar.css({'width': width, 'background-color': color});
+					$text.text(label).css('color', color);
 
-                    return score === 4;
-                },
-                genderImageChg: function () {
-                    // 1. 현재 선택된 성별 값 가져오기 (M 또는 F)
-                    const gender = this.$genderInputs.filter(':checked').val();
-                    if (!gender) return;
-                    // 2. 성별에 따라 이미지 파일명 접미사 결정
-                    // 남자면 '_m', 여자면 '_f' (소문자 기준)
-                    const suffix = (gender === 'F') ? '_f' : '_m';
-                    const baseUrl = 'https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/';
-                    // 3. 모든 아바타 아이템을 순회하며 img src 변경
-                    this.$avatars.each(function () {
-                        const $item = $(this);
-                        const id = $item.data('id'); // 예: "001"
-                        const $img = $item.find('img');
-                        $img.attr('src', `${baseUrl}${id}${suffix}.png`);
-                    });
-                },
-                checkIdDuplicate: function () {
-                    const inputId = this.$idInput.val().trim();
-                    if (inputId.length < 5) {
-                        this.setMessage(this.$msgId, '아이디는 5글자 이상이어야 해요.', false);
-                        this.$idInput.focus();
-                        return;
-                    }
-                    $.ajax({
-                        type: "GET",
-                        url: CONFIG.urls.checkId,
-                        data: {mberId: inputId},
-                        success: (data) => {
-                            if (data.rtnCd === '001') {
-                                this.setMessage(this.$msgId, '사용 가능한 아이디입니다!', true);
-                                this.isIdChecked = true;
-                            } else {
-                                this.setMessage(this.$msgId, '이미 사용 중인 아이디입니다.', false);
-                                this.isIdChecked = false;
-                            }
-                        },
-                        error: (e) => {
-                            console.error(e);
-                            this.showPopup('서버 오류가 발생했습니다.', '🔥', '오류');
-                        }
-                    });
-                },
-                checkPasswordMatch: function () {
-                    const pw = this.$pwInput.val();
-                    const pwConfirm = this.$pwConfirm.val();
-                    if (!pw && !pwConfirm) {
-                        this.$msgPw.text('');
-                        return;
-                    }
-                    if (pw === pwConfirm) {
-                        this.setMessage(this.$msgPw, '비밀번호가 일치합니다.', true);
-                    } else {
-                        this.setMessage(this.$msgPw, '비밀번호가 서로 달라요.', false);
-                    }
-                },
-                updateClassOptions: function () {
-                    const grade = this.$gradeSelect.val();
-                    const maxClass = (grade === '5') ? 4 : 6;
-                    const currentVal = this.$classSelect.val();
-                    this.$classSelect.empty();
-                    for (let i = 1; i <= maxClass; i++) {
-                        this.$classSelect.append(`<option value="${i}">${i}반</option>`);
-                    }
-                    if (currentVal && currentVal <= maxClass) {
-                        this.$classSelect.val(currentVal);
-                    }
-                },
-                handleSubmit: function () {
-                    if (!this.validateForm()) return;
-                    $.ajax({
-                        type: "POST",
-                        url: CONFIG.urls.join,
-                        data: this.$form.serialize(),
-                        success: (data) => {
-                            if (data.rtnCd === '001') {
-                                this.showPopup(`가입을 축하합니다!<br>${this.$nameInput.val()} 용사님!`, '🎉', '환영합니다', () => {
-                                    location.href = CONFIG.urls.login;
-                                });
-                            } else {
-                                this.showPopup(data.rtnMsg || '가입 처리에 실패했습니다.', '❌', '실패');
-                            }
-                        },
-                        error: (e) => {
-                            console.error(e);
-                            this.showPopup('가입 처리 중 오류가 발생했습니다.', '🔥', '오류');
-                        }
-                    });
-                },
-                validateForm: function () {
-                    const mberId = this.$idInput.val().trim();
-                    const pw = this.$pwInput.val();
-                    const pwConfirm = this.$pwConfirm.val();
-                    const name = this.$nameInput.val().trim();
-                    const ncnm = this.$nickInput.val().trim();
-                    const occp = this.$occpInput.val();
-                    // ✅ 성별 선택 여부 확인 (checked 된 요소가 0개면 선택 안 함)
-                    const isGenderSelected = this.$genderInputs.is(':checked');
-                    if (!mberId) return this.warn('아이디를 입력해주세요.', this.$idInput);
-                    if (!this.isIdChecked) return this.warn('아이디 중복확인을 해주세요!', this.$idInput);
-                    if (pw.length < 4) return this.warn('비밀번호를 4자리 이상 입력해주세요.', this.$pwInput);
-                    if (pw !== pwConfirm) return this.warn('비밀번호가 일치하지 않습니다.', this.$pwConfirm);
-                    if (!name) return this.warn('이름을 입력해주세요!', this.$nameInput);
-                    // ✅ 성별 검증 로직 추가
-                    if (!isGenderSelected) return this.warn('성별을 선택해주세요!', null);
-                    if (!ncnm) return this.warn('캐릭터 이름을 입력해주세요!', this.$nickInput);
-                    if (!occp) return this.warn('캐릭터를 선택해주세요!', null);
-                    // 비밀번호 강화 조건 검증
-                    const pwRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,}$/;
-                    if (!pwRegex.test(pw)) {
-                        return this.warn('비밀번호는 영문, 숫자, 특수문자를 포함하여 8자 이상이어야 합니다!', this.$pwInput);
-                    }
-                    return true;
-                },
-                warn: function (msg, $target) {
-                    this.showPopup(msg, '⚠️', '확인 필요', () => {
-                        if ($target) $target.focus();
-                    });
-                    return false;
-                },
-                setMessage: function ($el, text, isSuccess) {
-                    $el.text(text)
-                        .removeClass('msg-success msg-error')
-                        .addClass(isSuccess ? 'msg-success' : 'msg-error');
-                },
-                showPopup: function (msg, icon = '✨', title = '알림', callback) {
-                    this.$alertMsg.html(msg);
-                    this.$alertIcon.html(icon);
-                    this.$alertTitle.text(title);
+					return score === 4;
+				},
+				genderImageChg: function () {
+					// 1. 현재 선택된 성별 값 가져오기 (M 또는 F)
+					const gender = this.$genderInputs.filter(':checked').val();
+					if (!gender) return;
+					// 2. 성별에 따라 이미지 파일명 접미사 결정
+					// 남자면 '_m', 여자면 '_f' (소문자 기준)
+					const suffix = (gender === 'F') ? '_f' : '_m';
+					const baseUrl = 'https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/avatar/';
+					// 3. 모든 아바타 아이템을 순회하며 img src 변경
+					this.$avatars.each(function () {
+						const $item = $(this);
+						const id = $item.data('id'); // 예: "001"
+						const $img = $item.find('img');
+						$img.attr('src', `${baseUrl}${id}${suffix}.png`);
+					});
+				},
+				checkIdDuplicate: function () {
+					const inputId = this.$idInput.val().trim();
+					if (inputId.length < 5) {
+						this.setMessage(this.$msgId, '아이디는 5글자 이상이어야 해요.', false);
+						this.$idInput.focus();
+						return;
+					}
+					$.ajax({
+						type: "GET",
+						url: CONFIG.urls.checkId,
+						data: {mberId: inputId},
+						success: (data) => {
+							if (data.rtnCd === '001') {
+								this.setMessage(this.$msgId, '사용 가능한 아이디입니다!', true);
+								this.isIdChecked = true;
+							} else {
+								this.setMessage(this.$msgId, '이미 사용 중인 아이디입니다.', false);
+								this.isIdChecked = false;
+							}
+						},
+						error: (e) => {
+							console.error(e);
+							this.showPopup('서버 오류가 발생했습니다.', '🔥', '오류');
+						}
+					});
+				},
+				checkPasswordMatch: function () {
+					const pw = this.$pwInput.val();
+					const pwConfirm = this.$pwConfirm.val();
+					if (!pw && !pwConfirm) {
+						this.$msgPw.text('');
+						return;
+					}
+					if (pw === pwConfirm) {
+						this.setMessage(this.$msgPw, '비밀번호가 일치합니다.', true);
+					} else {
+						this.setMessage(this.$msgPw, '비밀번호가 서로 달라요.', false);
+					}
+				},
+				updateClassOptions: function () {
+					const grade = this.$gradeSelect.val();
+					const maxClass = (grade === '5') ? 4 : 6;
+					const currentVal = this.$classSelect.val();
+					this.$classSelect.empty();
+					for (let i = 1; i <= maxClass; i++) {
+						this.$classSelect.append(`<option value="${i}">${i}반</option>`);
+					}
+					if (currentVal && currentVal <= maxClass) {
+						this.$classSelect.val(currentVal);
+					}
+				},
+				handleSubmit: function () {
+					if (!this.validateForm()) return;
+					$.ajax({
+						type: "POST",
+						url: CONFIG.urls.join,
+						data: this.$form.serialize(),
+						success: (data) => {
+							if (data.rtnCd === '001') {
+								this.showPopup(`가입을 축하합니다!<br>${this.$nameInput.val()} 용사님!`, '🎉', '환영합니다', () => {
+									location.href = CONFIG.urls.login;
+								});
+							} else {
+								this.showPopup(data.rtnMsg || '가입 처리에 실패했습니다.', '❌', '실패');
+							}
+						},
+						error: (e) => {
+							console.error(e);
+							this.showPopup('가입 처리 중 오류가 발생했습니다.', '🔥', '오류');
+						}
+					});
+				},
+				validateForm: function () {
+					const mberId = this.$idInput.val().trim();
+					const pw = this.$pwInput.val();
+					const pwConfirm = this.$pwConfirm.val();
+					const name = this.$nameInput.val().trim();
+					const ncnm = this.$nickInput.val().trim();
+					const occp = this.$occpInput.val();
+					// ✅ 성별 선택 여부 확인 (checked 된 요소가 0개면 선택 안 함)
+					const isGenderSelected = this.$genderInputs.is(':checked');
+					if (!mberId) return this.warn('아이디를 입력해주세요.', this.$idInput);
+					if (!this.isIdChecked) return this.warn('아이디 중복확인을 해주세요!', this.$idInput);
+					if (pw.length < 4) return this.warn('비밀번호를 4자리 이상 입력해주세요.', this.$pwInput);
+					if (pw !== pwConfirm) return this.warn('비밀번호가 일치하지 않습니다.', this.$pwConfirm);
+					if (!name) return this.warn('이름을 입력해주세요!', this.$nameInput);
+					// ✅ 성별 검증 로직 추가
+					if (!isGenderSelected) return this.warn('성별을 선택해주세요!', null);
+					if (!ncnm) return this.warn('캐릭터 이름을 입력해주세요!', this.$nickInput);
+					if (!occp) return this.warn('캐릭터를 선택해주세요!', null);
+					// 비밀번호 강화 조건 검증
+					const pwRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,}$/;
+					if (!pwRegex.test(pw)) {
+						return this.warn('비밀번호는 영문, 숫자, 특수문자를 포함하여 8자 이상이어야 합니다!', this.$pwInput);
+					}
+					return true;
+				},
+				warn: function (msg, $target) {
+					this.showPopup(msg, '⚠️', '확인 필요', () => {
+						if ($target) $target.focus();
+					});
+					return false;
+				},
+				setMessage: function ($el, text, isSuccess) {
+					$el.text(text)
+						.removeClass('msg-success msg-error')
+						.addClass(isSuccess ? 'msg-success' : 'msg-error');
+				},
+				showPopup: function (msg, icon = '✨', title = '알림', callback) {
+					this.$alertMsg.html(msg);
+					this.$alertIcon.html(icon);
+					this.$alertTitle.text(title);
 
-                    // 강제 레이아웃 리플로우 방지 및 애니메이션 적용
-                    this.$alert.css('display', 'flex').hide().fadeIn(200);
-                    this.currentCallback = callback;
-                },
-                closePopup: function () {
-                    this.$alert.fadeOut(200, () => {
-                        if (this.currentCallback && typeof this.currentCallback === 'function') {
-                            this.currentCallback();
-                            this.currentCallback = null;
-                        }
-                    });
-                }
-            };
-            JoinApp.init();
-        });
-        /*]]>*/
+					// 강제 레이아웃 리플로우 방지 및 애니메이션 적용
+					this.$alert.css('display', 'flex').hide().fadeIn(200);
+					this.currentCallback = callback;
+				},
+				closePopup: function () {
+					this.$alert.fadeOut(200, () => {
+						if (this.currentCallback && typeof this.currentCallback === 'function') {
+							this.currentCallback();
+							this.currentCallback = null;
+						}
+					});
+				}
+			};
+			JoinApp.init();
+		});
+		/*]]>*/
 	</script>
 </head>
 <body>

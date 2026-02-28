@@ -7,6 +7,7 @@ import com.config.web.ThymeleafConfig;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,6 +27,7 @@ import java.util.List;
 	, TchAuthInterceptor.class // teacher interceptor
 	, MngAuthInterceptor.class // manager interceptor
 })
+@PropertySource("classpath:spring/prop/globals.properties")
 @ComponentScan( //
 	basePackages = {"com", "app"} //
 	, useDefaultFilters = false //

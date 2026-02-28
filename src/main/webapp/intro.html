@@ -9,6 +9,18 @@
 	<meta name="theme-color" content="#ffffff">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
 	<script src="https://cdn.tailwindcss.com"></script>
+	<script>
+		// 1. 현재 접속한 프로토콜이 'http:' 인지 확인합니다.
+		if (window.location.protocol === 'http:') {
+			// 2. http라면, 기존 주소 정보를 조합하여 https용 새 URL을 만듭니다.
+			const secureUrl = 'https://'
+				+ window.location.host
+				+ window.location.pathname
+				+ window.location.search;
+			// 3. 페이지를 안전한 URL로 즉시 이동시킵니다. (뒤로 가기 방지)
+			window.location.replace(secureUrl);
+		}
+	</script>
 	<style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
 
@@ -678,27 +690,27 @@
 </footer>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.1 // 요소가 10%만 보여도 애니메이션 시작
-        };
+	document.addEventListener('DOMContentLoaded', () => {
+		const observerOptions = {
+			root: null,
+			rootMargin: '0px',
+			threshold: 0.1 // 요소가 10%만 보여도 애니메이션 시작
+		};
 
-        const observer = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active'); // active 클래스 추가하여 애니메이션 실행
-                    observer.unobserve(entry.target); // 한 번만 실행되도록 설정
-                }
-            });
-        }, observerOptions);
+		const observer = new IntersectionObserver((entries, observer) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					entry.target.classList.add('active'); // active 클래스 추가하여 애니메이션 실행
+					observer.unobserve(entry.target); // 한 번만 실행되도록 설정
+				}
+			});
+		}, observerOptions);
 
-        // .reveal 클래스를 가진 모든 요소를 관찰
-        document.querySelectorAll('.reveal').forEach(section => {
-            observer.observe(section);
-        });
-    });
+		// .reveal 클래스를 가진 모든 요소를 관찰
+		document.querySelectorAll('.reveal').forEach(section => {
+			observer.observe(section);
+		});
+	});
 </script>
 </body>
 </html>

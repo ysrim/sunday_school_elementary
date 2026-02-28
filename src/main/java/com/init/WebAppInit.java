@@ -2,10 +2,12 @@ package com.init;
 
 import com.config.AppConfig;
 import com.config.WebConfig;
+
 import jakarta.servlet.Filter;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.SessionTrackingMode;
+
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
@@ -17,7 +19,7 @@ public class WebAppInit extends AbstractAnnotationConfigDispatcherServletInitial
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
 
-		return new Class<?>[]{AppConfig.class}; // properties, db conn, password encode, chache, scheduler
+		return new Class<?>[] {AppConfig.class}; // properties, db conn, password encode, chache, scheduler
 
 	}
 
@@ -25,7 +27,7 @@ public class WebAppInit extends AbstractAnnotationConfigDispatcherServletInitial
 	@Override
 	protected Class<?>[] getServletConfigClasses() {
 
-		return new Class<?>[]{WebConfig.class};
+		return new Class<?>[] {WebConfig.class};
 
 	}
 
@@ -33,7 +35,7 @@ public class WebAppInit extends AbstractAnnotationConfigDispatcherServletInitial
 	@Override
 	protected String[] getServletMappings() {
 
-		return new String[]{"*.do", "*.ax", "*.pg"};
+		return new String[] {"*.do", "*.ax", "*.pg"};
 
 	}
 
@@ -45,7 +47,7 @@ public class WebAppInit extends AbstractAnnotationConfigDispatcherServletInitial
 		encodingFilter.setEncoding("UTF-8");
 		encodingFilter.setForceEncoding(true);
 
-		return new Filter[]{encodingFilter};
+		return new Filter[] {encodingFilter};
 
 	}
 

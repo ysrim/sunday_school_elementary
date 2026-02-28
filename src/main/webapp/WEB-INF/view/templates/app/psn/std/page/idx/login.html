@@ -14,139 +14,139 @@
 </head>
 
 <script th:inline="javascript">
-    /*<![CDATA[*/
-    $(function () {
-        'use strict';
+	/*<![CDATA[*/
+	$(function () {
+		'use strict';
 
-        // 1. 설정 및 상수
-        const CONFIG = {
-            urls: {
-                login: /*[[@{/std/idx/login.ax}]]*/ '/std/idx/login.ax',
-                home: /*[[@{/std/home.pg}]]*/ '/std/home.pg',
-                join: /*[[@{/std/idx/join.pg}]]*/ '/std/idx/join.pg'
-            },
-            messages: {
-                idEmpty: '아이디를 입력해주세요!',
-                pwEmpty: '비밀번호를 입력해주세요!',
-                error: '서버 통신 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
-            },
-            cookieKey: 'saved_mberId'
-        };
+		// 1. 설정 및 상수
+		const CONFIG = {
+			urls: {
+				login: /*[[@{/std/idx/login.ax}]]*/ '/std/idx/login.ax',
+				home: /*[[@{/std/home.pg}]]*/ '/std/home.pg',
+				join: /*[[@{/std/idx/join.pg}]]*/ '/std/idx/join.pg'
+			},
+			messages: {
+				idEmpty: '아이디를 입력해주세요!',
+				pwEmpty: '비밀번호를 입력해주세요!',
+				error: '서버 통신 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
+			},
+			cookieKey: 'saved_mberId'
+		};
 
-        const LoginApp = {
-            init: function () {
-                this.cacheDOM();
-                this.bindEvents();
-                this.checkSavedId();
-            },
+		const LoginApp = {
+			init: function () {
+				this.cacheDOM();
+				this.bindEvents();
+				this.checkSavedId();
+			},
 
-            cacheDOM: function () {
-                this.$idInput = $('#mberId');
-                this.$pwInput = $('#pwd');
-                this.$loginBtn = $('.btn-main-login');
-                this.$saveIdCheck = $('#save-id');
-                this.$alert = $('#custom-alert');
-                this.$alertMsg = $('#alert-message');
-                this.$alertIcon = $('#alert-icon');
-                this.$alertTitle = $('#alert-title');
-                this.$alertConfirm = $('.custom-alert-confirm');
-            },
+			cacheDOM: function () {
+				this.$idInput = $('#mberId');
+				this.$pwInput = $('#pwd');
+				this.$loginBtn = $('.btn-main-login');
+				this.$saveIdCheck = $('#save-id');
+				this.$alert = $('#custom-alert');
+				this.$alertMsg = $('#alert-message');
+				this.$alertIcon = $('#alert-icon');
+				this.$alertTitle = $('#alert-title');
+				this.$alertConfirm = $('.custom-alert-confirm');
+			},
 
-            bindEvents: function () {
-                this.$loginBtn.on('click', () => this.handleLogin());
-                this.$pwInput.on('keyup', (e) => {
-                    if (e.key === 'Enter') this.handleLogin();
-                });
-                this.$alertConfirm.on('click', () => this.closePopup());
-            },
+			bindEvents: function () {
+				this.$loginBtn.on('click', () => this.handleLogin());
+				this.$pwInput.on('keyup', (e) => {
+					if (e.key === 'Enter') this.handleLogin();
+				});
+				this.$alertConfirm.on('click', () => this.closePopup());
+			},
 
-            // ✅ js-cookie 사용: 읽기 (Cookies.get)
-            checkSavedId: function () {
-                const savedId = Cookies.get(CONFIG.cookieKey);
+			// ✅ js-cookie 사용: 읽기 (Cookies.get)
+			checkSavedId: function () {
+				const savedId = Cookies.get(CONFIG.cookieKey);
 
-                if (savedId) {
-                    this.$idInput.val(savedId);
-                    this.$saveIdCheck.prop('checked', true);
-                }
-            },
+				if (savedId) {
+					this.$idInput.val(savedId);
+					this.$saveIdCheck.prop('checked', true);
+				}
+			},
 
-            // ✅ js-cookie 사용: 쓰기/삭제 (Cookies.set / Cookies.remove)
-            handleCookie: function (id) {
-                if (this.$saveIdCheck.is(':checked')) {
-                    // 30일 저장, 모든 경로에서 접근 가능하도록 path 설정
-                    Cookies.set(CONFIG.cookieKey, id, {expires: 30, path: '/'});
-                } else {
-                    Cookies.remove(CONFIG.cookieKey, {path: '/'});
-                }
-            },
+			// ✅ js-cookie 사용: 쓰기/삭제 (Cookies.set / Cookies.remove)
+			handleCookie: function (id) {
+				if (this.$saveIdCheck.is(':checked')) {
+					// 30일 저장, 모든 경로에서 접근 가능하도록 path 설정
+					Cookies.set(CONFIG.cookieKey, id, {expires: 30, path: '/'});
+				} else {
+					Cookies.remove(CONFIG.cookieKey, {path: '/'});
+				}
+			},
 
-            handleLogin: function () {
-                const mberId = this.$idInput.val().trim();
-                const pwd = this.$pwInput.val();
+			handleLogin: function () {
+				const mberId = this.$idInput.val().trim();
+				const pwd = this.$pwInput.val();
 
-                if (!mberId) {
-                    this.showPopup(CONFIG.messages.idEmpty, '⚠️', '아이디 입력', () => this.$idInput.focus());
-                    return;
-                }
-                if (!pwd) {
-                    this.showPopup(CONFIG.messages.pwEmpty, '🔑', '비밀번호 입력', () => this.$pwInput.focus());
-                    return;
-                }
+				if (!mberId) {
+					this.showPopup(CONFIG.messages.idEmpty, '⚠️', '아이디 입력', () => this.$idInput.focus());
+					return;
+				}
+				if (!pwd) {
+					this.showPopup(CONFIG.messages.pwEmpty, '🔑', '비밀번호 입력', () => this.$pwInput.focus());
+					return;
+				}
 
-                this.setLoading(true);
+				this.setLoading(true);
 
-                $.ajax({
-                    type: "POST",
-                    url: CONFIG.urls.login,
-                    contentType: "application/json; charset=utf-8",
-                    data: JSON.stringify({mberId: mberId, pwd: pwd}),
-                    success: (data) => {
-                        if (data.rtnCd === '001') {
-                            this.handleCookie(mberId); // 쿠키 처리
-                            this.showPopup(data.rtnMsg, '✨', '환영합니다!', () => {
-                                location.href = CONFIG.urls.home;
-                            });
-                        } else {
-                            this.setLoading(false);
-                            this.showPopup(data.rtnMsg || '로그인 실패', '❌', '인증 실패');
-                        }
-                    },
-                    error: (e) => {
-                        console.error(e);
-                        this.setLoading(false);
-                        this.showPopup(CONFIG.messages.error, '🔥', '오류 발생');
-                    }
-                });
-            },
+				$.ajax({
+					type: "POST",
+					url: CONFIG.urls.login,
+					contentType: "application/json; charset=utf-8",
+					data: JSON.stringify({mberId: mberId, pwd: pwd}),
+					success: (data) => {
+						if (data.rtnCd === '001') {
+							this.handleCookie(mberId); // 쿠키 처리
+							this.showPopup(data.rtnMsg, '✨', '환영합니다!', () => {
+								location.href = CONFIG.urls.home;
+							});
+						} else {
+							this.setLoading(false);
+							this.showPopup(data.rtnMsg || '로그인 실패', '❌', '인증 실패');
+						}
+					},
+					error: (e) => {
+						console.error(e);
+						this.setLoading(false);
+						this.showPopup(CONFIG.messages.error, '🔥', '오류 발생');
+					}
+				});
+			},
 
-            setLoading: function (isLoading) {
-                if (isLoading) {
-                    this.$loginBtn.prop('disabled', true).text('로그인 중...');
-                } else {
-                    this.$loginBtn.prop('disabled', false).text('로그인');
-                }
-            },
+			setLoading: function (isLoading) {
+				if (isLoading) {
+					this.$loginBtn.prop('disabled', true).text('로그인 중...');
+				} else {
+					this.$loginBtn.prop('disabled', false).text('로그인');
+				}
+			},
 
-            showPopup: function (msg, icon = '✨', title = '알림', callback) {
-                this.$alertMsg.html(msg);
-                this.$alertIcon.html(icon);
-                this.$alertTitle.text(title);
-                this.$alert.css('display', 'flex').addClass('active');
-                this.currentCallback = callback;
-            },
+			showPopup: function (msg, icon = '✨', title = '알림', callback) {
+				this.$alertMsg.html(msg);
+				this.$alertIcon.html(icon);
+				this.$alertTitle.text(title);
+				this.$alert.css('display', 'flex').addClass('active');
+				this.currentCallback = callback;
+			},
 
-            closePopup: function () {
-                this.$alert.removeClass('active').css('display', 'none');
-                if (this.currentCallback && typeof this.currentCallback === 'function') {
-                    this.currentCallback();
-                    this.currentCallback = null;
-                }
-            }
-        };
+			closePopup: function () {
+				this.$alert.removeClass('active').css('display', 'none');
+				if (this.currentCallback && typeof this.currentCallback === 'function') {
+					this.currentCallback();
+					this.currentCallback = null;
+				}
+			}
+		};
 
-        LoginApp.init();
-    });
-    /*]]>*/
+		LoginApp.init();
+	});
+	/*]]>*/
 </script>
 
 <body>
