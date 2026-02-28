@@ -4,7 +4,9 @@ import com.base.interceptor.MngAuthInterceptor;
 import com.base.interceptor.StdAuthInterceptor;
 import com.base.interceptor.TchAuthInterceptor;
 import com.config.web.ThymeleafConfig;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.context.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -20,15 +22,15 @@ import java.util.List;
 @Configuration
 @EnableWebMvc
 @Import({ThymeleafConfig.class // view template
-		, StdAuthInterceptor.class // student interceptor
-		, TchAuthInterceptor.class // teacher interceptor
-		, MngAuthInterceptor.class // manager interceptor
+	, StdAuthInterceptor.class // student interceptor
+	, TchAuthInterceptor.class // teacher interceptor
+	, MngAuthInterceptor.class // manager interceptor
 })
 @ComponentScan( //
-		basePackages = {"com", "app"} //
-		, useDefaultFilters = false //
-		, includeFilters = { //
-		@ComponentScan.Filter(type = FilterType.ANNOTATION, classes = {Controller.class, ControllerAdvice.class}) //
+	basePackages = {"com", "app"} //
+	, useDefaultFilters = false //
+	, includeFilters = { //
+	@ComponentScan.Filter(type = FilterType.ANNOTATION, classes = {Controller.class, ControllerAdvice.class}) //
 }) //
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
@@ -65,19 +67,19 @@ public class WebConfig implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry registry) {
 
 		registry.addInterceptor(stdAuthInterceptor) // 학생용 로그인
-				.addPathPatterns("/std/**") // path 설정
-				.excludePathPatterns("/std/idx/**") // 인덱스페이지들은 제외
-				.excludePathPatterns(STATIC_RESOURCES);
+			.addPathPatterns("/std/**") // path 설정
+			.excludePathPatterns("/std/idx/**") // 인덱스페이지들은 제외
+			.excludePathPatterns(STATIC_RESOURCES);
 
 		registry.addInterceptor(tchAuthInterceptor) // 선생님용 로그인
-				.addPathPatterns("/tch/**") // path 설정
-				.excludePathPatterns("/tch/idx/**") // 인덱스페이지들은 제외
-				.excludePathPatterns(STATIC_RESOURCES);
+			.addPathPatterns("/tch/**") // path 설정
+			.excludePathPatterns("/tch/idx/**") // 인덱스페이지들은 제외
+			.excludePathPatterns(STATIC_RESOURCES);
 
 		registry.addInterceptor(mngAuthInterceptor) // 관리자용 로그인
-				.addPathPatterns("/mng/**") // path 설정
-				.excludePathPatterns("/mng/idx/**")  // 인덱스페이지들은 제외
-				.excludePathPatterns(STATIC_RESOURCES);
+			.addPathPatterns("/mng/**") // path 설정
+			.excludePathPatterns("/mng/idx/**")  // 인덱스페이지들은 제외
+			.excludePathPatterns(STATIC_RESOURCES);
 
 	}
 

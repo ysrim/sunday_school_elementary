@@ -13,7 +13,7 @@
 		</encoder>
 	</appender>
 
-	<if condition='property("Globals.log.mode").equals("SERVICE")'>
+	<if condition='property("globals.log.mode").equals("SERVICE")'>
 		<then>
 			<logger name="org.springframework" level="info" />
 			<logger name="java.sql" level="info" />
