@@ -1,55 +1,36 @@
 package com.config.web;
 
+import lombok.extern.slf4j.Slf4j;
 import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 
+@Slf4j
 @Configuration
+@PropertySource("classpath:spring/prop/globals.properties")
 public class ThymeleafConfig {
 
-	private static final String RESOLVER_PATH = "/WEB-INF/view/templates";
-
-	@Bean
-	public SpringResourceTemplateResolver studentTemplateResolver() {
-
-		return createTemplateResolver(RESOLVER_PATH + "/std", 1);
-
-	}
-
-	@Bean
-	public SpringResourceTemplateResolver teacherTemplateResolver() {
-
-		return createTemplateResolver(RESOLVER_PATH + "/tch", 2);
-
-	}
-
-	@Bean
-	public SpringResourceTemplateResolver adminTemplateResolver() {
-
-		return createTemplateResolver(RESOLVER_PATH + "/adm", 3);
-
-	}
+	@Value("#{'true'.equals('${is.production}') ? true : false}")
+	private boolean isProduction;
 
 	@Bean
 	public SpringResourceTemplateResolver layoutTemplateResolver() {
 
-		return createTemplateResolver(RESOLVER_PATH, 4);
-
-	}
-
-	private SpringResourceTemplateResolver createTemplateResolver(String prefix, int order) {
-
+		log.warn("isProduction: {}", isProduction);
 		SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
-		resolver.setPrefix(prefix);
+		resolver.setPrefix("/WEB-INF/view/templates");
 		resolver.setSuffix(".html");
 		resolver.setTemplateMode(TemplateMode.HTML);
-		resolver.setOrder(order);
+		resolver.setOrder(2);
 		resolver.setCheckExistence(true);
-		resolver.setCacheable(false); // 운영 시 true로 변경
+		resolver.setCacheable(isProduction); // 운영 시 true로 변경
 
 		return resolver;
 
@@ -59,9 +40,6 @@ public class ThymeleafConfig {
 	public SpringTemplateEngine templateEngine() {
 
 		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-		templateEngine.addTemplateResolver(studentTemplateResolver()); // 학생
-		templateEngine.addTemplateResolver(teacherTemplateResolver()); // 선생
-		templateEngine.addTemplateResolver(adminTemplateResolver()); // 관리자
 		templateEngine.addTemplateResolver(layoutTemplateResolver());
 		templateEngine.addDialect(new LayoutDialect());
 

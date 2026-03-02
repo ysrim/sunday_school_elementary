@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html xmlns:th="http//www.thymeleaf.org" lang="ko">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -30,15 +30,13 @@
             transform: rotate(0deg) scale(1.1);
         }
 	</style>
-	<script>
-		// 1. 현재 접속한 프로토콜이 'http:' 인지 확인합니다.
+	<script th:if="#{is.production} == 'true'">
+		<!-- 운영일 경우에는 https로 강제로 redirect -->
 		if (window.location.protocol === 'http:') {
-			// 2. http라면, 기존 주소 정보를 조합하여 https용 새 URL을 만듭니다.
 			const secureUrl = 'https://'
 				+ window.location.host
 				+ window.location.pathname
 				+ window.location.search;
-			// 3. 페이지를 안전한 URL로 즉시 이동시킵니다. (뒤로 가기 방지)
 			window.location.replace(secureUrl);
 		}
 	</script>
@@ -106,7 +104,7 @@
 		</h2>
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-			<a href="student_guide.html"
+			<a href="/how/stdGuide.pg"
 			   class="card-btn bg-white p-5 rounded-2xl border border-slate-200 flex items-center gap-4 hover:border-blue-300 cursor-pointer outline-none focus:ring-2 focus:ring-blue-400 ring-offset-1">
 				<div class="w-12 h-12 bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-center text-blue-500 shadow-sm">
 					<i class="fas fa-book"></i>
@@ -118,7 +116,7 @@
 				<i class="fas fa-chevron-right text-slate-300 group-hover:text-blue-400 transition-colors"></i>
 			</a>
 
-			<a href="manager_guide.html#teacher-mobile"
+			<a href="/how/mngGuide.pg#teacher-mobile"
 			   class="card-btn bg-white p-5 rounded-2xl border border-slate-200 flex items-center gap-4 hover:border-indigo-300 cursor-pointer outline-none focus:ring-2 focus:ring-indigo-400 ring-offset-1">
 				<div class="w-12 h-12 bg-indigo-50 border border-indigo-100 rounded-xl flex items-center justify-center text-indigo-500 shadow-sm">
 					<i class="fas fa-book-reader"></i>
@@ -130,7 +128,7 @@
 				<i class="fas fa-chevron-right text-slate-300 group-hover:text-indigo-400 transition-colors"></i>
 			</a>
 
-			<a href="manager_guide.html#total-admin"
+			<a href="/how/mngGuide.pg#total-admin"
 			   class="card-btn bg-white p-5 rounded-2xl border border-slate-200 flex items-center gap-4 hover:border-slate-400 cursor-pointer outline-none focus:ring-2 focus:ring-slate-400 ring-offset-1">
 				<div class="w-12 h-12 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-center text-slate-600 shadow-sm">
 					<i class="fas fa-cogs"></i>
