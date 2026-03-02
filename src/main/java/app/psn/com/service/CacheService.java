@@ -50,4 +50,14 @@ public interface CacheService {
 	 */
 	boolean checkKeyExists(String cacheName, String key);
 
+	/**
+	 * 캐쉬생성 - 길드 메시지
+	 */
+	String getGildMsg(Integer guildSn);
+
+	/**
+	 * 캐쉬갱신 - 길드 메시지
+	 */
+	void evictGildMsg(Integer guildSn);
+
 }

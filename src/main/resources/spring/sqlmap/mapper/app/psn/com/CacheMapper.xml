@@ -2,19 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="app.psn.com.mapper.CacheMapper">
 
-	<select id="sltPont" parameterType="Integer" resultType="Integer">
+	<select id="sltPont" resultType="Integer">
 		SELECT POINT
 		FROM AVATAR_INFO
 		WHERE MBER_SN = #{mberSn}
 	</select>
 
-	<select id="sltLevel" parameterType="Integer" resultType="Integer">
+	<select id="sltLevel" resultType="Integer">
 		SELECT LEVEL
 		FROM AVATAR_INFO
 		WHERE MBER_SN = #{mberSn}
 	</select>
 
-	<select id="sltExp" parameterType="Integer" resultType="app.psn.com.vo.AvatarLevelVO">
+	<select id="sltExp" resultType="app.psn.com.vo.AvatarLevelVO">
 		SELECT CUR_LVL.LEVEL                                                                                              AS CURRENT_LEVEL
 			 , CUR_LVL.REQUIRED_EXP                                                                                       AS CURRENT_REQUIRED_EXP
 			 , NEXT_LVL.LEVEL                                                                                             AS NEXT_LEVEL
@@ -54,6 +54,10 @@
 				  JOIN BIBLE_VERSES V ON S.VERSE_SN = V.VERSE_SN
 		 WHERE S.SCHEDULE_DATE = CURDATE())
 		ORDER BY SEQ limit 1;
+	</select>
+
+	<select id="getGildMsg" resultType="string">
+		SELECT SLOGAN FROM GUILD_INFO WHERE GUILD_SN = #{guildSn}
 	</select>
 
 </mapper>

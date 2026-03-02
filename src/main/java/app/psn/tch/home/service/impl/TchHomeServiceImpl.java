@@ -1,11 +1,15 @@
 package app.psn.tch.home.service.impl;
 
+import app.psn.com.service.CacheService;
 import app.psn.tch.home.mapper.TchHomeMapper;
 import app.psn.tch.home.service.TchHomeService;
 import app.psn.tch.home.vo.TchGildPostVO;
+
 import com.base.utl.SessionUtil;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +23,8 @@ import java.util.Map;
 public class TchHomeServiceImpl implements TchHomeService {
 
 	private final TchHomeMapper tchHomeMapper;
+
+	private final CacheService cacheService;
 
 	@Override
 	public Map<String, String> dashboard() {
@@ -37,6 +43,7 @@ public class TchHomeServiceImpl implements TchHomeService {
 	public void regGildMsg(String slogan) {
 
 		tchHomeMapper.regGildMsg(SessionUtil.getTchMberInfo().guildSn(), slogan);
+		cacheService.evictGildMsg(SessionUtil.getTchMberInfo().guildSn()); // 길드 메시지 캐쉬 갱신
 
 	}
 

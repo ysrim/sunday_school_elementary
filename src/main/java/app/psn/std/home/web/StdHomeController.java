@@ -4,6 +4,7 @@ import app.psn.com.service.CacheService;
 import app.psn.com.service.ToastMsgService;
 import app.psn.std.home.service.StdHomeService;
 import app.psn.std.qest.service.StdQestService;
+
 import com.base.annotation.std.StdMenuInfo;
 import com.base.enumm.com.MberGrdEnum;
 import com.base.enumm.com.ViewPathEnum;
@@ -12,8 +13,10 @@ import com.base.utl.CommonUtil;
 import com.base.utl.ResUtil;
 import com.base.utl.SessionUtil;
 import com.base.vo.ResponseBody;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,12 +45,14 @@ public class StdHomeController {
 	public String homePg(Model model) {
 
 		Integer mberSn = SessionUtil.getStdMberInfo().mberSn();
+		Integer guildSn = SessionUtil.getStdMberInfo().guildSn();
 
 		// cache
 		model.addAttribute("mberPoint", cacheService.sltPont(mberSn)); // 달란트
 		model.addAttribute("mberLv", cacheService.sltLevel(mberSn)); // 레벨
 		model.addAttribute("mberExp", cacheService.sltExp(mberSn)); // 경험치
 		model.addAttribute("todayBibleVerse", cacheService.sltTodayBibleVerse()); // 오늘의 말씀
+		model.addAttribute("gildMsg", cacheService.getGildMsg(guildSn)); // 선생님 길드 공지
 
 		// sql
 		model.addAttribute("guildMberCnt", homeService.sltGildMberList().size()); // 길드맴버 숫자

@@ -15,7 +15,7 @@
 			<div class="flex justify-between items-center mb-6 relative z-10">
 				<div>
 					<div class="text-blue-100 text-xs font-bold mb-1 opacity-80"
-					     th:text="|출석현황 ${dashboard.monthName}|">출석현황(02.01)
+					     th:text="|${session.tchMberInfo.grade}학년 ${session.tchMberInfo.cla}반 출석현황 ${dashboard.monthName}|">출석현황(02.01)
 					</div>
 					<div class="text-4xl font-black">[[${dashboard.atndCnt}]] <span
 							class="text-lg opacity-70 font-medium" th:text="|/ ${dashboard.gildCnt}명|">/ 21명</span>

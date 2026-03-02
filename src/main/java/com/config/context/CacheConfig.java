@@ -2,6 +2,7 @@ package com.config.context;
 
 import com.base.enumm.std.CacheKeys;
 import com.github.benmanes.caffeine.cache.Caffeine;
+
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCache;
@@ -25,53 +26,61 @@ public class CacheConfig {
 		// 각 캐시(Cache) 객체를 리스트로 생성
 		List<CaffeineCache> caches = Arrays.asList(
 
-				// 1. 게시판 리스트 (5분 유지, 최대 1000개)
-				new CaffeineCache( //0
-						CacheKeys.OnlineMbers.name(), //
-						Caffeine.newBuilder() //
-								.expireAfterWrite(5, TimeUnit.MINUTES) //
-								.maximumSize(1000) //
-								.build()),
+			// 1. 게시판 리스트 (5분 유지, 최대 1000개)
+			new CaffeineCache( //0
+				CacheKeys.OnlineMbers.name(), //
+				Caffeine.newBuilder() //
+					.expireAfterWrite(5, TimeUnit.MINUTES) //
+					.maximumSize(1000) //
+					.build()),
 
-				// 2. 오늘의 말씀 (24시간 유지, 최대 10개)
-				new CaffeineCache( //
-						CacheKeys.TodayBibleVerse.name(), //
-						Caffeine.newBuilder() //
-								.expireAfterWrite(24, TimeUnit.HOURS) //
-								.maximumSize(10) //
-								.build()),
+			// 2. 오늘의 말씀 (24시간 유지, 최대 10개)
+			new CaffeineCache( //
+				CacheKeys.TodayBibleVerse.name(), //
+				Caffeine.newBuilder() //
+					.expireAfterWrite(24, TimeUnit.HOURS) //
+					.maximumSize(10) //
+					.build()),
 
-				// 3. 맴버 달란트 (24시간 유지, 최대 10개)
-				new CaffeineCache( //
-						CacheKeys.MberPoint.name(), //
-						Caffeine.newBuilder() //
-								.expireAfterWrite(10, TimeUnit.MINUTES) //
-								.maximumSize(1000) //
-								.build()),
+			// 3. 맴버 달란트 (24시간 유지, 최대 10개)
+			new CaffeineCache( //
+				CacheKeys.MberPoint.name(), //
+				Caffeine.newBuilder() //
+					.expireAfterWrite(10, TimeUnit.MINUTES) //
+					.maximumSize(1000) //
+					.build()),
 
-				// 4. 맴버 레벨 (10분 유지, 최대 1000개)
-				new CaffeineCache( //
-						CacheKeys.MberLv.name(), //
-						Caffeine.newBuilder() //
-								.expireAfterWrite(10, TimeUnit.MINUTES) //
-								.maximumSize(1000) //
-								.build()),
+			// 4. 맴버 레벨 (10분 유지, 최대 1000개)
+			new CaffeineCache( //
+				CacheKeys.MberLv.name(), //
+				Caffeine.newBuilder() //
+					.expireAfterWrite(10, TimeUnit.MINUTES) //
+					.maximumSize(1000) //
+					.build()),
 
-				// 5. 맴버 경험치 (10분 유지, 최대 1000개)
-				new CaffeineCache( //
-						CacheKeys.MberExp.name(), //
-						Caffeine.newBuilder() //
-								.expireAfterWrite(10, TimeUnit.MINUTES) //
-								.maximumSize(1000) //
-								.build()),
+			// 5. 맴버 경험치 (10분 유지, 최대 1000개)
+			new CaffeineCache( //
+				CacheKeys.MberExp.name(), //
+				Caffeine.newBuilder() //
+					.expireAfterWrite(10, TimeUnit.MINUTES) //
+					.maximumSize(1000) //
+					.build()),
 
-				// 6. 기본/기타 캐시 (60분 유지, 최대 100개)
-				new CaffeineCache( //
-						"defaultCache", //
-						Caffeine.newBuilder() //
-								.expireAfterWrite(60, TimeUnit.MINUTES) //
-								.maximumSize(1000) //
-								.build()));
+			// 6. 길드메시지 (24시간 유지, 최대 30개)
+			new CaffeineCache( //
+				CacheKeys.GildMsg.name(), //
+				Caffeine.newBuilder() //
+					.expireAfterWrite(24, TimeUnit.HOURS) //
+					.maximumSize(30) //
+					.build()),
+
+			// END. 기본/기타 캐시 (60분 유지, 최대 100개)
+			new CaffeineCache( //
+				"defaultCache", //
+				Caffeine.newBuilder() //
+					.expireAfterWrite(60, TimeUnit.MINUTES) //
+					.maximumSize(1000) //
+					.build()));
 
 		cacheManager.setCaches(caches);
 

@@ -11,7 +11,8 @@ public enum CacheKeys {
 	MberPoint("사용자 달란트 점수"),  //
 	MberLv("사용자 레벨"),           //
 	MberExp("사용자 경험치"),        //
-	TodayBibleVerse("오늘의 말씀");  //
+	TodayBibleVerse("오늘의 말씀"),  //
+	GildMsg("길드메시지");           //
 
 	private final String desc; // 무엇이 저장되는지 설명
 
@@ -22,5 +23,6 @@ public enum CacheKeys {
 	public static final String MberLvEnum = "MberLv";
 	public static final String MberExpEnum = "MberExp";
 	public static final String TodayBibleVerseEnum = "TodayBibleVerse";
+	public static final String GildMsgEnum = "GildMsg";
 
 }
