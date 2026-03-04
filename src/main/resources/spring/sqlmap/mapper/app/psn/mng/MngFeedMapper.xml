@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><!--Converted at: Wed May 11 15:49:38 KST 2016 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="app.psn.mng.feed.mapper.MngFeedMapper">
+
+	<select id="sltFeedList" resultType="app.psn.mng.feed.vo.MngResFeedVO">
+		SELECT A.POST_SN
+			 , A.BBS_SN
+			 , A.BBS_TYPE
+			 , A.TITLE
+			 , A.CONTENT
+			 , A.VIEW_CNT
+			 , A.CREAT_MBER_SN
+			 , (SELECT B.MBER_NM FROM MBER_INFO B WHERE A.CREAT_MBER_SN = B.MBER_SN) AS CREAT_MBER_NM
+			 , A.UDT_MBER_SN
+			 , (SELECT B.MBER_NM FROM MBER_INFO B WHERE A.UDT_MBER_SN = B.MBER_SN)   AS UDT_MBER_NM
+			 , DATE_FORMAT(A.CREAT_DE, '%Y-%m-%d %H:%I')                             AS CREAT_DATE
+			 , DATE_FORMAT(A.UDT_DE, '%Y-%m-%d %H:%I')                               AS UDT_DATE
+		FROM BBS_POST A
+		WHERE A.BBS_SN = #{bbsSn}
+		  AND A.USE_YN = 'Y'
+		ORDER BY A.CREAT_DE DESC
+	</select>
+
+	<select id="sltFeedList" resultType="app.psn.mng.feed.vo.MngResFeedVO">
+		SELECT A.POST_SN
+			 , A.BBS_SN
+			 , A.BBS_TYPE
+			 , A.TITLE
+			 , A.CONTENT
+			 , A.VIEW_CNT
+			 , A.CREAT_MBER_SN
+			 , (SELECT B.MBER_NM FROM MBER_INFO B WHERE A.CREAT_MBER_SN = B.MBER_SN) AS CREAT_MBER_NM
+			 , A.UDT_MBER_SN
+			 , (SELECT B.MBER_NM FROM MBER_INFO B WHERE A.UDT_MBER_SN = B.MBER_SN)   AS UDT_MBER_NM
+			 , DATE_FORMAT(A.CREAT_DE, '%Y-%m-%d %H:%I')                             AS CREAT_DATE
+			 , DATE_FORMAT(A.UDT_DE, '%Y-%m-%d %H:%I')                               AS UDT_DATE
+		FROM BBS_POST A
+		WHERE A.USE_YN = 'Y'
+		  AND A.POST_SN = #{postSn}
+	</select>
+
+	<insert id="crtFeedDo" parameterType="app.psn.mng.feed.vo.MngReqFeedVO">
+		INSERT INTO BBS_POST (BBS_SN, BBS_TYPE, TITLE, CONTENT, CREAT_MBER_SN, UDT_MBER_SN)
+		values (#{bbsSn}, #{bbsType}, #{title}, #{content}, #{creatMberSn}, #{udtMberSn});
+	</insert>
+
+	<update id="udtFeedDo" parameterType="app.psn.mng.feed.vo.MngReqFeedVO">
+		UPDATE BBS_POST
+		SET BBS_TYPE    = #{bbsType}
+		  , TITLE       = #{title}
+		  , CONTENT     = #{content}
+		  , UDT_MBER_SN = #{udtMberSn}
+		  , UDT_DE      = SYSDATE()
+		WHERE POST_SN = #{postSn}
+	</update>
+
+	<delete id="delFeedDo">
+		UPDATE BBS_POST
+		SET USE_YN = 'N'
+		  , UDT_DE = SYSDATE()
+		WHERE POST_SN = #{postSn}
+	</delete>
+
+</mapper>
