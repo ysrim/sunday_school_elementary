@@ -71,4 +71,13 @@ public class MngFeedController {
 
 	}
 
+	@RequestMapping("/feed/delFeedDo.ax")
+	public ResponseEntity<ResponseBody<Object>> delFeedDoAx(@Valid Integer postSn) {
+
+		mngFeedService.delFeedDo(postSn);
+
+		return ResUtil.resSucc("글이 삭제되었습니다!");
+
+	}
+
 }
