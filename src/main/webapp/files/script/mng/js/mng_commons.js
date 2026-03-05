@@ -24,7 +24,7 @@ function _naviPage(menu) {
 	const menuUrls = {
 		'MNG_HOME': '/mng/home.pg',
 		'MNG_MBER': '/mng/mber.pg',
-		'MNG_FEED': '/mng/feed.pg',
+		'MNG_FEED': '/mng/feed/feedList.pg',
 		'MNG_REWD': '/mng/rewd.pg',
 		'MNG_QEST': '/mng/qest.pg'
 	};

@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import app.psn.mng.feed.vo.MngReqFeedVO;
+import app.psn.mng.feed.vo.MngResFeedVO;
 
 @Mapper
 public interface MngFeedMapper {
@@ -13,12 +14,12 @@ public interface MngFeedMapper {
 	/**
 	 * 게시물 목록
 	 */
-	List<MngReqFeedVO> sltFeedList();
+	List<MngResFeedVO> sltFeedList();
 
 	/**
 	 * 게시물 정보
 	 */
-	MngReqFeedVO sltFeed(@Param("postSn") Integer postSn);
+	MngResFeedVO sltFeed(@Param("postSn") Integer postSn);
 
 	/**
 	 * 게시물 저장
@@ -29,10 +30,5 @@ public interface MngFeedMapper {
 	 * 게시물 수정
 	 */
 	void udtFeedDo(MngReqFeedVO mngReqFeedVO);
-
-	/**
-	 * 게시물 삭제
-	 */
-	void delFeedDo(@Param("postSn") Integer postSn);
 
 }

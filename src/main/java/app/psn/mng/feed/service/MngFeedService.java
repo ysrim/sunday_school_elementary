@@ -3,18 +3,19 @@ package app.psn.mng.feed.service;
 import java.util.List;
 
 import app.psn.mng.feed.vo.MngReqFeedVO;
+import app.psn.mng.feed.vo.MngResFeedVO;
 
 public interface MngFeedService {
 
 	/**
 	 * 게시물 목록
 	 */
-	List<MngReqFeedVO> sltFeedList();
+	List<MngResFeedVO> sltFeedList();
 
 	/**
 	 * 게시물 정보
 	 */
-	MngReqFeedVO sltFeed(Integer postSn);
+	MngResFeedVO sltFeed(Integer postSn);
 
 	/**
 	 * 게시물 저장
@@ -25,10 +26,5 @@ public interface MngFeedService {
 	 * 게시물 수정
 	 */
 	void udtFeedDo(MngReqFeedVO mngReqFeedVO);
-
-	/**
-	 * 게시물 삭제
-	 */
-	void delFeedDo(Integer postSn);
 
 }

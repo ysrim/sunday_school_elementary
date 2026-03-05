@@ -30,7 +30,7 @@
 						<option value="">전체 분류</option>
 						<option value="NOTICE">📢 공지사항</option>
 						<option value="EVENT">🎉 이벤트</option>
-						<option value="NEWS">📰 가정통신문</option>
+						<option value="GENERAL">📰 일반글</option>
 					</select>
 					<select class="appearance-none bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-600 outline-none cursor-pointer hover:border-indigo-300 transition focus:ring-2 focus:ring-indigo-100">
 						<option value="">전체 기간</option>
@@ -160,9 +160,6 @@
 
 	<script th:inline="javascript">
 		/*<![CDATA[*/
-
-		/*<![CDATA[*/
-
 		const NoticeManager = {
 			gridApi: null,
 
@@ -201,19 +198,12 @@
 							}
 						},
 						{
-							headerName: "제목", field: "title", flex: 1, minWidth: 300,
+							headerName: "제목", field: "title", flex: 1, minWidth: 200,
 							cellClass: "flex items-center",
 							cellRenderer: (params) => {
-								const pinIcon = params.data.isPinned
-									? `<i class="fas fa-thumbtack text-red-400 mr-2 text-xs transform rotate-45"></i>`
-									: ``;
-								const titleClass = params.data.isPinned ? "text-slate-900 font-black" : "text-slate-700 font-bold";
-
 								return `
                             <div class="flex items-center w-full cursor-pointer group">
-                                ${pinIcon}
-                                <span class="${titleClass} group-hover:text-indigo-600 transition-colors text-sm truncate">${params.value}</span>
-                                ${params.data.isNew ? '<span class="ml-2 w-1.5 h-1.5 bg-red-500 rounded-full"></span>' : ''}
+                                <span class="text-slate-900 font-black group-hover:text-indigo-600 transition-colors text-sm truncate">${params.value}</span>
                             </div>
                         `;
 							}
@@ -232,11 +222,15 @@
 							valueFormatter: (params) => params.value.toLocaleString()
 						},
 						{
+							headerName: "사용여부", field: "useYn", width: 120,
+							cellClass: "flex items-center justify-center font-mono text-slate-500 text-xs",
+						},
+						{
 							headerName: "관리", width: 100,
 							cellClass: "flex items-center justify-center",
 							cellRenderer: (params) => {
 								return `
-                            <button class="w-8 h-8 rounded-lg hover:bg-indigo-50 text-slate-400 hover:text-indigo-600 transition flex items-center justify-center" onclick="alert(${params.data.id});">
+                            <button class="w-8 h-8 rounded-lg hover:bg-indigo-50 text-slate-400 hover:text-indigo-600 transition flex items-center justify-center" onclick="location.href='/mng/feed/udtFeed.pg?postSn=${params.data.id}';">
                                 <i class="fas fa-edit text-xs"></i>
                             </button>
                         `;
@@ -270,28 +264,29 @@
 					const api = NoticeManager.gridApi;
 					if (!api) return;
 
-					// [수정] 페이징 테스트를 위해 더미 데이터 50개 생성
 					const dummyData = [];
-					const categories = ['NOTICE', 'EVENT', 'NEWS'];
-					const writers = ['관리자', '김선생', '박선생', '이총무'];
 
-					for (let i = 1; i <= 55; i++) {
-						const isPinned = i <= 3; // 상위 3개 고정
-						const randomCat = categories[Math.floor(Math.random() * categories.length)];
+					$.ajax({
+						url: '/mng/feed/feedList.ax',
+						type: 'POST',
+						contentType: "application/json",
+						success: (res) => {
+							const list = res.rtnData || [];
+							for (var i = 0; i < list.length; i++) {
+								dummyData.push({
+									id: list[i].postSn,
+									category: list[i].bbsType,
+									title: list[i].title,
+									writer: list[i].creatMberNm,
+									regDate: list[i].creatDate,
+									viewCount: list[i].viewCnt,
+									useYn: list[i].useYn
+								});
+							}
+							api.updateGridOptions({rowData: dummyData});
+						}
+					});
 
-						dummyData.push({
-							id: 1000 - i,
-							category: isPinned ? 'NOTICE' : randomCat,
-							title: isPinned ? `[필독] 중요 공지사항 테스트 제목 ${i}` : `왕국 소식 및 이벤트 안내 게시글 ${i}`,
-							writer: writers[i % writers.length],
-							regDate: `2026.02.${String((i % 28) + 1).padStart(2, '0')}`,
-							viewCount: Math.floor(Math.random() * 2000),
-							isPinned: isPinned,
-							isNew: i < 10
-						});
-					}
-
-					api.updateGridOptions({rowData: dummyData});
 				},
 
 				onFilterChanged() {

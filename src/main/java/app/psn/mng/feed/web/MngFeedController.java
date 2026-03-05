@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.base.annotation.mng.MngMenuInfo;
 import com.base.enumm.com.MberGrdEnum;
@@ -23,28 +24,33 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequiredArgsConstructor
 @MngMenuInfo(navi = MngNaviEnum.MNG_FEED, role = MberGrdEnum.MNG)
-@RequestMapping("/mng")
+@RequestMapping("/mng/feed")
 public class MngFeedController {
 
 	private final MngFeedService mngFeedService;
 
-	@RequestMapping("/feed.pg")
-	public String feedPg(Model model) {
+	@RequestMapping("/feedList.pg")
+	public String feedListPg() {
 
-		model.addAttribute("feedList", mngFeedService.sltFeedList());
-
-		return ViewPathEnum.MNG.to("/feed/mngFeed");
+		return ViewPathEnum.MNG.to("/feed/mngFeedList");
 
 	}
 
-	@RequestMapping("/feed/crtFeed.pg")
+	@RequestMapping("/feedList.ax")
+	public ResponseEntity<ResponseBody<Object>> feedListAx() {
+
+		return ResUtil.resSucc(mngFeedService.sltFeedList());
+
+	}
+
+	@RequestMapping("/crtFeed.pg")
 	public String crtFeedPg() {
 
-		return ViewPathEnum.MNG.to("/feed/mngFeedCont");
+		return ViewPathEnum.MNG.to("/feed/mngFeedCrt");
 
 	}
 
-	@RequestMapping("/feed/crtFeedDo.ax")
+	@RequestMapping("/crtFeedDo.ax")
 	public ResponseEntity<ResponseBody<Object>> crtFeedDoAx(@RequestBody @Valid MngReqFeedVO mngReqFeedVO) {
 
 		mngFeedService.crtFeedDo(mngReqFeedVO);
@@ -53,30 +59,21 @@ public class MngFeedController {
 
 	}
 
-	@RequestMapping("/feed/udtFeed.pg")
-	public String udtFeedPg(@Valid Integer postSn, Model model) {
+	@RequestMapping("/udtFeed.pg")
+	public String udtFeedPg(@Valid @RequestParam("postSn") Integer postSn, Model model) {
 
 		model.addAttribute("feedVo", mngFeedService.sltFeed(postSn));
 
-		return ViewPathEnum.MNG.to("/feed/mngFeedCont");
+		return ViewPathEnum.MNG.to("/feed/mngFeedUdt");
 
 	}
 
-	@RequestMapping("/feed/udtFeedDo.ax")
-	public ResponseEntity<ResponseBody<Object>> udtFeedDoAx(@RequestBody @Valid MngReqFeedVO mngReqFeedVO) {
+	@RequestMapping("/udtFeedDo.ax")
+	public ResponseEntity<ResponseBody<Object>> udtFeedDoAx(@Valid @RequestBody MngReqFeedVO mngReqFeedVO) {
 
 		mngFeedService.udtFeedDo(mngReqFeedVO);
 
 		return ResUtil.resSucc("글이 수정되었습니다!");
-
-	}
-
-	@RequestMapping("/feed/delFeedDo.ax")
-	public ResponseEntity<ResponseBody<Object>> delFeedDoAx(@Valid Integer postSn) {
-
-		mngFeedService.delFeedDo(postSn);
-
-		return ResUtil.resSucc("글이 삭제되었습니다!");
 
 	}
 
