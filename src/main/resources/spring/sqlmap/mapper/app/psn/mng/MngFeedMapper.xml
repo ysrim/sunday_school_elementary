@@ -7,6 +7,7 @@
 			 , A.BBS_SN
 			 , A.BBS_TYPE
 			 , A.TITLE
+			 , A.SUB_TITLE
 			 , A.CONTENT
 			 , A.VIEW_CNT
 			 , A.CREAT_MBER_SN
@@ -26,6 +27,7 @@
 			 , A.BBS_SN
 			 , A.BBS_TYPE
 			 , A.TITLE
+			 , A.SUB_TITLE
 			 , A.CONTENT
 			 , A.VIEW_CNT
 			 , A.CREAT_MBER_SN
@@ -40,14 +42,15 @@
 	</select>
 
 	<insert id="crtFeedDo" parameterType="app.psn.mng.feed.vo.MngReqFeedVO">
-		INSERT INTO BBS_POST (BBS_SN, BBS_TYPE, TITLE, CONTENT, CREAT_MBER_SN, UDT_MBER_SN, USE_YN)
-		values (#{bbsSn}, #{bbsType}, #{title}, #{content}, #{creatMberSn}, #{udtMberSn}, #{useYn})
+		INSERT INTO BBS_POST (BBS_SN, BBS_TYPE, TITLE, SUB_TITLE, CONTENT, CREAT_MBER_SN, UDT_MBER_SN, USE_YN)
+		values (#{bbsSn}, #{bbsType}, #{title}, #{subTitle}, #{content}, #{creatMberSn}, #{udtMberSn}, #{useYn})
 	</insert>
 
 	<update id="udtFeedDo" parameterType="app.psn.mng.feed.vo.MngReqFeedVO">
 		UPDATE BBS_POST
 		SET BBS_TYPE    = #{bbsType}
 		  , TITLE       = #{title}
+		  , SUB_TITLE   = #{subTitle}
 		  , CONTENT     = #{content}
 		  , UDT_MBER_SN = #{udtMberSn}
 		  , USE_YN      = #{useYn}

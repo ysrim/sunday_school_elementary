@@ -27,6 +27,9 @@ public class MngReqFeedVO {
 	@NotEmpty(message = "제목을 입력해주세요!")
 	private String title;
 
+	@NotEmpty(message = "부제를 입력해주세요!")
+	private String subTitle;
+
 	private String content;
 
 	@NotNull(message = "게시물 타입 정보가 없습니다!")

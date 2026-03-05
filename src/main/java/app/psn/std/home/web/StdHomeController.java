@@ -1,9 +1,10 @@
 package app.psn.std.home.web;
 
-import app.psn.com.service.CacheService;
-import app.psn.com.service.ToastMsgService;
-import app.psn.std.home.service.StdHomeService;
-import app.psn.std.qest.service.StdQestService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.base.annotation.std.StdMenuInfo;
 import com.base.enumm.com.MberGrdEnum;
@@ -14,14 +15,13 @@ import com.base.utl.ResUtil;
 import com.base.utl.SessionUtil;
 import com.base.vo.ResponseBody;
 
+import app.psn.com.service.CacheService;
+import app.psn.com.service.ToastMsgService;
+import app.psn.std.home.service.StdHomeService;
+import app.psn.std.qest.service.StdQestService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
 @Controller
@@ -60,8 +60,8 @@ public class StdHomeController {
 		model.addAttribute("guildInfo", homeService.sltGildInfo()); // 길드정보
 		model.addAttribute("toastMsgList", toastMsgService.sltToastMsgList()); // 토스트 메시지
 		model.addAttribute("qestCmpleteYn", stdQestService.qestCompleteChk(CommonUtil.setQuestPendingVO(4)) ? "Y" : "N"); // 맑씀읽기 퀘스트 여부
+		model.addAttribute("noticeList", homeService.getNoticeList());
 
-		// 미구현 기능: 공지사항
 		return ViewPathEnum.STD.to("/home/stdHome");
 
 	}
@@ -70,9 +70,10 @@ public class StdHomeController {
 	 * 공지사항 상세보기
 	 */
 	@RequestMapping("/home/noticeCont.pg")
-	public String noticeContPg() {
+	public String noticeContPg(@Valid @RequestParam("postSn") Integer postSn, Model model) {
 
-		// TODO 공지사항 컨텐츠 구현
+		model.addAttribute("noticeCont", homeService.getNoticeCont(postSn));
+
 		return ViewPathEnum.STD.to("/home/stdNoticeCont");
 
 	}

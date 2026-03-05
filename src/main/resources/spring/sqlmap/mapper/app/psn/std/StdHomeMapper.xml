@@ -32,4 +32,31 @@
 		  AND GUILD_SN = #{guildSn}
 	</select>
 
+	<select id="getNoticeList" resultType="app.psn.std.home.vo.StdNoticeVO">
+		SELECT A.POST_SN
+			 , A.BBS_TYPE
+			 , A.TITLE
+			 , A.SUB_TITLE
+			 , A.CONTENT
+			 , A.VIEW_CNT
+			 , DATE_FORMAT(A.CREAT_DE, '%Y-%m-%d %H:%I') AS CREAT_DATE
+		FROM BBS_POST A
+		WHERE A.USE_YN = 'Y'
+		  AND A.BBS_SN = 1
+		ORDER BY A.CREAT_DE DESC
+	</select>
+
+	<select id="getNoticeCont" resultType="app.psn.std.home.vo.StdNoticeVO">
+		SELECT A.POST_SN
+			 , A.BBS_TYPE
+			 , A.TITLE
+			 , A.SUB_TITLE
+			 , A.CONTENT
+			 , A.VIEW_CNT
+			 , DATE_FORMAT(A.CREAT_DE, '%Y-%m-%d %H:%I') AS CREAT_DATE
+		FROM BBS_POST A
+		WHERE A.USE_YN = 'Y'
+		  AND A.POST_SN = #{postSn}
+	</select>
+
 </mapper>

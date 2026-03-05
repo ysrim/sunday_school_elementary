@@ -1,24 +1,27 @@
 package app.psn.std.home.service.impl;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.base.enumm.std.CacheKeys;
+import com.base.utl.CommonUtil;
+import com.base.utl.SessionUtil;
+
 import app.psn.com.service.CacheService;
 import app.psn.std.home.mapper.StdHomeMapper;
 import app.psn.std.home.service.StdHomeService;
 import app.psn.std.home.vo.StdHomeGildInfoVO;
 import app.psn.std.home.vo.StdHomeGildVO;
+import app.psn.std.home.vo.StdNoticeVO;
 import app.psn.std.qest.service.StdQestService;
 import app.psn.std.qest.vo.StdQestPendingVO;
-import com.base.enumm.std.CacheKeys;
-import com.base.utl.CommonUtil;
-import com.base.utl.SessionUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service("stdHomeService")
@@ -50,8 +53,8 @@ public class StdHomeServiceImpl implements StdHomeService {
 		List<StdHomeGildVO> list = stdHomeMapper.sltGildMberList(SessionUtil.getStdMberInfo().guildSn());
 
 		return Optional.ofNullable(list).orElseGet(Collections::emptyList).stream() //
-				.filter(vo -> cacheService.checkKeyExists(CacheKeys.OnlineMbers.name(), vo.getMberId())) // 길드원이 온라인만 리스트업
-				.collect(Collectors.toList());
+			.filter(vo -> cacheService.checkKeyExists(CacheKeys.OnlineMbers.name(), vo.getMberId())) // 길드원이 온라인만 리스트업
+			.collect(Collectors.toList());
 
 	}
 
@@ -72,6 +75,20 @@ public class StdHomeServiceImpl implements StdHomeService {
 			stdQestService.qestDo(stdQestPendingVO);
 			return true;
 		}
+
+	}
+
+	@Override
+	public List<StdNoticeVO> getNoticeList() {
+
+		return stdHomeMapper.getNoticeList();
+
+	}
+
+	@Override
+	public StdNoticeVO getNoticeCont(Integer postSn) {
+
+		return stdHomeMapper.getNoticeCont(postSn);
 
 	}
 

@@ -10,6 +10,7 @@ public record MngResFeedVO( // 아바타 레벨 정보
                             Integer bbsSn,         // 게시판 번호
                             BbsTypeEnum bbsType,   // 게시물 유형
                             String title,          // 제목
+                            String subTitle,       // 서브 제목
                             String content,        // 내용
                             Integer viewCnt,       // 조회수
                             Integer creatMberSn,   // 작성자 순번
