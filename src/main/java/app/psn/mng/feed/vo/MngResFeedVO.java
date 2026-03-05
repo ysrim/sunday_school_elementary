@@ -16,6 +16,7 @@ public record MngResFeedVO( // 아바타 레벨 정보
                             String creatMberNm,    // 작성자 이름
                             Integer udtMberSn,     // 수정자 순번
                             String udtMberNm,      // 수정자 이름
+                            String useYn,          // 사용여부
                             String creatDate,      // 작성일
                             String udtDate         // 수정일
 ) {
