@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?><!--Converted at: Wed May 11 15:49:38 KST 2016 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="app.psn.mng.feed.mapper.MngFeedMapper">
+
+	<select id="getCurrAtndRate" resultType="hashmap">
+		SELECT ROUND((A.CURR_ATTENDANCE_COUNT * 100) / NULLIF(B.CURR_COUNT, 0), 2) AS CURR_ATND_RATE,
+			   ROUND((A.PRE_ATTENDANCE_COUNT * 100) / NULLIF(B.PRE_COUNT, 0), 2)   AS PRE_ATND_RATE,
+			   ROUND((A.CURR_ATTENDANCE_COUNT * 100) / NULLIF(B.CURR_COUNT, 0), 2) -
+			   ROUND((A.PRE_ATTENDANCE_COUNT * 100) / NULLIF(B.PRE_COUNT, 0), 2)   AS DIFF_ATND_RATE
+		FROM (
+				 -- [A] 출석자 수 구하기 (테이블 한 번만 스캔)
+				 SELECT COUNT(CASE WHEN Q.REQ_DATE = D.CURR_SUN THEN 1 END) AS CURR_ATTENDANCE_COUNT,
+						COUNT(CASE WHEN Q.REQ_DATE = D.PREV_SUN THEN 1 END) AS PRE_ATTENDANCE_COUNT
+				 FROM QUEST_LOGS Q
+						  CROSS JOIN (
+					 -- 날짜를 여기서 한 번만 계산합니다!
+					 SELECT DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL - DAYOFWEEK(CURDATE()) + 1 DAY), '%Y%m%d') AS CURR_SUN,
+							DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL - DAYOFWEEK(CURDATE()) - 6 DAY), '%Y%m%d') AS PREV_SUN) D
+				 WHERE Q.QUEST_SN = 2
+				   AND Q.STATUS = 'APPROVED'
+				   AND Q.REQ_DATE IN (D.CURR_SUN, D.PREV_SUN)
+				   -- 4등급 길드원의 출석만 필터링 (IN 절 내부 최적화)
+				   AND Q.MBER_SN IN (SELECT M.MBER_SN
+									 FROM GUILD_MBER_LIST M
+											  INNER JOIN GUILD_INFO G ON M.GUILD_SN = G.GUILD_SN
+									 WHERE M.EXIT_DATE IS NULL
+									   AND G.GRADE = 4
+									   AND M.JOIN_DATE  <![CDATA[ < ]]> D.CURR_SUN)) A,
+			 (
+				 -- [B] 총인원 수 구하기 (테이블 한 번만 스캔)
+				 SELECT COUNT(CASE WHEN M.JOIN_DATE  <![CDATA[ < ]]> D.CURR_SUN THEN 1 END) AS CURR_COUNT,
+						COUNT(CASE WHEN M.JOIN_DATE  <![CDATA[ < ]]> D.PREV_SUN THEN 1 END) AS PRE_COUNT
+				 FROM GUILD_MBER_LIST M
+						  INNER JOIN GUILD_INFO G ON M.GUILD_SN = G.GUILD_SN
+						  CROSS JOIN (
+					 -- 여기서도 날짜를 한 번만 계산해서 사용합니다.
+					 SELECT DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL - DAYOFWEEK(CURDATE()) + 1 DAY), '%Y%m%d') AS CURR_SUN,
+							DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL - DAYOFWEEK(CURDATE()) - 6 DAY), '%Y%m%d') AS PREV_SUN) D
+				 WHERE M.EXIT_DATE IS NULL
+				   AND G.GRADE = 4
+				   AND M.JOIN_DATE  <![CDATA[ < ]]> D.CURR_SUN -- 이번 주 일요일 이전 가입자까지만 스캔
+			 ) B
+	</select>
+
+</mapper>

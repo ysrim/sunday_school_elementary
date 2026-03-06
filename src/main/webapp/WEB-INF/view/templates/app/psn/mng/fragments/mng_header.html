@@ -1,53 +1,77 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="headerFragment">
-	<style>
-        .btn-side {
-            padding: 0.65rem 1rem !important; /* 세로/가로 패딩 축소 */
-            font-size: 0.8125rem !important; /* 폰트 크기 축소 (13px) */
-            border-radius: 0.5rem !important; /* 둥글기 약간 축소 */
-        }
-
-        /* 아이콘 크기 강제 조정 */
-        .btn-side i {
-            font-size: 0.9rem !important;
-            width: 1.25rem !important;
-        }
-	</style>
-
 	<aside class="w-56 bg-white border-r border-slate-200 flex flex-col z-10 shadow-sm transition-all duration-300">
-
 		<div class="h-14 flex items-center px-5 border-b border-slate-100">
 			<div class="text-lg font-bold text-slate-800 flex items-center tracking-tight">
 				<i class="fas fa-chess-rook mr-2.5 text-indigo-600"></i> RPG Admin
 			</div>
 		</div>
 
-		<nav class="flex-1 p-3 space-y-1">
+		<nav class="flex-1 p-3 space-y-2 overflow-y-auto">
 			<button onclick="_naviPage('MNG_HOME', this)"
-			        th:class="|btn-side btn-side-${_mngMenuInfo == 'MNG_HOME' ? 'on' : 'off'}|">
-				<i class="fas fa-home mr-2.5 text-center"></i> 대시보드
+			        th:class="|w-full flex items-center btn-side ${_mngMenuInfo == 'MNG_HOME' ? 'bg-indigo-50 text-indigo-600 font-bold' : 'text-slate-600 hover:bg-slate-50'}|">
+				<i class="fas fa-home fa-fw mr-2.5"></i> 대시보드
 			</button>
-			<button onclick="_naviPage('MNG_MBER', this)"
-			        th:class="|btn-side btn-side-${_mngMenuInfo == 'MNG_MBER' ? 'on' : 'off'}|">
-				<i class="fas fa-users mr-2.5 text-center"></i> 용사(회원) 관리
-			</button>
-			<button onclick="_naviPage('MNG_FEED', this)"
-			        th:class="|btn-side btn-side-${_mngMenuInfo == 'MNG_FEED' ? 'on' : 'off'}|">
-				<i class="fas fa-bullhorn mr-2.5 text-center"></i> 공지사항 관리
-			</button>
-			<button onclick="_naviPage('MNG_REWD', this)"
-			        th:class="|btn-side btn-side-${_mngMenuInfo == 'MNG_REWD' ? 'on' : 'off'}|">
-				<i class="fas fa-magic mr-2.5 text-center"></i> 리워드 관리
-			</button>
-			<button onclick="_naviPage('MNG_QEST', this)"
-			        th:class="|btn-side btn-side-${_mngMenuInfo == 'MNG_QEST' ? 'on' : 'off'}|">
-				<i class="fas fa-scroll mr-2.5 text-center"></i> 퀘스트 승인 관리
-			</button>
+
+			<div class="menu-group">
+				<button type="button" class="w-full flex items-center justify-between btn-side text-slate-600 hover:bg-slate-50 transition-colors">
+					<span class="flex items-center"><i class="fas fa-users fa-fw mr-2.5"></i> 용사관리</span>
+					<i class="fas fa-chevron-down text-[10px] transition-transform duration-200"
+					   th:classappend="${_mngMenuInfo == 'MNG_MBER' or _mngMenuInfo == 'MNG_ABSENT' or _mngMenuInfo == 'MNG_ATTEND'} ? 'rotate-180' : ''"></i>
+				</button>
+				<div class="sub-menu flex-col pl-7 pr-2 mt-1 space-y-0.5"
+				     th:style="${_mngMenuInfo == 'MNG_MBER' or _mngMenuInfo == 'MNG_ABSENT' or _mngMenuInfo == 'MNG_ATTEND'} ? 'display: flex;' : 'display: none;'">
+					<button onclick="_naviPage('MNG_MBER', this)" th:class="|w-full text-left btn-side-sub transition-colors ${_mngMenuInfo == 'MNG_MBER' ? 'text-indigo-600 font-bold bg-indigo-50/50' : 'text-slate-500 hover:text-indigo-600 hover:bg-slate-50'}|">
+						<span class="mr-2">⚔️</span> 용사관리
+					</button>
+					<button onclick="_naviPage('MNG_ABSENT', this)" th:class="|w-full text-left btn-side-sub transition-colors ${_mngMenuInfo == 'MNG_ABSENT' ? 'text-indigo-600 font-bold bg-indigo-50/50' : 'text-slate-500 hover:text-indigo-600 hover:bg-slate-50'}|">
+						<span class="mr-2">👻</span> 장결자관리
+					</button>
+					<button onclick="_naviPage('MNG_ATTEND', this)" th:class="|w-full text-left btn-side-sub transition-colors ${_mngMenuInfo == 'MNG_ATTEND' ? 'text-indigo-600 font-bold bg-indigo-50/50' : 'text-slate-500 hover:text-indigo-600 hover:bg-slate-50'}|">
+						<span class="mr-2">📅</span> 주간출석자관리
+					</button>
+				</div>
+			</div>
+
+			<div class="menu-group">
+				<button type="button" class="w-full flex items-center justify-between btn-side text-slate-600 hover:bg-slate-50 transition-colors">
+					<span class="flex items-center"><i class="fas fa-scroll fa-fw mr-2.5"></i> 퀘스트관리</span>
+					<i class="fas fa-chevron-down text-[10px] transition-transform duration-200"
+					   th:classappend="${_mngMenuInfo == 'MNG_QEST_MNG' or _mngMenuInfo == 'MNG_QEST' or _mngMenuInfo == 'MNG_REWD'} ? 'rotate-180' : ''"></i>
+				</button>
+				<div class="sub-menu flex-col pl-7 pr-2 mt-1 space-y-0.5"
+				     th:style="${_mngMenuInfo == 'MNG_QEST_MNG' or _mngMenuInfo == 'MNG_QEST' or _mngMenuInfo == 'MNG_REWD'} ? 'display: flex;' : 'display: none;'">
+					<button onclick="_naviPage('MNG_QEST_MNG', this)" th:class="|w-full text-left btn-side-sub transition-colors ${_mngMenuInfo == 'MNG_QEST_MNG' ? 'text-indigo-600 font-bold bg-indigo-50/50' : 'text-slate-500 hover:text-indigo-600 hover:bg-slate-50'}|">
+						<span class="mr-2">📜</span> 퀘스트관리
+					</button>
+					<button onclick="_naviPage('MNG_QEST', this)" th:class="|w-full text-left btn-side-sub transition-colors ${_mngMenuInfo == 'MNG_QEST' ? 'text-indigo-600 font-bold bg-indigo-50/50' : 'text-slate-500 hover:text-indigo-600 hover:bg-slate-50'}|">
+						<span class="mr-2">✅</span> 퀘스트승인관리
+					</button>
+					<button onclick="_naviPage('MNG_REWD', this)" th:class="|w-full text-left btn-side-sub transition-colors ${_mngMenuInfo == 'MNG_REWD' ? 'text-indigo-600 font-bold bg-indigo-50/50' : 'text-slate-500 hover:text-indigo-600 hover:bg-slate-50'}|">
+						<span class="mr-2">💎</span> 리워드관리
+					</button>
+				</div>
+			</div>
+
+			<div class="menu-group">
+				<button type="button" class="w-full flex items-center justify-between btn-side text-slate-600 hover:bg-slate-50 transition-colors">
+					<span class="flex items-center"><i class="fas fa-bullhorn fa-fw mr-2.5"></i> 게시판관리</span>
+					<i class="fas fa-chevron-down text-[10px] transition-transform duration-200"
+					   th:classappend="${_mngMenuInfo == 'MNG_FEED'} ? 'rotate-180' : ''"></i>
+				</button>
+				<div class="sub-menu flex-col pl-7 pr-2 mt-1 space-y-0.5"
+				     th:style="${_mngMenuInfo == 'MNG_FEED'} ? 'display: flex;' : 'display: none;'">
+					<button onclick="_naviPage('MNG_FEED', this)" th:class="|w-full text-left btn-side-sub transition-colors ${_mngMenuInfo == 'MNG_FEED' ? 'text-indigo-600 font-bold bg-indigo-50/50' : 'text-slate-500 hover:text-indigo-600 hover:bg-slate-50'}|">
+						<span class="mr-2">📌</span> 공지사항관리
+					</button>
+				</div>
+			</div>
 		</nav>
+
 		<div class="p-3 border-t border-slate-50">
-			<button class="btn-side text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors w-full"
+			<button class="btn-side text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors w-full flex items-center"
 			        th:onclick="|location.href='@{/mng/idx/logOut.pg}'|">
-				<i class="fas fa-sign-out-alt mr-2.5 text-center"></i> 로그아웃
+				<i class="fas fa-sign-out-alt fa-fw mr-2.5"></i> 로그아웃
 			</button>
 		</div>
 	</aside>

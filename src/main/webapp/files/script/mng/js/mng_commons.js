@@ -1,6 +1,24 @@
 $(function () {
 	// 페이지 로드 후 0.2초 뒤 알림 체크
 	setTimeout(_setAlertMsg, 200);
+
+	// 1뎁스 메뉴 버튼 클릭 이벤트
+	$('.menu-group > button').on('click', function () {
+		const $btn = $(this);
+		const $subMenu = $btn.next('.sub-menu');
+		const $icon = $btn.find('.fa-chevron-down');
+
+		// 서브메뉴가 숨겨져 있다면 보여주기
+		if ($subMenu.css('display') === 'none') {
+			$subMenu.css('display', 'flex'); // Tailwind의 flex-col과 충돌하지 않도록 flex 적용
+			$icon.addClass('rotate-180');
+		}
+		// 서브메뉴가 보인다면 숨기기
+		else {
+			$subMenu.css('display', 'none');
+			$icon.removeClass('rotate-180');
+		}
+	});
 });
 
 /**

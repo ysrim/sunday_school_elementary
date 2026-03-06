@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http//www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/app/psn/mng/layouts/mng_layout}" lang="ko">
 <th:block layout:fragment="content">
 	<div id="page-dashboard" class="page-content w-full min-h-screen bg-[#f8f9fa] p-5 font-sans text-slate-600">
@@ -91,9 +91,6 @@
 						<h2 class="text-base font-bold text-slate-800">주간 출석 추이</h2>
 						<p class="text-[10px] text-slate-400 font-bold mt-0.5 uppercase">Weekly Trends</p>
 					</div>
-					<button class="w-6 h-6 flex items-center justify-center rounded hover:bg-slate-100 text-slate-400 transition">
-						<i class="fas fa-ellipsis-h text-xs"></i>
-					</button>
 				</div>
 				<div id="attendanceChart" class="w-full flex-1 min-h-[230px]"></div>
 			</div>
@@ -119,18 +116,28 @@
 			</div>
 		</div>
 
-		<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-			<div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
-				<h2 class="text-base font-bold text-slate-800 mb-4">요일별 퀘스트 현황</h2>
-				<div id="questChart" class="w-full h-56"></div>
+		<div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+			<div class="lg:col-span-2 bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+				<div class="flex justify-between items-center mb-4">
+					<div>
+						<h2 class="text-base font-bold text-slate-800">학년·반별 출석 인원</h2>
+						<p class="text-[10px] text-slate-400 font-bold mt-0.5 uppercase">Class Attendance</p>
+					</div>
+					<div class="flex gap-3 text-xs font-bold text-slate-500">
+						<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-indigo-500"></span>4학년</span>
+						<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>5학년</span>
+						<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span>6학년</span>
+					</div>
+				</div>
+				<div id="classAttendanceChart" class="w-full flex-1 min-h-[250px]"></div>
 			</div>
 
-			<div class="bg-white p-0 rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col">
+			<div class="lg:col-span-1 bg-white p-0 rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col">
 				<div class="px-5 py-4 bg-gradient-to-b from-slate-50 to-white border-b border-slate-50">
 					<div class="flex justify-between items-center">
 						<div>
 							<h2 class="text-base font-bold text-slate-800 flex items-center">
-								<i class="fas fa-crown text-amber-400 mr-2 drop-shadow-sm"></i> Hall of Fame
+								<i class="fas fa-crown text-amber-400 mr-2 drop-shadow-sm"></i> 명예의 전당
 							</h2>
 							<p class="text-[10px] text-slate-500 mt-0.5 font-bold uppercase tracking-wider">Top 3 Warriors</p>
 						</div>
@@ -145,7 +152,7 @@
 						<div class="flex items-center gap-3">
 							<div class="font-black text-xl italic opacity-50">1</div>
 							<div class="relative">
-								<img src="[https://api.dicebear.com/7.x/avataaars/svg?seed=Felix](https://api.dicebear.com/7.x/avataaars/svg?seed=Felix)" class="w-10 h-10 rounded-full bg-white/20 border-2 border-white/50">
+								<img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" class="w-10 h-10 rounded-full bg-white/20 border-2 border-white/50" alt="avatar">
 								<div class="absolute -top-2 -right-1"><i class="fas fa-crown text-amber-300 text-sm animate-bounce"></i></div>
 							</div>
 							<div>
@@ -159,7 +166,7 @@
 					<div class="flex items-center justify-between p-3 rounded-xl border border-slate-100 hover:bg-slate-50 transition cursor-pointer">
 						<div class="flex items-center gap-3">
 							<div class="w-7 h-7 rounded bg-slate-100 text-slate-500 font-black flex items-center justify-center text-xs">2</div>
-							<img src="[https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka](https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka)" class="w-9 h-9 rounded-full bg-slate-50">
+							<img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka" class="w-9 h-9 rounded-full bg-slate-50" alt="avatar">
 							<div>
 								<div class="font-bold text-xs text-slate-800">이영희</div>
 								<div class="text-[10px] text-slate-400">980 EXP</div>
@@ -170,7 +177,7 @@
 					<div class="flex items-center justify-between p-3 rounded-xl border border-slate-100 hover:bg-slate-50 transition cursor-pointer">
 						<div class="flex items-center gap-3">
 							<div class="w-7 h-7 rounded bg-amber-50 text-amber-700 font-black flex items-center justify-center text-xs">3</div>
-							<img src="[https://api.dicebear.com/7.x/avataaars/svg?seed=Bob](https://api.dicebear.com/7.x/avataaars/svg?seed=Bob)" class="w-9 h-9 rounded-full bg-slate-50">
+							<img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Bob" class="w-9 h-9 rounded-full bg-slate-50" alt="avatar">
 							<div>
 								<div class="font-bold text-xs text-slate-800">박민수</div>
 								<div class="text-[10px] text-slate-400">850 EXP</div>
@@ -195,7 +202,7 @@
 
 		Apex.chart = {fontFamily: "Pretendard, sans-serif"};
 
-		// 주간 출석 추이
+		// 1. 주간 출석 추이
 		new ApexCharts(document.querySelector("#attendanceChart"), {
 			series: [{name: '출석', data: [22, 24, 24, 23, 25]}],
 			chart: {height: 230, type: 'area', toolbar: {show: false}, zoom: {enabled: false}},
@@ -216,29 +223,25 @@
 			tooltip: {theme: 'light', style: {fontSize: '11px'}, x: {show: false}}
 		}).render();
 
-		// 수정된 부분 1: 아바타 레벨 분포 (도넛 차트 유지, 데이터/라벨 변경)
+		// 2. 아바타 레벨 분포
 		new ApexCharts(document.querySelector("#avatarLevelChart"), {
 			series: [15, 45, 25, 10, 5],
 			labels: ['Lv.1~10', 'Lv.11~20', 'Lv.21~30', 'Lv.31~40', 'Lv.41+'],
 			chart: {type: 'donut', height: 230},
 			colors: ['#cbd5e1', COLORS.success, COLORS.primary, COLORS.warning, COLORS.danger],
 			plotOptions: {
-				pie: {
-					donut: {size: '65%', labels: {show: true, name: {fontSize: '12px'}, value: {fontSize: '16px', fontWeight: 'bold'}}}
-				}
+				pie: { donut: {size: '65%', labels: {show: true, name: {fontSize: '12px'}, value: {fontSize: '16px', fontWeight: 'bold'}}} }
 			},
 			dataLabels: {enabled: false},
 			legend: {position: 'bottom', fontSize: '11px', markers: {radius: 12}},
 			stroke: {show: false}
 		}).render();
 
-		// 수정된 부분 2: 로그인 활성 시간대 (막대 차트)
+		// 3. 로그인 활성 시간대
 		new ApexCharts(document.querySelector("#loginTimeChart"), {
 			series: [{name: '로그인 수', data: [12, 25, 45, 80, 110, 60, 30, 15]}],
 			chart: {type: 'bar', height: 230, toolbar: {show: false}},
-			plotOptions: {
-				bar: {borderRadius: 4, columnWidth: '50%'}
-			},
+			plotOptions: { bar: {borderRadius: 4, columnWidth: '50%'} },
 			colors: [COLORS.secondary],
 			dataLabels: {enabled: false},
 			xaxis: {
@@ -248,29 +251,53 @@
 			},
 			yaxis: {show: false},
 			grid: {borderColor: COLORS.border, strokeDashArray: 3},
-			tooltip: {
-				theme: 'light', y: {
-					formatter: function (val) {
-						return val + "명"
-					}
-				}
-			}
+			tooltip: { theme: 'light', y: { formatter: function (val) { return val + "명" } } }
 		}).render();
 
-		// 요일별 퀘스트 현황
-		new ApexCharts(document.querySelector("#questChart"), {
-			series: [{name: '완료', data: [5, 12, 18, 10, 8, 24, 30]}],
-			chart: {type: 'bar', height: 220, toolbar: {show: false}},
-			plotOptions: {bar: {borderRadius: 4, columnWidth: '30%', distributed: true}},
-			colors: ['#e2e8f0', '#e2e8f0', '#e2e8f0', '#e2e8f0', '#e2e8f0', COLORS.primary, COLORS.primary],
-			legend: {show: false},
-			dataLabels: {enabled: false},
-			xaxis: {
-				categories: ['월', '화', '수', '목', '금', '토', '일'],
-				axisBorder: {show: false}, axisTicks: {show: false},
-				labels: {style: {colors: COLORS.text, fontWeight: 600, fontSize: '11px'}}
+		// 4. [신규] 학년·반별 출석 인원 막대 그래프 (총 16개 반)
+		// 4학년(6개반), 5학년(4개반), 6학년(6개반) 데이터 예시입니다. 서버 데이터로 연동 시 배열을 교체해주세요.
+		new ApexCharts(document.querySelector("#classAttendanceChart"), {
+			series: [{
+				name: '출석 인원',
+				data: [25, 24, 26, 23, 25, 22, /* 4학년 */
+					24, 25, 24, 26,          /* 5학년 */
+					23, 25, 24, 25, 26, 22   /* 6학년 */]
+			}],
+			chart: { type: 'bar', height: 250, toolbar: { show: false } },
+			plotOptions: {
+				bar: {
+					borderRadius: 4,
+					columnWidth: '55%',
+					distributed: true, // 막대별로 각각 색상을 지정하기 위한 필수 옵션
+					dataLabels: { position: 'top' } // 숫자가 막대 위쪽에 표시되도록
+				}
 			},
-			grid: {show: false}
+			// 4학년(primary) 6개, 5학년(success) 4개, 6학년(warning) 6개 순서대로 색상 배열 생성
+			colors: [
+				...Array(6).fill(COLORS.primary),
+				...Array(4).fill(COLORS.success),
+				...Array(6).fill(COLORS.warning)
+			],
+			dataLabels: {
+				enabled: true,
+				formatter: function(val) { return val + "명"; },
+				offsetY: -20, // 텍스트 위치 살짝 위로
+				style: { fontSize: '10px', colors: [COLORS.text] }
+			},
+			legend: { show: false }, // 커스텀 범례를 썼으므로 내장 범례는 끕니다
+			xaxis: {
+				categories: [
+					'4-1', '4-2', '4-3', '4-4', '4-5', '4-6',
+					'5-1', '5-2', '5-3', '5-4',
+					'6-1', '6-2', '6-3', '6-4', '6-5', '6-6'
+				],
+				axisBorder: { show: false },
+				axisTicks: { show: false },
+				labels: { style: { colors: COLORS.text, fontWeight: 600, fontSize: '11px' } }
+			},
+			yaxis: { show: false },
+			grid: { borderColor: COLORS.border, strokeDashArray: 3, padding: { top: 20 } },
+			tooltip: { theme: 'light', y: { formatter: function(val) { return val + "명"; } } }
 		}).render();
 	</script>
 </th:block>
