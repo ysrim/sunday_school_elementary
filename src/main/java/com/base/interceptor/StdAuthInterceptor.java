@@ -1,26 +1,32 @@
 package com.base.interceptor;
 
-import app.psn.com.service.CacheService;
-import app.psn.std.login.vo.StdSessionVO;
-import com.base.annotation.com.PassAuth;
-import com.base.annotation.std.StdMenuInfo;
-import com.base.enumm.com.MberGrdEnum;
-import com.base.utl.CommonUtil;
-import com.base.utl.SessionUtil;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Optional;
+
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import java.util.Optional;
+import com.base.annotation.com.PassAuth;
+import com.base.annotation.std.StdMenuInfo;
+import com.base.enumm.com.MberGrdEnum;
+import com.base.utl.CommonUtil;
+import com.base.utl.SessionUtil;
+
+import app.psn.com.service.CacheService;
+import app.psn.com.vo.VisitLogVO;
+import app.psn.std.login.vo.StdSessionVO;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
 public class StdAuthInterceptor implements HandlerInterceptor {
+
+	private final ApplicationEventPublisher publisher;
 
 	private final CacheService cacheService;
 
@@ -55,6 +61,9 @@ public class StdAuthInterceptor implements HandlerInterceptor {
 		// 5. 사용자 부가 정보 설정 (Cache & Request Attributes)
 		setupUserContext(request, stdSessionVO);
 
+		// 6. 방문자 로그 저장
+		publisher.publishEvent(new VisitLogVO(stdSessionVO.mberSn(), request.getRequestURI(), request.getHeader("User-Agent")));
+
 		return true;
 
 	}
@@ -65,10 +74,10 @@ public class StdAuthInterceptor implements HandlerInterceptor {
 	private boolean processMenuAuthorization(HttpServletRequest request, HandlerMethod handlerMethod, StdSessionVO stdSessionVO) {
 
 		StdMenuInfo menuInfo = Optional.ofNullable(AnnotatedElementUtils.findMergedAnnotation(handlerMethod.getMethod(), StdMenuInfo.class)) // method
-				.orElseGet(() -> AnnotatedElementUtils.findMergedAnnotation(handlerMethod.getBeanType(), StdMenuInfo.class)); // bean
+			.orElseGet(() -> AnnotatedElementUtils.findMergedAnnotation(handlerMethod.getBeanType(), StdMenuInfo.class)); // bean
 
 		if (menuInfo == null // // 메뉴 정보가 없으면 실패
-				|| !isAuthorized(stdSessionVO) // 권한 체크 (관리자는 학생 페이지 접근 불가 등)
+			|| !isAuthorized(stdSessionVO) // 권한 체크 (관리자는 학생 페이지 접근 불가 등)
 		) {
 			return false;
 		}
@@ -103,7 +112,7 @@ public class StdAuthInterceptor implements HandlerInterceptor {
 	private boolean hasPassAuth(HandlerMethod handler) {
 
 		return AnnotatedElementUtils.hasAnnotation(handler.getMethod(), PassAuth.class) //
-				|| AnnotatedElementUtils.hasAnnotation(handler.getBeanType(), PassAuth.class); //
+			|| AnnotatedElementUtils.hasAnnotation(handler.getBeanType(), PassAuth.class); //
 
 	}
 
@@ -111,7 +120,7 @@ public class StdAuthInterceptor implements HandlerInterceptor {
 
 		// 학생 페이지는 선생님등급과 학생등급만 접근 가능
 		return MberGrdEnum.STD.is(session.gradeCode())
-				|| MberGrdEnum.TCH.is(session.gradeCode());
+			|| MberGrdEnum.TCH.is(session.gradeCode());
 
 	}
 

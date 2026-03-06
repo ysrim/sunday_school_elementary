@@ -1,29 +1,32 @@
 package com.base.interceptor;
 
-import app.psn.tch.login.vo.TchSessionVO;
+import java.io.IOException;
+import java.util.Optional;
 
-import com.base.annotation.com.PassAuth;
-import com.base.annotation.tch.TchMenuInfo;
-import com.base.enumm.com.MberGrdEnum;
-import com.base.utl.SessionUtil;
-import com.base.utl.CommonUtil;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import java.io.IOException;
-import java.util.Optional;
+import com.base.annotation.com.PassAuth;
+import com.base.annotation.tch.TchMenuInfo;
+import com.base.enumm.com.MberGrdEnum;
+import com.base.utl.CommonUtil;
+import com.base.utl.SessionUtil;
+
+import app.psn.com.vo.VisitLogVO;
+import app.psn.tch.login.vo.TchSessionVO;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
 public class TchAuthInterceptor implements HandlerInterceptor {
+
+	private final ApplicationEventPublisher publisher;
 
 	private static final String LOGIN_PAGE_URL = "/tch/idx/login.pg";
 
@@ -52,6 +55,9 @@ public class TchAuthInterceptor implements HandlerInterceptor {
 			CommonUtil.handleAuthFail(request, response, "Access Denied", HttpServletResponse.SC_FORBIDDEN, LOGIN_PAGE_URL);
 			return false;
 		}
+
+		// 5. 방문자 로그 저장
+		publisher.publishEvent(new VisitLogVO(tchSessionVO.mberSn(), request.getRequestURI(), request.getHeader("User-Agent")));
 
 		return true;
 

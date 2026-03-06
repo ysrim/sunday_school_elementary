@@ -1,6 +1,12 @@
 package app.psn.com.service;
 
-import app.psn.com.vo.*;
+import app.psn.com.vo.AvatarLevelRulesVO;
+import app.psn.com.vo.AvatarVO;
+import app.psn.com.vo.QuestContinuityRulesVO;
+import app.psn.com.vo.QuestContinuityVO;
+import app.psn.com.vo.QuestLogsVO;
+import app.psn.com.vo.QuestVO;
+import app.psn.com.vo.VisitLogVO;
 
 public interface DomainService {
 
@@ -33,5 +39,10 @@ public interface DomainService {
 	 * 퀘스트 로그 정보
 	 */
 	QuestLogsVO sltQuestLogs(Integer logSn);
+
+	/**
+	 * 방문자 로그 저장
+	 */
+	void regVisitLog(VisitLogVO visitLogVO);
 
 }

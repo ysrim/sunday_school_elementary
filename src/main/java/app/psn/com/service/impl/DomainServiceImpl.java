@@ -1,12 +1,19 @@
 package app.psn.com.service.impl;
 
-import app.psn.com.mapper.DomainMapper;
-import app.psn.com.service.DomainService;
-import app.psn.com.vo.*;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import app.psn.com.mapper.DomainMapper;
+import app.psn.com.service.DomainService;
+import app.psn.com.vo.AvatarLevelRulesVO;
+import app.psn.com.vo.AvatarVO;
+import app.psn.com.vo.QuestContinuityRulesVO;
+import app.psn.com.vo.QuestContinuityVO;
+import app.psn.com.vo.QuestLogsVO;
+import app.psn.com.vo.QuestVO;
+import app.psn.com.vo.VisitLogVO;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service("domainService")
@@ -55,6 +62,16 @@ public class DomainServiceImpl implements DomainService {
 	public QuestLogsVO sltQuestLogs(Integer logSn) {
 
 		return domainMapper.sltQuestLogs(logSn);
+
+	}
+
+	@Override
+	public void regVisitLog(VisitLogVO visitLogVO) {
+
+		// URL이 .pg로 끝나는 것만 저장
+		if (visitLogVO.reqUrl().endsWith(".pg")) {
+			domainMapper.regVisitLog(visitLogVO);
+		}
 
 	}
 

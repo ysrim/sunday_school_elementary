@@ -1,16 +1,20 @@
 package com.base.handler;
 
-import app.psn.com.service.AvatarService;
-import app.psn.com.service.CacheService;
-import app.psn.com.service.RewardService;
-import app.psn.com.service.ToastMsgService;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
+
 import com.base.vo.AvatarLvlUdtEvent;
 import com.base.vo.QuestCompleteEvent;
 import com.base.vo.ToastMsgEvent;
+
+import app.psn.com.service.AvatarService;
+import app.psn.com.service.CacheService;
+import app.psn.com.service.DomainService;
+import app.psn.com.service.RewardService;
+import app.psn.com.service.ToastMsgService;
+import app.psn.com.vo.VisitLogVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
@@ -22,6 +26,8 @@ public class TriggerEventHandler {
 	private final AvatarService avatarService;
 
 	private final ToastMsgService toastMsgService;
+
+	private final DomainService domainService;
 
 	private final CacheService cacheService;
 
@@ -65,6 +71,16 @@ public class TriggerEventHandler {
 	public void handleToastMsgEvent(ToastMsgEvent event) {
 
 		toastMsgService.insToastMsg(event);
+
+	}
+
+	/**
+	 * 회원의 방문 로그를 저장한다.
+	 */
+	@EventListener
+	public void handleVisitLogEvent(VisitLogVO event) {
+
+		domainService.regVisitLog(event);
 
 	}
 

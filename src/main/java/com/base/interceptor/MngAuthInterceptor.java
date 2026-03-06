@@ -1,28 +1,31 @@
 package com.base.interceptor;
 
-import app.psn.mng.login.vo.MngSessionVO;
+import java.util.Optional;
+
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.core.annotation.AnnotatedElementUtils;
+import org.springframework.lang.NonNull;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.base.annotation.com.PassAuth;
 import com.base.annotation.mng.MngMenuInfo;
 import com.base.enumm.com.MberGrdEnum;
-import com.base.utl.SessionUtil;
 import com.base.utl.CommonUtil;
+import com.base.utl.SessionUtil;
 
+import app.psn.com.vo.VisitLogVO;
+import app.psn.mng.login.vo.MngSessionVO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.core.annotation.AnnotatedElementUtils;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.lang.NonNull;
-
-import java.util.Optional;
-
 @Slf4j
 @RequiredArgsConstructor
 public class MngAuthInterceptor implements HandlerInterceptor {
+
+	private final ApplicationEventPublisher publisher;
 
 	private static final String LOGIN_PAGE_URL = "/mng/idx/login.pg";
 
@@ -51,6 +54,9 @@ public class MngAuthInterceptor implements HandlerInterceptor {
 			CommonUtil.handleAuthFail(request, response, "Access Denied", HttpServletResponse.SC_FORBIDDEN, LOGIN_PAGE_URL);
 			return false;
 		}
+
+		// 5. 방문자 로그 저장
+		publisher.publishEvent(new VisitLogVO(mngSessionVO.mberSn(), request.getRequestURI(), request.getHeader("User-Agent")));
 
 		return true;
 
