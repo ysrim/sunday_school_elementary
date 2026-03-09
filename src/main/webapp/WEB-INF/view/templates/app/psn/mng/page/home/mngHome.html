@@ -18,16 +18,16 @@
 					<div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors duration-300">
 						<i class="fas fa-chart-line text-base"></i>
 					</div>
-					<span class="flex items-center gap-1 px-2 py-0.5 rounded-md bg-green-50 text-green-600 text-[10px] font-bold">
-                    <i class="fas fa-arrow-up"></i> 3.2%
-                </span>
+					<span class="flex items-center gap-1 px-2 py-0.5 rounded-md bg-green-50 text-green-600 text-[10px] font-bold" th:text="${getAtndCnt.ATND_DATE}"></span>
 				</div>
 				<div>
-					<h3 class="text-2xl font-black text-slate-800 tracking-tight">92.4%</h3>
+					<h3 class="text-2xl font-black text-slate-800 tracking-tight" th:text="|${getAtndCnt.ATND_CNT}명|">
+						<span class="text-sm font-bold text-slate-400 ml-1">명</span></h3>
+					</h3>
 					<p class="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-wider">Weekly Attendance</p>
 				</div>
 				<div class="w-full bg-slate-100 h-1 rounded-full mt-3 overflow-hidden">
-					<div class="bg-indigo-500 h-1 rounded-full" style="width: 92%"></div>
+					<div class="bg-indigo-500 h-1 rounded-full" style="width: 100%">123</div>
 				</div>
 			</div>
 
@@ -36,34 +36,38 @@
 					<div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-300">
 						<i class="fas fa-check-double text-base"></i>
 					</div>
-					<span class="flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-600 text-[10px] font-bold">
-                    <i class="fas fa-plus"></i> 12%
+					<span class="flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-600 text-[10px] font-bold" th:text="|${getQestCnt.FROM_DATE} ~ ${getQestCnt.TO_DATE}|">
+                    12%
                 </span>
 				</div>
 				<div>
-					<h3 class="text-2xl font-black text-slate-800 tracking-tight">128<span class="text-sm font-bold text-slate-400 ml-1">건</span></h3>
+					<h3 class="text-2xl font-black text-slate-800 tracking-tight">
+						<th:block th:text="${#numbers.formatInteger(getQestCnt.QEST_CNT, 1, 'COMMA')}"></th:block>
+						<span class="text-sm font-bold text-slate-400 ml-1">건</span></h3>
 					<p class="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-wider">Quests Completed</p>
 				</div>
 				<div class="w-full bg-slate-100 h-1 rounded-full mt-3 overflow-hidden">
-					<div class="bg-emerald-500 h-1 rounded-full" style="width: 70%"></div>
+					<div class="bg-emerald-500 h-1 rounded-full" style="width: 100%"></div>
 				</div>
 			</div>
 
 			<div class="bg-white p-5 rounded-2xl shadow-sm card-hover-effect border border-transparent cursor-pointer group">
 				<div class="flex justify-between items-start mb-4">
-					<div class="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-orange-500 group-hover:bg-orange-500 group-hover:text-white transition-colors duration-300">
-						<i class="fas fa-user-plus text-base"></i>
+					<div class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-amber-500 group-hover:bg-amber-500 group-hover:text-white transition-colors duration-300">
+						<i class="fas fa-bolt text-base"></i>
 					</div>
-					<span class="flex items-center gap-1 px-2 py-0.5 rounded-md bg-rose-50 text-rose-500 text-[10px] font-bold">
-                    <i class="fas fa-arrow-down"></i> 1명
+					<span class="flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-600 text-[10px] font-bold" th:text="|${getWeekPoint.FROM_DATE} ~ ${getWeekPoint.TO_DATE}|">
+                    8.4%
                 </span>
 				</div>
 				<div>
-					<h3 class="text-2xl font-black text-slate-800 tracking-tight">5<span class="text-sm font-bold text-slate-400 ml-1">명</span></h3>
-					<p class="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-wider">New Warriors</p>
+					<h3 class="text-2xl font-black text-slate-800 tracking-tight">
+						<th:block th:text="${#numbers.formatInteger(getWeekPoint.POINT, 1, 'COMMA')}"></th:block>
+						<span class="text-sm font-bold text-slate-400 ml-1">POINT</span></h3>
+					<p class="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-wider">Weekly POINT Earned</p>
 				</div>
 				<div class="w-full bg-slate-100 h-1 rounded-full mt-3 overflow-hidden">
-					<div class="bg-orange-500 h-1 rounded-full" style="width: 40%"></div>
+					<div class="bg-amber-500 h-1 rounded-full" style="width: 105%"></div>
 				</div>
 			</div>
 
@@ -74,11 +78,13 @@
 						<i class="fas fa-coins text-base"></i>
 					</div>
 					<span class="px-2 py-0.5 rounded-md bg-white/20 backdrop-blur-sm text-white text-[10px] font-bold">
-                    Monthly
+                    Total
                 </span>
 				</div>
 				<div class="relative z-10">
-					<h3 class="text-2xl font-black tracking-tight">45,000<span class="text-sm font-normal opacity-80 ml-1">G</span></h3>
+					<h3 class="text-2xl font-black tracking-tight">
+						<th:block th:text="${#numbers.formatInteger(getSumPoint.POINT, 1, 'COMMA')}"></th:block>
+						<span class="text-sm font-normal opacity-80 ml-1">POINT</span></h3>
 					<p class="text-[10px] font-bold text-indigo-100 mt-1 uppercase tracking-wider">Total Rewards</p>
 				</div>
 			</div>
@@ -202,9 +208,12 @@
 
 		Apex.chart = {fontFamily: "Pretendard, sans-serif"};
 
-		// 1. 주간 출석 추이
+		// 1. 주간 출석 추이const feedVoData = /*[[${feedVo}]]*/ {};
+		const atndList = /*[[${getAtndList}]]*/ [];
+		const atndDates = atndList.map(item => item.ATND_DATE);
+		const atndCounts = atndList.map(item => item.ATND_CNT);
 		new ApexCharts(document.querySelector("#attendanceChart"), {
-			series: [{name: '출석', data: [22, 24, 24, 23, 25]}],
+			series: [{name: '출석', data: atndCounts}],
 			chart: {height: 230, type: 'area', toolbar: {show: false}, zoom: {enabled: false}},
 			colors: [COLORS.primary],
 			stroke: {curve: 'smooth', width: 3},
@@ -214,7 +223,7 @@
 			},
 			dataLabels: {enabled: false},
 			xaxis: {
-				categories: ['01/05', '01/12', '01/19', '01/26', '02/02'],
+				categories: atndDates,
 				axisBorder: {show: false}, axisTicks: {show: false},
 				labels: {style: {colors: COLORS.text, fontWeight: 600, fontSize: '11px'}}
 			},
@@ -224,13 +233,16 @@
 		}).render();
 
 		// 2. 아바타 레벨 분포
+		const avatarLevelList = /*[[${getAvatarLevel}]]*/ [];
+		const avatarLevelGrp = avatarLevelList.map(item => item.LEVEL_GROUP);
+		const avatarLevelCnt = avatarLevelList.map(item => item.USER_CNT);
 		new ApexCharts(document.querySelector("#avatarLevelChart"), {
-			series: [15, 45, 25, 10, 5],
-			labels: ['Lv.1~10', 'Lv.11~20', 'Lv.21~30', 'Lv.31~40', 'Lv.41+'],
+			series: avatarLevelCnt,
+			labels: avatarLevelGrp,
 			chart: {type: 'donut', height: 230},
 			colors: ['#cbd5e1', COLORS.success, COLORS.primary, COLORS.warning, COLORS.danger],
 			plotOptions: {
-				pie: { donut: {size: '65%', labels: {show: true, name: {fontSize: '12px'}, value: {fontSize: '16px', fontWeight: 'bold'}}} }
+				pie: {donut: {size: '65%', labels: {show: true, name: {fontSize: '12px'}, value: {fontSize: '16px', fontWeight: 'bold'}}}}
 			},
 			dataLabels: {enabled: false},
 			legend: {position: 'bottom', fontSize: '11px', markers: {radius: 12}},
@@ -238,24 +250,34 @@
 		}).render();
 
 		// 3. 로그인 활성 시간대
+		const timeVisitList = /*[[${getTimeVisit}]]*/ [];
+		const timeVisitLabel = timeVisitList.map(item => item.TIME_LABEL);
+		const timeVisitCnt = timeVisitList.map(item => item.VISIT_CNT);
 		new ApexCharts(document.querySelector("#loginTimeChart"), {
-			series: [{name: '로그인 수', data: [12, 25, 45, 80, 110, 60, 30, 15]}],
+			series: [{name: '로그인 수', data: timeVisitCnt}],
 			chart: {type: 'bar', height: 230, toolbar: {show: false}},
-			plotOptions: { bar: {borderRadius: 4, columnWidth: '50%'} },
+			plotOptions: {bar: {borderRadius: 4, columnWidth: '50%'}},
 			colors: [COLORS.secondary],
 			dataLabels: {enabled: false},
 			xaxis: {
-				categories: ['09시', '11시', '13시', '15시', '17시', '19시', '21시', '23시'],
+				categories: timeVisitLabel,
 				axisBorder: {show: false}, axisTicks: {show: false},
 				labels: {style: {colors: COLORS.text, fontWeight: 600, fontSize: '10px'}}
 			},
 			yaxis: {show: false},
 			grid: {borderColor: COLORS.border, strokeDashArray: 3},
-			tooltip: { theme: 'light', y: { formatter: function (val) { return val + "명" } } }
+			tooltip: {
+				theme: 'light', y: {
+					formatter: function (val) {
+						return val + "명"
+					}
+				}
+			}
 		}).render();
 
 		// 4. [신규] 학년·반별 출석 인원 막대 그래프 (총 16개 반)
-		// 4학년(6개반), 5학년(4개반), 6학년(6개반) 데이터 예시입니다. 서버 데이터로 연동 시 배열을 교체해주세요.
+		const getGradeClaAtndList = /*[[${getGradeClaAtndCnt}]]*/ [];
+		const getGradeClaAtnd = timeVisitList.map(item => item.ATND_CNT);
 		new ApexCharts(document.querySelector("#classAttendanceChart"), {
 			series: [{
 				name: '출석 인원',
@@ -263,13 +285,13 @@
 					24, 25, 24, 26,          /* 5학년 */
 					23, 25, 24, 25, 26, 22   /* 6학년 */]
 			}],
-			chart: { type: 'bar', height: 250, toolbar: { show: false } },
+			chart: {type: 'bar', height: 250, toolbar: {show: false}},
 			plotOptions: {
 				bar: {
 					borderRadius: 4,
 					columnWidth: '55%',
 					distributed: true, // 막대별로 각각 색상을 지정하기 위한 필수 옵션
-					dataLabels: { position: 'top' } // 숫자가 막대 위쪽에 표시되도록
+					dataLabels: {position: 'top'} // 숫자가 막대 위쪽에 표시되도록
 				}
 			},
 			// 4학년(primary) 6개, 5학년(success) 4개, 6학년(warning) 6개 순서대로 색상 배열 생성
@@ -280,24 +302,32 @@
 			],
 			dataLabels: {
 				enabled: true,
-				formatter: function(val) { return val + "명"; },
+				formatter: function (val) {
+					return val + "명";
+				},
 				offsetY: -20, // 텍스트 위치 살짝 위로
-				style: { fontSize: '10px', colors: [COLORS.text] }
+				style: {fontSize: '10px', colors: [COLORS.text]}
 			},
-			legend: { show: false }, // 커스텀 범례를 썼으므로 내장 범례는 끕니다
+			legend: {show: false}, // 커스텀 범례를 썼으므로 내장 범례는 끕니다
 			xaxis: {
 				categories: [
 					'4-1', '4-2', '4-3', '4-4', '4-5', '4-6',
 					'5-1', '5-2', '5-3', '5-4',
 					'6-1', '6-2', '6-3', '6-4', '6-5', '6-6'
 				],
-				axisBorder: { show: false },
-				axisTicks: { show: false },
-				labels: { style: { colors: COLORS.text, fontWeight: 600, fontSize: '11px' } }
+				axisBorder: {show: false},
+				axisTicks: {show: false},
+				labels: {style: {colors: COLORS.text, fontWeight: 600, fontSize: '11px'}}
 			},
-			yaxis: { show: false },
-			grid: { borderColor: COLORS.border, strokeDashArray: 3, padding: { top: 20 } },
-			tooltip: { theme: 'light', y: { formatter: function(val) { return val + "명"; } } }
+			yaxis: {show: false},
+			grid: {borderColor: COLORS.border, strokeDashArray: 3, padding: {top: 20}},
+			tooltip: {
+				theme: 'light', y: {
+					formatter: function (val) {
+						return val + "명";
+					}
+				}
+			}
 		}).render();
 	</script>
 </th:block>
