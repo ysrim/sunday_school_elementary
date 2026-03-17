@@ -9,7 +9,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.base.enumm.com.SessionKeyEnum;
-import com.base.utl.CommonUtil;
 import com.base.utl.JwtTokenProvider;
 import com.base.utl.SessionUtil;
 
@@ -17,7 +16,6 @@ import app.psn.com.vo.LoginVO;
 import app.psn.std.login.mapper.StdLoginMapper;
 import app.psn.std.login.service.StdLoginService;
 import app.psn.std.login.vo.StdSessionVO;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

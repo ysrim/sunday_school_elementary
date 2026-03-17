@@ -1,7 +1,6 @@
 package com.base.utl;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.text.NumberFormat;
@@ -20,7 +19,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
-import org.springframework.http.ResponseCookie;
 
 import app.psn.std.qest.vo.StdQestPendingVO;
 import jakarta.servlet.http.Cookie;
@@ -188,37 +186,6 @@ public class CommonUtil {
 		} else {
 			response.sendRedirect(request.getContextPath() + LOGIN_PAGE_URL);
 		}
-
-	}
-
-	// CommonUtil.java 내부 수정
-	public static void setCookieMsg(HttpServletResponse response, String key, String message) {
-
-		String encodedValue = URLEncoder.encode(message, StandardCharsets.UTF_8);
-
-		ResponseCookie cookie = ResponseCookie.from(key, encodedValue).path("/").maxAge(60) // 60초 유지 (필요에 따라 조절)
-			.httpOnly(false) // 자바스크립트에서 읽으려면 false여야 함
-			.secure(false) // https 환경이면 true
-			.build();
-
-		response.addHeader("Set-Cookie", cookie.toString());
-
-	}
-
-	public static String getCookieValue(HttpServletRequest request, String cookieName) {
-
-		Cookie[] cookies = request.getCookies();
-
-		if (cookies == null)
-			return null;
-
-		for (Cookie cookie : cookies) {
-			if (cookie.getName().equals(cookieName)) {
-				return cookie.getValue();
-			}
-		}
-
-		return null;
 
 	}
 

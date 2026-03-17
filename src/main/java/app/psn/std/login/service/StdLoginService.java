@@ -2,7 +2,6 @@ package app.psn.std.login.service;
 
 import app.psn.com.vo.LoginVO;
 import app.psn.std.login.vo.StdSessionVO;
-import jakarta.servlet.http.HttpServletRequest;
 
 public interface StdLoginService {
 
