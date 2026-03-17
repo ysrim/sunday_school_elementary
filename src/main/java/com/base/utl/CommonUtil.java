@@ -23,6 +23,7 @@ import org.jsoup.safety.Safelist;
 import org.springframework.http.ResponseCookie;
 
 import app.psn.std.qest.vo.StdQestPendingVO;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -193,22 +194,33 @@ public class CommonUtil {
 	// CommonUtil.java 내부 수정
 	public static void setCookieMsg(HttpServletResponse response, String key, String message) {
 
-		try {
+		String encodedValue = URLEncoder.encode(message, StandardCharsets.UTF_8);
 
-			String encodedValue = URLEncoder.encode(message, StandardCharsets.UTF_8);
+		ResponseCookie cookie = ResponseCookie.from(key, encodedValue)
+			.path("/")
+			.maxAge(60) // 60초 유지 (필요에 따라 조절)
+			.httpOnly(false) // 자바스크립트에서 읽으려면 false여야 함
+			.secure(false) // https 환경이면 true
+			.build();
 
-			ResponseCookie cookie = ResponseCookie.from(key, encodedValue)
-				.path("/")
-				.maxAge(60) // 60초 유지 (필요에 따라 조절)
-				.httpOnly(false) // 자바스크립트에서 읽으려면 false여야 함
-				.secure(false) // https 환경이면 true
-				.build();
+		response.addHeader("Set-Cookie", cookie.toString());
 
-			response.addHeader("Set-Cookie", cookie.toString());
+	}
 
-		} catch (Exception e) {
-			//
+	public static String getCookieValue(HttpServletRequest request, String cookieName) {
+
+		Cookie[] cookies = request.getCookies();
+
+		if (cookies == null)
+			return null;
+
+		for (Cookie cookie : cookies) {
+			if (cookie.getName().equals(cookieName)) {
+				return cookie.getValue();
+			}
 		}
+
+		return null;
 
 	}
 

@@ -24,4 +24,6 @@ public class LoginVO {
 	@Size(min = 4, message = "패스워드는 4자 이상이어야 합니다.")
 	private String pwd = ""; // 패스워드
 
+	private boolean autoLogin;
+
 }

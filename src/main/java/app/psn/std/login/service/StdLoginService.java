@@ -2,6 +2,7 @@ package app.psn.std.login.service;
 
 import app.psn.com.vo.LoginVO;
 import app.psn.std.login.vo.StdSessionVO;
+import jakarta.servlet.http.HttpServletRequest;
 
 public interface StdLoginService {
 
@@ -14,5 +15,10 @@ public interface StdLoginService {
 	 * 로그인 요청
 	 */
 	StdSessionVO loginAx(LoginVO loginVO);
+
+	/**
+	 * 엑세스토큰 리프래쉬
+	 */
+	String refreshToken(HttpServletRequest request);
 
 }
