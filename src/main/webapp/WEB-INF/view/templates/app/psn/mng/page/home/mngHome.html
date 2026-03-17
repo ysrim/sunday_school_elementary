@@ -147,7 +147,7 @@
 							</h2>
 							<p class="text-[10px] text-slate-500 mt-0.5 font-bold uppercase tracking-wider">Top 3 Warriors</p>
 						</div>
-						<button class="text-[10px] font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-2.5 py-1 rounded transition">
+						<button class="text-[10px] font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-2.5 py-1 rounded transition" th:onclick="location.href='/mng/mber.pg';">
 							전체보기
 						</button>
 					</div>
@@ -162,8 +162,10 @@
 								<div class="absolute -top-2 -right-1"><i class="fas fa-crown text-amber-300 text-sm animate-bounce"></i></div>
 							</div>
 							<div>
-								<div class="font-bold text-sm">김철수 <span class="text-[10px] bg-white/20 px-1.5 py-0.5 rounded-full ml-1 font-medium">전사</span></div>
-								<div class="text-[10px] text-indigo-100 font-medium">Total 1,200 EXP</div>
+								<div class="font-bold text-sm">
+									<th:block th:text="|${getExcellentMber[0].NCNM} [${getExcellentMber[0].MBER_NM}]|"></th:block>
+									<span class="text-[10px] bg-white/20 px-1.5 py-0.5 rounded-full ml-1 font-medium" th:text="${getExcellentMber[0].OCCP_NM}">전사</span></div>
+								<div class="text-[10px] text-indigo-100 font-medium" th:text="|${getExcellentMber[0].LEVEL}LV. / ${#numbers.formatInteger(getExcellentMber[0].POINT, 1, 'COMMA')}POINT |">Total 1,200 EXP</div>
 							</div>
 						</div>
 						<div class="text-lg font-black text-white/90">VIP</div>
@@ -174,8 +176,10 @@
 							<div class="w-7 h-7 rounded bg-slate-100 text-slate-500 font-black flex items-center justify-center text-xs">2</div>
 							<img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka" class="w-9 h-9 rounded-full bg-slate-50" alt="avatar">
 							<div>
-								<div class="font-bold text-xs text-slate-800">이영희</div>
-								<div class="text-[10px] text-slate-400">980 EXP</div>
+								<div class="font-bold text-xs text-slate-800">
+									<th:block th:text="|${getExcellentMber[1].NCNM} [${getExcellentMber[1].MBER_NM}]|"></th:block>
+								</div>
+								<div class="text-[10px] text-slate-400" th:text="|${getExcellentMber[1].LEVEL}LV. / ${#numbers.formatInteger(getExcellentMber[1].POINT, 1, 'COMMA')}POINT |">980 EXP</div>
 							</div>
 						</div>
 					</div>
@@ -185,8 +189,10 @@
 							<div class="w-7 h-7 rounded bg-amber-50 text-amber-700 font-black flex items-center justify-center text-xs">3</div>
 							<img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Bob" class="w-9 h-9 rounded-full bg-slate-50" alt="avatar">
 							<div>
-								<div class="font-bold text-xs text-slate-800">박민수</div>
-								<div class="text-[10px] text-slate-400">850 EXP</div>
+								<div class="font-bold text-xs text-slate-800">
+									<th:block th:text="|${getExcellentMber[2].NCNM} [${getExcellentMber[2].MBER_NM}]|"></th:block>
+								</div>
+								<div class="text-[10px] text-slate-400" th:text="|${getExcellentMber[2].LEVEL}LV. / ${#numbers.formatInteger(getExcellentMber[2].POINT, 1, 'COMMA')}POINT |">850 EXP</div>
 							</div>
 						</div>
 					</div>
@@ -277,13 +283,12 @@
 
 		// 4. [신규] 학년·반별 출석 인원 막대 그래프 (총 16개 반)
 		const getGradeClaAtndList = /*[[${getGradeClaAtndCnt}]]*/ [];
-		const getGradeClaAtnd = timeVisitList.map(item => item.ATND_CNT);
+		const getGradeClaAtnd = getGradeClaAtndList.map(item => item.ATND_CNT);
+		console.log("getGradeClaAtnd: {}", getGradeClaAtnd);
 		new ApexCharts(document.querySelector("#classAttendanceChart"), {
 			series: [{
 				name: '출석 인원',
-				data: [25, 24, 26, 23, 25, 22, /* 4학년 */
-					24, 25, 24, 26,          /* 5학년 */
-					23, 25, 24, 25, 26, 22   /* 6학년 */]
+				data: getGradeClaAtnd
 			}],
 			chart: {type: 'bar', height: 250, toolbar: {show: false}},
 			plotOptions: {
