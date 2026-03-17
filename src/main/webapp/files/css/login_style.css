@@ -20,8 +20,15 @@
 
 body {
     font-family: 'Noto Sans KR', sans-serif;
-    background-color: var(--bg-blue);
-    background-image: url('https://www.transparenttextures.com/patterns/clouds.png');
+    background-color: var(--bg-blue); /* 기존 파란색 배경 유지 */
+
+    /* ☁️ CSS 방사형 그라데이션으로 만든 구름 효과 */
+    background-image:
+            radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.3) 0%, transparent 20%),
+            radial-gradient(circle at 85% 40%, rgba(255, 255, 255, 0.2) 0%, transparent 25%),
+            radial-gradient(circle at 50% 80%, rgba(255, 255, 255, 0.25) 0%, transparent 35%);
+    background-attachment: fixed; /* 스크롤해도 구름이 고정되도록 설정 */
+
     color: var(--text-main);
     line-height: 1.6;
 }
