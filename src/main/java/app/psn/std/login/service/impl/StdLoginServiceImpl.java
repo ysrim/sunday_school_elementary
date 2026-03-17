@@ -56,18 +56,14 @@ public class StdLoginServiceImpl implements StdLoginService {
 		// 3. session set
 		SessionUtil.setAttribute(SessionKeyEnum.STD_MBER_INFO.getKey(), stdSessionVO);
 
-		// 2. Access Token 생성
-		String accessToken = jwtTokenProvider.createAccessToken(loginVO.getMberId());
-
-		// 3. 자동 로그인 체크 시 Refresh Token 발급
+		// 4. 자동 로그인을 위한 Refresh Token 발급
 		if (loginVO.isAutoLogin()) {
 
 			String refreshToken = jwtTokenProvider.createRefreshToken(loginVO.getMberId());
-
+			// 쿠키에 리프레쉬토큰 저장
 			this.saveRefreshTokenInCookie(refreshToken);
-
-			// DB에도 저장 (나중에 로그아웃 시키기 위함)
-			// tokenMapper.saveToken(req.getMberId(), refreshToken);
+			// DB에도 리프레쉬토큰 저장
+			this.regRefreshToken(stdSessionVO.mberId(), refreshToken);
 
 		}
 
@@ -76,35 +72,37 @@ public class StdLoginServiceImpl implements StdLoginService {
 	}
 
 	@Override
-	public String refreshToken(HttpServletRequest request) {
+	public boolean refreshTokenValid(String refreshToken) {
 
-		// 1. 쿠키에서 Refresh Token 추출
-		String refreshToken = CommonUtil.getCookieValue(request, "refreshToken");
-
-		// 2. 토큰이 유효하고 DB에 있는지 확인
+		// 1. 토큰이 유효 확인
 		if (refreshToken != null && jwtTokenProvider.validateToken(refreshToken)) {
 
-			LoginVO loginVO = new LoginVO();
-			loginVO.setMberId(jwtTokenProvider.getUserId(refreshToken));
-
 			// 1. id로 회원정보 찾기
-			StdSessionVO stdSessionVO = this.sltMber(loginVO);
-			if (stdSessionVO == null) {
-				throw new RuntimeException("일치하는 회원정보가 없습니다.");
+			StdSessionVO stdSessionVO = this.sltTokenMber(refreshToken);
+
+			if (stdSessionVO == null || !stdSessionVO.mberId().equals(jwtTokenProvider.getUserId(refreshToken))) {
+				return false;
 			}
 
 			// 2. session set
 			SessionUtil.setAttribute(SessionKeyEnum.STD_MBER_INFO.getKey(), stdSessionVO);
 
-			// 3. Access Token 생성
-			String newAccessToken = jwtTokenProvider.createAccessToken(loginVO.getMberId());
-
-			return newAccessToken;
+			return true;
 
 		}
 
-		return null;
+		return false;
 
+	}
+
+	@Override
+	public StdSessionVO sltTokenMber(String refreshToken) {
+		return stdLoginMapper.sltTokenMber(refreshToken);
+	}
+
+	@Override
+	public void regRefreshToken(String mberId, String refreshToken) {
+		stdLoginMapper.regRefreshToken(mberId, refreshToken);
 	}
 
 	private void saveRefreshTokenInCookie(String refreshToken) {
@@ -114,10 +112,7 @@ public class StdLoginServiceImpl implements StdLoginService {
 		if (attributes != null) {
 
 			HttpServletResponse response = attributes.getResponse();
-			ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
-				.httpOnly(true)
-				.path("/")
-				.maxAge(60 * 60 * 24 * 365 * 100) // 100년
+			ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken).httpOnly(true).path("/").maxAge(60 * 60 * 24 * 365 * 100) // 100년
 				.sameSite("Lax") // CSRF 방어
 				.build();
 			response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());

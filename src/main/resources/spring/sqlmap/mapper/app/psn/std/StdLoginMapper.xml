@@ -3,28 +3,59 @@
 <mapper namespace="app.psn.std.login.mapper.StdLoginMapper">
 
 	<select id="sltMber" parameterType="app.psn.com.vo.LoginVO" resultType="app.psn.std.login.vo.StdSessionVO">
-        SELECT A.MBER_SN
-             , A.MBER_ID
-             , A.MBER_NM
-             , A.PWD
-             , A.GRADE_CODE
-             , B.NCNM
-             , B.OCCP_CODE
-             , FN_GET_CODE_NM('OCCP', B.OCCP_CODE) as OCCP_NM
-             , B.EXP
-             , B.LEVEL
-             , D.GUILD_NM
-             , A.SEXDSTN
-             , D.GUILD_SN
-             , D.GRADE
-             , D.CLA
-        FROM MBER_INFO A
-                 INNER JOIN AVATAR_INFO B ON A.MBER_SN = B.MBER_SN
-                 INNER JOIN GUILD_MBER_LIST C ON A.MBER_SN = C.MBER_SN
-                 INNER JOIN GUILD_INFO D ON C.GUILD_SN = D.GUILD_SN
-        WHERE A.MBER_ID = #{mberId}
-          AND A.GRADE_CODE in ('200', '100')
-          AND A.USE_AT = 'Y'
-    </select>
+		SELECT A.MBER_SN
+			 , A.MBER_ID
+			 , A.MBER_NM
+			 , A.PWD
+			 , A.GRADE_CODE
+			 , B.NCNM
+			 , B.OCCP_CODE
+			 , FN_GET_CODE_NM('OCCP', B.OCCP_CODE) as OCCP_NM
+			 , B.EXP
+			 , B.LEVEL
+			 , D.GUILD_NM
+			 , A.SEXDSTN
+			 , D.GUILD_SN
+			 , D.GRADE
+			 , D.CLA
+		FROM MBER_INFO A
+				 INNER JOIN AVATAR_INFO B ON A.MBER_SN = B.MBER_SN
+				 INNER JOIN GUILD_MBER_LIST C ON A.MBER_SN = C.MBER_SN
+				 INNER JOIN GUILD_INFO D ON C.GUILD_SN = D.GUILD_SN
+		WHERE A.MBER_ID = #{mberId}
+		  AND A.GRADE_CODE in ('200', '100')
+		  AND A.USE_AT = 'Y'
+	</select>
+
+	<select id="sltTokenMber" resultType="app.psn.std.login.vo.StdSessionVO">
+		SELECT A.MBER_SN
+			 , A.MBER_ID
+			 , A.MBER_NM
+			 , A.PWD
+			 , A.GRADE_CODE
+			 , B.NCNM
+			 , B.OCCP_CODE
+			 , FN_GET_CODE_NM('OCCP', B.OCCP_CODE) as OCCP_NM
+			 , B.EXP
+			 , B.LEVEL
+			 , D.GUILD_NM
+			 , A.SEXDSTN
+			 , D.GUILD_SN
+			 , D.GRADE
+			 , D.CLA
+		FROM MBER_INFO A
+				 INNER JOIN AVATAR_INFO B ON A.MBER_SN = B.MBER_SN
+				 INNER JOIN GUILD_MBER_LIST C ON A.MBER_SN = C.MBER_SN
+				 INNER JOIN GUILD_INFO D ON C.GUILD_SN = D.GUILD_SN
+		WHERE A.REFRESH_TOKEN = #{refreshToken}
+		  AND A.GRADE_CODE in ('200', '100')
+		  AND A.USE_AT = 'Y'
+	</select>
+
+	<update id="regRefreshToken">
+		UPDATE MBER_INFO
+		SET REFRESH_TOKEN = #{refreshToken}
+		WHERE MBER_ID = #{mberId}
+	</update>
 
 </mapper>

@@ -3,8 +3,10 @@ package com.base.handler;
 import com.base.enumm.com.RstCdEnum;
 import com.base.utl.ResUtil;
 import com.base.utl.SessionUtil;
+
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
@@ -78,9 +80,7 @@ public class CustomRestExceptionHandler {
 			errorMessage = (firstError != null) ? firstError.getDefaultMessage() : "입력값이 올바르지 않습니다.";
 		} else {
 			// View: 어떤 필드들이 문제인지 나열 (사용자 경험에 따라 수정 가능)
-			errorMessage = ex.getBindingResult().getFieldErrors().stream()
-					.map(error -> String.format("%s: %s", error.getField(), error.getDefaultMessage()))
-					.collect(Collectors.joining(", "));
+			errorMessage = ex.getBindingResult().getFieldErrors().stream().map(error -> String.format("%s: %s", error.getField(), error.getDefaultMessage())).collect(Collectors.joining(", "));
 		}
 
 		log.info("[Validation Fail] URI: {}, Msg: {}", request.getRequestURI(), errorMessage);
@@ -96,12 +96,9 @@ public class CustomRestExceptionHandler {
 	@ExceptionHandler(Exception.class)
 	public Object handleAllExceptions(HttpServletRequest request, Model model, Exception ex) {
 
-		// 실제 에러 로그는 서버에만 남김 (스택 트레이스 포함)
 		log.error("[Unexpected Error] URI: {}", request.getRequestURI(), ex);
 
-		// 보안: 사용자에게는 내부 예외 메시지(ex.getMessage)를 그대로 노출하지 않고 일반적인 메시지 제공
-		// ex.getMessage()를 그대로 보내면 SQL 구조나 내부 로직이 노출될 위험이 있음
-		return resolveResponse(request, model, RstCdEnum.ERR, "시스템 오류가 발생했습니다. 관리자에게 문의해주세요.");
+		return resolveResponse(request, model, RstCdEnum.ERR, ex.getMessage());
 
 	}
 }

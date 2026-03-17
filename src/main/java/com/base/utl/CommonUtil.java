@@ -196,9 +196,7 @@ public class CommonUtil {
 
 		String encodedValue = URLEncoder.encode(message, StandardCharsets.UTF_8);
 
-		ResponseCookie cookie = ResponseCookie.from(key, encodedValue)
-			.path("/")
-			.maxAge(60) // 60초 유지 (필요에 따라 조절)
+		ResponseCookie cookie = ResponseCookie.from(key, encodedValue).path("/").maxAge(60) // 60초 유지 (필요에 따라 조절)
 			.httpOnly(false) // 자바스크립트에서 읽으려면 false여야 함
 			.secure(false) // https 환경이면 true
 			.build();
@@ -221,6 +219,18 @@ public class CommonUtil {
 		}
 
 		return null;
+
+	}
+
+	/**
+	 * 쿠키 삭제
+	 */
+	public static void deleteCookie(HttpServletResponse response, String cookieName) {
+
+		Cookie cookie = new Cookie(cookieName, null);
+		cookie.setMaxAge(0);
+		cookie.setPath("/");
+		response.addCookie(cookie);
 
 	}
 

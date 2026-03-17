@@ -20,11 +20,7 @@ function _setAlertMsg() {
  */
 function _naviPage(menu) {
 	const menuUrls = {
-		'STD_HOME': '/std/home.pg',
-		'STD_ATND': '/std/atnd.pg',
-		'STD_GILD': '/std/gild.pg',
-		'STD_QEST': '/std/qest.pg',
-		'STD_OPTS': '/std/opts.pg'
+		'STD_HOME': '/std/home.pg', 'STD_ATND': '/std/atnd.pg', 'STD_GILD': '/std/gild.pg', 'STD_QEST': '/std/qest.pg', 'STD_OPTS': '/std/opts.pg'
 	};
 	const targetUrl = menuUrls[menu];
 	if (targetUrl) {
@@ -32,6 +28,16 @@ function _naviPage(menu) {
 	} else {
 		console.warn(`[Navigation] 정의되지 않은 메뉴 코드입니다: ${menu}`);
 	}
+}
+
+/**
+ * 로그아웃
+ */
+function _logOut() {
+	if (confirm("로그아웃 하시겠습니까? 로그아웃 하면 자동로그인 기능이 해제됩니다.")) {
+		location.href = '/std/idx/logOut.pg';
+	}
+	return false;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -111,12 +117,6 @@ function _showToast(id, title, msg, type = 'INFO') {
 		$toast.addClass('show');
 	}, 10);
 
-	// (옵션) 3초 후 자동 삭제가 필요하다면 아래 주석 해제
-	/*
-	setTimeout(() => {
-		_removeToast(id);
-	}, 3000);
-	*/
 }
 
 /**
@@ -137,10 +137,7 @@ function _removeToast(id) {
 
 		// 3. 서버에 확인 요청 (비동기, 결과 무시)
 		$.ajax({
-			type: 'GET',
-			url: '/std/home/removeToast.ax',
-			data: {toastSn: id},
-			error: (e) => console.error('Toast Check Error:', e)
+			type: 'GET', url: '/std/home/removeToast.ax', data: {toastSn: id}, error: (e) => console.error('Toast Check Error:', e)
 		});
 	}
 }

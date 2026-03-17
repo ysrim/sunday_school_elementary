@@ -12,13 +12,47 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.5/js.cookie.min.js"></script>
 	<link rel="stylesheet" th:href="@{/files/css/login_style.css}">
 </head>
+<body>
+<div class="app-container">
+	<div class="page active">
+		<div class="sub-header">
+			<div class="sub-header-left">
+				<h2>봉동중앙교회 초등부 RPG - 로그인</h2>
+			</div>
+		</div>
+		<h3>반가워요! 믿음의 용사님</h3>
+		<div class="card">
+			<input type="text" id="mberId" placeholder="이름을 입력하세요">
+			<input type="password" id="pwd" placeholder="비밀번호">
+			<div class="login-options">
+				<label class="checkbox-label" for="save-id">
+					<input type="checkbox" id="save-id"> 아이디 저장
+				</label>
+				<label class="checkbox-label" for="auto-login">
+					<input type="checkbox" id="auto-login"> 자동 로그인
+				</label>
+			</div>
+			<button class="btn btn-main btn-main-login">로그인</button>
+			<button class="btn btn-sub" th:onclick="|location.href='@{/std/idx/join.pg}'|">처음 왔어요 (회원가입)</button>
+		</div>
+	</div>
+
+	<div id="custom-alert" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center;">
+		<div class="card" style="max-width:400px; width:320px; text-align:center; padding:30px; transform: scale(0.9); transition: transform 0.2s;">
+			<div id="alert-icon" style="font-size: 3rem; margin-bottom: 15px;">✨</div>
+			<h4 id="alert-title" style="margin-bottom: 10px; color: var(--secondary);">알림</h4>
+			<p id="alert-message" style="font-size: 0.95rem; color: #666; margin-bottom: 25px; line-height: 1.5; word-break: keep-all;"></p>
+			<button class="btn btn-main custom-alert-confirm" style="margin-top:0;">확인</button>
+		</div>
+	</div>
+</div>
 
 <script th:inline="javascript">
 	/*<![CDATA[*/
 	$(function () {
 		'use strict';
 
-		// 1. 설정 및 상수
+		// 1. 설정 및 상수 (쿠키 키값도 객체로 깔끔하게 묶어주었습니다)
 		const CONFIG = {
 			urls: {
 				login: /*[[@{/std/idx/login.ax}]]*/ '/std/idx/login.ax',
@@ -30,14 +64,17 @@
 				pwEmpty: '비밀번호를 입력해주세요!',
 				error: '서버 통신 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
 			},
-			cookieKey: 'saved_mberId'
+			cookie: {
+				idKey: 'savedMberId',
+				autoKey: 'autoLogin'
+			}
 		};
 
 		const LoginApp = {
 			init: function () {
 				this.cacheDOM();
 				this.bindEvents();
-				this.checkSavedId();
+				this.checkSavedCookies(); // 두 개의 쿠키 체크 로직 통합
 			},
 
 			cacheDOM: function () {
@@ -45,6 +82,7 @@
 				this.$pwInput = $('#pwd');
 				this.$loginBtn = $('.btn-main-login');
 				this.$saveIdCheck = $('#save-id');
+				this.$autoLoginCheck = $('#auto-login');
 				this.$alert = $('#custom-alert');
 				this.$alertMsg = $('#alert-message');
 				this.$alertIcon = $('#alert-icon');
@@ -54,29 +92,46 @@
 
 			bindEvents: function () {
 				this.$loginBtn.on('click', () => this.handleLogin());
+
+				// UX: 아이디 입력 후 엔터 누르면 비밀번호 창으로 이동
+				this.$idInput.on('keyup', (e) => {
+					if (e.key === 'Enter') this.$pwInput.focus();
+				});
+
 				this.$pwInput.on('keyup', (e) => {
 					if (e.key === 'Enter') this.handleLogin();
 				});
+
 				this.$alertConfirm.on('click', () => this.closePopup());
 			},
 
-			// ✅ js-cookie 사용: 읽기 (Cookies.get)
-			checkSavedId: function () {
-				const savedId = Cookies.get(CONFIG.cookieKey);
-
-				if (savedId) {
-					this.$idInput.val(savedId);
+			// ✅ 쿠키 읽기 통합
+			checkSavedCookies: function () {
+				if (Cookies.get(CONFIG.cookie.idKey)) {
+					this.$idInput.val(Cookies.get(CONFIG.cookie.idKey));
 					this.$saveIdCheck.prop('checked', true);
+				}
+				if (Cookies.get(CONFIG.cookie.autoKey)) {
+					this.$autoLoginCheck.prop('checked', true);
 				}
 			},
 
-			// ✅ js-cookie 사용: 쓰기/삭제 (Cookies.set / Cookies.remove)
-			handleCookie: function (id) {
+			// ✅ 쿠키 쓰기/삭제 통합
+			handleCookies: function (id) {
+				const cookieOptions = {path: '/'};
+
+				// 아이디 저장 쿠키
 				if (this.$saveIdCheck.is(':checked')) {
-					// 30일 저장, 모든 경로에서 접근 가능하도록 path 설정
-					Cookies.set(CONFIG.cookieKey, id, {expires: 30, path: '/'});
+					Cookies.set(CONFIG.cookie.idKey, id, {...cookieOptions, expires: 30});
 				} else {
-					Cookies.remove(CONFIG.cookieKey, {path: '/'});
+					Cookies.remove(CONFIG.cookie.idKey, cookieOptions);
+				}
+
+				// 자동 로그인 쿠키
+				if (this.$autoLoginCheck.is(':checked')) {
+					Cookies.set(CONFIG.cookie.autoKey, "true", {...cookieOptions, expires: 360});
+				} else {
+					Cookies.remove(CONFIG.cookie.autoKey, cookieOptions); // 해제 시 삭제 로직 추가
 				}
 			},
 
@@ -99,20 +154,24 @@
 					type: "POST",
 					url: CONFIG.urls.login,
 					contentType: "application/json; charset=utf-8",
-					data: JSON.stringify({mberId: mberId, pwd: pwd}),
+					data: JSON.stringify({
+						mberId: mberId,
+						pwd: pwd,
+						autoLogin: this.$autoLoginCheck.is(':checked')
+					}),
 					success: (data) => {
 						if (data.rtnCd === '001') {
-							this.handleCookie(mberId); // 쿠키 처리
+							this.handleCookies(mberId); // 통합된 쿠키 함수 한 번만 호출
 							this.showPopup(data.rtnMsg, '✨', '환영합니다!', () => {
 								location.href = CONFIG.urls.home;
 							});
 						} else {
 							this.setLoading(false);
-							this.showPopup(data.rtnMsg || '로그인 실패', '❌', '인증 실패');
+							this.showPopup(data.rtnMsg || '로그인 실패', '❌', '인증 실패', () => this.$pwInput.val('').focus());
 						}
 					},
 					error: (e) => {
-						console.error(e);
+						console.error('Login Error:', e);
 						this.setLoading(false);
 						this.showPopup(CONFIG.messages.error, '🔥', '오류 발생');
 					}
@@ -120,11 +179,7 @@
 			},
 
 			setLoading: function (isLoading) {
-				if (isLoading) {
-					this.$loginBtn.prop('disabled', true).text('로그인 중...');
-				} else {
-					this.$loginBtn.prop('disabled', false).text('로그인');
-				}
+				this.$loginBtn.prop('disabled', isLoading).text(isLoading ? '로그인 중...' : '로그인');
 			},
 
 			showPopup: function (msg, icon = '✨', title = '알림', callback) {
@@ -137,7 +192,7 @@
 
 			closePopup: function () {
 				this.$alert.removeClass('active').css('display', 'none');
-				if (this.currentCallback && typeof this.currentCallback === 'function') {
+				if (typeof this.currentCallback === 'function') {
 					this.currentCallback();
 					this.currentCallback = null;
 				}
@@ -148,44 +203,5 @@
 	});
 	/*]]>*/
 </script>
-
-<body>
-<div class="app-container">
-	<div class="page active">
-		<div class="sub-header">
-			<div class="sub-header-left">
-				<h2>봉동중앙교회 초등부 RPG - 로그인</h2>
-			</div>
-		</div>
-		<h3>반가워요! 믿음의 용사님</h3>
-		<div class="card">
-			<input type="text" id="mberId" placeholder="이름을 입력하세요">
-			<input type="password" id="pwd" placeholder="비밀번호">
-			<div class="login-options">
-				<label class="checkbox-label">
-					<input type="checkbox" id="save-id"> 아이디 저장
-				</label>
-				<!--<label class="checkbox-label">
-					<input type="checkbox" id="auto-login"> 자동 로그인
-				</label>-->
-			</div>
-			<button class="btn btn-main btn-main-login">로그인</button>
-
-			<button class="btn btn-sub" th:onclick="|location.href='@{/std/idx/join.pg}'|">처음 왔어요 (회원가입)</button>
-		</div>
-	</div>
-
-	<div id="custom-alert"
-	     style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center;">
-		<div class="card"
-		     style="max-width:400px; width:320px; text-align:center; padding:30px; transform: scale(0.9); transition: transform 0.2s;">
-			<div id="alert-icon" style="font-size: 3rem; margin-bottom: 15px;">✨</div>
-			<h4 id="alert-title" style="margin-bottom: 10px; color: var(--secondary);">알림</h4>
-			<p id="alert-message"
-			   style="font-size: 0.95rem; color: #666; margin-bottom: 25px; line-height: 1.5; word-break: keep-all;"></p>
-			<button class="btn btn-main custom-alert-confirm" style="margin-top:0;">확인</button>
-		</div>
-	</div>
-</div>
 </body>
 </html>

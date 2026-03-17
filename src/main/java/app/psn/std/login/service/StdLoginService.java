@@ -19,6 +19,16 @@ public interface StdLoginService {
 	/**
 	 * 엑세스토큰 리프래쉬
 	 */
-	String refreshToken(HttpServletRequest request);
+	boolean refreshTokenValid(String refreshToken);
+
+	/**
+	 * 학생 사용자 정보 요청
+	 */
+	StdSessionVO sltTokenMber(String refreshToken);
+
+	/**
+	 * 리프레쉬 토큰 DB 저장
+	 */
+	void regRefreshToken(String mberId, String refreshToken);
 
 }
