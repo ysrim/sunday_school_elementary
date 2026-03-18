@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/app/psn/mng/layouts/mng_layout}" lang="ko">
+<th:block layout:fragment="content">
+	<script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+	<div id="page-attendance" class="page-content w-full min-h-screen bg-[#f8f9fa] p-5 font-sans text-slate-600 animate-fade-in">
+
+		<div class="flex flex-col h-full gap-5">
+			<header class="flex justify-between items-end mb-2">
+				<div>
+					<span class="px-2.5 py-0.5 rounded-full bg-teal-50 text-teal-600 text-[10px] font-bold uppercase tracking-wider mb-1 inline-block">Activity & Records</span>
+					<h1 class="text-2xl font-black text-slate-900 tracking-tight">Glorious Warriors (주간 출석 현황)</h1>
+					<p class="text-xs text-slate-500 mt-1 font-medium">주차별 용사들의 출석 현황을 기록하고 통계를 확인합니다.</p>
+				</div>
+				<div class="flex gap-2">
+					<input type="week" id="weekSelector" class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-700 focus:ring-2 focus:ring-teal-100 focus:border-teal-500 outline-none shadow-sm">
+					<button onclick="AttendManager.api.saveAttendance()"
+					        class="bg-teal-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold hover:bg-teal-700 shadow-lg shadow-teal-200 transition flex items-center transform hover:scale-105 active:scale-95">
+						<i class="fas fa-save mr-2"></i> 출석 저장
+					</button>
+				</div>
+			</header>
+
+			<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+				<div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
+					<div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 text-xl"><i class="fas fa-users"></i></div>
+					<div>
+						<p class="text-[10px] text-slate-400 font-bold">대상 총원</p>
+						<h3 class="text-xl font-black text-slate-800" id="statTotal">0<span class="text-xs font-medium text-slate-500 ml-1">명</span></h3>
+					</div>
+				</div>
+				<div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
+					<div class="w-12 h-12 rounded-full bg-teal-50 flex items-center justify-center text-teal-500 text-xl"><i class="fas fa-check-circle"></i></div>
+					<div>
+						<p class="text-[10px] text-teal-600 font-bold">출석 (지각 포함)</p>
+						<h3 class="text-xl font-black text-slate-800" id="statAttend">0<span class="text-xs font-medium text-slate-500 ml-1">명</span></h3>
+					</div>
+				</div>
+				<div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
+					<div class="w-12 h-12 rounded-full bg-rose-50 flex items-center justify-center text-rose-500 text-xl"><i class="fas fa-times-circle"></i></div>
+					<div>
+						<p class="text-[10px] text-rose-600 font-bold">결석</p>
+						<h3 class="text-xl font-black text-slate-800" id="statAbsent">0<span class="text-xs font-medium text-slate-500 ml-1">명</span></h3>
+					</div>
+				</div>
+				<div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4 relative overflow-hidden">
+					<div class="absolute -right-4 -top-4 w-16 h-16 bg-amber-100 rounded-full opacity-50"></div>
+					<div class="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center text-amber-500 text-xl z-10"><i class="fas fa-chart-pie"></i></div>
+					<div class="z-10">
+						<p class="text-[10px] text-amber-600 font-bold">종합 출석률</p>
+						<h3 class="text-xl font-black text-slate-800" id="statRate">0<span class="text-xs font-medium text-slate-500 ml-1">%</span></h3>
+					</div>
+				</div>
+			</div>
+
+			<div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap gap-3 justify-between items-center">
+				<div class="relative w-full md:w-64 group">
+					<input type="text" id="gridSearchInput" placeholder="이름 검색"
+					       class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold focus:ring-2 focus:ring-teal-100 focus:border-teal-500 outline-none transition group-hover:bg-white">
+					<i class="fas fa-search absolute left-3.5 top-2.5 text-slate-400 text-xs group-hover:text-teal-500 transition-colors"></i>
+				</div>
+				<span class="text-xs text-slate-400 font-medium"><i class="fas fa-info-circle mr-1"></i>상태 칸을 더블클릭하여 출석/결석을 변경하세요.</span>
+			</div>
+
+			<div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-2">
+				<div id="attendGrid" class="ag-theme-quartz" style="width: 100%; height: 400px;"></div>
+			</div>
+
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+				<div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+					<h3 class="text-sm font-black text-slate-800 mb-4"><i class="fas fa-chart-bar text-teal-500 mr-2"></i>학년/반별 출석 현황</h3>
+					<div class="relative h-64 w-full">
+						<canvas id="deptChart"></canvas>
+					</div>
+				</div>
+				<div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+					<h3 class="text-sm font-black text-slate-800 mb-4"><i class="fas fa-chart-line text-indigo-500 mr-2"></i>최근 4주 출석률 추이</h3>
+					<div class="relative h-64 w-full">
+						<canvas id="trendChart"></canvas>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+
+		const AttendManager = {
+			gridApi: null,
+			charts: {},
+
+			init() {
+				this.setCurrentWeek();
+				this.grid.init();
+				this.bindEvents();
+				this.grid.loadData();
+			},
+
+			setCurrentWeek() {
+				const now = new Date();
+				// input[type="week"] 포맷(YYYY-Www)에 맞게 현재 주차 계산
+				const year = now.getFullYear();
+				const start = new Date(now.getFullYear(), 0, 1);
+				const days = Math.floor((now - start) / (24 * 60 * 60 * 1000));
+				const weekNumber = Math.ceil((now.getDay() + 1 + days) / 7);
+				const weekString = year + '-W' + weekNumber.toString().padStart(2, '0');
+				$('#weekSelector').val(weekString);
+			},
+
+			updateStats(rowData) {
+				const total = rowData.length;
+				const attended = rowData.filter(r => r.status === '출석' || r.status === '지각').length;
+				const absent = total - attended;
+				const rate = total === 0 ? 0 : Math.round((attended / total) * 100);
+
+				// 숫자 카운트 애니메이션 효과 (간단 버전)
+				$('#statTotal').html(`${total}<span class="text-xs font-medium text-slate-500 ml-1">명</span>`);
+				$('#statAttend').html(`${attended}<span class="text-xs font-medium text-slate-500 ml-1">명</span>`);
+				$('#statAbsent').html(`${absent}<span class="text-xs font-medium text-slate-500 ml-1">명</span>`);
+				$('#statRate').html(`${rate}<span class="text-xs font-medium text-slate-500 ml-1">%</span>`);
+			},
+
+			grid: {
+				init() {
+					const columnDefs = [
+						{
+							headerName: "용사 정보", field: "name", width: 220,
+							cellClass: "flex items-center",
+							cellRenderer: (params) => {
+								return `
+                            <div class="flex items-center gap-3 w-full">
+                               <div class="relative w-11 h-11 flex-shrink-0">
+                                  <img src="${params.data.avatar}" class="w-full h-full rounded-xl bg-slate-100 border border-slate-200 object-cover">
+                               </div>
+                               <div class="flex flex-col justify-center">
+                                  <div class="font-bold text-slate-800 text-sm leading-tight">${params.value}</div>
+                                  <div class="text-[10px] text-slate-400 font-medium leading-tight mt-1">@${params.data.userId}</div>
+                               </div>
+                            </div>
+                         `;
+							}
+						},
+						{
+							headerName: "소속", field: "dept", width: 160,
+							cellClass: "flex items-center font-bold text-xs text-slate-600",
+						},
+						{
+							headerName: "출석 상태 (더블클릭)",
+							field: "status",
+							width: 180,
+							editable: true,
+							cellEditor: 'agSelectCellEditor',
+							cellEditorParams: { values: ['출석', '결석', '지각'] },
+							cellClass: "flex items-center cursor-pointer",
+							cellRenderer: (params) => {
+								let badgeClass = "bg-slate-100 text-slate-500";
+								let icon = "fa-minus";
+
+								if(params.value === '출석') { badgeClass = "bg-teal-50 text-teal-600 border-teal-200"; icon = "fa-check"; }
+								if(params.value === '결석') { badgeClass = "bg-rose-50 text-rose-600 border-rose-200"; icon = "fa-times"; }
+								if(params.value === '지각') { badgeClass = "bg-amber-50 text-amber-600 border-amber-200"; icon = "fa-exclamation"; }
+
+								return `
+                            <div class="w-full flex items-center justify-between">
+                                <div class="px-3 py-1.5 rounded-lg border text-xs font-black ${badgeClass} w-24 text-center shadow-sm">
+                                   <i class="fas ${icon} mr-1"></i> ${params.value}
+                                </div>
+                                <i class="fas fa-pen text-slate-300 text-[10px] ml-2"></i>
+                            </div>
+                         `;
+							}
+						},
+						{
+							headerName: "획득 달란트", field: "reward", width: 120,
+							cellClass: "flex items-center",
+							cellRenderer: (params) => {
+								if(params.data.status === '결석') return `<span class="text-slate-300 text-xs font-bold">-</span>`;
+								const amt = params.data.status === '지각' ? 5 : 10;
+								return `
+                            <div class="flex items-center text-amber-600 font-bold text-xs">
+                               <i class="fas fa-coins mr-1.5 text-amber-500"></i> +${amt}
+                            </div>
+                         `;
+							}
+						},
+						{
+							headerName: "특이사항 메모", field: "memo", flex: 1, minWidth: 200, editable: true,
+							cellClass: "flex items-center text-xs text-slate-500",
+							cellRenderer: (params) => {
+								return params.value ? params.value : `<span class="text-slate-300 italic">클릭하여 메모 입력...</span>`;
+							}
+						}
+					];
+
+					const gridOptions = {
+						columnDefs: columnDefs,
+						rowData: [],
+						defaultColDef: {resizable: true, sortable: true},
+						pagination: true,
+						paginationPageSize: 10,
+						headerHeight: 48,
+						rowHeight: 65,
+						rowClass: "hover:bg-teal-50/30 transition-colors",
+						singleClickEdit: true, // 한 번 클릭으로 바로 수정 모드 진입
+						overlayLoadingTemplate: `<div class="flex flex-col items-center"><i class="fas fa-spinner fa-spin text-2xl text-teal-500 mb-2"></i><span class="text-xs text-slate-500 font-bold">출석 데이터를 불러오는 중...</span></div>`,
+						onCellValueChanged: (event) => {
+							// 데이터가 변경되면 상단 통계 업데이트
+							const allData = [];
+							event.api.forEachNode(node => allData.push(node.data));
+							AttendManager.updateStats(allData);
+						}
+					};
+
+					const gridDiv = document.querySelector('#attendGrid');
+					AttendManager.gridApi = agGrid.createGrid(gridDiv, gridOptions);
+				},
+
+				loadData() {
+					const api = AttendManager.gridApi;
+					if (!api) return;
+
+					api.showLoadingOverlay();
+
+					// 서버 API 호출 시뮬레이션 (선택한 주차 데이터를 불러옴)
+					setTimeout(() => {
+						const mockData = [
+							{ id: 1, name: "김철수", userId: "chulsoo99", dept: "1학년 믿음반", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=1", status: "출석", reward: 10, memo: "" },
+							{ id: 2, name: "이영희", userId: "younghee", dept: "1학년 믿음반", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=2", status: "지각", reward: 5, memo: "차량 지연" },
+							{ id: 3, name: "박지민", userId: "jiminpark", dept: "2학년 소망반", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=3", status: "결석", reward: 0, memo: "가족 여행" },
+							{ id: 4, name: "최동원", userId: "dongwon", dept: "3학년 사랑반", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=4", status: "출석", reward: 10, memo: "" },
+							{ id: 5, name: "강민호", userId: "minho", dept: "2학년 소망반", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=5", status: "출석", reward: 10, memo: "" },
+						];
+						api.updateGridOptions({rowData: mockData});
+						AttendManager.updateStats(mockData);
+						AttendManager.drawCharts(); // 데이터 로드 후 차트 그리기
+						api.hideOverlay();
+					}, 500);
+				}
+			},
+
+			bindEvents() {
+				$('#gridSearchInput').on('input', function () {
+					if (AttendManager.gridApi) AttendManager.gridApi.setGridOption('quickFilterText', $(this).val());
+				});
+
+				$('#weekSelector').on('change', function() {
+					// 주차가 변경되면 데이터를 다시 로드
+					AttendManager.grid.loadData();
+				});
+			},
+
+			drawCharts() {
+				// 차트 전역 설정
+				Chart.defaults.font.family = "'Pretendard', sans-serif";
+				Chart.defaults.color = '#64748b';
+
+				// 1. 부서별 출석률 (Bar Chart)
+				const ctxDept = document.getElementById('deptChart');
+				if(this.charts.dept) this.charts.dept.destroy(); // 기존 차트 초기화
+
+				this.charts.dept = new Chart(ctxDept, {
+					type: 'bar',
+					data: {
+						labels: ['1학년 믿음반', '2학년 소망반', '3학년 사랑반'],
+						datasets: [
+							{
+								label: '출석',
+								data: [15, 12, 18],
+								backgroundColor: '#14b8a6', // Teal-500
+								borderRadius: 4,
+							},
+							{
+								label: '결석',
+								data: [2, 3, 1],
+								backgroundColor: '#f43f5e', // Rose-500
+								borderRadius: 4,
+							}
+						]
+					},
+					options: {
+						responsive: true,
+						maintainAspectRatio: false,
+						plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8 } } },
+						scales: {
+							x: { stacked: true, grid: { display: false } },
+							y: { stacked: true, border: { display: false } }
+						}
+					}
+				});
+
+				// 2. 최근 4주 출석률 추이 (Line Chart)
+				const ctxTrend = document.getElementById('trendChart');
+				if(this.charts.trend) this.charts.trend.destroy();
+
+				this.charts.trend = new Chart(ctxTrend, {
+					type: 'line',
+					data: {
+						labels: ['3주 전', '2주 전', '지난 주', '이번 주'],
+						datasets: [{
+							label: '종합 출석률 (%)',
+							data: [82, 85, 80, 88], // 예시 데이터
+							borderColor: '#6366f1', // Indigo-500
+							backgroundColor: 'rgba(99, 102, 241, 0.1)',
+							borderWidth: 3,
+							pointBackgroundColor: '#fff',
+							pointBorderColor: '#6366f1',
+							pointBorderWidth: 2,
+							pointRadius: 4,
+							fill: true,
+							tension: 0.3 // 곡선 부드럽게
+						}]
+					},
+					options: {
+						responsive: true,
+						maintainAspectRatio: false,
+						plugins: { legend: { display: false } },
+						scales: {
+							x: { grid: { display: false } },
+							y: { min: 50, max: 100, border: { display: false } }
+						}
+					}
+				});
+			},
+
+			api: {
+				saveAttendance() {
+					const week = $('#weekSelector').val();
+
+					// 그리드 데이터를 모두 가져와서 전송할 배열 생성
+					const attendData = [];
+					AttendManager.gridApi.forEachNode(node => {
+						attendData.push({
+							id: node.data.id,
+							status: node.data.status,
+							memo: node.data.memo
+						});
+					});
+
+					// TODO: 실제 서버 전송 로직 (/mng/mber/saveWeeklyAttend.ax)
+					console.log('저장할 데이터:', { week: week, list: attendData });
+					alert(`[${week}] 주차 출석 데이터가 성공적으로 저장되었습니다! 달란트가 자동 지급됩니다.`);
+				}
+			}
+		};
+
+		$(function () {
+			AttendManager.init();
+		});
+		/*]]>*/
+	</script>
+</th:block>
+</html>

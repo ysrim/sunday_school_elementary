@@ -25,10 +25,10 @@
 						<span class="mr-2">⚔️</span> 용사관리
 					</button>
 					<button onclick="_naviPage('MNG_ABSENT', this)" th:class="|w-full text-left btn-side-sub transition-colors ${_mngMenuInfo == 'MNG_ABSENT' ? 'text-indigo-600 font-bold bg-indigo-50/50' : 'text-slate-500 hover:text-indigo-600 hover:bg-slate-50'}|">
-						<span class="mr-2">👻</span> 장결자관리
+						<span class="mr-2">👻</span> 장결자관리(개발중)
 					</button>
 					<button onclick="_naviPage('MNG_ATTEND', this)" th:class="|w-full text-left btn-side-sub transition-colors ${_mngMenuInfo == 'MNG_ATTEND' ? 'text-indigo-600 font-bold bg-indigo-50/50' : 'text-slate-500 hover:text-indigo-600 hover:bg-slate-50'}|">
-						<span class="mr-2">📅</span> 주간출석자관리
+						<span class="mr-2">📅</span> 주간출석자관리(개발중)
 					</button>
 				</div>
 			</div>
@@ -42,7 +42,7 @@
 				<div class="sub-menu flex-col pl-7 pr-2 mt-1 space-y-0.5"
 				     th:style="${_mngMenuInfo == 'MNG_QEST_MNG' or _mngMenuInfo == 'MNG_QEST' or _mngMenuInfo == 'MNG_REWD'} ? 'display: flex;' : 'display: none;'">
 					<button onclick="_naviPage('MNG_QEST_MNG', this)" th:class="|w-full text-left btn-side-sub transition-colors ${_mngMenuInfo == 'MNG_QEST_MNG' ? 'text-indigo-600 font-bold bg-indigo-50/50' : 'text-slate-500 hover:text-indigo-600 hover:bg-slate-50'}|">
-						<span class="mr-2">📜</span> 퀘스트관리
+						<span class="mr-2">📜</span> 퀘스트관리(개발중)
 					</button>
 					<button onclick="_naviPage('MNG_QEST', this)" th:class="|w-full text-left btn-side-sub transition-colors ${_mngMenuInfo == 'MNG_QEST' ? 'text-indigo-600 font-bold bg-indigo-50/50' : 'text-slate-500 hover:text-indigo-600 hover:bg-slate-50'}|">
 						<span class="mr-2">✅</span> 퀘스트승인관리

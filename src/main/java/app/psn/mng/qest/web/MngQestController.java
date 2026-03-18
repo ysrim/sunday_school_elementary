@@ -22,14 +22,22 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/mng")
-@MngMenuInfo(navi = MngNaviEnum.MNG_QEST, role = MberGrdEnum.MNG)
 public class MngQestController {
 
 	private final MngQestService mngQestService;
 
+	@MngMenuInfo(navi = MngNaviEnum.MNG_QEST_MNG, role = MberGrdEnum.MNG)
+	@RequestMapping("/qestInfo.pg")
+	public String qestInfoPg() {
+
+		return ViewPathEnum.MNG.to("/qest/mngQestInfo");
+
+	}
+
 	/**
 	 * 퀘스트 페이지
 	 */
+	@MngMenuInfo(navi = MngNaviEnum.MNG_QEST, role = MberGrdEnum.MNG)
 	@RequestMapping("/qest.pg")
 	public String qestPg() {
 
@@ -40,6 +48,7 @@ public class MngQestController {
 	/**
 	 * 퀘스트 수행 목록
 	 */
+	@MngMenuInfo(navi = MngNaviEnum.MNG_QEST, role = MberGrdEnum.MNG)
 	@RequestMapping("/qest/getQestLogList.ax")
 	public ResponseEntity<ResponseBody<Object>> getQestLogListAx() {
 
@@ -50,6 +59,7 @@ public class MngQestController {
 	/**
 	 * 퀘스트 승인/반려
 	 */
+	@MngMenuInfo(navi = MngNaviEnum.MNG_QEST, role = MberGrdEnum.MNG)
 	@RequestMapping("/qest/qestProc.ax")
 	public ResponseEntity<ResponseBody<Object>> atndChkAx(@RequestBody @Valid MngReqQuestProcVO mngReqQuestProcVO) {
 

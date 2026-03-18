@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/app/psn/mng/layouts/mng_layout}" lang="ko">
+<th:block layout:fragment="content">
+	<script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
+
+	<div id="page-quests" class="page-content w-full min-h-screen bg-[#f8f9fa] p-5 font-sans text-slate-600 animate-fade-in">
+
+		<div id="view-list" class="flex flex-col h-full gap-5">
+			<header class="flex justify-between items-end mb-2">
+				<div>
+					<span class="px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-600 text-[10px] font-bold uppercase tracking-wider mb-1 inline-block">Contents</span>
+					<h1 class="text-2xl font-black text-slate-900 tracking-tight">Epic Quests (퀘스트 관리)</h1>
+					<p class="text-xs text-slate-500 mt-1 font-medium">용사들이 수행할 임무(일일, 주간, 연속 퀘스트 등)를 생성하고 관리합니다.</p>
+				</div>
+				<button onclick="QuestManager.ui.toggleMode('write')"
+				        class="bg-purple-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold hover:bg-purple-700 shadow-lg shadow-purple-200 transition flex items-center transform hover:scale-105 active:scale-95">
+					<i class="fas fa-plus mr-2"></i> 신규 퀘스트 발행
+				</button>
+			</header>
+
+			<div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap gap-3 justify-between items-center">
+				<div class="relative w-full md:w-64 group">
+					<input type="text" id="gridSearchInput" placeholder="퀘스트 제목 검색"
+					       class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold focus:ring-2 focus:ring-purple-100 focus:border-purple-500 outline-none transition group-hover:bg-white">
+					<i class="fas fa-search absolute left-3.5 top-2.5 text-slate-400 text-xs group-hover:text-purple-500 transition-colors"></i>
+				</div>
+				<div class="flex gap-2">
+					<select id="filterQuestType" class="px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold focus:ring-2 focus:ring-purple-100 focus:border-purple-500 outline-none">
+						<option value="">모든 유형</option>
+						<option value="DAILY">일일 퀘스트</option>
+						<option value="WEEKLY">주간 퀘스트</option>
+						<option value="EVENT">이벤트 퀘스트</option>
+						<option value="ONE_TIME">1회성 퀘스트</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-2">
+				<div id="questGrid" class="ag-theme-quartz" style="width: 100%; height: 600px;"></div>
+			</div>
+		</div>
+
+		<div id="view-write" class="hidden animate-fade-in">
+			<header class="flex justify-between items-center mb-6">
+				<div class="flex items-center gap-3">
+					<button onclick="QuestManager.ui.toggleMode('list')"
+					        class="w-8 h-8 rounded-full bg-white border border-slate-200 text-slate-500 flex items-center justify-center hover:bg-slate-50 hover:text-slate-800 transition shadow-sm">
+						<i class="fas fa-arrow-left text-xs"></i>
+					</button>
+					<h1 id="form-title" class="text-xl font-black text-slate-900 tracking-tight">신규 퀘스트 발행</h1>
+				</div>
+				<div class="flex gap-2">
+					<button onclick="QuestManager.ui.toggleMode('list')"
+					        class="px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-600 text-xs font-bold hover:bg-slate-50 transition shadow-sm">
+						취소
+					</button>
+					<button onclick="QuestManager.api.saveQuest()" class="px-4 py-2 rounded-xl bg-purple-600 text-white text-xs font-bold hover:bg-purple-700 shadow-md shadow-purple-200 transition flex items-center">
+						<i class="fas fa-scroll mr-1.5"></i> 퀘스트 저장
+					</button>
+				</div>
+			</header>
+
+			<form id="questForm">
+				<input type="hidden" id="questSn" name="questSn">
+
+				<div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+					<div class="lg:col-span-1 space-y-5">
+						<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+							<h3 class="text-sm font-black text-slate-800 border-b border-slate-100 pb-2 mb-4">보상 설정</h3>
+							<div class="space-y-4">
+								<div>
+									<label class="form-label text-indigo-600"><i class="fas fa-star mr-1"></i>지급 경험치 (EXP)</label>
+									<input type="number" id="formRewardExp" class="form-input font-bold" value="0">
+								</div>
+								<div>
+									<label class="form-label text-amber-600"><i class="fas fa-coins mr-1"></i>지급 달란트 (POINT)</label>
+									<input type="number" id="formRewardPoint" class="form-input font-bold" value="0">
+								</div>
+							</div>
+						</div>
+
+						<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+							<h3 class="text-sm font-black text-slate-800 border-b border-slate-100 pb-2 mb-4">규칙 및 권한</h3>
+							<div class="space-y-4">
+								<div>
+									<label class="form-label">대상 학년</label>
+									<select id="formTargetGrade" class="form-input">
+										<option value="ALL">전체 학년</option>
+										<option value="1">1학년</option>
+										<option value="2">2학년</option>
+										<option value="3">3학년</option>
+									</select>
+								</div>
+								<div>
+									<label class="form-label">보상 지급 방식</label>
+									<select id="formImmediatePay" class="form-input">
+										<option value="N">관리자 승인 후 지급 (N)</option>
+										<option value="Y">조건 달성 시 즉시 지급 (Y)</option>
+									</select>
+								</div>
+								<div>
+									<label class="form-label">사용 여부</label>
+									<select id="formUseAt" class="form-input text-purple-600 font-bold">
+										<option value="Y">사용 (활성화)</option>
+										<option value="N">미사용 (비활성화)</option>
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="lg:col-span-2 space-y-5">
+						<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-5">
+							<div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+								<div class="md:col-span-1">
+									<label class="form-label">아이콘(이모지)</label>
+									<input type="text" id="formEmoji" class="form-input text-center text-2xl" placeholder="⚔️" value="📜">
+								</div>
+								<div class="md:col-span-3">
+									<label class="form-label">퀘스트 제목 *</label>
+									<input type="text" id="formTitle" class="form-input font-bold" placeholder="예: 주일 예배 3회 연속 참석하기">
+								</div>
+							</div>
+
+							<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+								<div>
+									<label class="form-label">퀘스트 유형 *</label>
+									<select id="formQuestType" class="form-input text-purple-600 font-bold border-purple-200 focus:border-purple-500">
+										<option value="DAILY">일일 (Daily)</option>
+										<option value="WEEKLY">주간 (Weekly)</option>
+										<option value="EVENT">이벤트 (Event)</option>
+										<option value="ONE_TIME">1회성 (One-Time)</option>
+									</select>
+								</div>
+
+								<div class="bg-purple-50 p-3 rounded-xl border border-purple-100">
+									<div class="flex items-center justify-between mb-2">
+										<label class="text-xs font-black text-purple-700 m-0">연속 퀘스트 설정</label>
+										<select id="formChainQuestYn" class="text-xs border-slate-200 rounded py-1 px-2 font-bold" onchange="QuestManager.ui.toggleChainConfig()">
+											<option value="N">단일 퀘스트</option>
+											<option value="Y">연속 퀘스트 (Chain)</option>
+										</select>
+									</div>
+									<div id="chainConfigWrap" class="hidden">
+										<select id="formNextQuestSn" class="form-input text-xs">
+											<option value="">-- 완료 시 오픈될 다음 퀘스트 선택 --</option>
+										</select>
+									</div>
+								</div>
+							</div>
+
+							<div>
+								<label class="form-label">퀘스트 상세 설명</label>
+								<textarea id="formDescription" rows="6" class="form-input" placeholder="퀘스트 수행 방법과 조건을 상세히 적어주세요..."></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+
+		const QuestManager = {
+			gridApi: null,
+			allQuests: [], // 연속 퀘스트 셀렉트박스를 위한 전체 데이터 보관
+
+			init() {
+				this.grid.init();
+				this.bindEvents();
+				this.grid.loadData();
+			},
+
+			grid: {
+				init() {
+					const columnDefs = [
+						{
+							headerName: "퀘스트 정보", field: "title", flex: 1, minWidth: 250,
+							cellClass: "flex items-center",
+							cellRenderer: (params) => {
+								const useBadge = params.data.useAt === 'N' ? '<span class="ml-2 px-1.5 py-0.5 bg-slate-100 text-slate-400 text-[9px] rounded font-bold">비활성</span>' : '';
+								const chainBadge = params.data.chainQuestYn === 'Y' ? '<span class="ml-1 text-purple-500" title="연속 퀘스트"><i class="fas fa-link text-[10px]"></i></span>' : '';
+
+								return `
+                            <div class="flex items-center gap-3 w-full">
+                               <div class="w-10 h-10 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center text-xl shadow-sm">
+                                  ${params.data.emoji || '📜'}
+                               </div>
+                               <div class="flex flex-col justify-center">
+                                  <div class="font-black text-slate-800 text-sm leading-tight hover:text-purple-600 transition-colors">${params.value} ${chainBadge} ${useBadge}</div>
+                                  <div class="text-[10px] text-slate-400 font-medium leading-tight mt-1 truncate max-w-xs">${params.data.description || '설명 없음'}</div>
+                               </div>
+                            </div>
+                         `;
+							}
+						},
+						{
+							headerName: "유형", field: "questType", width: 120,
+							cellClass: "flex items-center justify-center",
+							cellRenderer: (params) => {
+								const types = {
+									'DAILY': { text: '일일', color: 'bg-emerald-50 text-emerald-600 border-emerald-200' },
+									'WEEKLY': { text: '주간', color: 'bg-blue-50 text-blue-600 border-blue-200' },
+									'EVENT': { text: '이벤트', color: 'bg-rose-50 text-rose-600 border-rose-200' },
+									'ONE_TIME': { text: '1회성', color: 'bg-purple-50 text-purple-600 border-purple-200' }
+								};
+								const typeInfo = types[params.value] || { text: params.value, color: 'bg-slate-50 text-slate-600' };
+
+								return `<span class="px-2 py-1 text-[11px] font-bold rounded-md border ${typeInfo.color}">${typeInfo.text}</span>`;
+							}
+						},
+						{
+							headerName: "대상 학년", field: "targetGrade", width: 100,
+							cellClass: "flex items-center justify-center text-xs font-bold text-slate-600",
+							valueFormatter: params => params.value === 'ALL' ? '전체 학년' : `${params.value}학년`
+						},
+						{
+							headerName: "완료 보상", width: 180,
+							cellClass: "flex items-center",
+							cellRenderer: (params) => {
+								return `
+                            <div class="flex gap-2">
+                               <span class="flex items-center text-indigo-600 font-bold bg-indigo-50 px-2 py-1 rounded text-xs border border-indigo-100">
+                                  <i class="fas fa-star mr-1 text-indigo-400"></i> ${params.data.rewardExp.toLocaleString()}
+                               </span>
+                               <span class="flex items-center text-amber-600 font-bold bg-amber-50 px-2 py-1 rounded text-xs border border-amber-100">
+                                  <i class="fas fa-coins mr-1 text-amber-500"></i> ${params.data.rewardPoint.toLocaleString()}
+                               </span>
+                            </div>
+                         `;
+							}
+						},
+						{
+							headerName: "지급 방식", field: "immediatePayYn", width: 110,
+							cellClass: "flex items-center justify-center text-[11px] font-bold text-slate-500",
+							valueFormatter: params => params.value === 'Y' ? '⚡ 조건 즉시' : '🛡️ 승인 후'
+						}
+					];
+
+					const gridOptions = {
+						columnDefs: columnDefs,
+						rowData: [],
+						defaultColDef: {resizable: true, sortable: true},
+						pagination: true,
+						paginationPageSize: 15,
+						headerHeight: 48,
+						rowHeight: 70,
+						rowClass: "hover:bg-purple-50/40 transition-colors cursor-pointer",
+						overlayLoadingTemplate: `<div class="flex flex-col items-center"><i class="fas fa-spinner fa-spin text-2xl text-purple-500 mb-2"></i><span class="text-xs text-slate-500 font-bold">게시판 정보를 불러오는 중...</span></div>`,
+						overlayNoRowsTemplate: `<div class="text-xs text-slate-400 py-10">등록된 퀘스트가 없습니다.</div>`,
+						onRowClicked: (event) => {
+							QuestManager.ui.editQuest(event.data.questSn);
+						}
+					};
+
+					const gridDiv = document.querySelector('#questGrid');
+					QuestManager.gridApi = agGrid.createGrid(gridDiv, gridOptions);
+				},
+
+				loadData() {
+					const api = QuestManager.gridApi;
+					if (!api) return;
+
+					api.showLoadingOverlay();
+
+					// [시뮬레이션 용 가짜 데이터 설정]
+					setTimeout(() => {
+						const mockData = [
+							{ questSn: 1, title: "말씀 읽기 습관 (창세기)", description: "매일 창세기 1장씩 읽고 요약을 제출하세요.", questType: "DAILY", emoji: "📖", targetGrade: "ALL", rewardExp: 50, rewardPoint: 10, immediatePayYn: "Y", useAt: "Y", chainQuestYn: "N", nextQuestSn: null },
+							{ questSn: 2, title: "[연속] 전도왕의 길 1단계", description: "친구 1명에게 교회 예배를 안내하고 초대장을 건네주세요.", questType: "EVENT", emoji: "🤝", targetGrade: "ALL", rewardExp: 300, rewardPoint: 100, immediatePayYn: "N", useAt: "Y", chainQuestYn: "Y", nextQuestSn: 3 },
+							{ questSn: 3, title: "[연속] 전도왕의 길 2단계", description: "초대한 친구와 함께 주일 예배에 참석하세요.", questType: "EVENT", emoji: "🎉", targetGrade: "ALL", rewardExp: 1000, rewardPoint: 500, immediatePayYn: "N", useAt: "Y", chainQuestYn: "Y", nextQuestSn: null },
+							{ questSn: 4, title: "여름 수련회 선발대 지원", description: "수련회 짐 옮기기 및 세팅 봉사 활동 지원자 모집", questType: "ONE_TIME", emoji: "⛺", targetGrade: "3", rewardExp: 200, rewardPoint: 50, immediatePayYn: "N", useAt: "N", chainQuestYn: "N", nextQuestSn: null }
+						];
+						QuestManager.allQuests = mockData;
+						api.updateGridOptions({rowData: mockData});
+						QuestManager.ui.populateNextQuestSelect(mockData);
+						api.hideOverlay();
+					}, 500);
+
+					/* 실제 사용 시 아래 주석 해제 (url 추천: /mng/quest/getQuestList.ax)
+					$.ajax({
+					   url: '/mng/quest/getQuestList.ax', type: 'POST', dataType: 'json',
+					   success: function (res) {
+						   QuestManager.allQuests = res.rtnData;
+						   api.updateGridOptions({rowData: res.rtnData});
+						   QuestManager.ui.populateNextQuestSelect(res.rtnData);
+					   }
+					});
+					*/
+				}
+			},
+
+			bindEvents() {
+				$('#gridSearchInput').on('input', function () {
+					if (QuestManager.gridApi) QuestManager.gridApi.setGridOption('quickFilterText', $(this).val());
+				});
+
+				$('#filterQuestType').on('change', function() {
+					const type = $(this).val();
+					if (!QuestManager.gridApi) return;
+					if(type) {
+						QuestManager.gridApi.setColumnFilterModel('questType', { type: 'equals', filter: type }).then(() => QuestManager.gridApi.onFilterChanged());
+					} else {
+						QuestManager.gridApi.destroyFilter('questType');
+					}
+				});
+			},
+
+			ui: {
+				toggleMode(mode) {
+					const listDiv = $('#view-list');
+					const writeDiv = $('#view-write');
+					const title = $('#form-title');
+
+					if (mode === 'write') {
+						$('#questForm')[0].reset();
+						$('#questSn').val('');
+						this.toggleChainConfig(); // 초기화 시 숨김 처리
+						title.text('신규 퀘스트 발행');
+						listDiv.addClass('hidden');
+						writeDiv.removeClass('hidden');
+					} else if (mode === 'list') {
+						writeDiv.addClass('hidden');
+						listDiv.removeClass('hidden');
+					}
+				},
+
+				editQuest(sn) {
+					const quest = QuestManager.allQuests.find(q => q.questSn === sn);
+					if (quest) {
+						$('#questSn').val(quest.questSn);
+						$('#formTitle').val(quest.title);
+						$('#formEmoji').val(quest.emoji);
+						$('#formDescription').val(quest.description);
+						$('#formQuestType').val(quest.questType);
+						$('#formTargetGrade').val(quest.targetGrade);
+						$('#formRewardExp').val(quest.rewardExp);
+						$('#formRewardPoint').val(quest.rewardPoint);
+						$('#formImmediatePay').val(quest.immediatePayYn);
+						$('#formUseAt').val(quest.useAt);
+
+						$('#formChainQuestYn').val(quest.chainQuestYn || 'N');
+						this.toggleChainConfig();
+						$('#formNextQuestSn').val(quest.nextQuestSn || '');
+
+						$('#form-title').text('퀘스트 정보 수정');
+						this.toggleMode('write', true); // true는 강제로 화면만 전환하는 용도 (폼 초기화 안함)
+						$('#view-list').addClass('hidden');
+						$('#view-write').removeClass('hidden');
+					}
+				},
+
+				toggleChainConfig() {
+					const isChain = $('#formChainQuestYn').val() === 'Y';
+					if (isChain) {
+						$('#chainConfigWrap').removeClass('hidden');
+					} else {
+						$('#chainConfigWrap').addClass('hidden');
+						$('#formNextQuestSn').val(''); // N일 경우 값 초기화
+					}
+				},
+
+				populateNextQuestSelect(data) {
+					const select = $('#formNextQuestSn');
+					select.empty().append('<option value="">-- 완료 시 오픈될 다음 퀘스트 선택 --</option>');
+					data.forEach(q => {
+						select.append(`<option value="${q.questSn}">[${q.questSn}] ${q.title}</option>`);
+					});
+				}
+			},
+
+			api: {
+				saveQuest() {
+					// 필수값 체크
+					if (!$('#formTitle').val()) return alert('퀘스트 제목을 입력해주세요.');
+					if (!$('#formDescription').val()) return alert('퀘스트 설명을 입력해주세요.');
+
+					const formData = {
+						questSn: $('#questSn').val(),
+						title: $('#formTitle').val(),
+						emoji: $('#formEmoji').val(),
+						description: $('#formDescription').val(),
+						questType: $('#formQuestType').val(),
+						targetGrade: $('#formTargetGrade').val(),
+						rewardExp: $('#formRewardExp').val(),
+						rewardPoint: $('#formRewardPoint').val(),
+						immediatePayYn: $('#formImmediatePay').val(),
+						useAt: $('#formUseAt').val(),
+						chainQuestYn: $('#formChainQuestYn').val(),
+						nextQuestSn: $('#formNextQuestSn').val() || null
+					};
+
+					// TODO: 서버 저장 로직 (URL 추천: /mng/quest/saveQuest.ax)
+					console.log('서버로 전송할 데이터:', formData);
+					alert('퀘스트가 성공적으로 저장되었습니다!');
+
+					QuestManager.ui.toggleMode('list');
+					QuestManager.grid.loadData();
+				}
+			}
+		};
+
+		$(function () {
+			QuestManager.init();
+		});
+		/*]]>*/
+	</script>
+</th:block>
+</html>

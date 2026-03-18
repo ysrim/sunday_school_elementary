@@ -18,12 +18,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@MngMenuInfo(navi = MngNaviEnum.MNG_MBER, role = MberGrdEnum.MNG)
 @RequestMapping("/mng")
 public class MngMberController {
 
 	private final MngMberService mngMberService;
 
+	@MngMenuInfo(navi = MngNaviEnum.MNG_MBER, role = MberGrdEnum.MNG)
 	@RequestMapping("/mber.pg")
 	public String mberPg() {
 
@@ -31,8 +31,41 @@ public class MngMberController {
 
 	}
 
+	@MngMenuInfo(navi = MngNaviEnum.MNG_MBER, role = MberGrdEnum.MNG)
 	@RequestMapping("/mber/getMberList.ax")
 	public ResponseEntity<ResponseBody<Object>> getMberListAx() {
+
+		return ResUtil.resSucc(mngMberService.getMberList());
+
+	}
+
+	@MngMenuInfo(navi = MngNaviEnum.MNG_ABSENT, role = MberGrdEnum.MNG)
+	@RequestMapping("/absentee.pg")
+	public String absenteePg() {
+
+		return ViewPathEnum.MNG.to("/mber/mngAbsentee");
+
+	}
+
+	@MngMenuInfo(navi = MngNaviEnum.MNG_ABSENT, role = MberGrdEnum.MNG)
+	@RequestMapping("/absentee/getAbsenteeList.ax")
+	public ResponseEntity<ResponseBody<Object>> getAbsenteeListAx() {
+
+		return ResUtil.resSucc(mngMberService.getMberList());
+
+	}
+
+	@MngMenuInfo(navi = MngNaviEnum.MNG_ATTEND, role = MberGrdEnum.MNG)
+	@RequestMapping("/attendance.pg")
+	public String attendancePg() {
+
+		return ViewPathEnum.MNG.to("/mber/mngAttendance");
+
+	}
+
+	@MngMenuInfo(navi = MngNaviEnum.MNG_ATTEND, role = MberGrdEnum.MNG)
+	@RequestMapping("/attendance/getWeeklyAttendList.ax")
+	public ResponseEntity<ResponseBody<Object>> getWeeklyAttendListAx() {
 
 		return ResUtil.resSucc(mngMberService.getMberList());
 

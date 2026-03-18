@@ -44,7 +44,10 @@ function _naviPage(menu) {
 		'MNG_MBER': '/mng/mber.pg',
 		'MNG_FEED': '/mng/feed/feedList.pg',
 		'MNG_REWD': '/mng/rewd.pg',
-		'MNG_QEST': '/mng/qest.pg'
+		'MNG_QEST': '/mng/qest.pg',
+		'MNG_ABSENT': '/mng/absentee.pg',
+		'MNG_ATTEND': '/mng/attendance.pg',
+		'MNG_QEST_MNG': '/mng/qestInfo.pg'
 	};
 	const targetUrl = menuUrls[menu];
 	if (targetUrl) {
@@ -72,7 +75,6 @@ const Toast = {
 		if (!container) {
 			container = document.createElement('div');
 			container.id = this.containerId;
-			// [위치 변경] fixed top-6 left-1/2 (중앙 정렬을 위한 translate-x-1/2)
 			container.className = 'fixed top-6 left-1/2 transform -translate-x-1/2 z-[100] flex flex-col items-center gap-3 pointer-events-none w-full max-w-md';
 			document.body.appendChild(container);
 		}
@@ -86,7 +88,6 @@ const Toast = {
 		const container = this.ensureContainer();
 		const id = 'toast-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
 
-		// 디자인 테마 설정 (아이콘 + 배경색 + 텍스트색)
 		const config = {
 			success: {
 				icon: '<div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600"><i class="fas fa-check"></i></div>',
@@ -112,11 +113,6 @@ const Toast = {
 		const toastEl = document.createElement('div');
 		toastEl.id = id;
 
-		// [디자인 포인트]
-		// 1. backdrop-blur-md: 배경이 살짝 비치는 유리 효과
-		// 2. rounded-2xl: 알약처럼 둥근 모서리
-		// 3. shadow-2xl: 깊이감 있는 그림자
-		// 4. animate-bounce-custom: 커스텀 애니메이션 (CSS로 구현 필요 없게 tailwind 유틸리티 조합)
 		toastEl.className = `
             pointer-events-auto 
             bg-white/95 backdrop-blur-md 
