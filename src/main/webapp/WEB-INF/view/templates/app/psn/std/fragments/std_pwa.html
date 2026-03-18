@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="pwaConfig" th:if="#{is.production} == 'true'">
+	<link rel="manifest" href="/manifest.json">
+	<meta name="theme-color" content="#4A90E2">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<meta name="apple-mobile-web-app-title" content="초등부">
+	<link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/ysrim/bjcc_ss@main/images/pwa/icon-192.png">
+	<script>
+		if ('serviceWorker' in navigator) {
+			window.addEventListener('load', () => {
+				navigator.serviceWorker.register('/sw.js')
+					.then(registration => {
+						console.log('서비스 워커가 성공적으로 등록되었습니다.', registration.scope);
+					})
+					.catch(error => {
+						console.error('서비스 워커 등록에 실패했습니다.', error);
+					});
+			});
+		}
+	</script>
+</th:block>
+</html>

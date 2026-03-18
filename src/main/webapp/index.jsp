@@ -7,6 +7,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>봉동중앙교회 초등부 RPG</title>
+	<th:block th:replace="~{/app/psn/std/fragments/std_pwa :: pwaConfig}"></th:block>
 </head>
 <c:choose>
 	<c:when test="${isProd eq 'true'}">
