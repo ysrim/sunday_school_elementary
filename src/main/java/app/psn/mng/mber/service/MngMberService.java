@@ -11,4 +11,9 @@ public interface MngMberService {
 	 */
 	List<MngMberVO> getMberList();
 
+	/**
+	 * 패스워드 초기화
+	 */
+	void resetPasswordAx(Integer mberSn);
+
 }

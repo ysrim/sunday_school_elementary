@@ -371,9 +371,9 @@
 					const rewardType = $('input[name="rewardType"]:checked').val();
 					const actionType = $('input[name="actionType"]:checked').val();
 
-					if (!mberSn) return alert("학생을 먼저 선택해주세요.");
+					if (!mberSn) return Toast.error("학생을 먼저 선택해주세요.");
 					if (!amountVal || amountVal <= 0) {
-						alert("유효한 수량을 입력해주세요.");
+						Toast.error("유효한 수량을 입력해주세요.");
 						return $('#amountInput').focus();
 					}
 
@@ -399,13 +399,13 @@
 						data: JSON.stringify(reqData),
 						contentType: 'application/json',
 						success: function () {
-							alert("정상적으로 처리되었습니다.");
+							Toast.success("정상적으로 처리되었습니다.");
 							$('#amountInput').val('');
 							$('#reasonInput').val('');
 							RewardManager.grid.loadData();
 						},
 						error: function (xhr) {
-							alert("오류가 발생했습니다: " + (xhr.statusText || 'Unknown Error'));
+							Toast.error("오류가 발생했습니다: " + (xhr.statusText || 'Unknown Error'));
 						},
 						complete: function () {
 							btn.prop('disabled', false).html('<i class="fas fa-check-circle mr-2"></i> 설정 적용하기');

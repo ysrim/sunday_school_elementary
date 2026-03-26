@@ -33,4 +33,10 @@
 		  AND A.USE_AT = 'Y'
 	</select>
 
+	<update id="resetPasswordAx">
+		UPDATE MBER_INFO
+		SET PWD = #{pwd}
+		WHERE MBER_SN = #{mberSn}
+	</update>
+
 </mapper>

@@ -205,6 +205,21 @@
 					                  </div>
 					               `;
 							}
+						},
+						{
+							headerName: "관리",
+							width: 100,
+							sortable: false,
+							filter: false,
+							cellClass: "flex items-center justify-center",
+							cellRenderer: (params) => {
+								return `
+                  <button onclick="MemberManager.api.resetPassword('${params.data.id}')"
+                          class="px-3 py-1.5 bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 rounded-lg text-[11px] font-bold transition-colors border border-slate-200 hover:border-rose-200">
+                     <i class="fas fa-key mr-1"></i> 초기화
+                  </button>
+               `;
+							}
 						}
 					];
 
@@ -220,9 +235,10 @@
 						overlayLoadingTemplate: `<div class="flex flex-col items-center"><i class="fas fa-spinner fa-spin text-2xl text-indigo-500 mb-2"></i><span class="text-xs text-slate-500 font-bold">용사 정보를 불러오는 중...</span></div>`,
 						overlayNoRowsTemplate: `<div class="text-xs text-slate-400 py-10">등록된 용사가 없습니다.</div>`,
 						onRowClicked: (event) => {
-							if (!event.event.target.closest('button')) {
-								MemberManager.ui.editMember(event.data.id);
+							if (event.event.target.closest('button')) {
+								return;
 							}
+							MemberManager.ui.editMember(event.data.id);
 						}
 					};
 
@@ -346,7 +362,24 @@
 						MemberManager.grid.loadData();
 					}
 					*/
+				},
+
+				resetPassword(mberSn) {
+					if (confirm(`용사의 비밀번호를 초기화하시겠습니까?\n초기 비밀번호는 'a12345678*'로 설정됩니다.`)) {
+						$.ajax({
+							url: '/mng/mber/resetPassword.ax?mberSn='+mberSn, // 서버의 실제 URL로 변경 필요
+							type: 'POST',
+							success: function (res) {
+								Toast.success(res.rtnMsg);
+							},
+							error: function (xhr, status, error) {
+								console.error("패스워드 초기화 실패:", error);
+								Toast.error('서버 통신 중 오류가 발생했습니다.');
+							}
+						});
+					}
 				}
+
 			}
 		};
 

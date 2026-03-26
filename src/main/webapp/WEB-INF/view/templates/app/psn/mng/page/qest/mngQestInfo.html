@@ -375,8 +375,8 @@
 			api: {
 				saveQuest() {
 					// 필수값 체크
-					if (!$('#formTitle').val()) return alert('퀘스트 제목을 입력해주세요.');
-					if (!$('#formDescription').val()) return alert('퀘스트 설명을 입력해주세요.');
+					if (!$('#formTitle').val()) return Toast.error('퀘스트 제목을 입력해주세요.');
+					if (!$('#formDescription').val()) return Toast.error('퀘스트 설명을 입력해주세요.');
 
 					const formData = {
 						questSn: $('#questSn').val(),
@@ -395,7 +395,7 @@
 
 					// TODO: 서버 저장 로직 (URL 추천: /mng/quest/saveQuest.ax)
 					console.log('서버로 전송할 데이터:', formData);
-					alert('퀘스트가 성공적으로 저장되었습니다!');
+					Toast.success('퀘스트가 성공적으로 저장되었습니다!');
 
 					QuestManager.ui.toggleMode('list');
 					QuestManager.grid.loadData();

@@ -2,6 +2,7 @@ package app.psn.mng.mber.service.impl;
 
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,11 +20,18 @@ public class MngMberServiceImpl implements MngMberService {
 
 	private final MngMberMapper mngMberMapper;
 
+	private final PasswordEncoder passwordEncoder;
+
 	@Override
 	public List<MngMberVO> getMberList() {
 
 		return mngMberMapper.getMberList();
 
+	}
+
+	@Override
+	public void resetPasswordAx(Integer mberSn) {
+		mngMberMapper.resetPasswordAx(mberSn, passwordEncoder.encode("a123457"));
 	}
 
 }
