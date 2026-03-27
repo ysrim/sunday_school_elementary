@@ -9,6 +9,7 @@
 	<title>봉동중앙교회 초등부 RPG</title>
 	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;800&display=swap" rel="stylesheet">
 	<link rel="stylesheet" th:href="@{/files/css/intro_style.css}">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<th:block th:replace="~{/app/psn/std/fragments/std_pwa :: pwaConfig}"></th:block>
 </head>
 <body>
@@ -34,5 +35,57 @@
 		</div>
 	</div>
 </div>
+<script th:inline="javascript">
+	$(document).ready(function () {
+		// 1. VAPID Public Key (아까 생성한 값을 여기에 넣으세요)
+		const VAPID_PUBLIC_KEY = "BC8DXaBpsc5QB76NKtemBKOmZowHxHryeiNRpUUMHBLIXrGg9__xAO3b7PJ9cz2UlRimfOkNY8ryhC_tJ5uP2mE";
+
+		// 2. Base64 URL Safe -> Uint8Array 변환 함수 (필수)
+		function urlBase64ToUint8Array(base64String) {
+			const padding = '='.repeat((4 - base64String.length % 4) % 4);
+			const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+			const rawData = window.atob(base64);
+			const outputArray = new Uint8Array(rawData.length);
+			for (let i = 0; i < rawData.length; ++i) {
+				outputArray[i] = rawData.charCodeAt(i);
+			}
+			return outputArray;
+		}
+
+		// 3. 구독 버튼 클릭 이벤트
+		try {
+			// 서비스 워커가 준비될 때까지 대기
+			const registration = await navigator.serviceWorker.ready;
+
+			// 브라우저에 푸시 구독 요청
+			const subscription = await registration.pushManager.subscribe({
+				userVisibleOnly: true,
+				applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+			});
+
+			console.log("구독 성공:", subscription);
+
+			// 4. jQuery AJAX로 서버에 구독 정보 전송
+			$.ajax({
+				url: '/notifications/subscribe.ax',
+				type: 'POST',
+				contentType: 'application/json',
+				data: JSON.stringify(subscription),
+				success: function (response) {
+					alert('알림 구독이 완료되었습니다! 😊');
+				},
+				error: function (xhr, status, error) {
+					console.error("서버 전송 실패:", error);
+					alert('구독 정보 저장 중 오류가 발생했습니다.');
+				}
+			});
+
+		} catch (error) {
+			console.error("구독 실패:", error);
+			alert('알림 권한을 허용해야 서비스 이용이 가능합니다. (iOS는 홈 화면 추가 필수)');
+		}
+
+	});
+</script>
 </body>
 </html>
