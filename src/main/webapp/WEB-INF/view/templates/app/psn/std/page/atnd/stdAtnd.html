@@ -50,7 +50,7 @@
 	</th:block>
 	<div class="card text-center" style="padding: 30px 20px;">
 		<div class="flex-center gap-10 mb-10">
-			<h3 id="attendance-date-title">2월 출석부</h3>
+			<h3 id="attendance-date-title" th:text="|${#temporals.month(#temporals.createNow())}월의 출석부|">2월 출석부</h3>
 			<span class="text-white" id="sunday-badge"
 			      style="display:none; background: var(--secondary); font-size: 0.7rem; padding: 3px 8px; border-radius: 4px;">오늘은 주일!</span>
 		</div>
@@ -74,7 +74,7 @@
 		</div>
 		<p class="text-light mt-15">* 매주 일요일, 교회에 와서 도장을 꾹! 눌러주세요.</p>
 	</div>
-	<div class="section-title">📅 2월의 주일(Sunday)</div>
+	<div class="section-title"th:text="|📅 ${#temporals.month(#temporals.createNow())}월의 주일(Sunday)|">>📅 2월의 주일(Sunday)</div>
 	<div id="sunday-list-container" class="flex-col gap-10" style="padding: 0 20px 30px 20px;">
 		<div class="menu-item sunday-item"
 		     style="border: 1px solid #f0f0f0; border-radius:12px; padding:15px; cursor:default;"
