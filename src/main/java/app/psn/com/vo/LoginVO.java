@@ -16,7 +16,7 @@ import lombok.ToString;
 public class LoginVO {
 
 	@NotEmpty(message = "아이디를 입력해주세요!")
-	@Size(min = 5, message = "아이디는 5자 이상이어야 합니다.")
+	@Size(min = 4, message = "아이디는 4자 이상이어야 합니다.")
 	@XssCheck
 	private String mberId = ""; // 회원_아이디
 
