@@ -3,7 +3,8 @@
 <mapper namespace="app.psn.std.gild.mapper.StdGildMapper">
 
 	<select id="getTchGildPost" resultType="app.psn.std.gild.vo.StdGildPostVO">
-		SELECT A.POST_SN
+		select x.* from (
+SELECT A.POST_SN
 			 , A.GUILD_SN
 			 , A.MBER_SN
 			 , B.MBER_NM
@@ -18,7 +19,8 @@
 			     INNER JOIN AVATAR_INFO C ON A.MBER_SN = C.MBER_SN
 		WHERE A.GUILD_SN = #{guildSn}
 		  AND A.DEL_YN = 'N'
-		LIMIT 50
+order by creat_de desc
+LIMIT 50) x order by x.creat_de asc
 	</select>
 
 	<delete id="delGildPost">
