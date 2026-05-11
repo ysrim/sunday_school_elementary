@@ -58,7 +58,7 @@ public class AvatarServiceImpl implements AvatarService {
 			// 4-1. 리워드 달란트 정보 가져오기
 			AvatarLevelRulesVO avatarLevelRules = domainService.sltAvatarLevelRules(nextLevel);
 			// 4-2. 리워드 지급
-			rewardService.insMberReward(RewardVO.ofLevelUpPoint(mberSn, avatarLevelRules.rewardPoint()));
+			rewardService.insMberReward(RewardVO.ofLevelUpPoint(mberSn, avatarLevelRules.rewardPoint(), nextLevel));
 		}
 
 		// 5. 아바타 정보에 변경된 레벨 업데이트

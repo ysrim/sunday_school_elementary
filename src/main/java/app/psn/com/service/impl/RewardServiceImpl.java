@@ -83,10 +83,10 @@ public class RewardServiceImpl implements RewardService {
 		this.insMberReward(RewardVO.ofQuestExp(event, quest));
 
 		// 4. 연퀘퀘스트로그 저장 및 연퀘 조건 만족 시 추가 보상
-		QuestContinuityRulesVO rules = domainService.sltQuestContinuityRules(event.questSn());
-		if (rules != null) { // QUEST_CONTINUITY_RULES 수행하는 퀘스트가 연퀘가 가능한지 여부 판단. 연퀘보상정보가 없으면 pass
-			handleQuestContinuity(event, rules);
-		}
+		//QuestContinuityRulesVO rules = domainService.sltQuestContinuityRules(event.questSn());
+		//if (rules != null) { // QUEST_CONTINUITY_RULES 수행하는 퀘스트가 연퀘가 가능한지 여부 판단. 연퀘보상정보가 없으면 pass
+		//	handleQuestContinuity(event, rules);
+		//}
 
 	}
 

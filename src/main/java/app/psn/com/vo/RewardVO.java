@@ -63,11 +63,11 @@ public record RewardVO( //
 
 	}
 
-	public static RewardVO ofLevelUpPoint(Integer mberSn, Integer Point) {
+	public static RewardVO ofLevelUpPoint(Integer mberSn, Integer Point, Integer lvl) {
 
 		return new RewardVO(mberSn, RewardTypeEnum.POINT.name(), //
 			Point, RewardGetPathEnum.LEVEL_UP.name(), //
-			0, "Level Up 축하!");
+			lvl, "Level Up 축하!");
 
 	}
 
