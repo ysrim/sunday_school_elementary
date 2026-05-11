@@ -56,3 +56,14 @@ del -> 삭제
 -- 1. MBER_INFO (sedwd0209 제외하고 삭제)
 -- 2. QUEST_CONTINUITY_RULES (연퀘 정보니 협의 후 삭제)
 -- 3. QUESTS 퀘스트정보이니 협의 후 삭제 -> 연퀘 정보도 확인해야함
+
+1.
+MBER_REWARD_LOGS 테이블에서 pk 4개로 변경
+mber_sn, reward_type, change_type, reference_sn
+
+2.
+TchQestServiceImpl.java에서 QUEST_LOGS테이블을 조회해서 pendding상태가 아니면 아무일도 하지 않는 방어 로직 추가
+
+3.중복 지급 리워드 회수(달란트, 경험치) 로직 생성
+    > 경험치, 리워드 중복지급액 알아내기 > 관리자에서 회수 처리
+    > 해당 구간에 래벨업으로 지급된 리워드도 회수 > 관리자에서 회수 처리
