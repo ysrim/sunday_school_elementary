@@ -17,4 +17,6 @@ public interface MngRewdService {
 	 */
 	List<MngRewdHistVO> getRewdHistList();
 
+	Integer getReferenceSn();
+
 }

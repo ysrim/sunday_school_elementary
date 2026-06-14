@@ -44,4 +44,9 @@
 		ORDER BY A.CREAT_DE DESC
 	</select>
 
+	<select id="getReferenceSn" resultType="integer">
+		SELECT FN_GET_SEQ('SEQ_REWD_ADMIN_SN') as referenceSn
+		FROM DUAL
+	</select>
+
 </mapper>

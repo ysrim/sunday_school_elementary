@@ -47,7 +47,9 @@ public class MngRewdController {
 	@RequestMapping("/rewd/saveRewd.ax")
 	public ResponseEntity<ResponseBody<Object>> saveRewdAx(@RequestBody @Valid RewardVO rewardVO) {
 
-		rewardService.insMberReward(rewardVO);
+		RewardVO inputReward = new RewardVO(rewardVO.mberSn(), rewardVO.rewardType(), rewardVO.amount(), rewardVO.changeType(), mngRewdService.getReferenceSn(), rewardVO.description());
+
+		rewardService.insMberReward(inputReward);
 
 		return ResUtil.resSucc();
 

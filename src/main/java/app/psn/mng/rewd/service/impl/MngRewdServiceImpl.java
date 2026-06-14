@@ -29,7 +29,16 @@ public class MngRewdServiceImpl implements MngRewdService {
 
 	@Override
 	public List<MngRewdHistVO> getRewdHistList() {
+
 		return mngRewdMapper.getRewdHistList();
+
+	}
+
+	@Override
+	public Integer getReferenceSn() {
+
+		return mngRewdMapper.getReferenceSn();
+
 	}
 
 }

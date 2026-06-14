@@ -20,4 +20,6 @@ public interface MngRewdMapper {
 	 */
 	List<MngRewdHistVO> getRewdHistList();
 
+	Integer getReferenceSn();
+
 }
