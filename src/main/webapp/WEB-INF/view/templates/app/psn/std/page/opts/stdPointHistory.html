@@ -113,7 +113,7 @@
 	<div class="point-summary-card">
 		<span style="font-size: 0.85rem; opacity: 0.8;">현재 보유 달란트</span>
 		<h2 style="font-size: 3rem; font-weight: 800; margin: 15px 0 25px 0; letter-spacing: -1px;">
-			<span class="sub-money" th:text="|${#numbers.formatInteger(_mberPoint, 1, 'COMMA')}|">2,500</span> <small
+			<span class="sub-money" th:text="${_mberPoint}|">2,500</span> <small
 				style="font-size: 1.2rem;">P</small>
 		</h2>
 		<div class="flex-row"
